@@ -1,4 +1,4 @@
-package io.github.mvillafuertem.scala.akka.stream.graph
+package io.github.mvillafuertem.akka.stream.graph
 
 import akka.NotUsed
 import akka.actor.ActorSystem

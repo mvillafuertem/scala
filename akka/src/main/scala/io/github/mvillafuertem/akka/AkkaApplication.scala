@@ -1,4 +1,4 @@
-package io.github.mvillafuertem.scala.akka
+package io.github.mvillafuertem.akka
 
 object AkkaApplication extends App {
 

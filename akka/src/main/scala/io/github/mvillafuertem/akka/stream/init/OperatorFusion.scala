@@ -1,4 +1,4 @@
-package io.github.mvillafuertem.scala.akka.stream.init
+package io.github.mvillafuertem.akka.stream.init
 
 import akka.actor.{Actor, ActorSystem, Props}
 import akka.stream.ActorMaterializer

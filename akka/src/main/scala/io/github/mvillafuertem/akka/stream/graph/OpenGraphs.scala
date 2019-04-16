@@ -1,4 +1,4 @@
-package io.github.mvillafuertem.scala.akka.stream.graph
+package io.github.mvillafuertem.akka.stream.graph
 
 import akka.NotUsed
 import akka.actor.ActorSystem
@@ -7,7 +7,7 @@ import akka.stream.{ActorMaterializer, FlowShape, SinkShape, SourceShape}
 
 object OpenGraphs extends App {
 
-  implicit val actorSystem: ActorSystem = ActorSystem("GraphBasics")
+  implicit val actorSystem: ActorSystem = ActorSystem("OpenGraphs")
   implicit val actorMaterializer: ActorMaterializer = ActorMaterializer()
 
   /**

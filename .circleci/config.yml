@@ -1,0 +1,21 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/openjdk:11-jdk
+
+    working_directory: ~/repo
+
+    environment:
+      JVM_OPTS: -Xmx2048m
+      TERM: dumb
+
+    steps:
+      - checkout
+
+      # compiler, test & run
+      - run:
+          name: compile, test and run
+          command: |
+            sbt ";clean ;coverage ;test ;coverageReport"
+            bash <(curl -s https://codecov.io/bash)
