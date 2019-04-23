@@ -13,5 +13,6 @@ lazy val advanced = (project in file("advanced"))
 lazy val akka = (project in file("akka"))
   .settings(commonSettings,
     name := "akka",
-    libraryDependencies ++= Dependencies.production
+    libraryDependencies ++= Dependencies.production,
+    libraryDependencies ++= Dependencies.test
   )
