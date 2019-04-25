@@ -3,7 +3,14 @@ import sbt._
 object Dependencies {
 
   val production: Seq[ModuleID] = Seq(
+    // Akka Persistence
+    "com.typesafe.akka" %% "akka-persistence" % Versions.akka,
+    "com.postgresql" %% "postgresql" % "42.2.2",
+    "com.github.dnvriend" %% "akka-persistence-jdbc" % "3.4.0",
+    
+    // Akka Stream
     "com.typesafe.akka" %% "akka-stream" % Versions.akka,
+
   )
   val test: Seq[ModuleID] = Seq(
     //"org.scalatest" %% "scalatest" % Versions.scala_test % Test,
