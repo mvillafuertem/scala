@@ -8,7 +8,14 @@ object Postgres extends App {
   val simplePersistentActor = actorSystem.actorOf(Props[SimplePersistentActor], "simplePersistentActor")
 
   for (i <- 1 to 10) {
-    simplePersistentActor ! s""
+    simplePersistentActor ! s"I love Akka [$i]"
+  }
+
+  simplePersistentActor ! "print"
+  simplePersistentActor ! "snap"
+
+  for (i <- 11 to 20) {
+    simplePersistentActor ! s"I love Akka [$i]"
   }
 
 }
