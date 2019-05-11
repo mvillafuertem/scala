@@ -3,7 +3,7 @@ import sbt.{Def, Tests, _}
 
 object Configuration {
   
-  val commonSettings: Seq[Def.Setting[_ >: String with Task[Seq[String]] with Boolean with Task[Seq[TestOption]]]] = Seq(
+  val settings: Seq[Def.Setting[_]] = Seq(
     
     scalacOptions := {
       val default = Seq(

@@ -1,2 +1,0 @@
-= Scala
-include::attributes.adoc[]
