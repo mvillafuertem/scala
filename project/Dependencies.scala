@@ -15,8 +15,14 @@ object Dependencies {
 
     // Akka Stream
     "com.typesafe.akka" %% "akka-stream" % Version.akka,
-
   )
+
+  val cats: Seq[ModuleID] = Seq(
+    // Cats
+    "org.typelevel" %% "cats-core",
+    "org.typelevel" %% "cats-free"
+  ).map(_ % Version.cats)
+
   val test: Seq[ModuleID] = Seq(
     //"org.scalatest" %% "scalatest" % Versions.scala_test % Test,
     "org.scalatest" %% "scalatest" % Version.scalaTest,
@@ -34,6 +40,7 @@ object Dependencies {
     val akkaPersistenceCassandra = "0.94"
     val scalaTest = "3.0.7"
     val postgres = "42.2.5"
+    val cats = "2.0.0-M1"
   }
 
 }

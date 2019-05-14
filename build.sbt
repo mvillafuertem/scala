@@ -18,6 +18,11 @@ lazy val akka = (project in file("akka"))
     libraryDependencies ++= Dependencies.test
   )
 
+lazy val cats = (project in file("cats"))
+  .settings(commonSettings,
+    libraryDependencies ++= Dependencies.cats
+  )
+
 lazy val docs = (project in file("docs"))
   .enablePlugins(MicrositesPlugin)
   .settings(commonSettings,
