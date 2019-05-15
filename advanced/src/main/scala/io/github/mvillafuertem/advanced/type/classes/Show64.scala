@@ -5,6 +5,7 @@ import java.util.Base64
 trait Show64[A] {
 
   def encode(a: A): String
+
 }
 
 object Show64 {

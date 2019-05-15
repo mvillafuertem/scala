@@ -3,17 +3,20 @@ import sbt.{Def, Tests, _}
 
 object Settings {
   
-  val settings: Seq[Def.Setting[_]] = Seq(
+  val value: Seq[Def.Setting[_]] = Seq(
     
     scalacOptions := {
       val default = Seq(
         "-deprecation",
         "-feature",
+        "-language:existentials",
         "-language:higherKinds",
+        "-language:implicitConversions",
+        "-language:postfixOps",
         "-unchecked",
-        "-Xfatal-warnings",
+        //"-Xfatal-warnings",
         "-Xlint",
-        "-Ypartial-unification"
+        "-Ypartial-unification",
       )
       if (version.value.endsWith("SNAPSHOT")) {
         default :+ "-Xcheckinit"

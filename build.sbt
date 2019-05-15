@@ -1,4 +1,4 @@
-lazy val commonSettings = Seq(
+lazy val commonSettings = Settings.value ++ Seq(
   organization := "io.github.mvillafuertem",
   version := "0.1",
   scalaVersion := "2.12.8",
@@ -13,6 +13,16 @@ lazy val commonSettings = Seq(
     )
   )
 )
+
+lazy val scala = (project in file("."))
+  .aggregate(
+    advanced,
+    akka,
+    algorithms,
+    cats,
+    docs
+  )
+  .settings(commonSettings)
 
 lazy val advanced = (project in file("advanced"))
   .settings(commonSettings,
