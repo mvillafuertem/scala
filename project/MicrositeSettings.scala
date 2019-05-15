@@ -2,7 +2,7 @@ import microsites.ExtraMdFileConfig
 import microsites.MicrositesPlugin.autoImport._
 import sbt._
 
-object Microsite {
+object MicrositeSettings {
 
   val settings: Seq[Def.Setting[_]] = Seq(
     micrositeName := "scala",

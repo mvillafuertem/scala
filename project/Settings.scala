@@ -1,7 +1,7 @@
 import sbt.Keys.{exportJars, _}
 import sbt.{Def, Tests, _}
 
-object Configuration {
+object Settings {
   
   val settings: Seq[Def.Setting[_]] = Seq(
     
@@ -21,9 +21,6 @@ object Configuration {
         default
       } // check against early initialization
     },
-    
-    scalacOptions in(Test, console) --= Seq("-Ywarn-unused:imports", "-Xfatal-warnings"),
-    scalacOptions in(Test, console) ++= Seq("-Ywarn-unused:-imports"),
     
     javaOptions += "-Duser.timezone=UTC",
     

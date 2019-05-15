@@ -1,4 +1,4 @@
-package io.github.mvillafuertem.advanced
+package io.github.mvillafuertem.advanced.`type`.classes
 
 import java.util.Base64
 

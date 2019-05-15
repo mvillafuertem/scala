@@ -1,0 +1,17 @@
+language: scala
+
+scala:
+  - 2.12.8
+
+jobs:
+  include:
+    - stage: test
+      script: ./.cicd/test.sh
+    - stage: build
+      script: ./.cicd/build.sh
+    - stage: doc
+      script: ./.cicd/doc.sh
+    - stage: release
+      script: ./.cicd/release.sh
+    - stage: publish
+      script: ./.cicd/publish.sh

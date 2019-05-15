@@ -1,20 +1,21 @@
 import sbt._
 
 object Dependencies {
-
-  val production: Seq[ModuleID] = Seq(
-    // Akka Persistence
-    "com.typesafe.akka" %% "akka-persistence" % Version.akka,
-
-    // Akka Persistence Cassandra
+  
+  val akka: Seq[ModuleID] = Seq(
+    "com.typesafe.akka" %% "akka-persistence",
+    "com.typesafe.akka" %% "akka-stream"
+  ).map(_ % Version.akka) ++ Seq(
     "com.typesafe.akka" %% "akka-persistence-cassandra" % Version.akkaPersistenceCassandra,
-
-    // Akka Persistence JDBC
     "com.github.dnvriend" %% "akka-persistence-jdbc" % Version.akkaPersistenceJdbc,
-    "org.postgresql" % "postgresql" % "42.2.5",
-
-    // Akka Stream
-    "com.typesafe.akka" %% "akka-stream" % Version.akka,
+    "org.postgresql" % "postgresql" % "42.2.5"
+  )
+  
+  val akkaTest: Seq[ModuleID] = Seq(
+    "com.typesafe.akka" %% "akka-testkit",
+    "com.typesafe.akka" %% "akka-stream-testkit",
+  ).map(_ % Version.akka) ++ Seq(
+    "com.typesafe.akka" %% "akka-persistence-cassandra-launcher" % Version.akkaPersistenceCassandra % Test
   )
 
   val cats: Seq[ModuleID] = Seq(
@@ -26,12 +27,6 @@ object Dependencies {
   val test: Seq[ModuleID] = Seq(
     //"org.scalatest" %% "scalatest" % Versions.scala_test % Test,
     "org.scalatest" %% "scalatest" % Version.scalaTest,
-    //"com.typesafe.akka" %% "akka-testkit" % Versions.akka % Test,
-    "com.typesafe.akka" %% "akka-testkit" % Version.akka,
-    //"com.typesafe.akka" %% "akka-stream-testkit" % Versions.akka % Test
-    "com.typesafe.akka" %% "akka-stream-testkit" % Version.akka,
-    
-    "com.typesafe.akka" %% "akka-persistence-cassandra-launcher" % Version.akkaPersistenceCassandra % Test
   )
 
   object Version {

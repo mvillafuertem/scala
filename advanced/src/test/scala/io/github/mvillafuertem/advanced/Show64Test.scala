@@ -2,6 +2,7 @@ package io.github.mvillafuertem.advanced
 
 import org.scalatest.{FlatSpec, Matchers}
 import io.github.mvillafuertem.advanced.Show64._
+import io.github.mvillafuertem.advanced.`type`.classes.Device
 
 class Show64Test extends FlatSpec with Matchers {
 
