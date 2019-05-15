@@ -1,8 +1,8 @@
-package io.github.mvillafuertem.advanced
+package io.github.mvillafuertem.advanced.`type`.classes
 
-import org.scalatest.{FlatSpec, Matchers}
-import io.github.mvillafuertem.advanced.Show64._
 import io.github.mvillafuertem.advanced.`type`.classes.Device
+import io.github.mvillafuertem.advanced.`type`.classes.Show64._
+import org.scalatest.{FlatSpec, Matchers}
 
 class Show64Test extends FlatSpec with Matchers {
 
@@ -15,6 +15,7 @@ class Show64Test extends FlatSpec with Matchers {
 
     // T H E N
     device.encode shouldBe "RGV2aWNlKDIzLFBFUEUp"
+
   }
 
 }

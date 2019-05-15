@@ -49,7 +49,6 @@ class Stack[A] extends Equals {
       result += aux.value + "\n"
       aux = aux.next
     }
-    System.out.println(result)
     result
   }
 
