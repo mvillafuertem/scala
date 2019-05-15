@@ -15,7 +15,9 @@ lazy val commonSettings = Seq(
 )
 
 lazy val advanced = (project in file("advanced"))
-  .settings(commonSettings)
+  .settings(commonSettings,
+    libraryDependencies ++= Dependencies.test
+  )
 
 lazy val akka = (project in file("akka"))
   .settings(commonSettings,
