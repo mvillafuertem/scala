@@ -4,7 +4,12 @@ object Dependencies {
   
   val akka: Seq[ModuleID] = Seq(
     "com.typesafe.akka" %% "akka-persistence",
-    "com.typesafe.akka" %% "akka-stream"
+    "com.typesafe.akka" %% "akka-stream",
+    
+    // T Y P E D
+    "com.typesafe.akka" %% "akka-actor-typed",
+    "com.typesafe.akka" %% "akka-stream-typed",
+    "com.typesafe.akka" %% "akka-persistence-typed",
   ).map(_ % Version.akka) ++ Seq(
     "com.typesafe.akka" %% "akka-persistence-cassandra" % Version.akkaPersistenceCassandra,
     "com.github.dnvriend" %% "akka-persistence-jdbc" % Version.akkaPersistenceJdbc,
@@ -14,6 +19,9 @@ object Dependencies {
   val akkaTest: Seq[ModuleID] = Seq(
     "com.typesafe.akka" %% "akka-testkit",
     "com.typesafe.akka" %% "akka-stream-testkit",
+    
+    // T Y P E D
+    "com.typesafe.akka" %% "akka-actor-testkit-typed",
   ).map(_ % Version.akka) ++ Seq(
     "com.typesafe.akka" %% "akka-persistence-cassandra-launcher" % Version.akkaPersistenceCassandra % Test
   )
