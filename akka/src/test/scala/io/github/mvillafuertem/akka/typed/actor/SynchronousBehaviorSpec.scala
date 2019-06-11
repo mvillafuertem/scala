@@ -4,9 +4,8 @@ import akka.actor.testkit.typed.CapturedLogEvent
 import akka.actor.testkit.typed.Effect.{Spawned, SpawnedAnonymous}
 import akka.actor.testkit.typed.scaladsl.{BehaviorTestKit, TestInbox}
 import akka.event.Logging
-import com.typesafe.config.ConfigFactory
-import org.scalatest.{FlatSpec, Matchers}
 import io.github.mvillafuertem.akka.typed.actor.SynchronousBehavior._
+import org.scalatest.{FlatSpec, Matchers}
 
 class SynchronousBehaviorSpec extends FlatSpec with Matchers {
 
@@ -15,7 +14,7 @@ class SynchronousBehaviorSpec extends FlatSpec with Matchers {
   it should "children with name" in {
 
     // G I V E N
-    val testKit = BehaviorTestKit(myBehavior, ConfigFactory.load().getConfig("postgres"))
+    val testKit = BehaviorTestKit(myBehavior)
 
     // W H E N
     testKit.run(CreateChild("child"))

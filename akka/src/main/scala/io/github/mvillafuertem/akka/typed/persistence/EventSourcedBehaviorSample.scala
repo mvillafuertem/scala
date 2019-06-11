@@ -1,5 +1,6 @@
 package io.github.mvillafuertem.akka.typed.persistence
 
+import akka.actor.typed.ActorRef
 import akka.persistence.typed.PersistenceId
 import akka.persistence.typed.scaladsl.{Effect, EventSourcedBehavior}
 
@@ -12,6 +13,7 @@ object EventSourcedBehaviorSample {
   sealed trait Command
   final case class Add(data: String) extends Command
   case object Clear extends Command
+  case class GetValue(replyTo: ActorRef[State]) extends Command
 
   sealed trait Event
   final case class Added(data: String) extends Event
@@ -30,6 +32,9 @@ object EventSourcedBehaviorSample {
     command match {
       case Add(data) => Effect.persist(Added(data))
       case Clear     => Effect.persist(Cleared)
+      case GetValue(replyTo) =>
+        replyTo ! state
+        Effect.none
     }
   }
 
