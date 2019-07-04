@@ -1,10 +1,12 @@
 package io.github.mvillafuertem.akka.untyped.stream.techniques
 
+import akka.NotUsed
 import akka.actor.ActorSystem
 import akka.stream.Supervision.{Resume, Stop}
-import akka.stream.{ActorAttributes, ActorMaterializer}
-import akka.stream.scaladsl.{RestartSource, Sink, Source}
+import akka.stream.scaladsl.{Broadcast, GraphDSL, RestartSource, RunnableGraph, Sink, Source, Zip}
+import akka.stream.{ActorAttributes, ActorMaterializer, ClosedShape}
 
+import scala.concurrent.Future
 import scala.concurrent.duration._
 import scala.util.Random
 
@@ -50,19 +52,54 @@ object FaultTolerance extends App {
 
   // 5. Supervision strategy
   val numbers = Source(1 to 20)
-    .map(n => if (n == 13) throw new RuntimeException("bad luck") else n)
-    .log("supervision")
+    //.map(n => if (n == 13) throw new RuntimeException("bad luck") else n)
+    .mapAsync(1)(n =>  if (n == 13) Future.failed(new RuntimeException("bad luck")) else Future.successful(n))
+    //.log("supervision")
 
-  val supervisedNumbers = numbers.withAttributes(ActorAttributes.supervisionStrategy {
+  val supervisedNumbers = numbers
+//    .withAttributes(ActorAttributes.supervisionStrategy {
+//    // Resume = skips the faulty element
+//    // Stop = stop the stream
+//    // Restart = resume + clears internal state
+//
+//    case e: RuntimeException =>
+//      println(e.getMessage)
+//      Resume
+//    case _ => Stop
+//  })
+
+  //supervisedNumbers.to(Sink.ignore).run()
+
+  val output = Sink.foreach[(Int, Int)](println)
+
+
+  val graph = RunnableGraph.fromGraph(
+    GraphDSL.create() { implicit builder: GraphDSL.Builder[NotUsed] =>
+      import GraphDSL.Implicits._
+
+      // Step 2 - Add the necessary components of this graph
+      val broadcast = builder.add(Broadcast[Int](2)) // Fan-Out operator
+    val zip = builder.add(Zip[Int, Int]) // Fan-In operator
+
+      // Step 3 - Tying up the components
+      supervisedNumbers ~> broadcast
+      broadcast.out(0) ~> zip.in0
+      broadcast.out(1) ~> zip.in1
+
+      zip.out ~> output
+
+      // Step 4 - Return a closed shape
+      ClosedShape
+    }
+  ).withAttributes(ActorAttributes.supervisionStrategy {
     // Resume = skips the faulty element
     // Stop = stop the stream
     // Restart = resume + clears internal state
 
-    case _: RuntimeException => Resume
+    case e: RuntimeException =>
+      println(e.getMessage)
+      Resume
     case _ => Stop
-  })
-
-  supervisedNumbers.to(Sink.ignore).run()
-
+  }).run()
 
 }
