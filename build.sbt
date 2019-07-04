@@ -25,30 +25,33 @@ lazy val scala = (project in file("."))
   .settings(commonSettings)
 
 lazy val advanced = (project in file("advanced"))
-  .settings(commonSettings,
-    libraryDependencies ++= Dependencies.test
-  )
+  // S E T T I N G S
+  .settings(commonSettings)
+  .settings(libraryDependencies ++= Dependencies.test)
 
 lazy val akka = (project in file("akka"))
-  .settings(commonSettings,
-    libraryDependencies ++= Dependencies.akka,
-    libraryDependencies ++= Dependencies.akkaTest,
-    libraryDependencies ++= Dependencies.test
-  )
+  // S E T T I N G S
+  .settings(commonSettings)
+  .settings(NexusSettings.value)
+  .settings(libraryDependencies ++= Dependencies.akka)
+  .settings(libraryDependencies ++= Dependencies.akkaTest)
+  .settings(libraryDependencies ++= Dependencies.test)
 
 lazy val algorithms = (project in file("algorithms"))
-  .settings(commonSettings,
-    libraryDependencies ++= Dependencies.test
-  )
+  // S E T T I N G S
+  .settings(commonSettings)
+  .settings(libraryDependencies ++= Dependencies.test)
 
 lazy val cats = (project in file("cats"))
   .dependsOn(algorithms)
-  .settings(commonSettings,
-    libraryDependencies ++= Dependencies.cats,
-    libraryDependencies ++= Dependencies.test
-  )
+  // S E T T I N G S
+  .settings(commonSettings)
+  .settings(libraryDependencies ++= Dependencies.cats)
+  .settings(libraryDependencies ++= Dependencies.test)
 
 lazy val docs = (project in file("docs"))
+  // S E T T I N G S
+  .settings(commonSettings)
+  .settings(MicrositeSettings.settings)
+  // P L U G I N S
   .enablePlugins(MicrositesPlugin)
-  .settings(commonSettings, 
-    MicrositeSettings.settings)
