@@ -30,6 +30,7 @@ lazy val advanced = (project in file("advanced"))
   .settings(libraryDependencies ++= Dependencies.test)
 
 lazy val akka = (project in file("akka"))
+  .configs(IntegrationTest)
   // S E T T I N G S
   .settings(commonSettings)
   .settings(NexusSettings.value)
