@@ -26,6 +26,7 @@ object Dependencies {
     // T Y P E D
     "com.typesafe.akka" %% "akka-actor-testkit-typed",
   ).map(_ % Version.akka) ++ Seq(
+    "org.scalatest" %% "scalatest" % Version.scalaTest % "it,test",
     "com.typesafe.akka" %% "akka-stream-kafka-testkit" % Version.akkaKafka % "it,test",
     "com.typesafe.akka" %% "akka-persistence-cassandra-launcher" % Version.akkaPersistenceCassandra % Test,
     "com.github.dnvriend" %% "akka-persistence-inmemory" % "2.5.15.1" % Test,
@@ -38,7 +39,6 @@ object Dependencies {
   ).map(_ % Version.cats)
 
   val test: Seq[ModuleID] = Seq(
-    //"org.scalatest" %% "scalatest" % Versions.scala_test % Test,
     "org.scalatest" %% "scalatest" % Version.scalaTest,
   )
 
