@@ -14,7 +14,7 @@ object SubStreams extends App {
 
   // 1. Grouping a stream by a certain function
   val wordsSource = Source(List("Akka", "is", "amazing", "learning", "subStreams"))
-  val groups = wordsSource.groupBy(30, word => if(word.isEmpty) '\0' else word.toLowerCase().charAt(0))
+  val groups = wordsSource.groupBy(30, word => if(word.isEmpty) '\u0000' else word.toLowerCase().charAt(0))
 
   groups.to(Sink.fold(0)((count, word) => {
     val newCount = count + 1
