@@ -1,7 +1,7 @@
 lazy val commonSettings = Settings.value ++ Seq(
   organization := "io.github.mvillafuertem",
   version := "0.1",
-  scalaVersion := "2.12.8",
+  scalaVersion := "2.13.0",
   homepage := Some(url("https://github.com/mvillafuertem/scala")),
   licenses := List("MIT" -> url("http://www.apache.org/licenses/LICENSE-2.0")),
   developers := List(
