@@ -16,7 +16,7 @@ object Dependencies {
     "ch.qos.logback" % "logback-classic" % Version.logback,
     "com.typesafe.akka" %% "akka-persistence-cassandra" % Version.akkaPersistenceCassandra,
     "com.github.dnvriend" %% "akka-persistence-jdbc" % Version.akkaPersistenceJdbc,
-    "org.postgresql" % "postgresql" % "42.2.5"
+    "org.postgresql" % "postgresql" % Version.postgres
   )
   
   val akkaTest: Seq[ModuleID] = Seq(
@@ -29,7 +29,7 @@ object Dependencies {
     "org.scalatest" %% "scalatest" % Version.scalaTest % "it,test",
     "com.typesafe.akka" %% "akka-stream-kafka-testkit" % Version.akkaKafka % "it,test",
     "com.typesafe.akka" %% "akka-persistence-cassandra-launcher" % Version.akkaPersistenceCassandra % Test,
-    "com.github.dnvriend" %% "akka-persistence-inmemory" % "2.5.15.1" % Test,
+    "com.github.dnvriend" %% "akka-persistence-inmemory" % Version.akkaPersistenceInmemory % Test,
   )
 
   val cats: Seq[ModuleID] = Seq(
@@ -45,8 +45,9 @@ object Dependencies {
   object Version {
     val akka = "2.5.23"
     val akkaKafka = "1.0.4"
-    val akkaPersistenceJdbc = "3.5.0"
-    val akkaPersistenceCassandra = "0.94"
+    val akkaPersistenceJdbc = "3.5.2"
+    val akkaPersistenceCassandra = "0.98"
+    val akkaPersistenceInmemory = "2.5.15.2"
     val scalaTest = "3.0.8"
     val postgres = "42.2.5"
     val cats = "2.0.0-M4"
