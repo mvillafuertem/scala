@@ -13,6 +13,8 @@ lazy val commonSettings = Settings.value ++ Seq(
   )
 )
 
+ThisBuild / scalaVersion := Settings.scala213
+
 lazy val scala = (project in file("."))
   .aggregate(
     advanced,
