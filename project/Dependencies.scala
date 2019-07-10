@@ -47,7 +47,7 @@ object Dependencies {
     val akkaKafka = "1.0.4"
     val akkaPersistenceJdbc = "3.5.0"
     val akkaPersistenceCassandra = "0.94"
-    val scalaTest = "3.0.7"
+    val scalaTest = "3.0.8"
     val postgres = "42.2.5"
     val cats = "2.0.0-M1"
     val logback = "1.2.3"
