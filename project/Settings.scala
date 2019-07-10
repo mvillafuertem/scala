@@ -22,7 +22,6 @@ object Settings {
         "-unchecked",
         //"-Xfatal-warnings",
         "-Xlint",
-        "-Ypartial-unification",
       )
       if (version.value.endsWith("SNAPSHOT")) {
         default :+ "-Xcheckinit"
