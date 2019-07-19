@@ -53,3 +53,9 @@ lazy val cats = (project in file("cats"))
   .settings(commonSettings)
   .settings(libraryDependencies ++= Dependencies.cats)
   .settings(libraryDependencies ++= Dependencies.test)
+
+lazy val slick = (project in file("slick"))
+  // S E T T I N G S
+  .settings(commonSettings)
+  .settings(libraryDependencies ++= Dependencies.slick)
+  .settings(libraryDependencies ++= Dependencies.test)

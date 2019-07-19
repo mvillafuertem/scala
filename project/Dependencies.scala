@@ -38,6 +38,15 @@ object Dependencies {
     "org.typelevel" %% "cats-free"
   ).map(_ % Version.cats)
 
+
+  val slick: Seq[ModuleID] = Seq(
+    // S L I C K
+    "com.lightbend.akka" %% "akka-stream-alpakka-slick" % Version.alpakkaSlick,
+    
+    // S L I C K
+    "com.h2database" % "h2" % Version.h2
+  )
+
   val test: Seq[ModuleID] = Seq(
     "org.scalatest" %% "scalatest" % Version.scalaTest,
   )
@@ -45,6 +54,7 @@ object Dependencies {
   object Version {
     val akka = "2.5.23"
     val akkaKafka = "1.0.4"
+    val alpakkaSlick = "1.1.0"
     val akkaPersistenceJdbc = "3.5.2"
     val akkaPersistenceCassandra = "0.98"
     val akkaPersistenceInmemory = "2.5.15.2"
@@ -52,6 +62,7 @@ object Dependencies {
     val postgres = "42.2.5"
     val cats = "2.0.0-M4"
     val logback = "1.2.3"
+    val h2 = "1.4.199"
   }
 
 }
