@@ -21,7 +21,8 @@ lazy val scala = (project in file("."))
     advanced,
     akka,
     algorithms,
-    cats
+    cats,
+    slick
   )
   // S E T T I N G S
   .settings(commonSettings)
