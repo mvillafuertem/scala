@@ -1,15 +1,16 @@
 package io.github.mvillafuertem.akka.untyped.stream.techniques
 
+import akka.{Done, NotUsed}
 import akka.actor.ActorSystem
-import akka.stream.ActorMaterializer
-import akka.stream.scaladsl.{Flow, Keep, Sink, Source}
+import akka.stream.{ActorMaterializer, FanOutShape2, FlowShape}
+import akka.stream.scaladsl.{Flow, GraphDSL, Keep, Partition, Sink, Source}
 import akka.stream.testkit.scaladsl.{TestSink, TestSource}
 import akka.testkit.{TestKit, TestProbe}
 import org.scalatest.{BeforeAndAfterAll, WordSpecLike}
 
-import scala.concurrent.Await
+import scala.concurrent.{Await, Future}
 import scala.concurrent.duration._
-import scala.util.{Failure, Success}
+import scala.util.{Failure, Success, Try}
 
 final class TestingStreamsSpec extends TestKit(ActorSystem("TestingStreams"))
   with WordSpecLike
@@ -123,6 +124,47 @@ final class TestingStreamsSpec extends TestKit(ActorSystem("TestingStreams"))
         .request(3) // Don't forget this
         .expectNext(2, 10, 26)
         .expectComplete()
+
+    }
+
+    "monadic short-circuiting in streams" in {
+
+
+      object PartitionTry {
+        def apply[T]() = GraphDSL.create[FanOutShape2[Try[T], Throwable, T]]() { implicit builder =>
+          import GraphDSL.Implicits._
+
+          val success = builder.add(Flow[Try[T]].collect { case Success(a) => a })
+          val failure = builder.add(Flow[Try[T]].collect { case Failure(t) => t })
+          val partition = builder.add(Partition[Try[T]](2, _.fold(_ => 0, _ => 1)))
+
+          partition ~> failure
+          partition ~> success
+
+          new FanOutShape2[Try[T], Throwable, T](partition.in, failure.out, success.out)
+        }
+      }
+
+      object ErrorHandlingFlow {
+        def apply[T, MatErr](errorSink: Sink[Throwable, MatErr]): Flow[Try[T], T, MatErr] = Flow.fromGraph(
+          GraphDSL.create(errorSink) { implicit builder => sink =>
+            import GraphDSL.Implicits._
+
+            val partition = builder.add(PartitionTry[T]())
+
+            partition.out0 ~> sink
+
+            new FlowShape[Try[T], T](partition.in, partition.out1)
+          }
+        )
+      }
+
+      val source      : Source[String, NotUsed]           = Source(List("1", "2", "hello"))
+      val convert     : Flow[String, Try[Int], NotUsed]   = Flow.fromFunction((s: String) => Try{s.toInt})
+      val errorsSink  : Sink[Throwable, Future[Done]]     = Sink.foreach[Throwable](println)
+      val handleErrors: Flow[Try[Int], Int, Future[Done]] = ErrorHandlingFlow(errorsSink)
+
+      source.via(convert).via(handleErrors).runForeach(println)
 
     }
 
