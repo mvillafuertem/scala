@@ -7,7 +7,7 @@ import io.github.mvillafuertem.algorithms.data.structures.stack.Stack
 import io.github.mvillafuertem.cats.free.calculator.CalculatorOperationsADT
 import io.github.mvillafuertem.cats.free.calculator.CalculatorOperationsADT.{Sub, Sum}
 import io.github.mvillafuertem.cats.free.data.structures.StackADT
-import io.github.mvillafuertem.cats.free.data.structures.StackADT.{Push, Show}
+import io.github.mvillafuertem.cats.free.data.structures.StackADT.Push
 
 object EitherKApplication extends App {
 
@@ -44,7 +44,8 @@ object EitherKApplication extends App {
   val interpreter: CalculatorApp ~> Id = ConsoleCatsInterpreter or InMemoryDatasourceInterpreter
 
 
-  import StackRepository._, CalculatorOperations._
+  import CalculatorOperations._
+  import StackRepository._
 
   private val value: Id[String] = program.foldMap(interpreter)
 

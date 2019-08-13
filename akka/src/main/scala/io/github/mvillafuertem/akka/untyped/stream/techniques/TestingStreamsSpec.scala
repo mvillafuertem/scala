@@ -1,15 +1,15 @@
 package io.github.mvillafuertem.akka.untyped.stream.techniques
 
-import akka.{Done, NotUsed}
 import akka.actor.ActorSystem
-import akka.stream.{ActorMaterializer, FanOutShape2, FlowShape}
 import akka.stream.scaladsl.{Flow, GraphDSL, Keep, Partition, Sink, Source}
 import akka.stream.testkit.scaladsl.{TestSink, TestSource}
+import akka.stream.{ActorMaterializer, FanOutShape2, FlowShape}
 import akka.testkit.{TestKit, TestProbe}
+import akka.{Done, NotUsed}
 import org.scalatest.{BeforeAndAfterAll, WordSpecLike}
 
-import scala.concurrent.{Await, Future}
 import scala.concurrent.duration._
+import scala.concurrent.{Await, Future}
 import scala.util.{Failure, Success, Try}
 
 final class TestingStreamsSpec extends TestKit(ActorSystem("TestingStreams"))

@@ -1,6 +1,6 @@
 package io.github.mvillafuertem.akka.untyped.persistence.practices
 
-import akka.actor.{ActorLogging, ActorRef, ActorSystem, Props}
+import akka.actor.{ActorLogging, ActorSystem, Props}
 import akka.persistence.PersistentActor
 import akka.persistence.journal.{EventAdapter, EventSeq}
 import com.typesafe.config.ConfigFactory
@@ -63,8 +63,8 @@ object DataModel {
 }
 
 class ModelAdapter extends EventAdapter {
-  import DomainModel._
   import DataModel._
+  import DomainModel._
 
   override def manifest(event: Any): String = "CMA"
 

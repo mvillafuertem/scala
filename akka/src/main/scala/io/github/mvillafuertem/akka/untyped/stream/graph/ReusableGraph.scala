@@ -1,13 +1,13 @@
 package io.github.mvillafuertem.akka.untyped.stream.graph
 
-import akka.{Done, NotUsed}
 import akka.actor.ActorSystem
-import akka.stream.{ActorMaterializer, ClosedShape, FlowShape}
 import akka.stream.scaladsl.{Broadcast, Flow, GraphDSL, Keep, Merge, RunnableGraph, Sink, Source, Zip}
+import akka.stream.{ActorMaterializer, ClosedShape, FlowShape}
+import akka.{Done, NotUsed}
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.util.{Failure, Success}
-import scala.concurrent.ExecutionContext.Implicits.global
 
 object ReusableGraph extends App {
 

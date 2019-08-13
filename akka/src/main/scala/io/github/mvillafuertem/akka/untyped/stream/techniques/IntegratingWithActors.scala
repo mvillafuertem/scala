@@ -1,8 +1,8 @@
 package io.github.mvillafuertem.akka.untyped.stream.techniques
 
 import akka.actor.{Actor, ActorLogging, ActorSystem, Props}
-import akka.stream.{ActorMaterializer, OverflowStrategy}
 import akka.stream.scaladsl.{Flow, Sink, Source}
+import akka.stream.{ActorMaterializer, OverflowStrategy}
 import akka.util.Timeout
 
 import scala.concurrent.duration._

@@ -1,4 +1,4 @@
-package io.github.mvillafuertem.slick.stream
+package io.github.mvillafuertem.slick.withdi
 
 
 trait UserRepository[F[_], T] {

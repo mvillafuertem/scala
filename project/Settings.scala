@@ -4,10 +4,6 @@ import sbt.{Def, Tests, _}
 object Settings {
 
   lazy val scala213 = "2.13.0"
-
-  lazy val scala212 = "2.12.8"
-
-  lazy val supportedScalaVersions: Seq[String] = Seq(scala212, scala213)
   
   val value: Seq[Def.Setting[_]] = Seq(
     
@@ -19,6 +15,7 @@ object Settings {
         "-language:higherKinds",
         "-language:implicitConversions",
         "-language:postfixOps",
+        "-language:reflectiveCalls",
         "-unchecked",
         //"-Xfatal-warnings",
         "-Xlint",

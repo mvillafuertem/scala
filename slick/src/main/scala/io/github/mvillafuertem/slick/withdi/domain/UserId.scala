@@ -1,4 +1,4 @@
-package io.github.mvillafuertem.slick.stream.domain
+package io.github.mvillafuertem.slick.withdi.domain
 
 import java.util.UUID
 

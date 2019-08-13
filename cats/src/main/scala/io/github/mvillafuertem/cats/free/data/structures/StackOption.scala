@@ -2,7 +2,7 @@ package io.github.mvillafuertem.cats.free.data.structures
 
 import cats.~>
 import io.github.mvillafuertem.algorithms.data.structures.stack.Stack
-import io.github.mvillafuertem.cats.free.data.structures.StackADT.{Peek, Pop, Push, Show, _}
+import io.github.mvillafuertem.cats.free.data.structures.StackADT.{Push, _}
 
 object StackOption {
 

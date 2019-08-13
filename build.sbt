@@ -1,7 +1,7 @@
 lazy val commonSettings = Settings.value ++ Seq(
   organization := "io.github.mvillafuertem",
   version := "0.1",
-  scalaVersion := Settings.scala213,
+  scalaVersion := "2.13.0",
   homepage := Some(url("https://github.com/mvillafuertem/scala")),
   licenses := List("MIT" -> url("http://www.apache.org/licenses/LICENSE-2.0")),
   developers := List(
@@ -13,8 +13,6 @@ lazy val commonSettings = Settings.value ++ Seq(
     )
   )
 )
-
-ThisBuild / scalaVersion := Settings.scala213
 
 lazy val scala = (project in file("."))
   .aggregate(

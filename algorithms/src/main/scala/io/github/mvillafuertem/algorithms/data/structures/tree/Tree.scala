@@ -1,8 +1,5 @@
 package io.github.mvillafuertem.algorithms.data.structures.tree
 
-import io.github.mvillafuertem.algorithms.data.structures.node.TreeNode
-import io.github.mvillafuertem.algorithms.data.structures.queue.Queue
-
 class Tree[A] {
 //  private var raiz: TreeNode = _
 //

@@ -69,8 +69,8 @@ object ChildActors extends App {
   }
 
   class NaiveBankAccount extends Actor {
-    import NaiveBankAccount._
     import CreditCard._
+    import NaiveBankAccount._
 
     var amount = 0
 
@@ -110,8 +110,8 @@ object ChildActors extends App {
     }
   }
 
-  import NaiveBankAccount._
   import CreditCard._
+  import NaiveBankAccount._
 
   val bankAccountRef = system.actorOf(Props[NaiveBankAccount], "account")
   bankAccountRef ! InitializeAccount

@@ -1,8 +1,8 @@
 package io.github.mvillafuertem.akka.untyped.stream.graph
 
 import akka.actor.ActorSystem
-import akka.stream.{ActorMaterializer, ClosedShape, OverflowStrategy, UniformFanInShape}
 import akka.stream.scaladsl.{Broadcast, Flow, GraphDSL, Merge, MergePreferred, RunnableGraph, Sink, Source, Zip}
+import akka.stream.{ActorMaterializer, ClosedShape, OverflowStrategy, UniformFanInShape}
 
 object GraphCycles extends App {
 

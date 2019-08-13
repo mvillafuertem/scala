@@ -1,7 +1,7 @@
-package io.github.mvillafuertem.slick.stream.repository
+package io.github.mvillafuertem.slick.withdi.repository
 
-import io.github.mvillafuertem.slick.stream.UserRepository
-import io.github.mvillafuertem.slick.stream.domain.User
+import io.github.mvillafuertem.slick.withdi.UserRepository
+import io.github.mvillafuertem.slick.withdi.domain.User
 import slick.basic.DatabaseConfig
 import slick.jdbc.JdbcProfile
 
@@ -46,4 +46,8 @@ final class RelationalUserRepository(databaseConfig: DatabaseConfig[JdbcProfile]
 
   def schema(): profile.DDL = userTable.schema
 
+}
+
+object RelationalUserRepository {
+  def apply(databaseConfig: DatabaseConfig[JdbcProfile]): RelationalUserRepository = new RelationalUserRepository(databaseConfig)
 }

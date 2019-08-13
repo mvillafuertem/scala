@@ -1,28 +1,27 @@
-package io.github.mvillafuertem.slick.stream.repository
+package io.github.mvillafuertem.slick.withdi.repository
 
-import io.github.mvillafuertem.slick.stream.configuration.UserConfiguration
-import io.github.mvillafuertem.slick.stream.configuration.UserConfiguration.userRepository._
-import io.github.mvillafuertem.slick.stream.configuration.UserConfiguration.userRepository.profile.api._
-import io.github.mvillafuertem.slick.stream.domain.User
-import org.scalatest.{AsyncFlatSpec, BeforeAndAfterEach, Matchers, OptionValues}
+import io.github.mvillafuertem.slick.withdi.configuration.UserConfigurationSpec
+import io.github.mvillafuertem.slick.withdi.domain.User
+import org.scalatest.{AsyncFlatSpecLike, BeforeAndAfterEach, Matchers, OptionValues}
 
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
 
 class RelationalUserRepositorySpec
-    extends AsyncFlatSpec
+    extends UserConfigurationSpec
+      with AsyncFlatSpecLike
     with Matchers
     with BeforeAndAfterEach
     with OptionValues {
 
-  private val userRepository: RelationalUserRepository =
-    UserConfiguration.userRepository
+  import userRepository._
+  import userRepository.profile.api._
 
   override protected def beforeEach(): Unit =
-    Await.result(userRepository.userTable.schema.create, 5 seconds)
+    Await.result(userRepository.userTable.schema.create, 10 seconds)
 
   override protected def afterEach(): Unit =
-    Await.result(userRepository.userTable.schema.drop, 5 seconds)
+    Await.result(userRepository.userTable.schema.drop, 10 seconds)
 
   behavior of "RelationalUserRepositorySpec"
 

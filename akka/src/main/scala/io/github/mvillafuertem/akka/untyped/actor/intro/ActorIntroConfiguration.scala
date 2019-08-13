@@ -1,7 +1,7 @@
 package io.github.mvillafuertem.akka.untyped.actor.intro
 
 import akka.actor.{Actor, ActorLogging, ActorSystem, Props}
-import com.typesafe.config.{Config, ConfigFactory}
+import com.typesafe.config.ConfigFactory
 
 object ActorIntroConfiguration extends App {
 
