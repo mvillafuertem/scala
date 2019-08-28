@@ -1,3 +1,4 @@
+import sbt.Keys.libraryDependencies
 import sbt._
 
 object Dependencies {
@@ -10,7 +11,7 @@ object Dependencies {
     // T Y P E D
     "com.typesafe.akka" %% "akka-actor-typed",
     "com.typesafe.akka" %% "akka-stream-typed",
-    "com.typesafe.akka" %% "akka-persistence-typed",
+    "com.typesafe.akka" %% "akka-persistence-typed"
   ).map(_ % Version.akka) ++ Seq(
     // L O G B A C K
     "ch.qos.logback" % "logback-classic" % Version.logback,
@@ -24,12 +25,22 @@ object Dependencies {
     "com.typesafe.akka" %% "akka-stream-testkit",
     
     // T Y P E D
-    "com.typesafe.akka" %% "akka-actor-testkit-typed",
+    "com.typesafe.akka" %% "akka-actor-testkit-typed"
   ).map(_ % Version.akka) ++ Seq(
     "org.scalatest" %% "scalatest" % Version.scalaTest % "it,test",
     "com.typesafe.akka" %% "akka-stream-kafka-testkit" % Version.akkaKafka % "it,test",
     "com.typesafe.akka" %% "akka-persistence-cassandra-launcher" % Version.akkaPersistenceCassandra % Test,
-    "com.github.dnvriend" %% "akka-persistence-inmemory" % Version.akkaPersistenceInmemory % Test,
+    "com.github.dnvriend" %% "akka-persistence-inmemory" % Version.akkaPersistenceInmemory % Test
+  )
+
+
+  val todo: Seq[ModuleID]  = Seq(
+    "com.typesafe.akka" %% "akka-persistence-typed" % "2.6.0-M6",
+    "com.softwaremill.tapir" %% "tapir-core" % "0.9.3",
+    "com.softwaremill.tapir" %% "tapir-akka-http-server" % "0.9.3",
+    //"org.iq80.leveldb" % "leveldb" % "0.12",
+    "org.fusesource.leveldbjni" % "leveldbjni-all" % "1.8",
+    "com.github.dnvriend" %% "akka-persistence-inmemory" % "2.5.15.2"
   )
 
   val cats: Seq[ModuleID] = Seq(
@@ -48,7 +59,7 @@ object Dependencies {
   )
 
   val test: Seq[ModuleID] = Seq(
-    "org.scalatest" %% "scalatest" % Version.scalaTest,
+    "org.scalatest" %% "scalatest" % Version.scalaTest
   )
 
   object Version {

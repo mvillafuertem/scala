@@ -41,6 +41,13 @@ lazy val akka = (project in file("akka"))
   .settings(libraryDependencies ++= Dependencies.akkaTest)
   .settings(libraryDependencies ++= Dependencies.test)
 
+lazy val todo = (project in file("applications/todo"))
+  // S E T T I N G S
+  .settings(name := todo)
+  .settings(commonSettings)
+  .settings(libraryDependencies ++= Dependencies.todo)
+  .settings(libraryDependencies ++= Dependencies.test)
+
 lazy val algorithms = (project in file("algorithms"))
   // S E T T I N G S
   .settings(commonSettings)
