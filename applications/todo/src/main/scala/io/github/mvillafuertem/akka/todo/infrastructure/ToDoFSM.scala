@@ -1,52 +1,67 @@
 package io.github.mvillafuertem.akka.todo.infrastructure
 
+import akka.actor.typed.scaladsl.{ActorContext, Behaviors}
 import akka.actor.typed.{ActorRef, Behavior}
-import akka.actor.typed.scaladsl.Behaviors
 import io.github.mvillafuertem.akka.todo.domain.ToDo
+import io.github.mvillafuertem.akka.todo.infrastructure.ToDoFSM.Command
 
 /**
  * @author Miguel Villafuerte
  */
-final class ToDoFSM {
+final class ToDoFSM(context: ActorContext[Command]) {
 
   import ToDoFSM._
 
-  val initialState: Behavior[Command] = idle(Uninitialized)
+  def initialState: Behavior[Command] = idle(Uninitialized)
 
-  private def idle(state: State): Behavior[Command] = Behaviors.receiveMessage[Command] { command: Command =>
-    (state, command) match {
+  private def idle(state: State): Behavior[Command] =
 
-      case (Uninitialized, Open(toDo)) =>
-        idle(Opened(toDo))
+    Behaviors.receiveMessage[Command] { command: Command =>
+      (state, command) match {
 
-      case (Opened(toDo), Close) =>
-        idle(Closed(toDo))
+        case (Uninitialized, Open(toDo)) =>
+          context.log.info(s"$state")
+          idle(Opened(toDo))
 
-      case (state, GetToDo(replyTo)) =>
-        replyTo ! state
-        Behaviors.unhandled
+        case (Opened(toDo), Close) =>
+          context.log.info(s"$state")
+          idle(Closed(toDo))
 
-      case _ =>
-        Behaviors.unhandled
+        case (state, GetToDo(replyTo)) =>
+          //context.log.info(s"$state")
+          replyTo ! state
+          Behaviors.unhandled
+
+        case _ =>
+          context.log.info(s"$state")
+          Behaviors.unhandled
+
+      }
 
     }
-  }
 }
 
 object ToDoFSM {
 
-  def apply(): ToDoFSM = new ToDoFSM()
+  def apply():Behavior[Command] =
+    Behaviors.setup[Command](context => new ToDoFSM(context).initialState)
 
   // S T A T E
   sealed trait State
-  final case class Opened(toDo: ToDo) extends State
-  final case class Closed(toDo: ToDo) extends State
-  case object Uninitialized extends State
 
   // C O M M A N D
   sealed trait Command
+
+  final case class Opened(toDo: ToDo) extends State
+
+  final case class Closed(toDo: ToDo) extends State
+
   final case class Open(toDo: ToDo) extends Command
-  final case object Close extends Command
+
   final case class GetToDo(replyTo: ActorRef[State]) extends Command
+
+  case object Uninitialized extends State
+
+  final case object Close extends Command
 
 }

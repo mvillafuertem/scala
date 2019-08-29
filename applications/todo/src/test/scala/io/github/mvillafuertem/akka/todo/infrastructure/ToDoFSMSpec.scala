@@ -16,7 +16,7 @@ final class ToDoFSMSpec extends ScalaTestWithActorTestKit with FlatSpecLike {
   it should "FSMDocSpec" in {
 
     val toDo = ToDo("Hola", "que tal", 0L)
-    val buncher = spawn(ToDoFSM().initialState)
+    val buncher = spawn(ToDoFSM())
     val probe = TestProbe[State]
 
     buncher ! GetToDo(probe.ref)
