@@ -1,17 +1,22 @@
 package io.github.mvillafuertem.akka.todo.infrastructure
 
-import akka.actor.typed.receptionist.ServiceKey
-import akka.actor.typed.{ActorRef, Behavior}
+import akka.actor.ActorSystem
 import akka.actor.typed.scaladsl.{ActorContext, Behaviors}
+import akka.actor.typed.{ActorRef, Behavior}
+import akka.persistence.query.PersistenceQuery
+import akka.persistence.query.journal.leveldb.scaladsl.LeveldbReadJournal
 import akka.persistence.typed.PersistenceId
 import akka.persistence.typed.scaladsl.{Effect, EventSourcedBehavior}
+import akka.stream.{ActorMaterializer, Materializer}
+import akka.stream.scaladsl.{Keep, Sink}
+import io.github.mvillafuertem.akka.todo.ToDoApplicationService.actorSystem
 import io.github.mvillafuertem.akka.todo.domain.ToDo
 import io.github.mvillafuertem.akka.todo.infrastructure.ToDoBehavior.Command
 
 /**
  * @author Miguel Villafuerte
  */
-final class ToDoBehavior(context: ActorContext[Command]) {
+final class ToDoBehavior(context: ActorContext[Command])(implicit actorSystem: ActorSystem, actorMaterializer: ActorMaterializer) {
 
   import ToDoBehavior._
 
@@ -25,13 +30,16 @@ final class ToDoBehavior(context: ActorContext[Command]) {
   val commandHandler: (State, Command) => Effect[Event, State] = { (state, command) =>
     command match {
       case Open(toDo) =>
-        if (state.opened) {
-          throw new RuntimeException("ToDo is already open")
-          Effect.none
-        } else {
-          Effect.persist(Opened(toDo))
-        }
-      case Close  => Effect.persist(Closed)
+
+//        PersistenceQuery(actorSystem).readJournalFor[LeveldbReadJournal](LeveldbReadJournal.Identifier)
+//          .currentEventsByPersistenceId(toDo.id.toString,0, Long.MaxValue)
+//          .map(_.event)
+//          .runForeach(a => context.log.info(s"PEPE ~ $a"))
+        context.log.info(s"$command")
+        Effect.persist(Opened(toDo))
+      case Close  =>
+        Effect.persist(Closed)
+
       case GetToDo(replyTo) =>
         replyTo ! state
         Effect.none
@@ -50,8 +58,23 @@ final class ToDoBehavior(context: ActorContext[Command]) {
 
 object ToDoBehavior {
 
-  def apply(id: String): Behavior[Command] = Behaviors.setup[Command](context => {
-    context.log.info("ToDo behavior started")
+  def apply(id: String)(implicit actorSystem: ActorSystem, actorMaterializer: ActorMaterializer): Behavior[Command] = Behaviors.setup[Command](context => {
+
+//    PersistenceQuery(actorSystem).readJournalFor[LeveldbReadJournal](LeveldbReadJournal.Identifier)
+//      .currentPersistenceIds()
+//      .runForeach(a => context.log.info(s"$a"))
+//    journal.currentEventsByPersistenceId(id, 0, Long.MaxValue)
+//      .log("asdf")
+//      .map(_.event)
+//      .map {
+//        case State(toDo, true) => context.log.info(s"true")
+//          throw new RuntimeException("ToDo is already open")
+//        case State(toDo, false) =>
+//          Effect.persist(Opened(toDo)).thenStop()
+//          context.log.info(s"true")
+//      }.runForeach(a => context.log.info("$a"))
+
+    context.log.info(s"ToDo behavior started $id")
     new ToDoBehavior(context).behavior(id)
   })
 

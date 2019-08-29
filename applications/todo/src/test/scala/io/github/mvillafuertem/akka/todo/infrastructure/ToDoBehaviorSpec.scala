@@ -2,7 +2,9 @@ package io.github.mvillafuertem.akka.todo.infrastructure
 
 import java.util.{Date, UUID}
 
+import akka.actor.ActorSystem
 import akka.actor.testkit.typed.scaladsl.{ScalaTestWithActorTestKit, TestProbe}
+import akka.stream.ActorMaterializer
 import com.typesafe.config.{Config, ConfigFactory}
 import io.github.mvillafuertem.akka.todo.domain.ToDo
 import io.github.mvillafuertem.akka.todo.infrastructure.ToDoBehavior.{Close, GetToDo, Open, State}
@@ -17,18 +19,22 @@ final class ToDoBehaviorSpec extends ScalaTestWithActorTestKit(ToDoBehaviorSpec.
   with BeforeAndAfterAll
   with OneInstancePerTest {
 
+  implicit val actorSystem = ActorSystem()
+  implicit val actorMaterializer = ActorMaterializer()
+
   behavior of "ToDo Behavior Spec"
 
   it should "open" in {
 
     // G I V E N
     val toDo = ToDo("ToDo", "ToDo with id 1234567890", new Date().toInstant.toEpochMilli)
-    val value = spawn(ToDoBehavior(s"ToDo-${toDo.id}"))
+    val value = spawn(ToDoBehavior(s"ToDo-123"))
+    val value1 = spawn(ToDoBehavior(s"ToDo-123"))
     val probe = TestProbe[State]
 
     // W H E N
     value ! Open(toDo)
-    value ! GetToDo(probe.ref)
+    //value ! GetToDo(probe.ref)
 
     // T H E N
     probe.expectMessage(State(toDo, opened = true))
@@ -65,9 +71,11 @@ object ToDoBehaviorSpec {
 
   val conf: Config = ConfigFactory.parseString(s"""
     akka.actor.allow-java-serialization = on
-    akka.persistence.journal.leveldb.dir = "target/typed-persistence-${UUID.randomUUID().toString}"
+    #akka.persistence.journal.leveldb.dir = "target/typed-persistence-${UUID.randomUUID().toString}"
+    akka.persistence.journal.leveldb.dir = "target/typed-persistence"
     akka.persistence.journal.plugin = "akka.persistence.journal.leveldb"
     akka.persistence.snapshot-store.plugin = "akka.persistence.snapshot-store.local"
-    akka.persistence.snapshot-store.local.dir = "target/typed-persistence-${UUID.randomUUID().toString}"
+    #akka.persistence.snapshot-store.local.dir = "target/typed-persistence-${UUID.randomUUID().toString}"
+    akka.persistence.snapshot-store.local.dir = "target/typed-persistence"
     """)
 }

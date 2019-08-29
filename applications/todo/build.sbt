@@ -6,6 +6,7 @@ scalaVersion := "2.13.0"
 
 
 libraryDependencies += "com.typesafe.akka" %% "akka-persistence-typed" % "2.6.0-M6"
+libraryDependencies += "com.typesafe.akka" %% "akka-stream-typed" % "2.6.0-M6"
 libraryDependencies += "com.softwaremill.tapir" %% "tapir-core" % "0.9.3"
 libraryDependencies += "com.softwaremill.tapir" %% "tapir-akka-http-server" % "0.9.3"
 
