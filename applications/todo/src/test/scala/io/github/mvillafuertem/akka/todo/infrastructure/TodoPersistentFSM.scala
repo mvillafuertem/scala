@@ -4,21 +4,20 @@ import java.util.UUID
 import java.util.concurrent.atomic.AtomicInteger
 
 import akka.actor.testkit.typed.scaladsl.{ScalaTestWithActorTestKit, TestProbe}
-import akka.actor.typed.receptionist.Receptionist.Find
-import akka.actor.typed.receptionist.Receptionist.Register
+import akka.actor.typed.receptionist.Receptionist.{Find, Register}
 import akka.actor.typed.receptionist.{Receptionist, ServiceKey}
 import akka.actor.typed.scaladsl.{ActorContext, Behaviors}
 import akka.actor.typed.{ActorRef, Behavior}
 import akka.persistence.typed.scaladsl.{Effect, EventSourcedBehavior, RetentionCriteria}
 import akka.persistence.typed.{DeleteSnapshotsFailed, PersistenceId, SnapshotFailed}
 import com.typesafe.config.{Config, ConfigFactory}
-import io.github.mvillafuertem.akka.todo.MessageAdapterSpec.Application
 import io.github.mvillafuertem.akka.todo.infrastructure.TodoPersistentFSM.EventSeedBehavior
 import io.github.mvillafuertem.akka.todo.infrastructure.TodoPersistentFSM.EventSeedBehavior._
 import org.scalatest.{FlatSpecLike, OneInstancePerTest}
 
 final class TodoPersistentFSM extends ScalaTestWithActorTestKit(TodoPersistentFSM.conf)
-  with FlatSpecLike with OneInstancePerTest {
+  with FlatSpecLike
+  with OneInstancePerTest {
 
 
   val pidCounter = new AtomicInteger(0)
@@ -245,11 +244,7 @@ object TodoPersistentFSM {
         }
     }
 
-
-
   }
-
-
 
 
 }
