@@ -2,17 +2,18 @@ package io.github.mvillafuertem.slick.withdi.repository
 
 import io.github.mvillafuertem.slick.withdi.configuration.UserConfigurationSpec
 import io.github.mvillafuertem.slick.withdi.domain.User
-import org.scalatest.{AsyncFlatSpecLike, BeforeAndAfterEach, Matchers, OptionValues}
+import org.scalatest.{AsyncFlatSpecLike, BeforeAndAfterEach, Matchers, OneInstancePerTest, OptionValues}
 
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
 
-class RelationalUserRepositorySpec
+final class RelationalUserRepositorySpec
     extends UserConfigurationSpec
       with AsyncFlatSpecLike
     with Matchers
     with BeforeAndAfterEach
-    with OptionValues {
+    with OptionValues
+      with OneInstancePerTest {
 
   import userRepository._
   import userRepository.profile.api._
