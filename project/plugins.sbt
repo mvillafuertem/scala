@@ -26,4 +26,4 @@ addSbtPlugin("io.spray" % "sbt-revolver" % "0.9.1")
 addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.6.0")
 
 // M D O C
-// addSbtPlugin("org.scalameta" % "sbt-mdoc" % "1.3.1" )
+addSbtPlugin("org.scalameta" % "sbt-mdoc" % "1.3.2" )

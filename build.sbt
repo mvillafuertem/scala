@@ -20,7 +20,8 @@ lazy val scala = (project in file("."))
     akka,
     algorithms,
     cats,
-    slick
+    slick,
+    todo
   )
   // S E T T I N G S
   .settings(commonSettings)
@@ -43,7 +44,6 @@ lazy val akka = (project in file("akka"))
 
 lazy val todo = (project in file("applications/todo"))
   // S E T T I N G S
-  .settings(name := todo)
   .settings(commonSettings)
   .settings(libraryDependencies ++= Dependencies.todo)
   .settings(libraryDependencies ++= Dependencies.test)
@@ -58,6 +58,13 @@ lazy val cats = (project in file("cats"))
   // S E T T I N G S
   .settings(commonSettings)
   .settings(libraryDependencies ++= Dependencies.cats)
+  .settings(libraryDependencies ++= Dependencies.test)
+
+lazy val circe = (project in file("circe"))
+  .dependsOn(algorithms)
+  // S E T T I N G S
+  .settings(commonSettings)
+  .settings(libraryDependencies ++= Dependencies.circe)
   .settings(libraryDependencies ++= Dependencies.test)
 
 lazy val slick = (project in file("slick"))

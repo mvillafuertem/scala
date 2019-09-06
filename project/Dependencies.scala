@@ -49,6 +49,12 @@ object Dependencies {
     "org.typelevel" %% "cats-free"
   ).map(_ % Version.cats)
 
+  val circe: Seq[ModuleID] = Seq(
+    // C I R C E
+    "io.circe" %% "circe-parser",
+    "io.circe" %% "circe-generic"
+  ).map(_ % Version.circe)
+
 
   val slick: Seq[ModuleID] = Seq(
     // S L I C K
@@ -71,7 +77,8 @@ object Dependencies {
     val akkaPersistenceInmemory = "2.5.15.2"
     val scalaTest = "3.0.8"
     val postgres = "42.2.5"
-    val cats = "2.0.0-M4"
+    val cats = "2.0.0-RC2"
+    val circe = "0.12.0-RC4"
     val logback = "1.2.3"
     val h2 = "1.4.199"
   }
