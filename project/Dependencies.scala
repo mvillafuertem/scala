@@ -69,14 +69,14 @@ object Dependencies {
   )
 
   object Version {
-    val akka = "2.5.23"
+    val akka = "2.5.25"
     val akkaKafka = "1.0.4"
     val alpakkaSlick = "1.1.0"
     val akkaPersistenceJdbc = "3.5.2"
-    val akkaPersistenceCassandra = "0.98"
+    val akkaPersistenceCassandra = "0.99"
     val akkaPersistenceInmemory = "2.5.15.2"
     val scalaTest = "3.0.8"
-    val postgres = "42.2.5"
+    val postgres = "42.2.6"
     val cats = "2.0.0-RC2"
     val circe = "0.12.0-RC4"
     val logback = "1.2.3"

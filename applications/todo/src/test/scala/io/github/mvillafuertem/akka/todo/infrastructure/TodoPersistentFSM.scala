@@ -15,10 +15,10 @@ import com.typesafe.config.{Config, ConfigFactory}
 import io.github.mvillafuertem.akka.todo.MessageAdapterSpec.Application
 import io.github.mvillafuertem.akka.todo.infrastructure.TodoPersistentFSM.EventSeedBehavior
 import io.github.mvillafuertem.akka.todo.infrastructure.TodoPersistentFSM.EventSeedBehavior._
-import org.scalatest.FlatSpecLike
+import org.scalatest.{FlatSpecLike, OneInstancePerTest}
 
 final class TodoPersistentFSM extends ScalaTestWithActorTestKit(TodoPersistentFSM.conf)
-  with FlatSpecLike {
+  with FlatSpecLike with OneInstancePerTest {
 
 
   val pidCounter = new AtomicInteger(0)
