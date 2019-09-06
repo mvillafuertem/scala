@@ -1,7 +1,7 @@
-package io.github.mvillafuertem.akka.todo.infrastructure
+package io.github.mvillafuertem.todo.infrastructure
 
 import akka.actor.testkit.typed.scaladsl.{ScalaTestWithActorTestKit, TestProbe}
-import io.github.mvillafuertem.akka.todo.domain.ToDo
+import io.github.mvillafuertem.todo.domain.ToDo
 import org.scalatest.FlatSpecLike
 
 /**

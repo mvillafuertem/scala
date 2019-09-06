@@ -1,11 +1,11 @@
-package io.github.mvillafuertem.akka.todo
+package io.github.mvillafuertem.todo
 
 import java.net.URI
 
 import akka.actor.typed.scaladsl.{ActorContext, Behaviors}
 import akka.actor.typed.{ActorRef, Behavior}
 import akka.actor.testkit.typed.scaladsl.{ScalaTestWithActorTestKit, TestProbe}
-import io.github.mvillafuertem.akka.todo.MessageAdapterSpec.Infrastructure.{Closed, Command, Opened, State, Uninitialized}
+import MessageAdapterSpec.Infrastructure.{Closed, Command, Opened, State, Uninitialized}
 import org.scalatest.FlatSpecLike
 
 /**

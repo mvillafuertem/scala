@@ -1,8 +1,8 @@
-package io.github.mvillafuertem.akka.todo.application
+package io.github.mvillafuertem.todo.application
 
 import akka.actor.typed.ActorRef
-import io.github.mvillafuertem.akka.todo.domain.ToDo
-import io.github.mvillafuertem.akka.todo.infrastructure.ToDoFSM.{Close, Command, Open}
+import io.github.mvillafuertem.todo.domain.ToDo
+import io.github.mvillafuertem.todo.infrastructure.ToDoFSM.{Close, Command, Open}
 
 /**
  * @author Miguel Villafuerte

@@ -1,4 +1,4 @@
-package io.github.mvillafuertem.akka.todo.domain
+package io.github.mvillafuertem.todo.domain
 
 import java.util.UUID
 

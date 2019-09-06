@@ -1,4 +1,4 @@
-package io.github.mvillafuertem.akka.todo
+package io.github.mvillafuertem.todo
 
 import java.net.URI
 

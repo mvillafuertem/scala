@@ -1,4 +1,4 @@
-package io.github.mvillafuertem.akka.todo.infrastructure
+package io.github.mvillafuertem.todo.infrastructure
 
 object ToDoReceptionist {
 

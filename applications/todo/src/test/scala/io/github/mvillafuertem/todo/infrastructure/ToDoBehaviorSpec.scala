@@ -1,4 +1,4 @@
-package io.github.mvillafuertem.akka.todo.infrastructure
+package io.github.mvillafuertem.todo.infrastructure
 
 import java.util.Date
 
@@ -7,8 +7,8 @@ import akka.actor.testkit.typed.scaladsl.{ScalaTestWithActorTestKit, TestProbe}
 import akka.stream.ActorMaterializer
 import akka.util.Timeout
 import com.typesafe.config.{Config, ConfigFactory}
-import io.github.mvillafuertem.akka.todo.domain.ToDo
-import io.github.mvillafuertem.akka.todo.infrastructure.ToDoBehavior.{Close, GetToDo, Open, State}
+import ToDoBehavior.{Close, GetToDo, Open, State}
+import io.github.mvillafuertem.todo.domain.ToDo
 import org.scalatest.{BeforeAndAfterAll, FlatSpecLike, Matchers, OneInstancePerTest}
 
 import scala.concurrent.duration._

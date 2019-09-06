@@ -1,11 +1,12 @@
-package io.github.mvillafuertem.akka.todo.infrastructure
+package io.github.mvillafuertem.todo.infrastructure
 
 import akka.actor.typed.scaladsl.{ActorContext, Behaviors}
 import akka.actor.typed.{ActorRef, Behavior}
 import akka.persistence.typed.PersistenceId
 import akka.persistence.typed.scaladsl.{Effect, EventSourcedBehavior}
-import io.github.mvillafuertem.akka.todo.domain.ToDo
-import io.github.mvillafuertem.akka.todo.infrastructure.ToDoBehavior.Command
+import io.github.mvillafuertem.todo.domain.ToDo
+import io.github.mvillafuertem.todo.infrastructure.ToDoBehavior.Command
+import io.github.mvillafuertem.todo.domain.ToDo
 
 /**
  * @author Miguel Villafuerte

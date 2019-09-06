@@ -1,9 +1,10 @@
-package io.github.mvillafuertem.akka.todo.application
+package io.github.mvillafuertem.todo.application
 
 import akka.actor.testkit.typed.scaladsl.{ScalaTestWithActorTestKit, TestProbe}
-import io.github.mvillafuertem.akka.todo.domain.ToDo
-import io.github.mvillafuertem.akka.todo.infrastructure.ToDoFSM
-import io.github.mvillafuertem.akka.todo.infrastructure.ToDoFSM.{GetToDo, Opened, State, Uninitialized}
+import io.github.mvillafuertem.todo.domain.ToDo
+import io.github.mvillafuertem.todo.infrastructure.ToDoFSM.{GetToDo, Opened, State, Uninitialized}
+import io.github.mvillafuertem.todo.domain.ToDo
+import io.github.mvillafuertem.todo.infrastructure.ToDoFSM
 import org.scalatest.FlatSpecLike
 
 /**
