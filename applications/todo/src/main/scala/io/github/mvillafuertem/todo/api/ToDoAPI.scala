@@ -1,6 +1,7 @@
 package io.github.mvillafuertem.todo.api
 
 import java.nio.charset.StandardCharsets
+import java.time.Year
 
 import akka.NotUsed
 import akka.actor.typed.Logger
@@ -14,7 +15,7 @@ import tapir.{Endpoint, endpoint, jsonBody, oneOf, statusCode, statusDefaultMapp
 import io.circe.generic.auto._
 import io.github.mvillafuertem.todo.BuildInfo
 import io.github.mvillafuertem.todo.api.ToDoAPI.{BuildInfo, _}
-import tapir.Codec.JsonCodec
+import tapir.Codec.{JsonCodec, PlainCodec}
 import tapir.DecodeResult.{Error, Value}
 import io.circe.generic.auto._
 import io.circe.parser.{decode, _}
@@ -89,10 +90,9 @@ object ToDoAPI {
     "builtAtString" -> builtAtString,
     "builtAtMillis" -> builtAtMillis)
 
-
-//  implicit val buildInfoCodec: JsonCodec[BuildInfo] =
-//    implicitly[JsonCodec[String]].map(BuildInfo.toMap)(io.circe.parser.decode[BuildInfo].asJson)
-//
+  implicit val buildInfoCodec: JsonCodec[BuildInfo] =
+    implicitly[JsonCodec[Json]]
+      .map(a => (decode[BuildInfo](a.noSpaces)).getOrElse(BuildInfo.toMap))(a => a.asJson)
 
 
   lazy val baseEndpoint: Endpoint[Unit, HttpError, Unit, Nothing] =
