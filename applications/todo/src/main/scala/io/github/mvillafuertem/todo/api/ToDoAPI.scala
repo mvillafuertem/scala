@@ -8,14 +8,17 @@ import akka.http.scaladsl.server.Directives.{complete, get, path, pathEnd}
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.server.directives.DebuggingDirectives
 import akka.stream.scaladsl.Source
-import io.circe.{Decoder, Encoder}
+import io.circe.{Decoder, Encoder, HCursor, Json}
 import tapir.model.{StatusCode, StatusCodes}
 import tapir.{Endpoint, endpoint, jsonBody, oneOf, statusCode, statusDefaultMapping, statusMapping, _}
 import io.circe.generic.auto._
 import io.github.mvillafuertem.todo.BuildInfo
-import io.github.mvillafuertem.todo.api.ToDoAPI._
+import io.github.mvillafuertem.todo.api.ToDoAPI.{BuildInfo, _}
 import tapir.Codec.JsonCodec
 import tapir.DecodeResult.{Error, Value}
+import io.circe.generic.auto._
+import io.circe.parser.{decode, _}
+import io.circe.syntax._
 import tapir._
 import tapir.json.circe._
 import tapir.openapi.OpenAPI
@@ -65,15 +68,32 @@ object ToDoAPI {
   type DoorId = String
   type BuildInfo = Map[String, Any]
 
-  new JsonCodec[BuildInfo] {
-    override def encode(t: BuildInfo): String = jsonPrinter.pretty(t.asJson)
-    override def rawDecode(s: String): DecodeResult[BuildInfo] = io.circe.parser.decode[BuildInfo](s) match {
-      case Left(error) => Error(s, error)
-      case Right(v)    => Value(v)
-    }
-    override def meta: CodecMeta[BuildInfo, MediaType.Json, String] =
-      CodecMeta(implicitly[SchemaFor[BuildInfo]].schema, MediaType.Json(), StringValueType(StandardCharsets.UTF_8), implicitly[Validator[BuildInfo]])
-  }
+
+  implicit val encodeBuildInfo: Encoder[BuildInfo] = (a: BuildInfo) =>
+    Json.fromFields(a.map{case (a, b) => (a, Json.fromString(String.valueOf(b)))})
+
+  implicit val decodeBuildInfo: Decoder[BuildInfo] = (c: HCursor) => for {
+    name <- c.downField("name").as[String]
+    version <- c.downField("version").as[String]
+    scalaVersion <- c.downField("scalaVersion").as[String]
+    sbtVersion <- c.downField("sbtVersion").as[String]
+    gitCommit <- c.downField("gitCommit").as[String]
+    builtAtString <- c.downField("builtAtString").as[String]
+    builtAtMillis <- c.downField("builtAtMillis").as[String]
+  } yield Map[String, Any](
+    "name" -> name,
+    "version" -> version,
+    "scalaVersion" -> scalaVersion,
+    "sbtVersion" -> sbtVersion,
+    "gitCommit" -> gitCommit,
+    "builtAtString" -> builtAtString,
+    "builtAtMillis" -> builtAtMillis)
+
+
+//  implicit val buildInfoCodec: JsonCodec[BuildInfo] =
+//    implicitly[JsonCodec[String]].map(BuildInfo.toMap)(io.circe.parser.decode[BuildInfo].asJson)
+//
+
 
   lazy val baseEndpoint: Endpoint[Unit, HttpError, Unit, Nothing] =
     endpoint
