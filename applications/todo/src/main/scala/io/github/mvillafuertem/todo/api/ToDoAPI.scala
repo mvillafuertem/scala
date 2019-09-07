@@ -1,36 +1,23 @@
 package io.github.mvillafuertem.todo.api
 
-import java.nio.charset.StandardCharsets
-import java.time.Year
-
-import akka.NotUsed
-import akka.actor.typed.Logger
-import akka.http.scaladsl.server.Directives.{complete, get, path, pathEnd}
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.server.directives.DebuggingDirectives
-import akka.stream.scaladsl.Source
-import io.circe.{Decoder, Encoder, HCursor, Json}
-import tapir.model.{StatusCode, StatusCodes}
-import tapir.{Endpoint, endpoint, jsonBody, oneOf, statusCode, statusDefaultMapping, statusMapping, _}
 import io.circe.generic.auto._
-import io.github.mvillafuertem.todo.BuildInfo
-import io.github.mvillafuertem.todo.api.ToDoAPI.{BuildInfo, _}
-import tapir.Codec.{JsonCodec, PlainCodec}
-import tapir.DecodeResult.{Error, Value}
-import io.circe.generic.auto._
-import io.circe.parser.{decode, _}
+import io.circe.parser.decode
 import io.circe.syntax._
-import tapir._
-import tapir.json.circe._
-import tapir.openapi.OpenAPI
+import io.circe.{Decoder, Encoder, HCursor, Json}
+import io.github.mvillafuertem.todo.BuildInfo
+import org.slf4j.LoggerFactory
 import tapir.docs.openapi._
+import tapir.json.circe._
+import tapir.model.{StatusCode, StatusCodes}
 import tapir.openapi.OpenAPI
 import tapir.openapi.circe.yaml._
-import tapir.swagger.akkahttp.SwaggerAkka
 import tapir.server.akkahttp._
+import tapir.swagger.akkahttp.SwaggerAkka
+import tapir.{Endpoint, endpoint, jsonBody, oneOf, statusCode, statusDefaultMapping, statusMapping, _}
 
 import scala.concurrent.Future
-import org.slf4j.LoggerFactory
 
 /**
  * @author Miguel Villafuerte
@@ -71,13 +58,13 @@ object ToDoAPI {
   type HttpError = (StatusCode, ErrorInfo)
   type AuthToken = String
   type DoorId = String
-  type BuildInfo = Map[String, Any]
+  type HealthInfo = Map[String, Any]
 
 
-  implicit val encodeBuildInfo: Encoder[BuildInfo] = (a: BuildInfo) =>
+  implicit val encodeBuildInfo: Encoder[HealthInfo] = (a: HealthInfo) =>
     Json.fromFields(a.map{case (a, b) => (a, Json.fromString(String.valueOf(b)))})
 
-  implicit val decodeBuildInfo: Decoder[BuildInfo] = (c: HCursor) => for {
+  implicit val decodeBuildInfo: Decoder[HealthInfo] = (c: HCursor) => for {
     name <- c.downField("name").as[String]
     version <- c.downField("version").as[String]
     scalaVersion <- c.downField("scalaVersion").as[String]
@@ -94,10 +81,16 @@ object ToDoAPI {
     "builtAtString" -> builtAtString,
     "builtAtMillis" -> builtAtMillis)
 
-  implicit val buildInfoCodec: JsonCodec[BuildInfo] =
-    implicitly[JsonCodec[Json]]
-      .map(a => (decode[BuildInfo](a.noSpaces)).getOrElse(BuildInfo.toMap))(a => a.asJson)
+  // TODO: Estudiar que forma es mas cómoda de hacer encode
+//  implicit val buildInfoCodec: JsonCodec[HealthInfo] =
+//    implicitly[JsonCodec[]]
+//      .map(a => (decode[HealthInfo](a)).getOrElse(BuildInfo.toMap))(a => a.asJson.noSpaces)
 
+  // TODO: Estudiar que forma es mas cómoda de hacer encode
+  implicit val buildInfoCodec: Codec[HealthInfo, MediaType.Json, String] =
+    Codec.stringPlainCodecUtf8.mediaType(MediaType.Json()).mapDecode[HealthInfo](a => (DecodeResult.Value(decode[HealthInfo](a) match {
+      case Right(value) => value
+    })))(a => a.asJson.noSpaces)
 
   lazy val baseEndpoint: Endpoint[Unit, HttpError, Unit, Nothing] =
     endpoint
@@ -152,14 +145,14 @@ object ToDoAPI {
       )
 
 
-  lazy val actuatorEndpoint: Endpoint[Unit, StatusCode, BuildInfo, Nothing] =
+  lazy val actuatorEndpoint: Endpoint[Unit, StatusCode, HealthInfo, Nothing] =
     endpoint
       .in("api" / "v1.0")
       .name("service-health")
       .description("ToDo Application Service Health Check Endpoint")
       .get
       .in("health")
-      .out(jsonBody[BuildInfo].example(BuildInfo.toMap))
+      .out(jsonBody[HealthInfo].example(BuildInfo.toMap))
       .errorOut(statusCode)
 
 
