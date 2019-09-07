@@ -6,6 +6,7 @@ import akka.actor.typed.{Behavior, Logger}
 import akka.http.scaladsl.Http
 import akka.stream.ActorMaterializer
 import akka.{Done, actor}
+import org.slf4j.LoggerFactory
 
 import scala.concurrent.{ExecutionContextExecutor, Future}
 import scala.util.{Failure, Success}
@@ -15,7 +16,9 @@ import scala.util.{Failure, Success}
  */
 final class ToDoApplicationConfiguration(context: ActorContext[Done]) extends ToDoConfiguration {
 
-  override lazy val log: Logger = context.system.log
+  private val log = LoggerFactory.getLogger(getClass)
+
+  //override lazy val log: Logger = context.system.log
   implicit lazy val untypedSystem: actor.ActorSystem = context.system.toUntyped
   implicit lazy val materializer: ActorMaterializer = ActorMaterializer()
   implicit lazy val contextExecutor: ExecutionContextExecutor = context.system.executionContext

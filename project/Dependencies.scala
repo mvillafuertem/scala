@@ -35,7 +35,7 @@ object Dependencies {
 
 
   val todo: Seq[ModuleID]  = Seq(
-    "com.typesafe.akka" %% "akka-persistence-typed" % "2.6.0-M6",
+    "com.typesafe.akka" %% "akka-persistence-typed" % Version.akka,
     "com.softwaremill.tapir" %% "tapir-core" % Version.tapir,
     "com.softwaremill.tapir" %% "tapir-akka-http-server" % Version.tapir,
     "com.softwaremill.tapir" %% "tapir-json-circe" % Version.tapir,
@@ -44,7 +44,13 @@ object Dependencies {
     "com.softwaremill.tapir" %% "tapir-swagger-ui-akka-http" % Version.tapir,
     //"org.iq80.leveldb" % "leveldb" % "0.12",
     "org.fusesource.leveldbjni" % "leveldbjni-all" % "1.8",
-    "com.github.dnvriend" %% "akka-persistence-inmemory" % "2.5.15.2"
+    "com.github.dnvriend" %% "akka-persistence-inmemory" % Version.akkaPersistenceInmemory,
+    "ch.qos.logback" % "logback-classic" % Version.logback
+  )
+
+  val todoTest: Seq[ModuleID]  = Seq(
+    "com.typesafe.akka" %% "akka-stream-testkit" % Version.akka,
+    "com.typesafe.akka" %% "akka-http-testkit" % Version.akkaHttp
   )
 
   val cats: Seq[ModuleID] = Seq(
@@ -74,6 +80,7 @@ object Dependencies {
 
   object Version {
     val akka = "2.5.25"
+    val akkaHttp = "10.1.9"
     val akkaKafka = "1.0.4"
     val alpakkaSlick = "1.1.0"
     val akkaPersistenceJdbc = "3.5.2"

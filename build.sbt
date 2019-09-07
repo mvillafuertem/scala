@@ -47,6 +47,7 @@ lazy val todo = (project in file("applications/todo"))
   .settings(commonSettings)
   .settings(BuildInfoSettings.value)
   .settings(libraryDependencies ++= Dependencies.todo)
+  .settings(libraryDependencies ++= Dependencies.todoTest)
   .settings(libraryDependencies ++= Dependencies.test)
   // P L U G I N S
   .enablePlugins(BuildInfoPlugin)

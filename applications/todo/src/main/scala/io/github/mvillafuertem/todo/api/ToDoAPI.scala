@@ -30,13 +30,17 @@ import tapir.swagger.akkahttp.SwaggerAkka
 import tapir.server.akkahttp._
 
 import scala.concurrent.Future
+import org.slf4j.LoggerFactory
 
 /**
  * @author Miguel Villafuerte
  */
-final class ToDoAPI(log: Logger) {
+final class ToDoAPI() {
 
+  import ToDoAPI._
   import akka.http.scaladsl.server.Directives._
+
+  private val log = LoggerFactory.getLogger(getClass)
 
   val routes: Route = new SwaggerAkka(yml).routes ~ route
 
@@ -53,8 +57,8 @@ final class ToDoAPI(log: Logger) {
 
 object ToDoAPI {
 
-  def apply(log: Logger): ToDoAPI = new ToDoAPI(log)
-
+//  def apply(log: Logger): ToDoAPI = new ToDoAPI(log)
+  def apply(): ToDoAPI = new ToDoAPI()
 
   lazy val openApi: OpenAPI = List(actuatorEndpoint).toOpenAPI("ToDo API", "1.0")
   lazy val yml: String = openApi.toYaml
