@@ -158,18 +158,18 @@ final class CirceApplicationSpec extends FlatSpecLike with Matchers {
 
     // G I V E N
     sealed trait Thing
-    case object SomeObject extends Thing
+    case object SomeThing extends Thing
 
     implicit val encodeThing: Encoder[Thing] = (a: Thing) => Json.obj(
       ("value", Json.fromString(a.toString))
     )
 
     // W H E N
-    val actual: Thing = SomeObject
+    val actual: Thing = SomeThing
 
     // T H E N
     val expected = Json.obj(
-      ("value", Json.fromString("SomeObject")),
+      ("value", Json.fromString("SomeThing")),
     )
 
     actual.asJson shouldBe expected
@@ -180,19 +180,19 @@ final class CirceApplicationSpec extends FlatSpecLike with Matchers {
 
     // G I V E N
     sealed trait Thing
-    case object SomeObject extends Thing
-    type SomeObjectResult = (String, Thing)
+    case object SomeThing extends Thing
+    type SomeThingResult = (String, Thing)
 
-    implicit val decodeThing: Decoder[SomeObjectResult] = (c: HCursor) => for {
+    implicit val decodeThing: Decoder[SomeThingResult] = (c: HCursor) => for {
       foo <- c.downField("value").as[String]
-    } yield new SomeObjectResult("value", Seq[Thing](SomeObject).filter(_.toString.equalsIgnoreCase(foo)).head)
+    } yield new SomeThingResult("value", Seq[Thing](SomeThing).filter(_.toString.equalsIgnoreCase(foo)).head)
 
     // W H E N
-    val actual = decode[SomeObjectResult]("""{"value":"SomeObject"}""")
+    val actual = decode[SomeThingResult]("""{"value":"SomeThing"}""")
 
     // T H E N
     actual.map{ result =>
-        result shouldBe ("value", SomeObject)
+        result shouldBe ("value", SomeThing)
     }
 
   }
@@ -202,17 +202,17 @@ final class CirceApplicationSpec extends FlatSpecLike with Matchers {
     // G I V E N
     case class User(id: Long, thing: Thing)
     sealed trait Thing
-    case object SomeObject extends Thing
+    case object SomeThing extends Thing
 
     implicit val encodeThing: Encoder[Thing] = (a: Thing) => Json.fromString(a.toString)
 
     // W H E N
-    val actual: User = User(0L, SomeObject)
+    val actual: User = User(0L, SomeThing)
 
     // T H E N
     val expected = Json.obj(
       ("id", Json.fromInt(0)),
-      ("thing", Json.fromString("SomeObject"))
+      ("thing", Json.fromString("SomeThing"))
     )
 
     actual.asJson shouldBe expected
@@ -224,17 +224,17 @@ final class CirceApplicationSpec extends FlatSpecLike with Matchers {
     // G I V E N
     case class User(id: Long, thing: Thing)
     sealed trait Thing
-    case object SomeObject extends Thing
+    case object SomeThing extends Thing
 
     implicit val decodeThing: Decoder[Thing] = (c: HCursor) => for {
       foo <- c.field("thing").as[String]
-    } yield Seq[Thing](SomeObject).filter(_.toString.equalsIgnoreCase(foo)).head
+    } yield Seq[Thing](SomeThing).filter(_.toString.equalsIgnoreCase(foo)).head
 
     // W H E N
-    val actual = decode[User]("""{"id": 0,"thing":"SomeObject"}""")
+    val actual = decode[User]("""{"id": 0,"thing":"SomeThing"}""")
 
     // T H E N
-    val expected: User = User(0L, SomeObject)
+    val expected: User = User(0L, SomeThing)
 
     // T H E N
     actual.map{ result =>
@@ -243,8 +243,51 @@ final class CirceApplicationSpec extends FlatSpecLike with Matchers {
 
   }
 
-}
+  it should "encode case class with sequence of sealed trait with object" in {
 
-object CirceApplicationSpec {
+    // G I V E N
+    case class User(id: Long, thing: Seq[Thing])
+    sealed trait Thing
+    case object SomeThing extends Thing
+    case object OtherThing extends Thing
+
+    implicit val encodeThing: Encoder[Thing] = (a: Thing) => Json.fromString(a.toString)
+
+    // W H E N
+    val actual: User = User(0L, Seq(SomeThing, OtherThing))
+
+    // T H E N
+    val expected = Json.obj(
+      ("id", Json.fromInt(0)),
+      ("thing", Json.fromString("SomeThing"))
+    )
+
+    actual.asJson shouldBe expected
+
+  }
+
+  it should "decode case class with sequence of sealed trait with object" in {
+
+    // G I V E N
+    case class User(id: Long, thing: Seq[Thing])
+    sealed trait Thing
+    case object SomeThing extends Thing
+    case object OtherThing extends Thing
+
+    implicit val decodeThing: Decoder[Thing] = (c: HCursor) => for {
+      foo <- c.field("thing").as[String]
+    } yield Seq[Thing](SomeThing).filter(_.toString.equalsIgnoreCase(foo)).head
+
+    // W H E N
+    val actual = decode[User]("""{"id": 0,"things":["SomeThing", "OtherThing"]}""")
+
+    // T H E N
+    val expected: User = User(0L, Seq(SomeThing, OtherThing))
+
+    actual.map{ result =>
+      result shouldBe expected
+    }
+
+  }
 
 }

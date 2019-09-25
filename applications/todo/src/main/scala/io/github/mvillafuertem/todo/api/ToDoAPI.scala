@@ -1,6 +1,6 @@
 package io.github.mvillafuertem.todo.api
 
-import akka.http.scaladsl.server.Route
+import akka.http.scaladsl.server.{Route, RouteResult}
 import akka.http.scaladsl.server.directives.DebuggingDirectives
 import io.circe.generic.auto._
 import io.circe.parser.decode
@@ -18,6 +18,8 @@ import tapir.swagger.akkahttp.SwaggerAkka
 import tapir.{Endpoint, endpoint, jsonBody, oneOf, statusCode, statusDefaultMapping, statusMapping, _}
 
 import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.util.{Failure, Success}
 
 /**
  * @author Miguel Villafuerte
@@ -32,12 +34,20 @@ final class ToDoAPI() {
   val routes: Route = new SwaggerAkka(yml).routes ~ route
 
 
+  def handleErrors[T](f: Future[T]): Future[Either[HttpError, T]] =
+    f.transform {
+      case Success(v) => Success(Right(v))
+      case Failure(e) =>
+        log.error("Exception when running endpoint logic", e)
+        Success(Left((200, conflictErrorInfo)))
+    }
+
   lazy val route: Route = DebuggingDirectives.logRequestResult("actuator-logger") {
-    actuatorEndpoint.toRoute { _ =>
-      val buildInfo = BuildInfo.toMap
+    actuatorEndpoint.toRoute ({ _: Unit =>
+      val buildInfo: HealthInfo = BuildInfo.toMap
       log.info(s"build-info: $buildInfo")
       Future.successful(Right(buildInfo))
-    }
+    }.andThen(a => handleErrors(a)))
   }
 
 }
@@ -145,15 +155,14 @@ object ToDoAPI {
       )
 
 
-  lazy val actuatorEndpoint: Endpoint[Unit, StatusCode, HealthInfo, Nothing] =
-    endpoint
-      .in("api" / "v1.0")
+  lazy val actuatorEndpoint: Endpoint[Unit, HttpError, HealthInfo, Nothing] =
+    baseEndpoint
       .name("service-health")
       .description("ToDo Application Service Health Check Endpoint")
       .get
       .in("health")
       .out(jsonBody[HealthInfo].example(BuildInfo.toMap))
-      .errorOut(statusCode)
+      //.errorOut(statusCode)
 
 
   // 400
