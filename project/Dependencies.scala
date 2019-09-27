@@ -1,54 +1,66 @@
+import Dependencies.Artifact
 import sbt._
 
 object Dependencies {
 
-  val akka: Seq[ModuleID] = Seq(
-    Artifact.akkaPersistence,
-    Artifact.akkaStream,
-    Artifact.akkaSlf4f,
-    // T Y P E D
-    Artifact.akkaActorTyped,
-    Artifact.akkaStreamTyped,
-    Artifact.akkaPersistenceTyped
-  ).map(_ % Version.akka) ++ Seq(
-    // L O G B A C K
-    Artifact.logback % Version.logback,
-    Artifact.akkaPersistenceCassandra % Version.akkaPersistenceCassandra,
-    Artifact.akkaPersistenceJdbc % Version.akkaPersistenceJdbc,
-    Artifact.postgresql % Version.postgres
+  val akka: Seq[ModuleID] =
+    // A K K A
+    Seq(
+      Artifact.akkaPersistence,
+      Artifact.akkaStream,
+      Artifact.akkaSlf4f,
+      Artifact.akkaActorTyped,
+      Artifact.akkaStreamTyped,
+      Artifact.akkaPersistenceTyped
+    ).map(_ % Version.akka) ++ Seq(
+      Artifact.logback % Version.logback,
+      Artifact.akkaPersistenceCassandra % Version.akkaPersistenceCassandra,
+      Artifact.akkaPersistenceJdbc % Version.akkaPersistenceJdbc,
+      Artifact.postgresql % Version.postgres
+    ) ++ Seq(
+      // A K K A  T E S T
+      Artifact.akkaTestKit,
+      Artifact.akkaStreamTestkit,
+      Artifact.akkaActorTestkitTyped
+    ).map(_ % Version.akka) ++ Seq(
+      Artifact.scalaTest % Version.scalaTest % "it,test",
+      Artifact.akkaStreamKafkaTestkit % Version.akkaKafka % "it,test",
+      Artifact.akkaPersistenceCassandraLauncher % Version.akkaPersistenceCassandra % Test,
+      Artifact.akkaPersistenceInmemory % Version.akkaPersistenceInmemory % Test,
+      Artifact.scalaTest % Version.scalaTest % Test
   )
 
-  val akkaTest: Seq[ModuleID] = Seq(
-    Artifact.akkaTestKit,
-    Artifact.akkaStreamTestkit,
-    // T Y P E D
-    Artifact.akkaActorTestkitTyped
-  ).map(_ % Version.akka) ++ Seq(
-    Artifact.scalaTest % Version.scalaTest % "it,test",
-    Artifact.akkaStreamKafkaTestkit % Version.akkaKafka % "it,test",
-    Artifact.akkaPersistenceCassandraLauncher % Version.akkaPersistenceCassandra % Test,
-    Artifact.akkaPersistenceInmemory % Version.akkaPersistenceInmemory % Test
+  val advanced: Seq[ModuleID] = Seq(
+    // A D V A N C E D  T E S T
+    Artifact.scalaTest % Version.scalaTest % Test
   )
 
-  val todo: Seq[ModuleID] = Seq(
-    Artifact.akkaPersistenceTyped % Version.akka,
-    //"org.iq80.leveldb" % "leveldb" % "0.12",
-    Artifact.leveldbjniAll % Version.leveldbjniAll,
-    Artifact.akkaPersistenceInmemory % Version.akkaPersistenceInmemory,
-    Artifact.logback % Version.logback
-  ) ++ Seq(
-    Artifact.tapirCore,
-    Artifact.tapirAkkaHttpServer,
-    Artifact.tapirJsonCirce,
-    Artifact.tapirOpenapiDocs,
-    Artifact.tapirOpenapiCirceYaml,
-    Artifact.tapirSwaggerUiAkkaHttp
-  ).map(_ % Version.tapir)
-
-  val todoTest: Seq[ModuleID] = Seq(
-    Artifact.akkaStreamTestkit % Version.akka,
-    Artifact.akkaHttpTestkit % Version.akkaHttp
+  val algorithms: Seq[ModuleID] = Seq(
+    // A L G O R I T H M S  T E S T
+    Artifact.scalaTest % Version.scalaTest % Test
   )
+
+  val todo: Seq[ModuleID] =
+    // T O D O
+    Seq(
+      Artifact.akkaPersistenceTyped % Version.akka,
+      //"org.iq80.leveldb" % "leveldb" % "0.12",
+      Artifact.leveldbjniAll % Version.leveldbjniAll,
+      Artifact.akkaPersistenceInmemory % Version.akkaPersistenceInmemory,
+      Artifact.logback % Version.logback
+    ) ++ Seq(
+      Artifact.tapirCore,
+      Artifact.tapirAkkaHttpServer,
+      Artifact.tapirJsonCirce,
+      Artifact.tapirOpenapiDocs,
+      Artifact.tapirOpenapiCirceYaml,
+      Artifact.tapirSwaggerUiAkkaHttp
+    ).map(_ % Version.tapir) ++ Seq(
+      // T O D O  T E S T
+      Artifact.akkaStreamTestkit % Version.akka,
+      Artifact.akkaHttpTestkit % Version.akkaHttp,
+      Artifact.scalaTest % Version.scalaTest
+    ).map(_ % Test)
 
   val cats: Seq[ModuleID] = Seq(
     // C A T S
@@ -60,22 +72,31 @@ object Dependencies {
     // C I R C E
     Artifact.circeParser,
     Artifact.circeGeneric
-  ).map(_ % Version.circe)
+  ).map(_ % Version.circe) ++ Seq(
+    // C I R C E  T E S T
+    Artifact.scalaTest % Version.scalaTest
+  ).map(_ % Test)
 
-  val slick: Seq[ModuleID] = Seq(
+  val slick: Seq[ModuleID] =
     // S L I C K
-    Artifact.alpakkaSlick % Version.alpakkaSlick,
-    // H 2
-    Artifact.h2 % Version.h2
-  )
+    Seq(
+      Artifact.alpakkaSlick % Version.alpakkaSlick,
+      Artifact.h2 % Version.h2
+    ) ++ Seq(
+      // S L I C K  T E S T
+      Artifact.scalaTest % Version.scalaTest
+    ).map(_ % Test)
 
-  val zio: Seq[ModuleID] = Seq(
+  val zio: Seq[ModuleID] =
     // Z I O
-    Artifact.zio,
-    Artifact.zioStreams
-  ).map(_ % Version.zio)
-
-  val test: Seq[ModuleID] = Seq(Artifact.scalaTest % Version.scalaTest)
+    Seq(
+      Artifact.zio,
+      Artifact.zioStreams
+    ).map(_ % Version.zio) ++ Seq(
+      // Z I O  T E S T
+      Artifact.zioTest,
+      Artifact.zioTestSbt
+    ).map(_ % Version.zio % Test)
 
   private object Artifact {
     val akkaActorTestkitTyped = "com.typesafe.akka" %% "akka-actor-testkit-typed"
@@ -112,6 +133,8 @@ object Dependencies {
     val tapirSwaggerUiAkkaHttp = "com.softwaremill.tapir" %% "tapir-swagger-ui-akka-http"
     val zio = "dev.zio" %% "zio"
     val zioStreams = "dev.zio" %% "zio-streams"
+    val zioTest = "dev.zio" %% "zio-test"
+    val zioTestSbt = "dev.zio" %% "zio-test-sbt"
   }
 
   private object Version {
