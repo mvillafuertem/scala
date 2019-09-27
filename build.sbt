@@ -1,7 +1,7 @@
 lazy val commonSettings = Settings.value ++ Seq(
   organization := "io.github.mvillafuertem",
   version := "0.1",
-  scalaVersion := "2.13.0",
+  scalaVersion := "2.13.1",
   homepage := Some(url("https://github.com/mvillafuertem/scala")),
   licenses := List("MIT" -> url("http://www.apache.org/licenses/LICENSE-2.0")),
   developers := List(
@@ -76,4 +76,10 @@ lazy val slick = (project in file("slick"))
   // S E T T I N G S
   .settings(commonSettings)
   .settings(libraryDependencies ++= Dependencies.slick)
+  .settings(libraryDependencies ++= Dependencies.test)
+
+lazy val zio = (project in file("zio"))
+  // S E T T I N G S
+  .settings(commonSettings)
+  .settings(libraryDependencies ++= Dependencies.zio)
   .settings(libraryDependencies ++= Dependencies.test)
