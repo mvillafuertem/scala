@@ -33,7 +33,6 @@ final class ToDoAPI() {
 
   val routes: Route = new SwaggerAkka(yml).routes ~ route
 
-
   def handleErrors[T](f: Future[T]): Future[Either[HttpError, T]] =
     f.transform {
       case Success(v) => Success(Right(v))
@@ -42,13 +41,17 @@ final class ToDoAPI() {
         Success(Left((200, conflictErrorInfo)))
     }
 
+  private val getBuildInfo: Unit => Future[HealthInfo] = Unit => Future.successful({
+    val buildInfo: HealthInfo = BuildInfo.toMap
+    log.info(s"build-info: $buildInfo")
+    buildInfo
+  })
+
+
   lazy val route: Route = DebuggingDirectives.logRequestResult("actuator-logger") {
-    actuatorEndpoint.toRoute ({ _: Unit =>
-      val buildInfo: HealthInfo = BuildInfo.toMap
-      log.info(s"build-info: $buildInfo")
-      Future.successful(Right(buildInfo))
-    }.andThen(a => handleErrors(a)))
+    actuatorEndpoint.toRoute(getBuildInfo andThen handleErrors)
   }
+
 
 }
 

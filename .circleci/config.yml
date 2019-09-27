@@ -1,0 +1,19 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/openjdk:11-jdk
+
+    working_directory: ~/repo
+
+    environment:
+      JVM_OPTS: -Xmx2048m
+      TERM: dumb
+
+    steps:
+      - checkout
+      # compiler, test & run
+      - run:
+          name: clean, update
+          command: |
+            sbt -mem 2048 ";clean ;coverageReport ;test ;coverageAggregate ;dependencyUpdates"
