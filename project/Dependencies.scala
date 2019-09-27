@@ -1,4 +1,3 @@
-import Dependencies.Artifact
 import sbt._
 
 object Dependencies {
@@ -6,28 +5,27 @@ object Dependencies {
   val akka: Seq[ModuleID] =
     // A K K A
     Seq(
-      Artifact.akkaPersistence,
-      Artifact.akkaStream,
-      Artifact.akkaSlf4f,
       Artifact.akkaActorTyped,
-      Artifact.akkaStreamTyped,
-      Artifact.akkaPersistenceTyped
+      Artifact.akkaPersistence,
+      Artifact.akkaPersistenceTyped,
+      Artifact.akkaSlf4f,
+      Artifact.akkaStream,
+      Artifact.akkaStreamTyped
     ).map(_ % Version.akka) ++ Seq(
-      Artifact.logback % Version.logback,
       Artifact.akkaPersistenceCassandra % Version.akkaPersistenceCassandra,
       Artifact.akkaPersistenceJdbc % Version.akkaPersistenceJdbc,
+      Artifact.logback % Version.logback,
       Artifact.postgresql % Version.postgres
     ) ++ Seq(
       // A K K A  T E S T
-      Artifact.akkaTestKit,
+      Artifact.akkaActorTestkitTyped,
       Artifact.akkaStreamTestkit,
-      Artifact.akkaActorTestkitTyped
+      Artifact.akkaTestKit
     ).map(_ % Version.akka) ++ Seq(
-      Artifact.scalaTest % Version.scalaTest % "it,test",
-      Artifact.akkaStreamKafkaTestkit % Version.akkaKafka % "it,test",
       Artifact.akkaPersistenceCassandraLauncher % Version.akkaPersistenceCassandra % Test,
       Artifact.akkaPersistenceInmemory % Version.akkaPersistenceInmemory % Test,
-      Artifact.scalaTest % Version.scalaTest % Test
+      Artifact.akkaStreamKafkaTestkit % Version.akkaKafka % "it,test",
+      Artifact.scalaTest % Version.scalaTest % "it,test"
   )
 
   val advanced: Seq[ModuleID] = Seq(
@@ -52,8 +50,8 @@ object Dependencies {
       Artifact.tapirCore,
       Artifact.tapirAkkaHttpServer,
       Artifact.tapirJsonCirce,
-      Artifact.tapirOpenapiDocs,
       Artifact.tapirOpenapiCirceYaml,
+      Artifact.tapirOpenapiDocs,
       Artifact.tapirSwaggerUiAkkaHttp
     ).map(_ % Version.tapir) ++ Seq(
       // T O D O  T E S T
@@ -66,7 +64,10 @@ object Dependencies {
     // C A T S
     Artifact.catsCore,
     Artifact.catsFree
-  ).map(_ % Version.cats)
+  ).map(_ % Version.cats) ++ Seq(
+    // C A T S  T E S T
+    Artifact.scalaTest % Version.scalaTest
+  ).map(_ % Test)
 
   val circe: Seq[ModuleID] = Seq(
     // C I R C E
