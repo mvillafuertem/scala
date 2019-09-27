@@ -1,4 +1,4 @@
-package io.github.mvillafuertem.akka.untyped.stream.techniques
+package io.github.mvillafuertem.akka.untyped.stream
 
 import akka.actor.ActorSystem
 import akka.stream.scaladsl.{Flow, GraphDSL, Keep, Partition, Sink, Source}
@@ -8,10 +8,13 @@ import akka.testkit.{TestKit, TestProbe}
 import akka.{Done, NotUsed}
 import org.scalatest.{BeforeAndAfterAll, WordSpecLike}
 
-import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
+import scala.concurrent.duration._
 import scala.util.{Failure, Success, Try}
 
+/**
+ * @author Miguel Villafuerte
+ */
 final class TestingStreamsSpec extends TestKit(ActorSystem("TestingStreams"))
   with WordSpecLike
   with BeforeAndAfterAll {
