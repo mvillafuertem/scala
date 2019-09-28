@@ -1,6 +1,6 @@
 package io.github.mvillafuertem.todo.api
 
-import akka.http.scaladsl.server.{Route, RouteResult}
+import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.server.directives.DebuggingDirectives
 import io.circe.generic.auto._
 import io.circe.parser.decode
@@ -17,8 +17,8 @@ import tapir.server.akkahttp._
 import tapir.swagger.akkahttp.SwaggerAkka
 import tapir.{Endpoint, endpoint, jsonBody, oneOf, statusCode, statusDefaultMapping, statusMapping, _}
 
-import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 import scala.util.{Failure, Success}
 
 /**
