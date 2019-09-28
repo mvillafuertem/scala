@@ -1,7 +1,7 @@
-package io.github.mvillafuertem.advanced.`type`.classes
+package io.github.mvillafuertem.advanced.typeclasses
 
-import io.github.mvillafuertem.advanced.`type`.classes.Device
-import io.github.mvillafuertem.advanced.`type`.classes.Show64._
+import io.github.mvillafuertem.advanced.typeclasses.Device
+import io.github.mvillafuertem.advanced.typeclasses.Show64._
 import org.scalatest.{FlatSpec, Matchers}
 
 class Show64Test extends FlatSpec with Matchers {
