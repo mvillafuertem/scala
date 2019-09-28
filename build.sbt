@@ -50,6 +50,15 @@ lazy val todo = (project in file("applications/todo"))
   .enablePlugins(BuildInfoPlugin)
   .enablePlugins(GitVersioning)
 
+lazy val products = (project in file("applications/products"))
+  // S E T T I N G S
+  .settings(commonSettings)
+  .settings(BuildInfoSettings.value)
+  .settings(libraryDependencies ++= Dependencies.products)
+  // P L U G I N S
+  .enablePlugins(BuildInfoPlugin)
+  .enablePlugins(GitVersioning)
+
 lazy val algorithms = (project in file("algorithms"))
   // S E T T I N G S
   .settings(commonSettings)

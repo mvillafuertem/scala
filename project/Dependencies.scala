@@ -60,6 +60,27 @@ object Dependencies {
       Artifact.scalaTest % Version.scalaTest
     ).map(_ % Test)
 
+  val products: Seq[ModuleID] =
+  // P R O D U C T S
+    Seq(
+      //"org.iq80.leveldb" % "leveldb" % "0.12",
+      Artifact.zio % Version.zio,
+      Artifact.zioInterop % Version.zioInterop,
+      Artifact.slick % Version.slick,
+      Artifact.logback % Version.logback
+    ) ++ Seq(
+      Artifact.tapirCore,
+      Artifact.tapirAkkaHttpServer,
+      Artifact.tapirJsonCirce,
+      Artifact.tapirOpenapiCirceYaml,
+      Artifact.tapirOpenapiDocs,
+      Artifact.tapirSwaggerUiAkkaHttp
+    ).map(_ % Version.tapir) ++ Seq(
+      // P R O D U C T S  T E S T
+      Artifact.scalaTest % Version.scalaTest,
+      Artifact.zioTest % Version.zio
+    ).map(_ % Test)
+
   val cats: Seq[ModuleID] = Seq(
     // C A T S
     Artifact.catsCore,
@@ -126,6 +147,7 @@ object Dependencies {
     val logback = "ch.qos.logback" % "logback-classic"
     val postgresql = "org.postgresql" % "postgresql"
     val scalaTest = "org.scalatest" %% "scalatest"
+    val slick = "com.typesafe.slick" %% "slick"
     val tapirAkkaHttpServer = "com.softwaremill.tapir" %% "tapir-akka-http-server"
     val tapirCore = "com.softwaremill.tapir" %% "tapir-core"
     val tapirJsonCirce = "com.softwaremill.tapir" %% "tapir-json-circe"
@@ -134,6 +156,7 @@ object Dependencies {
     val tapirSwaggerUiAkkaHttp = "com.softwaremill.tapir" %% "tapir-swagger-ui-akka-http"
     val zio = "dev.zio" %% "zio"
     val zioStreams = "dev.zio" %% "zio-streams"
+    val zioInterop = "dev.zio" %% "zio-interop-reactivestreams"
     val zioTest = "dev.zio" %% "zio-test"
     val zioTestSbt = "dev.zio" %% "zio-test-sbt"
   }
@@ -153,8 +176,10 @@ object Dependencies {
     val logback = "1.2.3"
     val postgres = "42.2.8"
     val scalaTest = "3.0.8"
+    val slick = "3.3.2"
     val tapir = "0.11.3"
     val zio = "1.0.0-RC13"
+    val zioInterop = "1.0.3.2-RC1"
   }
 
 }

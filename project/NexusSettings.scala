@@ -16,7 +16,7 @@ object NexusSettings {
         Some("snapshots" at baseUrl + "/repository/libs-snapshot-local")
       else
         Some("releases" at baseUrl + "/repository/libs-release-local")
-    },
+    }
   )
 
 }

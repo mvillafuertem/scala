@@ -3,8 +3,6 @@ import sbt.{Def, Tests, _}
 
 object Settings {
 
-  lazy val scala213 = "2.13.0"
-  
   val value: Seq[Def.Setting[_]] = Seq(
     
     scalacOptions := {
@@ -18,7 +16,7 @@ object Settings {
         "-language:reflectiveCalls",
         "-unchecked",
         //"-Xfatal-warnings",
-        "-Xlint",
+        "-Xlint"
       )
       if (version.value.endsWith("SNAPSHOT")) {
         default :+ "-Xcheckinit"
