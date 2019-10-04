@@ -2,7 +2,7 @@ package io.github.mvillafuertem.zio
 
 import io.github.mvillafuertem.zio.ZioApplication._
 import zio.test.Assertion._
-import zio.test.mock.MockConsole
+import zio.test.environment.TestConsole
 import zio.test.{DefaultRunnableSpec, _}
 
 object ZioApplicationSpec
@@ -11,7 +11,7 @@ object ZioApplicationSpec
       testM("sayHello correctly displays output") {
         for {
           _      <- sayHello
-          output <- MockConsole.output
+          output <- TestConsole.output
         } yield assert(output, equalTo(Vector("Hello, World!\n")))
       }
     )
