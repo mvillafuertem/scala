@@ -20,9 +20,9 @@ trait SlickProductsRepository extends ProductsRepository with InfrastructureConf
   val products = TableQuery[ProductTable.Products]
 
 
-  override def create(name: String): IO[ProductException, ProductId] = {
+  override def create(product: Product): IO[ProductException, ProductId] = {
 
-    val insert = (products returning products.map(_.id)) += Product(ProductId(), name)
+    val insert = (products returning products.map(_.id)) += product
     ZIO.fromDBIO(insert).provide(self).refineOrDie {
       case e: Exception => new ProductException(e)
     }

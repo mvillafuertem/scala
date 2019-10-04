@@ -22,7 +22,8 @@ lazy val scala = (project in file("."))
     cats,
     slick,
     todo,
-    zio
+    products,
+    zio,
   )
   // S E T T I N G S
   .settings(commonSettings)

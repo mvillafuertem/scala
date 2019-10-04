@@ -2,21 +2,26 @@ package io.github.mvillafuertem.products.infrastructure.tables
 
 import java.util.UUID
 
-import io.github.mvillafuertem.products.domain.{ProductId, model}
-import io.github.mvillafuertem.products.domain.model.{Product, ProductId}
-import slick.lifted.CaseClassShape
+import io.github.mvillafuertem.products.domain.model
+import io.github.mvillafuertem.products.domain.model.{Product, ProductId, ProductType}
 import slick.driver.H2Driver.api._
+import slick.lifted.CaseClassShape
 
 trait ProductTable {
 
   implicit object ProductShape extends CaseClassShape(LiftedProduct.tupled, Product.tupled)
 
-  implicit def productIdIdMapper: BaseColumnType[ProductId] = MappedColumnType.base[ProductId, UUID](
+  implicit def productIdMapper: BaseColumnType[ProductId] = MappedColumnType.base[ProductId, UUID](
     vo => vo.id,
     dbo => model.ProductId(dbo)
   )
 
-  case class LiftedProduct(productId: Rep[ProductId], name: Rep[String])
+  implicit def productTypeMapper: BaseColumnType[ProductType] = MappedColumnType.base[ProductType, String](
+    vo => vo.toString.toLowerCase,
+    dbo => model.ProductType.find(dbo)
+  )
+
+  case class LiftedProduct(productId: Rep[ProductId], name: Rep[String], productType: Rep[ProductType])
 
   final class Products(tag: Tag) extends Table[Product](tag, "ASSETS") {
     // P R I M A R Y  K E Y
@@ -25,8 +30,10 @@ trait ProductTable {
     // C O L U M N S
     def name = column[String]("NAME")
 
+    def productType = column[ProductType]("PRODUCT_TYPE")
+
     // P R O J E C T I O N
-    def * = LiftedProduct(id, name)
+    def * = LiftedProduct(id, name, productType)
   }
 
 }
