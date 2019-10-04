@@ -25,7 +25,9 @@ trait ProductTable {
 
   final class Products(tag: Tag) extends Table[Product](tag, "ASSETS") {
     // P R I M A R Y  K E Y
-    def id = column[ProductId]("PRODUCT_ID", O.PrimaryKey)
+    def id = column[Long]("ID", O.PrimaryKey, O.AutoInc)
+
+    def productId = column[ProductId]("PRODUCT_ID", O.PrimaryKey)
 
     // C O L U M N S
     def name = column[String]("NAME")
@@ -33,7 +35,7 @@ trait ProductTable {
     def productType = column[ProductType]("PRODUCT_TYPE")
 
     // P R O J E C T I O N
-    def * = LiftedProduct(id, name, productType)
+    def * = LiftedProduct(productId, name, productType)
   }
 
 }

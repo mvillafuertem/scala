@@ -67,6 +67,7 @@ object Dependencies {
       Artifact.zio % Version.zio,
       Artifact.zioInterop % Version.zioInterop,
       Artifact.slick % Version.slick,
+      Artifact.h2 % Version.h2,
       Artifact.logback % Version.logback
     ) ++ Seq(
       Artifact.tapirCore,
@@ -77,6 +78,7 @@ object Dependencies {
       Artifact.tapirSwaggerUiAkkaHttp
     ).map(_ % Version.tapir) ++ Seq(
       // P R O D U C T S  T E S T
+      Artifact.akkaHttpTestkit % Version.akkaHttp,
       Artifact.scalaTest % Version.scalaTest,
       Artifact.zioTest % Version.zio
     ).map(_ % Test)
@@ -183,8 +185,8 @@ object Dependencies {
     val scalaTest = "3.0.8"
     val specs2 = "4.6.0"
     val slick = "3.3.2"
-    val tapir = "0.11.3"
-    val zio = "1.0.0-RC13"
+    val tapir = "0.11.4"
+    val zio = "1.0.0-RC14"
     val zioInterop = "1.0.3.2-RC1"
   }
 

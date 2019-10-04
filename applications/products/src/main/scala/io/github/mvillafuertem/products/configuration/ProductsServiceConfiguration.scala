@@ -8,9 +8,8 @@ trait ProductsServiceConfiguration extends InfrastructureConfiguration {
 
 
   lazy val productsConfigurationProperties = ProductsConfigurationProperties()
-  override def db: InfrastructureConfiguration.Service = new InfrastructureConfiguration.Service {
-    override def db: UIO[BasicBackend#DatabaseDef] = ZIO.effectTotal(Database.forURL("jdbc:h2:mem:test1;DB_CLOSE_DELAY=-1", driver="org.h2.Driver"))
-  }
+
+  override def db: UIO[BasicBackend#DatabaseDef] = ZIO.effectTotal(Database.forConfig("infrastructure.h2"))
 
   val routes = SwaggerApi.route
 

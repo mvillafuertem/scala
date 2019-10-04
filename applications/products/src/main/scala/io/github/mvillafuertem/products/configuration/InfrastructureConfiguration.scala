@@ -5,14 +5,10 @@ import zio.UIO
 
 trait InfrastructureConfiguration {
 
-  def db: InfrastructureConfiguration.Service
+  def db: UIO[BasicBackend#DatabaseDef]
 
 }
 
 object InfrastructureConfiguration {
-
-  trait Service {
-    def db: UIO[BasicBackend#DatabaseDef]
-  }
 
 }
