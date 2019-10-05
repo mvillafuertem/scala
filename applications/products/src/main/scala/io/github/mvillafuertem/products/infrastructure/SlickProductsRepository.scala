@@ -2,7 +2,6 @@ package io.github.mvillafuertem.products.infrastructure
 
 import io.github.mvillafuertem.products.configuration.InfrastructureConfiguration
 import io.github.mvillafuertem.products.domain.error.ProductException
-import io.github.mvillafuertem.products.domain.model
 import io.github.mvillafuertem.products.domain.model.{Product, ProductId}
 import io.github.mvillafuertem.products.domain.repository.ProductsRepository
 import io.github.mvillafuertem.products.infrastructure.tables.ProductTable
@@ -21,19 +20,19 @@ trait SlickProductsRepository extends ProductsRepository with InfrastructureConf
 
   val products = TableQuery[ProductTable.Products]
 
-
   override def create(product: Product): IO[ProductException, ProductId] = {
-
     val insert = (products += product).map(_ => product.productId)
     ZIO.fromDBIO(insert).provide(self).refineOrDie {
       case e: Exception => new ProductException(e)
     }
-
   }
 
-  override def getAll: IO[ProductException, Seq[model.Product]] = ???
-
-
+  override def getAll: IO[ProductException, ZStream[Any, Throwable, Product]] = {
+    val getAll: StreamingDBIO[Seq[Product], Product] = products.result
+    ZIO.fromStreamingDBIO(getAll).provide(self).refineOrDie {
+      case e: Exception => new ProductException(e)
+    }
+  }
 
 }
 
@@ -43,7 +42,7 @@ object SlickProductsRepository {
     def fromDBIO[R](dbio: DBIO[R]): ZIO[InfrastructureConfiguration, Throwable, R] =
       for {
         db <- ZIO.accessM[InfrastructureConfiguration](_.db)
-        r  <- ZIO.fromFuture(ec => db.run(dbio))
+        r  <- ZIO.fromFuture(_ => db.run(dbio))
       } yield r
 
     def fromStreamingDBIO[T](dbio: StreamingDBIO[_, T]): ZIO[InfrastructureConfiguration, Throwable, ZStream[Any, Throwable, T]] =

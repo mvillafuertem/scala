@@ -7,6 +7,7 @@ import io.github.mvillafuertem.products.infrastructure.SlickProductsRepositorySp
 import org.scalatest.{FlatSpecLike, Matchers}
 import slick.basic.BasicBackend
 import slick.jdbc.H2Profile.backend._
+import zio.stream.ZStream
 import zio.{DefaultRuntime, UIO, ZIO}
 
 
@@ -29,6 +30,33 @@ final class SlickProductsRepositorySpec extends SlickProductsRepositoryConfigura
 
     // t h e n
     actual shouldBe productId
+
+  }
+
+  ignore should "get all products from the database" in {
+
+    // g i v e n
+    val productId = ProductId()
+    val name = "Product 1"
+    val productType = ProductType.New
+    val product: model.Product = Product(productId, name, productType)
+
+    val productId2 = ProductId()
+    val name2 = "Product 2"
+    val productType2 = ProductType.New
+    val product2: model.Product = Product(productId2, name2, productType2)
+
+    // w h e n
+    val actual: ZStream[Any, Throwable, Product] = this.unsafeRun(
+      for {
+        _ <- create(product)
+        _ <- create(product2)
+        result <- getAll
+      } yield result
+    )
+
+    // t h e n
+    actual shouldBe "productId"
 
   }
 
