@@ -24,7 +24,19 @@ object Dependencies {
     ).map(_ % Version.akka) ++ Seq(
       Artifact.akkaPersistenceCassandraLauncher % Version.akkaPersistenceCassandra % Test,
       Artifact.akkaPersistenceInmemory % Version.akkaPersistenceInmemory % Test,
+      Artifact.scalaTest % Version.scalaTest % "it,test"
+  )
+
+  val alpakka: Seq[ModuleID] =
+    // A L P A K K A
+    Seq(
+      Artifact.akkaSlf4f
+    ).map(_ % Version.akka) ++ Seq(
+      Artifact.logback % Version.logback
+    ) ++ Seq(
+      // A L P A K K A  T E S T
       Artifact.akkaStreamKafkaTestkit % Version.akkaKafka % "it,test",
+      Artifact.testcontainersKafka % Version.testcontainersKafka % "it,test",
       Artifact.scalaTest % Version.scalaTest % "it,test"
   )
 
@@ -161,9 +173,10 @@ object Dependencies {
     val tapirOpenapiCirceYaml = "com.softwaremill.tapir" %% "tapir-openapi-circe-yaml"
     val tapirOpenapiDocs = "com.softwaremill.tapir" %% "tapir-openapi-docs"
     val tapirSwaggerUiAkkaHttp = "com.softwaremill.tapir" %% "tapir-swagger-ui-akka-http"
+    val testcontainersKafka = "org.testcontainers" % "kafka"
     val zio = "dev.zio" %% "zio"
-    val zioStreams = "dev.zio" %% "zio-streams"
     val zioInterop = "dev.zio" %% "zio-interop-reactivestreams"
+    val zioStreams = "dev.zio" %% "zio-streams"
     val zioTest = "dev.zio" %% "zio-test"
     val zioTestSbt = "dev.zio" %% "zio-test-sbt"
   }
@@ -186,6 +199,7 @@ object Dependencies {
     val specs2 = "4.6.0"
     val slick = "3.3.2"
     val tapir = "0.11.4"
+    val testcontainersKafka = "1.12.2"
     val zio = "1.0.0-RC14"
     val zioInterop = "1.0.3.2-RC1"
   }

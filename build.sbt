@@ -18,6 +18,7 @@ lazy val scala = (project in file("."))
   .aggregate(
     advanced,
     akka,
+    alpakka,
     algorithms,
     cats,
     slick,
@@ -41,6 +42,13 @@ lazy val akka = (project in file("akka"))
   .settings(commonSettings)
   .settings(NexusSettings.value)
   .settings(libraryDependencies ++= Dependencies.akka)
+
+lazy val alpakka = (project in file("alpakka"))
+  .configs(IntegrationTest)
+  .settings(Defaults.itSettings)
+  // S E T T I N G S
+  .settings(commonSettings)
+  .settings(libraryDependencies ++= Dependencies.alpakka)
 
 lazy val todo = (project in file("applications/todo"))
   // S E T T I N G S

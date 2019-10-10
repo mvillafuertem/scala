@@ -12,8 +12,19 @@ jobs:
 
     steps:
       - checkout
-      # compiler, test & run
       - run:
-          name: clean, update
+          name: Test
           command: |
-            sbt -mem 2048 ";clean ;coverageReport ;test ;coverageAggregate ;dependencyUpdates"
+            sudo ls -la
+            ./.cicd/test.sh
+#      - setup_remote_docker:
+#          docker_layer_caching: true
+#      - run:
+#          name: Integration Test
+#          command: |
+#            curl -L https://github.com/docker/compose/releases/download/1.24.1/docker-compose-`uname -s`-`uname -m` > ~/docker-compose
+#            chmod +x ~/docker-compose
+#            sudo mv ~/docker-compose /usr/local/bin/docker-compose
+#            sudo ls -la
+#            docker create --network env_default --name tests
+#            ./.cicd/integration-test.sh
