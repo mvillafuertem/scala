@@ -184,7 +184,7 @@ object Dependencies {
   private object Version {
     val akka = "2.5.25"
     val akkaHttp = "10.1.10"
-    val akkaKafka = "1.0.5"
+    val akkaKafka = "1.1.0"
     val akkaPersistenceCassandra = "0.99"
     val akkaPersistenceInmemory = "2.5.15.2"
     val akkaPersistenceJdbc = "3.5.2"
@@ -198,7 +198,7 @@ object Dependencies {
     val scalaTest = "3.0.8"
     val specs2 = "4.6.0"
     val slick = "3.3.2"
-    val tapir = "0.11.4"
+    val tapir = "0.11.5"
     val testcontainersKafka = "1.12.2"
     val zio = "1.0.0-RC14"
     val zioInterop = "1.0.3.2-RC1"
