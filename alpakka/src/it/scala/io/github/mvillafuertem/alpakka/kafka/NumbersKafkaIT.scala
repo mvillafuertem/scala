@@ -36,7 +36,7 @@ class NumbersKafkaIT extends SpecBase with TestcontainersKafkaLike
 
   implicit val patience = PatienceConfig(15.seconds, 1.second)
 
-  it should "numbers" in assertAllStagesStopped {
+  ignore should "numbers" in assertAllStagesStopped {
 
 
     // G I V E N

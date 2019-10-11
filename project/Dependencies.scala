@@ -36,6 +36,7 @@ object Dependencies {
     ) ++ Seq(
       // A L P A K K A  T E S T
       Artifact.akkaStreamKafkaTestkit % Version.akkaKafka % "it,test",
+      Artifact.testcontainers % Version.testcontainers % "it,test",
       Artifact.testcontainersKafka % Version.testcontainersKafka % "it,test",
       Artifact.scalaTest % Version.scalaTest % "it,test"
   )
@@ -173,6 +174,7 @@ object Dependencies {
     val tapirOpenapiCirceYaml = "com.softwaremill.tapir" %% "tapir-openapi-circe-yaml"
     val tapirOpenapiDocs = "com.softwaremill.tapir" %% "tapir-openapi-docs"
     val tapirSwaggerUiAkkaHttp = "com.softwaremill.tapir" %% "tapir-swagger-ui-akka-http"
+    val testcontainers = "com.dimafeng" %% "testcontainers-scala"
     val testcontainersKafka = "org.testcontainers" % "kafka"
     val zio = "dev.zio" %% "zio"
     val zioInterop = "dev.zio" %% "zio-interop-reactivestreams"
@@ -199,6 +201,7 @@ object Dependencies {
     val specs2 = "4.6.0"
     val slick = "3.3.2"
     val tapir = "0.11.5"
+    val testcontainers = "0.33.0"
     val testcontainersKafka = "1.12.2"
     val zio = "1.0.0-RC14"
     val zioInterop = "1.0.3.2-RC1"
