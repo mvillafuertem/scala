@@ -11,13 +11,14 @@ import akka.stream.ActorMaterializer
 import akka.stream.scaladsl.{Keep, Source}
 import akka.stream.testkit.scaladsl.TestSink
 import com.dimafeng.testcontainers.DockerComposeContainer
+import com.typesafe.config.{Config, ConfigFactory}
 import io.github.mvillafuertem.alpakka.kafka.NumbersIT.NumbersConfigurationIT
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.{BeforeAndAfterAll, FlatSpecLike, Matchers}
 import org.testcontainers.containers.wait.strategy.Wait
 
-import scala.concurrent.ExecutionContextExecutor
+import scala.concurrent.{Await, ExecutionContextExecutor}
 import scala.concurrent.duration._
 
 /**
@@ -52,7 +53,7 @@ with EventConfiguration
 
       val msg = "{\"id\":\"3771a4d1-477f-459c-9b64-90207e486992\",\"timestamp\":\"2019-03-18T15:28:07.000Z\"}"
       probe.ensureSubscription().requestNext().value() shouldBe msg
-   }
+  }
 
   private val msg: String = scala.io.Source.fromURL(getClass.getResource("/event.json"))
     .getLines()
