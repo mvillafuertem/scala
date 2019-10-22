@@ -204,7 +204,7 @@ object Dependencies {
     val testcontainers = "0.33.0"
     val testcontainersKafka = "1.12.2"
     val zio = "1.0.0-RC15"
-    val zioInterop = "1.0.3.2-RC1"
+    val zioInterop = "1.0.3.4-RC1"
   }
 
 }
