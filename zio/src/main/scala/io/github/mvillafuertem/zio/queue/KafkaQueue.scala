@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit
 
 object Main extends App {
 
-  override def run(args: List[String]): ZIO[Main.Environment, Nothing, Int] = program.fold(_ => 1, _ => 0)
+  override def run(args: List[String]) = program.fold(_ => 1, _ => 0)
 
   sealed trait Diagnostic
 
