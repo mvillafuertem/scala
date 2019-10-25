@@ -134,9 +134,12 @@ object Dependencies {
       Artifact.zioTest,
       Artifact.zioTestSbt
     ).map(_ % Version.zio % Test) ++ Seq(
+      // S P E C  T E S T
       Artifact.specs2Core,
       Artifact.specs2MatcherExtra
-  ).map(_ % Version.specs2 % Test)
+    ).map(_ % Version.specs2 % Test) ++ Seq(
+      Artifact.scalaTest % Version.scalaTest
+    ).map(_ % Test)
 
   private object Artifact {
     val akkaActorTestkitTyped = "com.typesafe.akka" %% "akka-actor-testkit-typed"
