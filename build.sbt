@@ -17,7 +17,8 @@ lazy val commonSettings = Settings.value ++ Seq(
 lazy val scala = (project in file("."))
   .aggregate(
     advanced,
-    akka,
+    `akka-untyped`,
+    `akka-typed`,
     alpakka,
     algorithms,
     cats,
@@ -35,13 +36,21 @@ lazy val advanced = (project in file("advanced"))
   .settings(commonSettings)
   .settings(libraryDependencies ++= Dependencies.advanced)
 
-lazy val akka = (project in file("akka"))
+lazy val `akka-untyped` = (project in file("akka-untyped"))
   .configs(IntegrationTest)
   .settings(Defaults.itSettings)
   // S E T T I N G S
   .settings(commonSettings)
   .settings(NexusSettings.value)
-  .settings(libraryDependencies ++= Dependencies.akka)
+  .settings(libraryDependencies ++= Dependencies.`akka-untyped`)
+
+lazy val `akka-typed` = (project in file("akka-typed"))
+  .configs(IntegrationTest)
+  .settings(Defaults.itSettings)
+  // S E T T I N G S
+  .settings(commonSettings)
+  .settings(NexusSettings.value)
+  .settings(libraryDependencies ++= Dependencies.`akka-typed`)
 
 lazy val alpakka = (project in file("alpakka"))
   .configs(IntegrationTest)

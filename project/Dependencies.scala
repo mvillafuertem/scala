@@ -2,15 +2,12 @@ import sbt._
 
 object Dependencies {
 
-  val akka: Seq[ModuleID] =
+  val `akka-untyped`: Seq[ModuleID] =
     // A K K A
     Seq(
-      Artifact.akkaActorTyped,
       Artifact.akkaPersistence,
-      Artifact.akkaPersistenceTyped,
       Artifact.akkaSlf4f,
-      Artifact.akkaStream,
-      Artifact.akkaStreamTyped
+      Artifact.akkaStream
     ).map(_ % Version.akka) ++ Seq(
       Artifact.akkaPersistenceCassandra % Version.akkaPersistenceCassandra,
       Artifact.akkaPersistenceJdbc % Version.akkaPersistenceJdbc,
@@ -18,11 +15,28 @@ object Dependencies {
       Artifact.postgresql % Version.postgres
     ) ++ Seq(
       // A K K A  T E S T
-      Artifact.akkaActorTestkitTyped,
       Artifact.akkaStreamTestkit,
       Artifact.akkaTestKit
     ).map(_ % Version.akka) ++ Seq(
       Artifact.akkaPersistenceCassandraLauncher % Version.akkaPersistenceCassandra % Test,
+      Artifact.akkaPersistenceInmemory % Version.akkaPersistenceInmemory % Test,
+      Artifact.scalaTest % Version.scalaTest % "it,test"
+  )
+
+  val `akka-typed`: Seq[ModuleID] =
+    // A K K A  T Y P E D
+    Seq(
+      Artifact.akkaActorTyped,
+      Artifact.akkaPersistenceTyped,
+      Artifact.akkaSlf4f,
+      Artifact.akkaStreamTyped
+    ).map(_ % Version.akka) ++ Seq(
+      Artifact.logback % Version.logback
+    ) ++ Seq(
+      // A K K A  T Y P E D  T E S T
+      Artifact.akkaActorTestkitTyped,
+      Artifact.akkaStreamTestkit
+    ).map(_ % Version.akka) ++ Seq(
       Artifact.akkaPersistenceInmemory % Version.akkaPersistenceInmemory % Test,
       Artifact.scalaTest % Version.scalaTest % "it,test"
   )
@@ -205,7 +219,7 @@ object Dependencies {
     val slick = "3.3.2"
     val tapir = "0.11.9"
     val testcontainers = "0.33.0"
-    val testcontainersKafka = "1.12.2"
+    val testcontainersKafka = "1.12.3"
     val zio = "1.0.0-RC15"
     val zioInterop = "1.0.3.4-RC1"
   }

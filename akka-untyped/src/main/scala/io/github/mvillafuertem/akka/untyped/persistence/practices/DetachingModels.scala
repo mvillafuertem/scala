@@ -42,7 +42,7 @@ object DetachingModels extends App {
 
   for (i <- 1 to 5) {
     val coupon = Coupon(s"MEGA_COUPON_$i", 100)
-    val user = User(s"$i", "user_$i@email.com")
+    val user = User(s"$i", s"user_$i@email.com")
 
     couponManager ! ApplyCoupon(coupon, user)
   }
