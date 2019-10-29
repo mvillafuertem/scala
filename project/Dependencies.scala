@@ -220,7 +220,7 @@ object Dependencies {
     val tapir = "0.11.9"
     val testcontainers = "0.33.0"
     val testcontainersKafka = "1.12.3"
-    val zio = "1.0.0-RC15"
+    val zio = "1.0.0-RC16"
     val zioInterop = "1.0.3.4-RC1"
   }
 

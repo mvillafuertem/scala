@@ -1,6 +1,6 @@
 package io.github.mvillafuertem.zio.elevator.system
 
-import zio.{Queue, Ref, Schedule, UIO, ZIO}
+import zio.{Queue, Ref, Schedule, UIO, ZIO, ZSchedule}
 import zio.clock.Clock
 import zio.duration.Duration
 
@@ -26,7 +26,7 @@ final class ElevatorSystem(elevators: Ref[Vector[ElevatorState]],
   def run(duration: Duration): ZIO[Clock, Nothing, Unit] = {
     val moveElevator = elevators
       .update(ElevatorSystem.step)
-      .repeat(Schedule.spaced(duration))
+      .repeat(ZSchedule.spaced(duration))
       .unit
     val processRequests = (for {
       request <- requests.take
