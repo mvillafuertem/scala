@@ -22,7 +22,7 @@ final class TodoPersistentFSM extends ScalaTestWithActorTestKit(TodoPersistentFS
 
   val pidCounter = new AtomicInteger(0)
 
-  private def nextPid(): PersistenceId = PersistenceId(s"alert${pidCounter.incrementAndGet()})")
+  private def nextPid(): PersistenceId = PersistenceId.ofUniqueId(s"alert${pidCounter.incrementAndGet()})")
 
 
   it should "process an alert" in {
@@ -83,9 +83,9 @@ object TodoPersistentFSM {
     # akka.persistence.snapshot-store.plugin = "akka.persistence.snapshot-store.local"
     # akka.persistence.snapshot-store.local.dir = "target/typed-persistence-${UUID.randomUUID().toString}"
 
+    akka.persistence.journal.plugin = "akka.persistence.journal.inmem"
+    akka.persistence.journal.inmem.test-serialization = on
     akka.actor.allow-java-serialization = on
-    akka.persistence.journal.plugin = "inmemory-journal"
-    akka.persistence.snapshot-store.plugin = "inmemory-snapshot-store"
     """)
 
   object EventSeedBehavior {
@@ -108,13 +108,13 @@ object TodoPersistentFSM {
           GetValues(ref)
         case key.Listing(ref) if (ref.isEmpty) =>
           context.log.info("REF EMPTY")
-          val value = context.spawnAnonymous(apply(PersistenceId(id)))
+          val value = context.spawnAnonymous(apply(PersistenceId.ofUniqueId(id)))
           receptionist ! Register(key, value)
           value ! Check(EventSeed("", ""))
           GetValues(ref)
       }
       receptionist ! Find(key, adapter)
-      apply(PersistenceId(id))
+      apply(PersistenceId.ofUniqueId(id))
     })
 
     def apply(persistenceId: PersistenceId): Behavior[EventSeedCommand] =

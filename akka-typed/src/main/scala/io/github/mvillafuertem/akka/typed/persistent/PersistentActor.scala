@@ -68,7 +68,7 @@ object PersistentActor {
     context =>
     context.log.info(s"Stated entity $entityId")
     EventSourcedBehavior[Command, Event, PersonState](
-      persistenceId = PersistenceId(entityId),
+      persistenceId = PersistenceId.ofUniqueId(entityId),
       emptyState = PersonState(),
       commandHandler = commandHandler(context, entityId),
       eventHandler = eventHandler

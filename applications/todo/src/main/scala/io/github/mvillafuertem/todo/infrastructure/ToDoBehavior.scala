@@ -6,7 +6,6 @@ import akka.persistence.typed.PersistenceId
 import akka.persistence.typed.scaladsl.{Effect, EventSourcedBehavior}
 import io.github.mvillafuertem.todo.domain.ToDo
 import io.github.mvillafuertem.todo.infrastructure.ToDoBehavior.Command
-import io.github.mvillafuertem.todo.domain.ToDo
 
 /**
  * @author Miguel Villafuerte
@@ -17,7 +16,7 @@ final class ToDoBehavior(context: ActorContext[Command]) {
 
   def behavior(id: String): EventSourcedBehavior[Command, Event, State] =
     EventSourcedBehavior[Command, Event, State](
-      persistenceId = PersistenceId(id),
+      persistenceId = PersistenceId.ofUniqueId(id),
       emptyState = State(ToDo("", "", 0L), false),
       commandHandler = commandHandler,
       eventHandler = eventHandler)

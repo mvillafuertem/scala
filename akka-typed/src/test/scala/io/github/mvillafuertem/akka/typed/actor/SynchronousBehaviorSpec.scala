@@ -3,9 +3,9 @@ package io.github.mvillafuertem.akka.typed.actor
 import akka.actor.testkit.typed.CapturedLogEvent
 import akka.actor.testkit.typed.Effect.{Spawned, SpawnedAnonymous}
 import akka.actor.testkit.typed.scaladsl.{BehaviorTestKit, TestInbox}
-import akka.event.Logging
 import io.github.mvillafuertem.akka.typed.actor.SynchronousBehavior._
 import org.scalatest.{FlatSpec, Matchers}
+import org.slf4j.event.Level
 
 class SynchronousBehaviorSpec extends FlatSpec with Matchers {
 
@@ -90,7 +90,7 @@ class SynchronousBehaviorSpec extends FlatSpec with Matchers {
     testKit.run(LogAndSayHello(inbox.ref))
 
     // T H E N
-    testKit.logEntries() shouldBe Seq(CapturedLogEvent(Logging.InfoLevel, "Saying hello to Inboxer"))
+    testKit.logEntries() shouldBe Seq(CapturedLogEvent(Level.INFO, "Saying hello to Inboxer"))
 
   }
 

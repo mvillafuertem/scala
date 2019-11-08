@@ -51,9 +51,10 @@ object PersistentActorSpec {
   def conf: Config = ConfigFactory.parseString(s"""
     akka.loglevel = INFO
     akka.loggers = [akka.testkit.TestEventListener]
-    akka.persistence.journal.plugin = "inmemory-journal"
-    akka.persistence.snapshot-store.plugin = "inmemory-snapshot-store"
+    akka.persistence.journal.plugin = "akka.persistence.journal.inmem"
+    akka.persistence.journal.inmem.test-serialization = on
     akka.actor.warn-about-java-serializer-usage = false
+    akka.actor.allow-java-serialization = on
     """)
 
 }

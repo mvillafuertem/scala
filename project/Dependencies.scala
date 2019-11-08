@@ -9,8 +9,8 @@ object Dependencies {
       Artifact.akkaSlf4f,
       Artifact.akkaStream
     ).map(_ % Version.akka) ++ Seq(
-      Artifact.akkaPersistenceCassandra % Version.akkaPersistenceCassandra,
-      Artifact.akkaPersistenceJdbc % Version.akkaPersistenceJdbc,
+      //Artifact.akkaPersistenceCassandra % Version.akkaPersistenceCassandra,
+      //Artifact.akkaPersistenceJdbc % Version.akkaPersistenceJdbc,
       Artifact.logback % Version.logback,
       Artifact.postgresql % Version.postgres
     ) ++ Seq(
@@ -18,8 +18,8 @@ object Dependencies {
       Artifact.akkaStreamTestkit,
       Artifact.akkaTestKit
     ).map(_ % Version.akka) ++ Seq(
-      Artifact.akkaPersistenceCassandraLauncher % Version.akkaPersistenceCassandra % Test,
-      Artifact.akkaPersistenceInmemory % Version.akkaPersistenceInmemory % Test,
+      //Artifact.akkaPersistenceCassandraLauncher % Version.akkaPersistenceCassandra % Test,
+      //Artifact.akkaPersistenceInmemory % Version.akkaPersistenceInmemory % Test,
       Artifact.scalaTest % Version.scalaTest % "it,test"
   )
 
@@ -37,7 +37,7 @@ object Dependencies {
       Artifact.akkaActorTestkitTyped,
       Artifact.akkaStreamTestkit
     ).map(_ % Version.akka) ++ Seq(
-      Artifact.akkaPersistenceInmemory % Version.akkaPersistenceInmemory % Test,
+      //Artifact.akkaPersistenceInmemory % Version.akkaPersistenceInmemory % Test,
       Artifact.scalaTest % Version.scalaTest % "it,test"
   )
 
@@ -71,7 +71,7 @@ object Dependencies {
       Artifact.akkaPersistenceTyped % Version.akka,
       //"org.iq80.leveldb" % "leveldb" % "0.12",
       Artifact.leveldbjniAll % Version.leveldbjniAll,
-      Artifact.akkaPersistenceInmemory % Version.akkaPersistenceInmemory,
+      //Artifact.akkaPersistenceInmemory % Version.akkaPersistenceInmemory,
       Artifact.logback % Version.logback
     ) ++ Seq(
       Artifact.tapirCore,
@@ -82,6 +82,7 @@ object Dependencies {
       Artifact.tapirSwaggerUiAkkaHttp
     ).map(_ % Version.tapir) ++ Seq(
       // T O D O  T E S T
+      Artifact.akkaActorTestkitTyped % Version.akka,
       Artifact.akkaStreamTestkit % Version.akka,
       Artifact.akkaHttpTestkit % Version.akkaHttp,
       Artifact.scalaTest % Version.scalaTest
@@ -92,7 +93,7 @@ object Dependencies {
     Seq(
       //"org.iq80.leveldb" % "leveldb" % "0.12",
       Artifact.zio % Version.zio,
-      Artifact.zioInterop % Version.zioInterop,
+      Artifact.zioInteropReactiveStreams % Version.zioInteropReactiveStreams,
       Artifact.slick % Version.slick,
       Artifact.h2 % Version.h2,
       Artifact.logback % Version.logback
@@ -160,10 +161,10 @@ object Dependencies {
     val akkaActorTyped = "com.typesafe.akka" %% "akka-actor-typed"
     val akkaHttpTestkit = "com.typesafe.akka" %% "akka-http-testkit"
     val akkaPersistence = "com.typesafe.akka" %% "akka-persistence"
-    val akkaPersistenceCassandra = "com.typesafe.akka" %% "akka-persistence-cassandra"
-    val akkaPersistenceCassandraLauncher = "com.typesafe.akka" %% "akka-persistence-cassandra-launcher"
-    val akkaPersistenceInmemory = "com.github.dnvriend" %% "akka-persistence-inmemory"
-    val akkaPersistenceJdbc = "com.github.dnvriend" %% "akka-persistence-jdbc"
+    //val akkaPersistenceCassandra = "com.typesafe.akka" %% "akka-persistence-cassandra"
+    //val akkaPersistenceCassandraLauncher = "com.typesafe.akka" %% "akka-persistence-cassandra-launcher"
+    //val akkaPersistenceInmemory = "com.github.dnvriend" %% "akka-persistence-inmemory"
+    //val akkaPersistenceJdbc = "com.github.dnvriend" %% "akka-persistence-jdbc"
     val akkaPersistenceTyped = "com.typesafe.akka" %% "akka-persistence-typed"
     val akkaSlf4f = "com.typesafe.akka" %% "akka-slf4j"
     val akkaStream = "com.typesafe.akka" %% "akka-stream"
@@ -194,14 +195,14 @@ object Dependencies {
     val testcontainers = "com.dimafeng" %% "testcontainers-scala"
     val testcontainersKafka = "org.testcontainers" % "kafka"
     val zio = "dev.zio" %% "zio"
-    val zioInterop = "dev.zio" %% "zio-interop-reactivestreams"
+    val zioInteropReactiveStreams = "dev.zio" %% "zio-interop-reactivestreams"
     val zioStreams = "dev.zio" %% "zio-streams"
     val zioTest = "dev.zio" %% "zio-test"
     val zioTestSbt = "dev.zio" %% "zio-test-sbt"
   }
 
   private object Version {
-    val akka = "2.5.26"
+    val akka = "2.6.0"
     val akkaHttp = "10.1.10"
     val akkaKafka = "1.1.0"
     val akkaPersistenceCassandra = "0.100"
@@ -221,7 +222,7 @@ object Dependencies {
     val testcontainers = "0.33.0"
     val testcontainersKafka = "1.12.3"
     val zio = "1.0.0-RC16"
-    val zioInterop = "1.0.3.4-RC1"
+    val zioInteropReactiveStreams = "1.0.3.4-RC1"
   }
 
 }

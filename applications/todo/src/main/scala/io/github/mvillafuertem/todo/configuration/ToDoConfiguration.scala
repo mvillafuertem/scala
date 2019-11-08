@@ -1,6 +1,5 @@
 package io.github.mvillafuertem.todo.configuration
 
-import akka.actor.typed.Logger
 import io.github.mvillafuertem.todo.api.ToDoAPI
 
 /**

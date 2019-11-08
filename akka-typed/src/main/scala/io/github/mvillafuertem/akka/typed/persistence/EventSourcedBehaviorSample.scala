@@ -23,7 +23,7 @@ object EventSourcedBehaviorSample {
 
   def behavior(id: String): EventSourcedBehavior[Command, Event, State] =
     EventSourcedBehavior[Command, Event, State](
-      persistenceId = PersistenceId(id),
+      persistenceId = PersistenceId.ofUniqueId(id),
       emptyState = State(Nil),
       commandHandler = commandHandler,
       eventHandler = eventHandler)

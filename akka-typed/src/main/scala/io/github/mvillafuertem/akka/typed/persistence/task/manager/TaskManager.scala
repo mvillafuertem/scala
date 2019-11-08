@@ -26,7 +26,7 @@ object TaskManager extends App {
 
   def apply(persistenceId: PersistenceId): Behavior[Command] = Behaviors.setup {
 
-    context => context.setLoggerClass(this.getClass)
+    context => context.setLoggerName(this.getClass)
 
       EventSourcedBehavior[Command, Event, State](
         persistenceId = persistenceId,
@@ -86,7 +86,7 @@ object TaskManager extends App {
   }
 
 
-  val typedSystem = ActorSystem(apply(PersistenceId("taskManager")), "TaskManagerTypedSystem", ConfigFactory.load().getConfig("postgres"))
+  val typedSystem = ActorSystem(apply(PersistenceId.ofUniqueId("taskManager")), "TaskManagerTypedSystem", ConfigFactory.load().getConfig("postgres"))
 
   typedSystem ! StartTask("Task con ID pepe")
   typedSystem ! NextStep("Task con ID pepe", "Pending")
