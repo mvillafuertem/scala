@@ -21,7 +21,9 @@ lazy val scala = (project in file("."))
     `akka-typed`,
     alpakka,
     algorithms,
+    basic,
     cats,
+    circe,
     slick,
     todo,
     products,
@@ -58,6 +60,11 @@ lazy val alpakka = (project in file("alpakka"))
   // S E T T I N G S
   .settings(commonSettings)
   .settings(libraryDependencies ++= Dependencies.alpakka)
+
+lazy val basic = (project in file("basic"))
+  // S E T T I N G S
+  .settings(commonSettings)
+  .settings(libraryDependencies ++= Dependencies.basic)
 
 lazy val todo = (project in file("applications/todo"))
   // S E T T I N G S

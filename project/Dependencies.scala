@@ -65,6 +65,11 @@ object Dependencies {
     Artifact.scalaTest % Version.scalaTest % Test
   )
 
+  val basic: Seq[ModuleID] = Seq(
+    // B A S I C  T E S T
+    Artifact.scalaTest % Version.scalaTest % Test
+  )
+
   val todo: Seq[ModuleID] =
     // T O D O
     Seq(
