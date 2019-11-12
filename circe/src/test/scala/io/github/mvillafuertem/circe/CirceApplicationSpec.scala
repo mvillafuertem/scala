@@ -259,7 +259,9 @@ final class CirceApplicationSpec extends FlatSpecLike with Matchers {
     // T H E N
     val expected = Json.obj(
       ("id", Json.fromInt(0)),
-      ("thing", Json.fromString("SomeThing"))
+      ("thing", Json.arr(
+        Json.fromString("SomeThing"),
+        Json.fromString("OtherThing")))
     )
 
     actual.asJson shouldBe expected
