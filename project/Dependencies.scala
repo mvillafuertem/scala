@@ -150,6 +150,8 @@ object Dependencies {
       Artifact.zio,
       Artifact.zioStreams
     ).map(_ % Version.zio) ++ Seq(
+      "dev.zio" %% "zio-akka-cluster" % "0.1.7"
+    ) ++ Seq(
       // Z I O  T E S T
       Artifact.zioTest,
       Artifact.zioTestSbt
