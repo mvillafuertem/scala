@@ -97,6 +97,8 @@ object Dependencies {
   // P R O D U C T S
     Seq(
       //"org.iq80.leveldb" % "leveldb" % "0.12",
+      Artifact.akkaActorTyped % Version.akka,
+      Artifact.akkaStreamTyped % Version.akka,
       Artifact.zio % Version.zio,
       Artifact.zioInteropReactiveStreams % Version.zioInteropReactiveStreams,
       Artifact.slick % Version.slick,
@@ -167,6 +169,7 @@ object Dependencies {
   private object Artifact {
     val akkaActorTestkitTyped = "com.typesafe.akka" %% "akka-actor-testkit-typed"
     val akkaActorTyped = "com.typesafe.akka" %% "akka-actor-typed"
+    val akkaHttp = "com.typesafe.akka" %% "akka-http"
     val akkaHttpTestkit = "com.typesafe.akka" %% "akka-http-testkit"
     val akkaPersistence = "com.typesafe.akka" %% "akka-persistence"
     //val akkaPersistenceCassandra = "com.typesafe.akka" %% "akka-persistence-cassandra"
@@ -219,13 +222,13 @@ object Dependencies {
     val akkaPersistenceJdbc = "3.5.2"
     val alpakkaSlick = "1.1.2"
     val cats = "2.0.0"
-    val circe = "0.12.1"
+    val circe = "0.12.3"
     val h2 = "1.4.200"
     val leveldbjniAll = "1.8"
     val logback = "1.2.3"
     val postgres = "42.2.8"
     val scalaTest = "3.0.8"
-    val specs2 = "4.6.0"
+    val specs2 = "4.8.0"
     val slick = "3.3.2"
     val tapir = "0.12.1"
     val swaggerUi = "3.24.0"

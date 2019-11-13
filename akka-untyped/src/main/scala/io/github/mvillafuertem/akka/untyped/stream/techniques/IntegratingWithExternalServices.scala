@@ -5,7 +5,6 @@ import java.util.Date
 import akka.Done
 import akka.actor.{Actor, ActorLogging, ActorSystem, Props}
 import akka.dispatch.MessageDispatcher
-import akka.stream.ActorMaterializer
 import akka.stream.scaladsl.{Sink, Source}
 import akka.util.Timeout
 
@@ -15,7 +14,6 @@ import scala.concurrent.Future
 object IntegratingWithExternalServices extends App {
 
   implicit val actorSystem: ActorSystem = ActorSystem("IntegratingWithExternalServices")
-  implicit val actorMaterializer: ActorMaterializer = ActorMaterializer()
 
   // Not recommended in practice for mapAsync
   // import actorSystem.dispatcher

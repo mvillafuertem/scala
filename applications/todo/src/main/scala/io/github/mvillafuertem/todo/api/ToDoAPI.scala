@@ -1,5 +1,6 @@
 package io.github.mvillafuertem.todo.api
 
+import akka.http.scaladsl.model
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.server.directives.DebuggingDirectives
 import io.circe.generic.auto._
@@ -8,14 +9,14 @@ import io.circe.syntax._
 import io.circe.{Decoder, Encoder, HCursor, Json}
 import io.github.mvillafuertem.todo.BuildInfo
 import org.slf4j.LoggerFactory
-import tapir.docs.openapi._
-import tapir.json.circe._
-import tapir.model.{StatusCode, StatusCodes}
-import tapir.openapi.OpenAPI
-import tapir.openapi.circe.yaml._
-import tapir.server.akkahttp._
-import tapir.swagger.akkahttp.SwaggerAkka
-import tapir.{Endpoint, endpoint, jsonBody, oneOf, statusCode, statusDefaultMapping, statusMapping, _}
+import sttp.model.StatusCode
+import sttp.tapir.docs.openapi._
+import sttp.tapir.json.circe._
+import sttp.tapir.openapi.OpenAPI
+import sttp.tapir.openapi.circe.yaml._
+import sttp.tapir.server.akkahttp._
+import sttp.tapir.swagger.akkahttp.SwaggerAkka
+import sttp.tapir.{Endpoint, endpoint, jsonBody, oneOf, statusCode, statusDefaultMapping, statusMapping, _}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -38,7 +39,7 @@ final class ToDoAPI() {
       case Success(v) => Success(Right(v))
       case Failure(e) =>
         log.error("Exception when running endpoint logic", e)
-        Success(Left((200, conflictErrorInfo)))
+        Success(Left((StatusCode.Ok, conflictErrorInfo)))
     }
 
   private val getBuildInfo: Unit => Future[HealthInfo] = Unit => Future.successful({
@@ -100,8 +101,8 @@ object ToDoAPI {
 //      .map(a => (decode[HealthInfo](a)).getOrElse(BuildInfo.toMap))(a => a.asJson.noSpaces)
 
   // TODO: Estudiar que forma es mas cómoda de hacer encode
-  implicit val buildInfoCodec: Codec[HealthInfo, MediaType.Json, String] =
-    Codec.stringPlainCodecUtf8.mediaType(MediaType.Json()).mapDecode[HealthInfo](a => (DecodeResult.Value(decode[HealthInfo](a) match {
+  implicit val buildInfoCodec: Codec[HealthInfo, CodecFormat.Json, String] =
+    Codec.stringPlainCodecUtf8.codecFormat(CodecFormat.Json()).mapDecode[HealthInfo](a => (DecodeResult.Value(decode[HealthInfo](a) match {
       case Right(value) => value
     })))(a => a.asJson.noSpaces)
 
@@ -111,40 +112,40 @@ object ToDoAPI {
       .errorOut(
         oneOf(
           statusMapping(
-            StatusCodes.BadRequest,
+            StatusCode.BadRequest,
             statusCode
               .and(jsonBody[ErrorInfo]
                 .example(badRequestErrorInfo)
                 .description("Bad Request"))
           ),
           statusMapping(
-            StatusCodes.Unauthorized,
+            StatusCode.Unauthorized,
             statusCode
               .and(jsonBody[ErrorInfo]
                 .example(unauthorizedErrorInfo)
                 .description("Unauthorized"))
           ),
           statusMapping(
-            StatusCodes.Forbidden,
+            StatusCode.Forbidden,
             statusCode.and(jsonBody[ErrorInfo]
               .example(forbiddenErrorInfo)
               .description("Forbidden"))
           ),
           statusMapping(
-            StatusCodes.NotFound,
+            StatusCode.NotFound,
             statusCode
               .and(jsonBody[ErrorInfo]
                 .example(notFoundErrorInfo)
                 .description("Not Found"))
           ),
           statusMapping(
-            StatusCodes.InternalServerError,
+            StatusCode.InternalServerError,
             statusCode
               .and(jsonBody[ErrorInfo]
                 .example(internalServerErrorErrorInfo)
                 .description("Internal Server Error"))),
           statusMapping(
-            StatusCodes.ServiceUnavailable,
+            StatusCode.ServiceUnavailable,
             statusCode
               .and(jsonBody[ErrorInfo]
                 .example(serviceUnavailableErrorInfo)
@@ -169,14 +170,14 @@ object ToDoAPI {
 
 
   // 400
-  lazy val badRequestErrorInfo = ErrorInfo("bad_request", "The server could not understand the request due to invalid syntax")
-  lazy val unauthorizedErrorInfo = ErrorInfo("unauthorized", "The client must authenticate itself to get the requested response")
-  lazy val forbiddenErrorInfo = ErrorInfo("forbidden", "The client does not have access rights to the content")
-  lazy val notFoundErrorInfo = ErrorInfo("not_found", "The server can not find requested resource")
-  lazy val conflictErrorInfo = ErrorInfo("conflict", "This response is sent when a request conflicts with the current state of the server")
+  lazy val badRequestErrorInfo = ErrorInfo(model.StatusCodes.BadRequest.reason, model.StatusCodes.BadRequest.defaultMessage)
+  lazy val unauthorizedErrorInfo = ErrorInfo(model.StatusCodes.Unauthorized.reason, model.StatusCodes.Unauthorized.defaultMessage)
+  lazy val forbiddenErrorInfo = ErrorInfo(model.StatusCodes.Forbidden.reason, model.StatusCodes.Forbidden.defaultMessage)
+  lazy val notFoundErrorInfo = ErrorInfo(model.StatusCodes.NotFound.reason, model.StatusCodes.NotFound.defaultMessage)
+  lazy val conflictErrorInfo = ErrorInfo(model.StatusCodes.Conflict.reason, model.StatusCodes.Conflict.defaultMessage)
   // 500
-  lazy val internalServerErrorErrorInfo = ErrorInfo("internal_server_error", "The server has encountered a situation it doesn't know how to handle")
-  lazy val serviceUnavailableErrorInfo = ErrorInfo("service_unavailable", "The server is not ready to handle the request")
+  lazy val internalServerErrorErrorInfo = ErrorInfo(model.StatusCodes.InternalServerError.reason, model.StatusCodes.InternalServerError.defaultMessage)
+  lazy val serviceUnavailableErrorInfo = ErrorInfo(model.StatusCodes.ServiceUnavailable.reason, model.StatusCodes.ServiceUnavailable.defaultMessage)
   lazy val unknownErrorInfo = ErrorInfo("unknown_error", "The reason for the error could not be determined")
 
 }
