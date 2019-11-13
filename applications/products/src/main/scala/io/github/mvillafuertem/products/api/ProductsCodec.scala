@@ -1,12 +1,12 @@
 package io.github.mvillafuertem.products.api
 
-import io.circe.{Decoder, Encoder, HCursor, Json}
 import io.circe.syntax._
+import io.circe.{Decoder, Encoder, HCursor, Json}
 import io.github.mvillafuertem.products.domain.model.ProductType
 import io.github.mvillafuertem.products.domain.model.ProductType.{New, Used}
-import tapir.Codec.{JsonCodec, PlainCodec}
-import tapir.json.circe._
-import tapir.{Codec, Validator}
+import sttp.tapir.Codec.{JsonCodec, PlainCodec}
+import sttp.tapir.json.circe._
+import sttp.tapir.{Codec, Validator}
 
 
 /**

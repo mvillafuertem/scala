@@ -4,10 +4,9 @@ import io.circe.generic.auto._
 import io.github.mvillafuertem.products.api.ProductsEndpoint.ProductsQuery
 import io.github.mvillafuertem.products.domain.model.ProductType.New
 import io.github.mvillafuertem.products.domain.model.{Product, ProductId, ProductType}
-import tapir.json.circe._
-import tapir.model.StatusCodes
-import tapir.{Endpoint, EndpointInput, jsonBody, path, query, _}
-
+import sttp.model.StatusCode
+import sttp.tapir.json.circe._
+import sttp.tapir._
 
 
 /**
@@ -51,7 +50,7 @@ trait ProductsEndpoint extends ProductsCodec {
       .in(baseProductsResource)
       .name(productsResourceName)
       .description(productsResourceDescription)
-      .out(statusCode(StatusCodes.Created).and(jsonBody[Vector[Product]].example(vectorProductsExample)))
+      .out(statusCode(StatusCode.Created).and(jsonBody[Vector[Product]].example(vectorProductsExample)))
 
   // e x a m p l e
 

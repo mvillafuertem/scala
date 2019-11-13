@@ -4,8 +4,8 @@ import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import io.github.mvillafuertem.products.BuildInfo
-import tapir.docs.openapi._
-import tapir.openapi.circe.yaml._
+import sttp.tapir.docs.openapi._
+import sttp.tapir.openapi.circe.yaml._
 
 
 trait SwaggerApi {
@@ -24,7 +24,7 @@ trait SwaggerApi {
       redirect(s"$contextPath/index.html?url=/${ProductsEndpoint.apiResource}/${ProductsEndpoint.apiVersion}/$contextPath/$yamlName", StatusCodes.PermanentRedirect)
     } ~ path(yamlName) {
       complete(openApi)
-    } ~ getFromResourceDirectory("META-INF/resources/webjars/swagger-ui/3.23.8/")
+    } ~ getFromResourceDirectory("META-INF/resources/webjars/swagger-ui/3.24.0/")
   }
   }
 

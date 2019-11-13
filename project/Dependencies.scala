@@ -101,7 +101,8 @@ object Dependencies {
       Artifact.zioInteropReactiveStreams % Version.zioInteropReactiveStreams,
       Artifact.slick % Version.slick,
       Artifact.h2 % Version.h2,
-      Artifact.logback % Version.logback
+      Artifact.logback % Version.logback,
+      Artifact.swaggerUi % Version.swaggerUi
     ) ++ Seq(
       Artifact.tapirCore,
       Artifact.tapirAkkaHttpServer,
@@ -193,12 +194,13 @@ object Dependencies {
     val slick = "com.typesafe.slick" %% "slick"
     val specs2Core = "org.specs2" %% "specs2-core"
     val specs2MatcherExtra = "org.specs2" %% "specs2-matcher-extra"
-    val tapirAkkaHttpServer = "com.softwaremill.tapir" %% "tapir-akka-http-server"
-    val tapirCore = "com.softwaremill.tapir" %% "tapir-core"
-    val tapirJsonCirce = "com.softwaremill.tapir" %% "tapir-json-circe"
-    val tapirOpenapiCirceYaml = "com.softwaremill.tapir" %% "tapir-openapi-circe-yaml"
-    val tapirOpenapiDocs = "com.softwaremill.tapir" %% "tapir-openapi-docs"
-    val tapirSwaggerUiAkkaHttp = "com.softwaremill.tapir" %% "tapir-swagger-ui-akka-http"
+    val tapirAkkaHttpServer = "com.softwaremill.sttp.tapir" %% "tapir-akka-http-server"
+    val tapirCore = "com.softwaremill.sttp.tapir" %% "tapir-core"
+    val tapirJsonCirce = "com.softwaremill.sttp.tapir" %% "tapir-json-circe"
+    val tapirOpenapiCirceYaml = "com.softwaremill.sttp.tapir" %% "tapir-openapi-circe-yaml"
+    val tapirOpenapiDocs = "com.softwaremill.sttp.tapir" %% "tapir-openapi-docs"
+    val tapirSwaggerUiAkkaHttp = "com.softwaremill.sttp.tapir" %% "tapir-swagger-ui-akka-http"
+    val swaggerUi = "org.webjars" % "swagger-ui"
     val testcontainers = "com.dimafeng" %% "testcontainers-scala"
     val testcontainersKafka = "org.testcontainers" % "kafka"
     val zio = "dev.zio" %% "zio"
@@ -225,7 +227,8 @@ object Dependencies {
     val scalaTest = "3.0.8"
     val specs2 = "4.6.0"
     val slick = "3.3.2"
-    val tapir = "0.11.9"
+    val tapir = "0.12.1"
+    val swaggerUi = "3.24.0"
     val testcontainers = "0.33.0"
     val testcontainersKafka = "1.12.3"
     val zio = "1.0.0-RC16"
