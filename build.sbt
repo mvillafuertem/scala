@@ -27,7 +27,8 @@ lazy val scala = (project in file("."))
     slick,
     todo,
     products,
-    zio,
+    `sensor-controller`,
+    zio
   )
   // S E T T I N G S
   .settings(commonSettings)
@@ -82,6 +83,19 @@ lazy val products = (project in file("applications/products"))
   .settings(libraryDependencies ++= Dependencies.products)
   // P L U G I N S
   .enablePlugins(BuildInfoPlugin)
+  .enablePlugins(GitVersioning)
+
+lazy val `sensor-controller` = (project in file("applications/sensor-controller"))
+  // S E T T I N G S
+  .settings(commonSettings)
+  // FIXME override scala version, eliminar cuando kafka sea compatible con 2.13
+  .settings(scalaVersion := "2.12.10")
+  .settings(libraryDependencies ++= Dependencies.`sensor-controller`)
+  .settings(
+    PB.targets in Compile := Seq(
+      scalapb.gen() -> (sourceManaged in Compile).value
+    ))
+  // P L U G I N S
   .enablePlugins(GitVersioning)
 
 lazy val algorithms = (project in file("algorithms"))

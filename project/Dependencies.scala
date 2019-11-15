@@ -119,6 +119,23 @@ object Dependencies {
       Artifact.zioTest % Version.zio
     ).map(_ % Test)
 
+  val `sensor-controller`: Seq[ModuleID] =
+  // S E N S O R  C O N T R O L L E R
+    Seq(
+      Artifact.akkaActorTyped % Version.akka,
+      Artifact.akkaStreamTyped % Version.akka,
+      Artifact.akkaKafka % Version.akkaKafka,
+      "com.iheart" %% "ficus" % "1.4.7",
+      "org.apache.curator" % "curator-test" % "4.2.0",
+      "org.apache.kafka" %% "kafka" % "2.3.1",
+      Artifact.logback % Version.logback
+    ) ++ Seq(
+      // S E N S O R  C O N T R O L L E R  T E S T
+      Artifact.akkaHttpTestkit % Version.akkaHttp,
+      Artifact.scalaTest % Version.scalaTest,
+      Artifact.zioTest % Version.zio
+    ).map(_ % Test)
+
   val cats: Seq[ModuleID] = Seq(
     // C A T S
     Artifact.catsCore,
@@ -180,6 +197,7 @@ object Dependencies {
     val akkaSlf4f = "com.typesafe.akka" %% "akka-slf4j"
     val akkaStream = "com.typesafe.akka" %% "akka-stream"
     val akkaStreamKafkaTestkit = "com.typesafe.akka" %% "akka-stream-kafka-testkit"
+    val akkaKafka = "com.typesafe.akka" %% "akka-stream-kafka"
     val akkaStreamTestkit = "com.typesafe.akka" %% "akka-stream-testkit"
     val akkaStreamTyped = "com.typesafe.akka" %% "akka-stream-typed"
     val akkaTestKit = "com.typesafe.akka" %% "akka-testkit"

@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+option java_package = "com.lightbend.stream.messages";
+
+// Heater control
+enum HeaterCommand{
+    On = 0;
+    Off = 1;
+}
+
+// Heater Control Message.
+message HeaterControl {
+    int32 sensorID = 1;
+    HeaterCommand command = 2;
+}
+
+// Temperature Control Message
+message TemperatureControl {
+    int32 sensorID = 1;
+    double desired = 2;
+    double upDelta = 3;
+    double downDelta = 4;
+}
+
+// Sensor data.
+message SensorData {
+    int32 sensorID = 1;
+    double temperature = 2;
+}
