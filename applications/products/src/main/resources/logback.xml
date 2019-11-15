@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{ISO8601} %-5level [%thread] %logger{50} - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <appender name="ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="STDOUT"/>
+    </appender>
+
+    <!-- akka -->
+    <logger name="akka.actor" level="DEBUG"/>
+    <logger name="akka.actor.TimerScheduler" level="INFO"/>
+
+    <root level="DEBUG">
+        <appender-ref ref="ASYNC"/>
+    </root>
+</configuration>

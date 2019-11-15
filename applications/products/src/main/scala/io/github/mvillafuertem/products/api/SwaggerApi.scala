@@ -13,7 +13,7 @@ trait SwaggerApi {
   private lazy val openApi: String = Seq(
     // p r o d u c t s  e n d p o i n t
     ProductsEndpoint.productsEndpoint
-    ).toOpenAPI(BuildInfo.name, BuildInfo.version)
+  ).toOpenAPI(BuildInfo.name, BuildInfo.version)
     .toYaml
 
   private lazy val contextPath = "docs"
