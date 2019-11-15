@@ -1,19 +1,13 @@
 package io.github.mvillafuertem.products.api
 
-import io.github.mvillafuertem.products.configuration.InfrastructureConfiguration
+import akka.http.scaladsl.server.Route
+import io.github.mvillafuertem.products.api.TapirAkkaHttpServerWithZIO._
 import io.github.mvillafuertem.products.domain.repository.ProductsRepository
 /**
   * @author Miguel Villafuerte
   */
-final class ProductsApi(productsRepository: ProductsRepository,
-                        infrastructureConfiguration: InfrastructureConfiguration) extends ProductsEndpoint {
+final class ProductsApi(productsRepository: ProductsRepository) extends ProductsEndpoint {
 
-
-
-//  productsEndpoint.toRoute(
-//    query => productsRepository.getAll.provide(infrastructureConfiguration)
-//  )
-
-
+  val route: Route = productsEndpoint.toRoute(_ => productsRepository.find)
 
 }

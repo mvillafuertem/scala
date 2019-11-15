@@ -7,10 +7,12 @@ import akka.http.scaladsl.Http
 import akka.stream.Materializer
 import akka.{Done, actor}
 import io.github.mvillafuertem.products.BuildInfo
-import io.github.mvillafuertem.products.api.SwaggerApi
+import io.github.mvillafuertem.products.api.{ProductsApi, SwaggerApi}
+import io.github.mvillafuertem.products.infrastructure.SlickProductsRepository
 import slick.basic.BasicBackend
 import slick.jdbc.H2Profile.backend._
 import zio.{Task, UIO, ZIO}
+import akka.http.scaladsl.server.Directives._
 
 import scala.concurrent.ExecutionContext
 
@@ -24,7 +26,9 @@ trait ProductsServiceConfiguration extends InfrastructureConfiguration {
       server <- Task.fromFuture(_ => {
         implicit lazy val untypedSystem: actor.ActorSystem = actorSystem.toClassic
         implicit lazy val materializer: Materializer = Materializer(actorSystem)
-        Http()(untypedSystem).bindAndHandle(SwaggerApi.route, productsConfigurationProperties.interface, productsConfigurationProperties.port)
+        Http()(untypedSystem).bindAndHandle(SwaggerApi.route ~ new ProductsApi(new SlickProductsRepository() {
+          override def db: UIO[BasicBackend#DatabaseDef] =  ZIO.effectTotal(Database.forConfig("infrastructure.h2"))
+        }).route, productsConfigurationProperties.interface, productsConfigurationProperties.port)
       }).mapError { exception =>
         actorSystem.log.error(s"Server could not start with parameters [host:port]=[${productsConfigurationProperties.interface},${productsConfigurationProperties.port}]", exception)
         exception

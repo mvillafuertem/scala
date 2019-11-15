@@ -50,7 +50,7 @@ trait ProductsEndpoint extends ProductsCodec {
       .in(baseProductsResource)
       .name(productsResourceName)
       .description(productsResourceDescription)
-      .out(statusCode(StatusCode.Created).and(jsonBody[Vector[Product]].example(vectorProductsExample)))
+      .out(statusCode(StatusCode.Created).and(jsonBody[String].example("vectorProductsExample")))
 
   // e x a m p l e
 

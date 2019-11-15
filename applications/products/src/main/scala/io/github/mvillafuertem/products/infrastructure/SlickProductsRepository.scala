@@ -9,7 +9,7 @@ import slick.dbio.{DBIO, StreamingDBIO}
 import slick.driver.H2Driver.api._
 import zio.interop.reactiveStreams._
 import zio.stream.ZStream
-import zio.{IO, ZIO}
+import zio.{IO, UIO, ZIO}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -33,6 +33,8 @@ trait SlickProductsRepository extends ProductsRepository with InfrastructureConf
       case e: Exception => new ProductException(e)
     }
   }
+
+  override def find: IO[Unit, String] = UIO.succeed("hola")
 
 }
 
