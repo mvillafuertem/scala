@@ -170,7 +170,7 @@ object Dependencies {
       Artifact.zio,
       Artifact.zioStreams
     ).map(_ % Version.zio) ++ Seq(
-      "dev.zio" %% "zio-akka-cluster" % "0.1.7"
+      Artifact.zioAkkaCluster % Version.zioAkkaCluster
     ) ++ Seq(
       // Z I O  T E S T
       Artifact.zioTest,
@@ -227,6 +227,7 @@ object Dependencies {
     val zio = "dev.zio" %% "zio"
     val zioInteropReactiveStreams = "dev.zio" %% "zio-interop-reactivestreams"
     val zioStreams = "dev.zio" %% "zio-streams"
+    val zioAkkaCluster = "dev.zio" %% "zio-akka-cluster"
     val zioTest = "dev.zio" %% "zio-test"
     val zioTestSbt = "dev.zio" %% "zio-test-sbt"
   }
@@ -249,10 +250,11 @@ object Dependencies {
     val specs2 = "4.8.1"
     val slick = "3.3.2"
     val tapir = "0.12.2"
-    val swaggerUi = "3.24.0"
+    val swaggerUi = "3.24.3"
     val testcontainers = "0.33.0"
     val testcontainersKafka = "1.12.3"
-    val zio = "1.0.0-RC16"
+    val zio = "1.0.0-RC17"
+    val zioAkkaCluster = "0.1.8"
     val zioInteropReactiveStreams = "1.0.3.4-RC1"
   }
 

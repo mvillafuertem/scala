@@ -8,7 +8,7 @@ import scala.concurrent.ExecutionContext
 object ProductsServiceApplication extends ProductsServiceConfiguration
   with zio.App  {
 
-  override implicit val executionContext: ExecutionContext = Platform.executor.asEC
+  override implicit val executionContext: ExecutionContext = platform.executor.asEC
 
   override def run(args: List[String]): ZIO[zio.ZEnv, Nothing, Int] =
     Managed.make(actorSystem)(sys => UIO.succeed(sys.terminate()).ignore)

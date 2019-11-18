@@ -46,7 +46,7 @@ final class ProducerConsumerQueue extends DefaultRuntime
         q <- Queue.unbounded[String]
       } yield new MainEnv with Console.Live with Clock.Live {
         override val mainQueue: Queue[String] = q
-      }).fold(_ => 1, _ => 0)
+      }).as(0)
 
     unsafeRun(program) shouldBe 0
   }
