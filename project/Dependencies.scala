@@ -249,7 +249,7 @@ object Dependencies {
     val scalaTest = "3.0.8"
     val specs2 = "4.8.1"
     val slick = "3.3.2"
-    val tapir = "0.12.2"
+    val tapir = "0.12.3"
     val swaggerUi = "3.24.3"
     val testcontainers = "0.33.0"
     val testcontainersKafka = "1.12.3"

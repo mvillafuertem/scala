@@ -23,7 +23,7 @@ addSbtPlugin("com.typesafe.sbt" % "sbt-native-packager" % "1.4.1")
 addSbtPlugin("io.spray" % "sbt-revolver" % "0.9.1")
 
 // S C O V E R A G E
-addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.6.0")
+addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.6.1")
 
 // M D O C
-addSbtPlugin("org.scalameta" % "sbt-mdoc" % "1.3.2" )
+addSbtPlugin("org.scalameta" % "sbt-mdoc" % "2.0.2" )
