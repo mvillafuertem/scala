@@ -1,20 +1,21 @@
 package io.github.mvillafuertem.akka.untyped.stream
 
 import akka.actor.ActorSystem
-import akka.stream.scaladsl.{Flow, GraphDSL, Keep, Partition, Sink, Source}
+import akka.stream.Attributes.LogLevels
+import akka.stream.scaladsl.{Flow, GraphDSL, Keep, Merge, Partition, Sink, Source}
 import akka.stream.testkit.scaladsl.{TestSink, TestSource}
-import akka.stream.{ActorMaterializer, FanOutShape2, FlowShape}
+import akka.stream.{ActorMaterializer, Attributes, FanOutShape2, FlowShape}
 import akka.testkit.{TestKit, TestProbe}
 import akka.{Done, NotUsed}
 import org.scalatest.{BeforeAndAfterAll, WordSpecLike}
 
-import scala.concurrent.{Await, Future}
 import scala.concurrent.duration._
+import scala.concurrent.{Await, Future}
 import scala.util.{Failure, Success, Try}
 
 /**
- * @author Miguel Villafuerte
- */
+  * @author Miguel Villafuerte
+  */
 final class TestingStreamsSpec extends TestKit(ActorSystem("TestingStreams"))
   with WordSpecLike
   with BeforeAndAfterAll {
@@ -130,6 +131,48 @@ final class TestingStreamsSpec extends TestKit(ActorSystem("TestingStreams"))
 
     }
 
+    "test partition flows with a test source AND a test sink" in {
+
+      def spin(value: Int): Int = {
+        val start = System.currentTimeMillis()
+        while (System.currentTimeMillis() - start < 10) {}
+        value
+      }
+
+      val flow = Flow.fromGraph(GraphDSL.create() { implicit b =>
+        import GraphDSL.Implicits._
+
+        val workerCount = 4
+
+        val partition = b.add(Partition[Int](workerCount, _ % workerCount))
+        val merge = b.add(Merge[Int](workerCount))
+
+        for (_ <- 1 to workerCount) {
+          partition ~> Flow[Int].log("partition").map(spin).async ~> merge
+        }
+
+        FlowShape(partition.in, merge.out)
+      }).withAttributes(Attributes.logLevels(onElement = LogLevels.Info))
+
+      val testSource = TestSource.probe[Int]
+      val testSink = TestSink.probe[Int]
+
+      val materializedTestValue = testSource.via(flow).toMat(testSink)(Keep.both).run()
+      val (publisher, subscriber) = materializedTestValue
+
+      publisher
+        .sendNext(1)
+        .sendNext(5)
+        .sendNext(13)
+        .sendComplete()
+
+      subscriber
+        .request(3) // Don't forget this
+        .expectNext(1, 5, 13)
+        .expectComplete()
+
+    }
+
     "monadic short-circuiting in streams" in {
 
 
@@ -150,21 +193,24 @@ final class TestingStreamsSpec extends TestKit(ActorSystem("TestingStreams"))
 
       object ErrorHandlingFlow {
         def apply[T, MatErr](errorSink: Sink[Throwable, MatErr]): Flow[Try[T], T, MatErr] = Flow.fromGraph(
-          GraphDSL.create(errorSink) { implicit builder => sink =>
-            import GraphDSL.Implicits._
+          GraphDSL.create(errorSink) { implicit builder =>
+            sink =>
+              import GraphDSL.Implicits._
 
-            val partition = builder.add(PartitionTry[T]())
+              val partition = builder.add(PartitionTry[T]())
 
-            partition.out0 ~> sink
+              partition.out0 ~> sink
 
-            new FlowShape[Try[T], T](partition.in, partition.out1)
+              new FlowShape[Try[T], T](partition.in, partition.out1)
           }
         )
       }
 
-      val source      : Source[String, NotUsed]           = Source(List("1", "2", "hello"))
-      val convert     : Flow[String, Try[Int], NotUsed]   = Flow.fromFunction((s: String) => Try{s.toInt})
-      val errorsSink  : Sink[Throwable, Future[Done]]     = Sink.foreach[Throwable](println)
+      val source: Source[String, NotUsed] = Source(List("1", "2", "hello"))
+      val convert: Flow[String, Try[Int], NotUsed] = Flow.fromFunction((s: String) => Try {
+        s.toInt
+      })
+      val errorsSink: Sink[Throwable, Future[Done]] = Sink.foreach[Throwable](println)
       val handleErrors: Flow[Try[Int], Int, Future[Done]] = ErrorHandlingFlow(errorsSink)
 
       source.via(convert).via(handleErrors).runForeach(println)
