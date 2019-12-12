@@ -20,21 +20,25 @@ trait ProductsServiceConfiguration extends InfrastructureConfiguration {
 
   implicit val executionContext: ExecutionContext
 
-  def httpServer(actorSystem: ActorSystem[_]): Task[Http.ServerBinding] =
+  def httpServer(actorSystem: ActorSystem[_]): ZIO[Any, Throwable, Unit] = {
+
+    implicit lazy val untypedSystem: actor.ActorSystem = actorSystem.toClassic
+    implicit lazy val materializer: Materializer = Materializer(actorSystem)
+    val eventualBinding = Http()(untypedSystem).bindAndHandle(SwaggerApi.route ~ new ProductsApi(new SlickProductsRepository() {
+      override def db: UIO[BasicBackend#DatabaseDef] = ZIO.effectTotal(Database.forConfig("infrastructure.h2"))
+    }).route, productsConfigurationProperties.interface, productsConfigurationProperties.port)
     for {
       //actorSystem <- ZIO.environment[ActorSystem[_]]
-      server <- Task.fromFuture(_ => {
-        implicit lazy val untypedSystem: actor.ActorSystem = actorSystem.toClassic
-        implicit lazy val materializer: Materializer = Materializer(actorSystem)
-        Http()(untypedSystem).bindAndHandle(SwaggerApi.route ~ new ProductsApi(new SlickProductsRepository() {
-          override def db: UIO[BasicBackend#DatabaseDef] =  ZIO.effectTotal(Database.forConfig("infrastructure.h2"))
-        }).route, productsConfigurationProperties.interface, productsConfigurationProperties.port)
-      }).mapError { exception =>
+      _ <- Task.fromFuture(_ => eventualBinding)
+        .mapError { exception =>
         actorSystem.log.error(s"Server could not start with parameters [host:port]=[${productsConfigurationProperties.interface},${productsConfigurationProperties.port}]", exception)
         exception
-      }
-      _ <- UIO.effectTotal(actorSystem.log.info(s"Server online at http://${server.localAddress.getHostString}:${server.localAddress.getPort}/"))
-    } yield server
+      }.forever
+      //_ <- UIO.effectTotal(actorSystem.log.info(s"Server online at http://${server.localAddress.getHostString}:${server.localAddress.getPort}/"))
+
+    } yield ()
+
+  }
 
 
   val actorSystem: Task[ActorSystem[Done]] = Task(ActorSystem[Done](Behaviors.setup[Done] { context =>

@@ -1,7 +1,7 @@
 package io.github.mvillafuertem.products
 
 import io.github.mvillafuertem.products.configuration.ProductsServiceConfiguration
-import zio.{Managed, UIO, ZIO, console}
+import zio.{Managed, UIO, ZIO}
 
 import scala.concurrent.ExecutionContext
 
@@ -16,9 +16,6 @@ object ProductsServiceApplication extends ProductsServiceConfiguration
         actorSystem =>
           for {
             _ <- httpServer(actorSystem)
-            _ <- console.putStrLn("Type [ENTER] to stop")
-            _ <- console.getStrLn
-          } yield 0)
-      .catchAll(e => console.putStrLn(e.toString).as(1))
+          } yield 0).fold(_ => 1, _ => 0)
 
 }
