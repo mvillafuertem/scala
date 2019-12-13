@@ -4,7 +4,6 @@ scala:
   - 2.13.1
 
 jdk:
-  - oraclejdk11
   - openjdk11
 
 jobs:

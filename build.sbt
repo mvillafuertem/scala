@@ -123,7 +123,5 @@ lazy val slick = (project in file("slick"))
 lazy val zio = (project in file("zio"))
   // S E T T I N G S
   .settings(commonSettings)
-  // FIXME override scala version, eliminar cuando zio-akka-cluster sea compatible con 2.13
-  .settings(scalaVersion := "2.12.10")
   .settings(libraryDependencies ++= Dependencies.zio)
   .settings(testFrameworks := Seq(new TestFramework("zio.test.sbt.ZTestFramework")))
