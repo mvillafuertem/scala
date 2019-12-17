@@ -127,7 +127,7 @@ object Dependencies {
       Artifact.akkaKafka % Version.akkaKafka,
       "com.iheart" %% "ficus" % "1.4.7",
       "org.apache.curator" % "curator-test" % "4.2.0",
-      "org.apache.kafka" %% "kafka" % "2.3.1",
+      "org.apache.kafka" %% "kafka" % "2.4.0",
       Artifact.logback % Version.logback
     ) ++ Seq(
       // S E N S O R  C O N T R O L L E R  T E S T
@@ -249,7 +249,7 @@ object Dependencies {
     val scalaTest = "3.0.8"
     val specs2 = "4.8.1"
     val slick = "3.3.2"
-    val tapir = "0.12.8"
+    val tapir = "0.12.9"
     val swaggerUi = "3.24.3"
     val testcontainers = "0.34.1"
     val testcontainersKafka = "1.12.4"

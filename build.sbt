@@ -88,8 +88,6 @@ lazy val products = (project in file("applications/products"))
 lazy val `sensor-controller` = (project in file("applications/sensor-controller"))
   // S E T T I N G S
   .settings(commonSettings)
-  // FIXME override scala version, eliminar cuando kafka sea compatible con 2.13
-  .settings(scalaVersion := "2.12.10")
   .settings(libraryDependencies ++= Dependencies.`sensor-controller`)
   .settings(
     PB.targets in Compile := Seq(
