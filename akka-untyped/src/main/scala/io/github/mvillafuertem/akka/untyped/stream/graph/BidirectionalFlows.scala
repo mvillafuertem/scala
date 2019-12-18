@@ -2,12 +2,12 @@ package io.github.mvillafuertem.akka.untyped.stream.graph
 
 import akka.actor.ActorSystem
 import akka.stream.scaladsl.{Flow, GraphDSL, RunnableGraph, Sink, Source}
-import akka.stream.{ActorMaterializer, BidiShape, ClosedShape}
+import akka.stream.{BidiShape, ClosedShape, Materializer}
 
 object BidirectionalFlows extends App {
 
   implicit val actorSystem: ActorSystem = ActorSystem("BidirectionalFlows")
-  implicit val actorMaterializer: ActorMaterializer = ActorMaterializer()
+  implicit val actorMaterializer: Materializer = Materializer(actorSystem)
 
 
   /**

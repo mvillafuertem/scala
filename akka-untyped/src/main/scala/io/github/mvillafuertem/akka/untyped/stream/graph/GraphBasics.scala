@@ -3,14 +3,14 @@ package io.github.mvillafuertem.akka.untyped.stream.graph
 import akka.NotUsed
 import akka.actor.ActorSystem
 import akka.stream.scaladsl.{Balance, Broadcast, Flow, GraphDSL, Merge, RunnableGraph, Sink, Source, Zip}
-import akka.stream.{ActorMaterializer, ClosedShape}
+import akka.stream.{ClosedShape, Materializer}
 
 import scala.concurrent.duration._
 
 object GraphBasics extends App {
 
   implicit val actorSystem: ActorSystem = ActorSystem("GraphBasics")
-  implicit val actorMaterializer: ActorMaterializer = ActorMaterializer()
+  implicit val actorMaterializer: Materializer = Materializer(actorSystem)
 
 
   val input = Source(1 to 1000)

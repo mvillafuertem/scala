@@ -4,12 +4,12 @@ import java.util.Date
 
 import akka.actor.ActorSystem
 import akka.stream.scaladsl.{Broadcast, Flow, GraphDSL, RunnableGraph, Sink, Source, ZipWith}
-import akka.stream.{ActorMaterializer, ClosedShape, FanOutShape2, UniformFanInShape}
+import akka.stream.{ClosedShape, FanOutShape2, Materializer, UniformFanInShape}
 
 object ComplexOpenGraphs extends App {
 
   implicit val actorSystem: ActorSystem = ActorSystem("ComplexOpenGraphs")
-  implicit val actorMaterializer: ActorMaterializer = ActorMaterializer()
+  implicit val actorMaterializer: Materializer = Materializer(actorSystem)
 
   /**
    * Max3 Operator

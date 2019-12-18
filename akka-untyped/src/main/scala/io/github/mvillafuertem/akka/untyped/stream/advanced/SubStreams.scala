@@ -1,7 +1,7 @@
 package io.github.mvillafuertem.akka.untyped.stream.advanced
 
 import akka.actor.ActorSystem
-import akka.stream.ActorMaterializer
+import akka.stream.Materializer
 import akka.stream.scaladsl.{Keep, Sink, Source}
 
 import scala.util.{Failure, Success}
@@ -9,7 +9,7 @@ import scala.util.{Failure, Success}
 object SubStreams extends App {
 
   implicit val actorSystem: ActorSystem = ActorSystem("SubStreams")
-  implicit val actorMaterializer: ActorMaterializer = ActorMaterializer()
+  implicit val actorMaterializer: Materializer = Materializer(actorSystem)
   import actorSystem.dispatcher
 
   // 1. Grouping a stream by a certain function

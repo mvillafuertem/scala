@@ -1,12 +1,11 @@
 package io.github.mvillafuertem.products.api
 
-import io.circe.generic.auto._
 import io.github.mvillafuertem.products.api.ProductsEndpoint.ProductsQuery
 import io.github.mvillafuertem.products.domain.model.ProductType.New
 import io.github.mvillafuertem.products.domain.model.{Product, ProductId, ProductType}
 import sttp.model.StatusCode
-import sttp.tapir.json.circe._
 import sttp.tapir._
+import sttp.tapir.json.circe._
 
 
 /**

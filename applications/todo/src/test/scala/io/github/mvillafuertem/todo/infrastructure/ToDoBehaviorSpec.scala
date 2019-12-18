@@ -4,7 +4,7 @@ import java.util.Date
 
 import akka.actor.ActorSystem
 import akka.actor.testkit.typed.scaladsl.{ScalaTestWithActorTestKit, TestProbe}
-import akka.stream.ActorMaterializer
+import akka.stream.{ActorMaterializer, Materializer}
 import akka.util.Timeout
 import com.typesafe.config.{Config, ConfigFactory}
 import ToDoBehavior.{Close, GetToDo, Open, State}
@@ -26,7 +26,7 @@ final class ToDoBehaviorSpec extends ScalaTestWithActorTestKit(ToDoBehaviorSpec.
   override implicit val timeout: Timeout = 10 second
 
   implicit val actorSystem = ActorSystem()
-  implicit val actorMaterializer = ActorMaterializer()
+  implicit val actorMaterializer = Materializer(actorSystem)
 
   behavior of "ToDo Behavior Spec"
 

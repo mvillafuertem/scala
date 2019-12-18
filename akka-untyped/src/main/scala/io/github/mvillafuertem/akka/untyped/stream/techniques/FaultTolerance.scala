@@ -4,7 +4,7 @@ import akka.NotUsed
 import akka.actor.ActorSystem
 import akka.stream.Supervision.{Resume, Stop}
 import akka.stream.scaladsl.{Broadcast, GraphDSL, RestartSource, RunnableGraph, Sink, Source, Zip}
-import akka.stream.{ActorAttributes, ActorMaterializer, ClosedShape}
+import akka.stream.{ActorAttributes, ClosedShape, Materializer}
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
@@ -13,7 +13,7 @@ import scala.util.Random
 object FaultTolerance extends App {
 
   implicit val actorSystem: ActorSystem = ActorSystem("FaultTolerance")
-  implicit val actorMaterializer: ActorMaterializer = ActorMaterializer()
+  implicit val actorMaterializer: Materializer = Materializer(actorSystem)
 
   // 1. Logging
   val faultySource = Source(1 to 10).map(e => if(e == 6) throw new RuntimeException else e)

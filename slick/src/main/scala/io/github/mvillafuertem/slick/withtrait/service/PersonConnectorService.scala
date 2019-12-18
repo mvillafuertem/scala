@@ -2,14 +2,11 @@ package io.github.mvillafuertem.slick.withtrait.service
 
 import io.github.mvillafuertem.slick.withtrait.model.{Connection, ConnectionId, EdgeDBO, VertexDBO}
 import io.github.mvillafuertem.slick.withtrait.{EdgeRepository, PersonConnector, VertexRepository}
-import org.slf4j.LoggerFactory
 
 import scala.concurrent.Future
 
 final class PersonConnectorService(vertexRepository: VertexRepository[Future, VertexDBO],
                       edgeRepository: EdgeRepository[Future, EdgeDBO]) extends PersonConnector[Future] {
-
-  private val log = LoggerFactory.getLogger(classOf[PersonConnectorService])
 
   override def create(connection: Connection): Future[Connection] = ???
 

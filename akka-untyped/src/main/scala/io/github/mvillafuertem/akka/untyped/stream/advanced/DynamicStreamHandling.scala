@@ -2,14 +2,14 @@ package io.github.mvillafuertem.akka.untyped.stream.advanced
 
 import akka.actor.ActorSystem
 import akka.stream.scaladsl.{BroadcastHub, Keep, MergeHub, Sink, Source}
-import akka.stream.{ActorMaterializer, KillSwitches}
+import akka.stream.{KillSwitches, Materializer}
 
 import scala.concurrent.duration._
 
 object DynamicStreamHandling extends App {
 
   implicit val actorSystem: ActorSystem = ActorSystem("DynamicStreamHandling")
-  implicit val actorMaterializer: ActorMaterializer = ActorMaterializer()
+  implicit val actorMaterializer: Materializer = Materializer(actorSystem)
   import actorSystem.dispatcher
 
   // 1. Kill Switch

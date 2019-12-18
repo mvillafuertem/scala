@@ -2,7 +2,7 @@ package io.github.mvillafuertem.akka.untyped.stream.techniques
 
 import akka.actor.{Actor, ActorLogging, ActorSystem, Props}
 import akka.stream.scaladsl.{Flow, Sink, Source}
-import akka.stream.{ActorMaterializer, OverflowStrategy}
+import akka.stream.{Materializer, OverflowStrategy}
 import akka.util.Timeout
 
 import scala.concurrent.duration._
@@ -10,7 +10,7 @@ import scala.concurrent.duration._
 object IntegratingWithActors extends App {
 
   implicit val actorSystem: ActorSystem = ActorSystem("IntegratingWithActors")
-  implicit val actorMaterializer: ActorMaterializer = ActorMaterializer()
+  implicit val actorMaterializer: Materializer = Materializer(actorSystem)
 
   class SimpleActor extends Actor with ActorLogging {
 
@@ -75,7 +75,7 @@ object IntegratingWithActors extends App {
   }
 
   val destinationActor = actorSystem.actorOf(Props[DestinationActor], "destinationActor")
-  val actorPoweredSink = Sink.actorRefWithAck[Int](
+  val actorPoweredSink = Sink.actorRefWithBackpressure[Int](
     destinationActor,
     onInitMessage = StreamInit,
     onCompleteMessage = StreamComplete,

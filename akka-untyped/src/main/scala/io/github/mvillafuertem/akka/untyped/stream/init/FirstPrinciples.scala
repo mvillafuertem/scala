@@ -1,7 +1,7 @@
 package io.github.mvillafuertem.akka.untyped.stream.init
 
 import akka.actor.ActorSystem
-import akka.stream.ActorMaterializer
+import akka.stream.Materializer
 import akka.stream.scaladsl.{Flow, Sink, Source}
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -11,7 +11,7 @@ import scala.concurrent.Future
 object FirstPrinciples extends App {
 
   implicit val actorSystem: ActorSystem = ActorSystem("FirstPrinciples")
-  implicit val actorMaterializer: ActorMaterializer = ActorMaterializer()
+  implicit val actorMaterializer: Materializer = Materializer(actorSystem)
 
   // Producer
   val source = Source(1 to 10)
@@ -36,8 +36,8 @@ object FirstPrinciples extends App {
   val finiteSource = Source.single(1)
   val anotherFiniteSource = Source(List(1, 2, 3))
   val emptySource = Source.empty[Int]
-  val infiniteSource = Source(Stream.from(1))
-  val futureSource = Source.fromFuture(Future(42))
+  val infiniteSource = Source(LazyList(1))
+  val futureSource = Source.future(Future(42))
 
   // Kind of Consumer
   val theMostBoringSink = Sink.ignore

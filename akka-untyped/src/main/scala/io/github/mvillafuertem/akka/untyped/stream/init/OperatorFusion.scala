@@ -1,13 +1,13 @@
 package io.github.mvillafuertem.akka.untyped.stream.init
 
 import akka.actor.{Actor, ActorSystem, Props}
-import akka.stream.ActorMaterializer
+import akka.stream.Materializer
 import akka.stream.scaladsl.{Flow, Sink, Source}
 
 object OperatorFusion extends App {
 
   implicit val actorSystem: ActorSystem = ActorSystem("FirstPrinciples")
-  implicit val actorMaterializer: ActorMaterializer = ActorMaterializer()
+  implicit val actorMaterializer: Materializer = Materializer(actorSystem)
 
   val simpleSource = Source(1 to 10)
   val simpleFlow = Flow[Int].map(_ + 1)

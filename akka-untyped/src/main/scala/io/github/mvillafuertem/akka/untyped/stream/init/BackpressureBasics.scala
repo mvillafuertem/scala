@@ -2,7 +2,7 @@ package io.github.mvillafuertem.akka.untyped.stream.init
 
 import akka.actor.ActorSystem
 import akka.stream.scaladsl.{Flow, Sink, Source}
-import akka.stream.{ActorMaterializer, OverflowStrategy}
+import akka.stream.{Materializer, OverflowStrategy}
 
 import scala.concurrent.duration._
 
@@ -10,7 +10,7 @@ import scala.concurrent.duration._
 object BackpressureBasics extends App {
 
   implicit val actorSystem: ActorSystem = ActorSystem("BackpressureBasics")
-  implicit val actorMaterializer: ActorMaterializer = ActorMaterializer()
+  implicit val actorMaterializer: Materializer = Materializer(actorSystem)
 
   val fastSource = Source(1 to 1000)
   val slowSink = Sink.foreach[Int] { x =>

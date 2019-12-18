@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory
 
 import kafka.server.{ KafkaConfig, KafkaServerStartable }
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import java.util.Comparator
 
 

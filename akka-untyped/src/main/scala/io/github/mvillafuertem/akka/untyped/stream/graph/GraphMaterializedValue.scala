@@ -2,7 +2,7 @@ package io.github.mvillafuertem.akka.untyped.stream.graph
 
 import akka.actor.ActorSystem
 import akka.stream.scaladsl.{Broadcast, Flow, GraphDSL, Keep, Sink, Source}
-import akka.stream.{ActorMaterializer, FlowShape, SinkShape}
+import akka.stream.{FlowShape, Materializer, SinkShape}
 
 import scala.concurrent.Future
 import scala.util.{Failure, Success}
@@ -10,7 +10,7 @@ import scala.util.{Failure, Success}
 object GraphMaterializedValue extends App {
 
   implicit val actorSystem: ActorSystem = ActorSystem("GraphMaterializedValue")
-  implicit val actorMaterializer: ActorMaterializer = ActorMaterializer()
+  implicit val actorMaterializer: Materializer = Materializer(actorSystem)
 
   val wordSource = Source(List("Akka", "learning", "awesome"))
   val printer = Sink.foreach[String](println)

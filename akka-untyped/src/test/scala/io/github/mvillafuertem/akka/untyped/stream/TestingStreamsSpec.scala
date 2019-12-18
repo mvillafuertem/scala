@@ -5,6 +5,7 @@ import akka.stream.Attributes.LogLevels
 import akka.stream.scaladsl.{Flow, GraphDSL, Keep, Merge, Partition, Sink, Source}
 import akka.stream.testkit.scaladsl.{TestSink, TestSource}
 import akka.stream.{ActorMaterializer, Attributes, FanOutShape2, FlowShape}
+import akka.stream.{FanOutShape2, FlowShape, Materializer}
 import akka.testkit.{TestKit, TestProbe}
 import akka.{Done, NotUsed}
 import org.scalatest.{BeforeAndAfterAll, WordSpecLike}
@@ -20,7 +21,7 @@ final class TestingStreamsSpec extends TestKit(ActorSystem("TestingStreams"))
   with WordSpecLike
   with BeforeAndAfterAll {
 
-  implicit val materializer = ActorMaterializer()
+  implicit val materializer = Materializer(system)
 
   override def afterAll(): Unit = TestKit.shutdownActorSystem(system)
 

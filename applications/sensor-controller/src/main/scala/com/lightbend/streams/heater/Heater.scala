@@ -18,7 +18,7 @@ object Heater {
   var heaterOperation = 1
   val sensorID = 12345
 
-  def main(args: Array[String]) {
+  def main(args: Array[String]): Unit = {
 
     val brokers = kafkaConfig.brokers
     val temperatureUp = Duration(temperatureUpRate.rate)

@@ -2,7 +2,7 @@ package io.github.mvillafuertem.akka.untyped.stream.graph
 
 import akka.actor.ActorSystem
 import akka.stream.scaladsl.{Broadcast, Flow, GraphDSL, Keep, Merge, RunnableGraph, Sink, Source, Zip}
-import akka.stream.{ActorMaterializer, ClosedShape, FlowShape}
+import akka.stream.{ClosedShape, FlowShape, Materializer}
 import akka.{Done, NotUsed}
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -12,7 +12,7 @@ import scala.util.{Failure, Success}
 object ReusableGraph extends App {
 
   implicit val actorSystem: ActorSystem = ActorSystem("ReusableGraph")
-  implicit val actorMaterializer: ActorMaterializer = ActorMaterializer()
+  implicit val actorMaterializer: Materializer = Materializer(actorSystem)
 
 
   private val source: Source[String, NotUsed] = Source.single("Hello World")

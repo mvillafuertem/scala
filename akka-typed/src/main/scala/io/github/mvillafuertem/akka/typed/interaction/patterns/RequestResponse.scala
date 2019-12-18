@@ -25,8 +25,6 @@ object RequestResponse {
 
   object ResponseActor {
 
-    import RequestActor._
-
     val behavior = Behaviors.receiveMessage[Response] {
       case Response(result) =>
         println(s"Received message: $result")

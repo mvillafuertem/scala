@@ -3,12 +3,12 @@ package io.github.mvillafuertem.akka.untyped.stream.graph
 import akka.NotUsed
 import akka.actor.ActorSystem
 import akka.stream.scaladsl.{Broadcast, Concat, Flow, GraphDSL, Sink, Source}
-import akka.stream.{ActorMaterializer, FlowShape, SinkShape, SourceShape}
+import akka.stream.{FlowShape, Materializer, SinkShape, SourceShape}
 
 object OpenGraphs extends App {
 
   implicit val actorSystem: ActorSystem = ActorSystem("OpenGraphs")
-  implicit val actorMaterializer: ActorMaterializer = ActorMaterializer()
+  implicit val actorMaterializer: Materializer = Materializer(actorSystem)
 
   /**
    * A Composite source that concatenates 2 sources
