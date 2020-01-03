@@ -45,6 +45,8 @@ object Settings {
     publish / skip := true
   )
 
+  ThisBuild / useCoursier := false
+
 //  val noAssemblyTest: Seq[Def.Setting[_]] = Seq(
 //    assembly / test := {}
 //  )
