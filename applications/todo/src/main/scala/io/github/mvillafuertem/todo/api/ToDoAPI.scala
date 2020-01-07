@@ -16,7 +16,7 @@ import sttp.tapir.openapi.OpenAPI
 import sttp.tapir.openapi.circe.yaml._
 import sttp.tapir.server.akkahttp._
 import sttp.tapir.swagger.akkahttp.SwaggerAkka
-import sttp.tapir.{Endpoint, endpoint, jsonBody, oneOf, statusCode, statusDefaultMapping, statusMapping, _}
+import sttp.tapir.{Endpoint, endpoint, jsonBody, oneOf, statusCode, statusDefaultMapping, _}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -106,55 +106,65 @@ object ToDoAPI {
       case Right(value) => value
     })))(a => a.asJson.noSpaces)
 
+  private val notFoundErrorInfoValue: EndpointOutput[(StatusCode, ErrorInfo)] = statusCode
+    .and(jsonBody[ErrorInfo]
+      .example(notFoundErrorInfo)
+      .description("Not Found"))
+
+  private val internalServerErrorErrorInfoValue: EndpointOutput[(StatusCode, ErrorInfo)] = statusCode
+    .and(jsonBody[ErrorInfo]
+      .example(internalServerErrorErrorInfo)
+      .description("Internal Server Error"))
+
+  private val serviceUnavailableErrorInfoValue: EndpointOutput[(StatusCode, ErrorInfo)] = statusCode
+    .and(jsonBody[ErrorInfo]
+      .example(serviceUnavailableErrorInfo)
+      .description("Service Unavailable"))
+
+  private val badRequestErrorInfoValue: EndpointOutput[(StatusCode, ErrorInfo)] = statusCode
+    .and(jsonBody[ErrorInfo]
+      .example(badRequestErrorInfo)
+      .description("Bad Request"))
+
+  private val unauthorizedErrorInfoValue: EndpointOutput[(StatusCode, ErrorInfo)] = statusCode
+    .and(jsonBody[ErrorInfo]
+      .example(unauthorizedErrorInfo)
+      .description("Unauthorized"))
+
+  private val forbiddenErrorInfoValue: EndpointOutput[(StatusCode, ErrorInfo)] = statusCode
+    .and(jsonBody[ErrorInfo]
+    .example(forbiddenErrorInfo)
+    .description("Forbidden"))
+
+  private val unknownErrorInfoValue: EndpointOutput[(StatusCode, ErrorInfo)] = statusCode
+    .and(jsonBody[ErrorInfo]
+      .example(unknownErrorInfo)
+      .description("unknown error"))
+
   lazy val baseEndpoint: Endpoint[Unit, HttpError, Unit, Nothing] =
     endpoint
       .in("api" / "v1.0")
       .errorOut(
         oneOf(
-          statusMapping(
-            StatusCode.BadRequest,
-            statusCode
-              .and(jsonBody[ErrorInfo]
-                .example(badRequestErrorInfo)
-                .description("Bad Request"))
-          ),
-          statusMapping(
-            StatusCode.Unauthorized,
-            statusCode
-              .and(jsonBody[ErrorInfo]
-                .example(unauthorizedErrorInfo)
-                .description("Unauthorized"))
-          ),
-          statusMapping(
-            StatusCode.Forbidden,
-            statusCode.and(jsonBody[ErrorInfo]
-              .example(forbiddenErrorInfo)
-              .description("Forbidden"))
-          ),
-          statusMapping(
-            StatusCode.NotFound,
-            statusCode
-              .and(jsonBody[ErrorInfo]
-                .example(notFoundErrorInfo)
-                .description("Not Found"))
-          ),
-          statusMapping(
-            StatusCode.InternalServerError,
-            statusCode
-              .and(jsonBody[ErrorInfo]
-                .example(internalServerErrorErrorInfo)
-                .description("Internal Server Error"))),
-          statusMapping(
-            StatusCode.ServiceUnavailable,
-            statusCode
-              .and(jsonBody[ErrorInfo]
-                .example(serviceUnavailableErrorInfo)
-                .description("Service Unavailable"))),
-          statusDefaultMapping(
-            statusCode
-              .and(jsonBody[ErrorInfo]
-                .example(unknownErrorInfo)
-                .description("unknown error")))
+          statusMappingValueMatcher(StatusCode.BadRequest, badRequestErrorInfoValue){
+            case (StatusCode.BadRequest, _) => true
+          },
+          statusMappingValueMatcher(StatusCode.Unauthorized, unauthorizedErrorInfoValue){
+            case (StatusCode.Unauthorized, _) => true
+          },
+          statusMappingValueMatcher(StatusCode.Forbidden, forbiddenErrorInfoValue){
+            case (StatusCode.Forbidden, _) => true
+          },
+          statusMappingValueMatcher(StatusCode.NotFound, notFoundErrorInfoValue){
+            case (StatusCode.NotFound, _) => true
+          },
+          statusMappingValueMatcher(StatusCode.InternalServerError, internalServerErrorErrorInfoValue){
+            case (StatusCode.InternalServerError, _) => true
+          },
+          statusMappingValueMatcher(StatusCode.ServiceUnavailable, serviceUnavailableErrorInfoValue){
+            case (StatusCode.ServiceUnavailable, _) => true
+          },
+          statusDefaultMapping(unknownErrorInfoValue)
         )
       )
 
