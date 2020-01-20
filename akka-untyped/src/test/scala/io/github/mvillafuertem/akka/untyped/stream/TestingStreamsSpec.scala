@@ -2,10 +2,9 @@ package io.github.mvillafuertem.akka.untyped.stream
 
 import akka.actor.ActorSystem
 import akka.stream.Attributes.LogLevels
+import akka.stream._
 import akka.stream.scaladsl.{Flow, GraphDSL, Keep, Merge, Partition, Sink, Source}
 import akka.stream.testkit.scaladsl.{TestSink, TestSource}
-import akka.stream.{ActorMaterializer, Attributes, FanOutShape2, FlowShape}
-import akka.stream.{FanOutShape2, FlowShape, Materializer}
 import akka.testkit.{TestKit, TestProbe}
 import akka.{Done, NotUsed}
 import org.scalatest.{BeforeAndAfterAll, WordSpecLike}
@@ -153,6 +152,67 @@ final class TestingStreamsSpec extends TestKit(ActorSystem("TestingStreams"))
         }
 
         FlowShape(partition.in, merge.out)
+      }).withAttributes(Attributes.logLevels(onElement = LogLevels.Info))
+
+      val testSource = TestSource.probe[Int]
+      val testSink = TestSink.probe[Int]
+
+      val materializedTestValue = testSource.via(flow).toMat(testSink)(Keep.both).run()
+      val (publisher, subscriber) = materializedTestValue
+
+      publisher
+        .sendNext(1)
+        .sendNext(5)
+        .sendNext(13)
+        .sendComplete()
+
+      subscriber
+        .request(3) // Don't forget this
+        .expectNext(1, 5, 13)
+        .expectComplete()
+
+    }
+
+    "test partition flows with a test source AND a test sink with validation graph" in {
+
+      def spin(value: Option[Int]): Int = {
+        val start = System.currentTimeMillis()
+        while (System.currentTimeMillis() - start < 10) {}
+        value.get
+      }
+
+      val validationGraph =
+        GraphDSL.create() { implicit builder =>
+          import GraphDSL.Implicits._
+
+          val validationShape: FlowShape[Int, Option[Int]] = builder.add(Flow[Int].map(n => if (n > 0) Some(n) else None))
+          val partitionShape: UniformFanOutShape[Option[Int], Option[Int]] = builder.add(Partition[Option[Int]](2, {
+            case Some(_) => 0
+            case None => 1
+          }))
+          validationShape ~> partitionShape
+
+          UniformFanOutShape(validationShape.in, partitionShape.out(0), partitionShape.out(1))
+        }
+
+      val flow = Flow.fromGraph(GraphDSL.create() { implicit b =>
+        import GraphDSL.Implicits._
+
+        val workerCount = 4
+
+        val validation = b.add(validationGraph)
+        val partition = b.add(Partition[Option[Int]](workerCount, { case Some(value) =>  value % workerCount}))
+        val merge = b.add(Merge[Int](workerCount + 1))
+
+        validation.out(0) ~> partition.in
+
+        for (_ <- 1 to workerCount) {
+          partition ~> Flow[Option[Int]].log("partition").map(spin).async ~> merge
+        }
+
+        validation.out(1) ~> Flow[Option[Int]].log("partition").map(_ => 0).async ~> merge
+
+        FlowShape(validation.in, merge.out)
       }).withAttributes(Attributes.logLevels(onElement = LogLevels.Info))
 
       val testSource = TestSource.probe[Int]
