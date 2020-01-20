@@ -45,7 +45,7 @@ object Dependencies {
     // A L P A K K A
     Seq(
       Artifact.akkaSlf4f
-    ).map(_ % Version.akka) ++ Seq(
+    ).map(_ % "2.5.27") ++ Seq(
       Artifact.logback % Version.logback
     ) ++ Seq(
       // A L P A K K A  T E S T
@@ -235,7 +235,7 @@ object Dependencies {
   private object Version {
     val akka = "2.6.1"
     val akkaHttp = "10.1.11"
-    val akkaKafka = "1.1.0"
+    val akkaKafka = "2.0.0"
     val akkaPersistenceCassandra = "0.100"
     val akkaPersistenceInmemory = "2.5.15.2"
     val akkaPersistenceJdbc = "3.5.2"
@@ -249,9 +249,9 @@ object Dependencies {
     val scalaTest = "3.0.8"
     val specs2 = "4.8.1"
     val slick = "3.3.2"
-    val tapir = "0.12.12"
+    val tapir = "0.12.15"
     val swaggerUi = "3.24.3"
-    val testcontainers = "0.34.2"
+    val testcontainers = "0.34.3"
     val testcontainersKafka = "1.12.4"
     val zio = "1.0.0-RC17"
     val zioAkkaCluster = "0.1.10"

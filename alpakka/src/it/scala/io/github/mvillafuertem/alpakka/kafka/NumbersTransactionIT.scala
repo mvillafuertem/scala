@@ -3,22 +3,23 @@ package io.github.mvillafuertem.alpakka.kafka
 import java.io.File
 import java.nio.charset.StandardCharsets
 
-import akka.{Done, NotUsed}
 import akka.actor.ActorSystem
 import akka.event.{Logging, LoggingAdapter}
 import akka.kafka.ConsumerMessage.PartitionOffset
 import akka.kafka.scaladsl.{Consumer, Producer, Transactional}
 import akka.kafka.{ConsumerMessage, ProducerMessage, Subscriptions}
 import akka.stream.Supervision.{Restart, Stop}
-import akka.stream.scaladsl.{Broadcast, Flow, GraphDSL, Keep, Sink, Source, Zip}
+import akka.stream.scaladsl.{Broadcast, Flow, GraphDSL, Keep, Source, Zip}
 import akka.stream.testkit.scaladsl.StreamTestKit.assertAllStagesStopped
 import akka.stream.testkit.scaladsl.TestSink
 import akka.stream.{ActorAttributes, ActorMaterializer, FlowShape}
-import com.dimafeng.testcontainers.DockerComposeContainer
+import akka.{Done, NotUsed}
+import com.dimafeng.testcontainers.{DockerComposeContainer, ExposedService}
 import io.github.mvillafuertem.alpakka.kafka.NumbersTransactionIT.NumbersTransactionConfigurationIT
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.{BeforeAndAfterAll, FlatSpecLike, Matchers}
+import org.testcontainers.containers
 import org.testcontainers.containers.wait.strategy.Wait
 
 import scala.collection.immutable
@@ -179,11 +180,11 @@ object NumbersTransactionIT {
 
   trait NumbersTransactionConfigurationIT {
 
-    val dockerInfrastructure = DockerComposeContainer(
+    val dockerInfrastructure: containers.DockerComposeContainer[_]  = DockerComposeContainer(
       new File("alpakka/src/it/resources/docker-compose.it.yml"),
+      exposedServices = Seq(ExposedService("kafka", 9092, 1,  Wait.forLogMessage(".*started .*\\n", 1))),
       identifier = "docker_infrastructure"
     ).container
-      .waitingFor("kafka_1", Wait.forLogMessage(".*started .*\\n", 1))
 
   }
 }

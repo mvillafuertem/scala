@@ -10,15 +10,15 @@ import akka.kafka.{ConnectionCheckerSettings, ConsumerSettings, ProducerSettings
 import akka.stream.ActorMaterializer
 import akka.stream.scaladsl.{Keep, Source}
 import akka.stream.testkit.scaladsl.TestSink
-import com.dimafeng.testcontainers.DockerComposeContainer
-import com.typesafe.config.{Config, ConfigFactory}
+import com.dimafeng.testcontainers.{DockerComposeContainer, ExposedService}
 import io.github.mvillafuertem.alpakka.kafka.NumbersIT.NumbersConfigurationIT
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.{BeforeAndAfterAll, FlatSpecLike, Matchers}
+import org.testcontainers.containers
 import org.testcontainers.containers.wait.strategy.Wait
 
-import scala.concurrent.{Await, ExecutionContextExecutor}
+import scala.concurrent.ExecutionContextExecutor
 import scala.concurrent.duration._
 
 /**
@@ -97,11 +97,11 @@ object NumbersIT {
 
   trait NumbersConfigurationIT {
 
-    val dockerInfrastructure = DockerComposeContainer(
+    val dockerInfrastructure: containers.DockerComposeContainer[_]  = DockerComposeContainer(
       new File("alpakka/src/it/resources/docker-compose.it.yml"),
+      exposedServices = Seq(ExposedService("kafka", 9092, 1,  Wait.forLogMessage(".*started .*\\n", 1))),
       identifier = "docker_infrastructure"
     ).container
-      .waitingFor("kafka_1", Wait.forLogMessage(".*started .*\\n", 1))
 
   }
 

@@ -42,7 +42,7 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
 
   kafka-rest:
-    image: nodefluent/kafka-rest
+    image: nodefluent/kafka-rest:latest
     ports:
       - 8082:8082
     links:
@@ -58,7 +58,7 @@ services:
       KAFKA_REST_PRODUCER_METADATA_BROKER_LIST: "kafka:9092"
 
   kafka-topics-ui:
-    image: landoop/kafka-topics-ui
+    image: landoop/kafka-topics-ui:latest
     ports:
       - 8000:8000
     links:
