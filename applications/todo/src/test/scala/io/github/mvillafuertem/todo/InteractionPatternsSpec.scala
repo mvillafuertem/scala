@@ -5,10 +5,10 @@ import java.net.URI
 import akka.actor.testkit.typed.scaladsl.{ScalaTestWithActorTestKit, TestProbe}
 import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.{ActorRef, Behavior}
-import org.scalatest.FlatSpecLike
+import org.scalatest.flatspec.AnyFlatSpecLike
 
 
-class InteractionPatternsSpec extends ScalaTestWithActorTestKit with FlatSpecLike {
+class InteractionPatternsSpec extends ScalaTestWithActorTestKit with AnyFlatSpecLike {
 
   import InteractionPatternsSpec._
 

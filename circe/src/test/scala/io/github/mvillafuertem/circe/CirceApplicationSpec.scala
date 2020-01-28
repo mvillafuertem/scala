@@ -4,13 +4,14 @@ import io.circe.generic.auto._
 import io.circe.parser._
 import io.circe.syntax._
 import io.circe.{Decoder, Encoder, HCursor, Json}
-import org.scalatest.{FlatSpecLike, Matchers}
+import org.scalatest.flatspec.AnyFlatSpecLike
+import org.scalatest.matchers.should.Matchers
 
 
 /**
   * @author Miguel Villafuerte
   */
-final class CirceApplicationSpec extends FlatSpecLike with Matchers {
+final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
 
   behavior of "Circe"
 

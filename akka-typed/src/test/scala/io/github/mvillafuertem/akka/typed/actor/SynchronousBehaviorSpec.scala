@@ -4,10 +4,11 @@ import akka.actor.testkit.typed.CapturedLogEvent
 import akka.actor.testkit.typed.Effect.{Spawned, SpawnedAnonymous}
 import akka.actor.testkit.typed.scaladsl.{BehaviorTestKit, TestInbox}
 import io.github.mvillafuertem.akka.typed.actor.SynchronousBehavior._
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 import org.slf4j.event.Level
 
-class SynchronousBehaviorSpec extends FlatSpec with Matchers {
+class SynchronousBehaviorSpec extends AnyFlatSpec with Matchers {
 
   behavior of "Synchronous Behavior Spec"
 

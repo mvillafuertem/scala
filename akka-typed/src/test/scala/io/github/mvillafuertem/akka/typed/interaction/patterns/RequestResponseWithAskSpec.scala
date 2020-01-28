@@ -1,7 +1,8 @@
 package io.github.mvillafuertem.akka.typed.interaction.patterns
 
 import akka.actor.testkit.typed.scaladsl.ScalaTestWithActorTestKit
-import org.scalatest.{AsyncFlatSpecLike, Matchers}
+import org.scalatest.flatspec.AsyncFlatSpecLike
+import org.scalatest.matchers.should.Matchers
 
 import scala.concurrent.Future
 

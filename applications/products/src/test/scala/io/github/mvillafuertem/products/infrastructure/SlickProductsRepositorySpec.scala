@@ -4,13 +4,14 @@ import io.github.mvillafuertem.products.configuration.InfrastructureConfiguratio
 import io.github.mvillafuertem.products.domain.model
 import io.github.mvillafuertem.products.domain.model.{Product, ProductId, ProductType}
 import io.github.mvillafuertem.products.infrastructure.SlickProductsRepositorySpec.SlickProductsRepositoryConfigurationSpec
-import org.scalatest.{FlatSpecLike, Matchers}
+import org.scalatest.flatspec.AnyFlatSpecLike
+import org.scalatest.matchers.should.Matchers
 import slick.basic.BasicBackend
 import slick.jdbc.H2Profile.backend._
 import zio.{DefaultRuntime, UIO, ZIO}
 
 
-final class SlickProductsRepositorySpec extends SlickProductsRepositoryConfigurationSpec with FlatSpecLike
+final class SlickProductsRepositorySpec extends SlickProductsRepositoryConfigurationSpec with AnyFlatSpecLike
   with Matchers
   with DefaultRuntime {
 

@@ -5,11 +5,12 @@ import java.util.Date
 import akka.actor.{ActorSystem, Props}
 import akka.testkit.{ImplicitSender, TestKit}
 import io.github.mvillafuertem.akka.untyped.fsm.task.management.TaskManagementActor._
-import org.scalatest.{BeforeAndAfterAll, FlatSpecLike, OneInstancePerTest}
+import org.scalatest.flatspec.AnyFlatSpecLike
+import org.scalatest.{BeforeAndAfterAll, OneInstancePerTest}
 
 class TaskManagementActorSpec extends TestKit(ActorSystem("TaskManagementActorSpec"))
   with ImplicitSender
-  with FlatSpecLike
+  with AnyFlatSpecLike
   with BeforeAndAfterAll
   with OneInstancePerTest {
 

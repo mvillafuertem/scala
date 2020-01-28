@@ -1,9 +1,10 @@
 package io.github.mvillafuertem.advanced.pattern.taglessfinal.basic
 
 import io.github.mvillafuertem.advanced.pattern.taglessfinal.basic.InterpreterAsStringLanguageBasic.F
-import org.scalatest.{FlatSpecLike, Matchers}
+import org.scalatest.flatspec.AnyFlatSpecLike
+import org.scalatest.matchers.should.Matchers
 
-class InterpreterAsStringLanguageBasicSpec extends FlatSpecLike with Matchers {
+class InterpreterAsStringLanguageBasicSpec extends AnyFlatSpecLike with Matchers {
 
   behavior of "InterpreterAsStringLanguageBasicSpec"
 

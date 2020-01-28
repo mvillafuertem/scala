@@ -3,9 +3,10 @@ package io.github.mvillafuertem.cats.free.data.structures
 import cats.instances.option.catsStdInstancesForOption
 import io.github.mvillafuertem.algorithms.data.structures.stack.Stack
 import io.github.mvillafuertem.cats.free.data.structures.StackOption.{compilerOption, programOption}
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class StackOptionSpec extends FlatSpec with Matchers {
+class StackOptionSpec extends AnyFlatSpec with Matchers {
 
   behavior of "Stack Option"
 

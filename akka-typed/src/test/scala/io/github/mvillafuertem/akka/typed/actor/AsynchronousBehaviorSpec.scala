@@ -2,11 +2,13 @@ package io.github.mvillafuertem.akka.typed.actor
 
 import akka.actor.testkit.typed.scaladsl.ActorTestKit
 import io.github.mvillafuertem.akka.typed.actor.AsynchronousBehavior._
-import org.scalatest.{BeforeAndAfterAll, FlatSpec, Matchers}
+import org.scalatest.BeforeAndAfterAll
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
 import scala.concurrent.duration._
 
-class AsynchronousBehaviorSpec extends FlatSpec with Matchers with BeforeAndAfterAll {
+class AsynchronousBehaviorSpec extends AnyFlatSpec with Matchers with BeforeAndAfterAll {
 
   val testKit = ActorTestKit()
 

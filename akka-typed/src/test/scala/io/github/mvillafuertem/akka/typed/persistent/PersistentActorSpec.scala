@@ -5,7 +5,8 @@ import akka.stream.scaladsl.Source
 import akka.stream.typed.javadsl.ActorSink
 import com.typesafe.config.{Config, ConfigFactory}
 import io.github.mvillafuertem.akka.typed.persistent.PersistentActor.{AddPerson, GetPerson, ModifyLastName, Person}
-import org.scalatest.{FlatSpecLike, Matchers}
+import org.scalatest.flatspec.AnyFlatSpecLike
+import org.scalatest.matchers.should.Matchers
 
 import scala.concurrent.duration._
 
@@ -14,7 +15,7 @@ import scala.concurrent.duration._
   * @author Miguel Villafuerte
   */
 final class PersistentActorSpec extends ScalaTestWithActorTestKit(PersistentActorSpec.conf)
-  with FlatSpecLike with Matchers {
+  with AnyFlatSpecLike with Matchers {
 
   behavior of "Persistent Actor"
 

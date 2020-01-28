@@ -1,13 +1,13 @@
 package io.github.mvillafuertem.akka.typed.interaction.patterns
 
 import akka.actor.testkit.typed.scaladsl.{ScalaTestWithActorTestKit, TestProbe}
-import org.scalatest.FlatSpecLike
+import org.scalatest.flatspec.AnyFlatSpecLike
 
 /**
  * @author Miguel Villafuerte
  */
 final class RequestResponseSpec extends ScalaTestWithActorTestKit
-  with FlatSpecLike {
+  with AnyFlatSpecLike {
 
   behavior of "Request Response"
 

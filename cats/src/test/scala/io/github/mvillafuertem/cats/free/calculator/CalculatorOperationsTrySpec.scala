@@ -2,11 +2,12 @@ package io.github.mvillafuertem.cats.free.calculator
 
 import cats.instances.try_.catsStdInstancesForTry
 import io.github.mvillafuertem.cats.free.calculator.CalculatorOperationsTry._
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
 import scala.util.Success
 
-class CalculatorOperationsTrySpec extends FlatSpec with Matchers {
+class CalculatorOperationsTrySpec extends AnyFlatSpec with Matchers {
 
   behavior of "Calculator Operations Try"
 

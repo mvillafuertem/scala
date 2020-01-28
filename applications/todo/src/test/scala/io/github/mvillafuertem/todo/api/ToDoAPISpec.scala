@@ -9,13 +9,14 @@ import io.circe.parser.decode
 import io.github.mvillafuertem.todo.BuildInfo
 import io.github.mvillafuertem.todo.api.ToDoAPI.{HealthInfo, _}
 import io.github.mvillafuertem.todo.configuration.ToDoConfiguration
-import org.scalatest.{FlatSpecLike, Matchers}
+import org.scalatest.flatspec.AnyFlatSpecLike
+import org.scalatest.matchers.should.Matchers
 
 /**
  * @author Miguel Villafuerte
  */
 final class ToDoAPISpec extends ToDoConfiguration
-  with FlatSpecLike
+  with AnyFlatSpecLike
   with ScalatestRouteTest
   with Matchers {
 

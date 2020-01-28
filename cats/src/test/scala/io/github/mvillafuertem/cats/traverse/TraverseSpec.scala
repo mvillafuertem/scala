@@ -2,7 +2,8 @@ package io.github.mvillafuertem.cats.traverse
 
 import cats.data._
 import cats.implicits._
-import org.scalatest.{AsyncFlatSpec, Matchers}
+import org.scalatest.AsyncFlatSpec
+import org.scalatest.matchers.should.Matchers
 
 import scala.concurrent.Future
 import scala.util.Random

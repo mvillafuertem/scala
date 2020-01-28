@@ -2,9 +2,10 @@ package io.github.mvillafuertem.cats.free.calculator
 
 import cats.instances.option.catsStdInstancesForOption
 import io.github.mvillafuertem.cats.free.calculator.CalculatorOperationsOption._
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class CalculatorOperationsOptionSpec extends FlatSpec with Matchers {
+class CalculatorOperationsOptionSpec extends AnyFlatSpec with Matchers {
 
   behavior of "Calculator Operations Option"
 

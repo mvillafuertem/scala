@@ -2,12 +2,12 @@ package io.github.mvillafuertem.todo.infrastructure
 
 import akka.actor.testkit.typed.scaladsl.{ScalaTestWithActorTestKit, TestProbe}
 import io.github.mvillafuertem.todo.domain.ToDo
-import org.scalatest.FlatSpecLike
+import org.scalatest.flatspec.AnyFlatSpecLike
 
 /**
  * @author Miguel Villafuerte
  */
-final class ToDoFSMSpec extends ScalaTestWithActorTestKit with FlatSpecLike {
+final class ToDoFSMSpec extends ScalaTestWithActorTestKit with AnyFlatSpecLike {
 
   import ToDoFSM._
 

@@ -4,12 +4,14 @@ import java.util.Date
 
 import akka.actor.ActorSystem
 import akka.actor.testkit.typed.scaladsl.{ScalaTestWithActorTestKit, TestProbe}
-import akka.stream.{ActorMaterializer, Materializer}
+import akka.stream.Materializer
 import akka.util.Timeout
 import com.typesafe.config.{Config, ConfigFactory}
-import ToDoBehavior.{Close, GetToDo, Open, State}
 import io.github.mvillafuertem.todo.domain.ToDo
-import org.scalatest.{BeforeAndAfterAll, FlatSpecLike, Matchers, OneInstancePerTest}
+import io.github.mvillafuertem.todo.infrastructure.ToDoBehavior.{Close, GetToDo, Open, State}
+import org.scalatest.flatspec.AnyFlatSpecLike
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.{BeforeAndAfterAll, OneInstancePerTest}
 
 import scala.concurrent.duration._
 import scala.language.postfixOps
@@ -18,7 +20,7 @@ import scala.language.postfixOps
  * @author Miguel Villafuerte
  */
 final class ToDoBehaviorSpec extends ScalaTestWithActorTestKit(ToDoBehaviorSpec.conf)
-  with FlatSpecLike
+  with AnyFlatSpecLike
   with Matchers
   with BeforeAndAfterAll
   with OneInstancePerTest {

@@ -1,12 +1,13 @@
 package io.github.mvillafuertem.advanced.phantom.types
 
 import io.github.mvillafuertem.advanced.phantom.types.Chef.{Food, Pizza}
-import org.scalatest.{FlatSpecLike, Matchers}
+import org.scalatest.flatspec.AnyFlatSpecLike
+import org.scalatest.matchers.should.Matchers
 
 /**
  * @author Miguel Villafuerte
  */
-final class ChefSpec extends FlatSpecLike with Matchers {
+final class ChefSpec extends AnyFlatSpecLike with Matchers {
 
   behavior of "Chef"
 

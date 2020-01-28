@@ -1,8 +1,9 @@
 package io.github.mvillafuertem.basic.map
 
-import org.scalatest.{FlatSpecLike, Matchers}
+import org.scalatest.flatspec.AnyFlatSpecLike
+import org.scalatest.matchers.should.Matchers
 
-final class MapSpec extends FlatSpecLike with Matchers {
+final class MapSpec extends AnyFlatSpecLike with Matchers {
 
   behavior of "Map"
 

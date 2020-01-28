@@ -13,7 +13,8 @@ import akka.stream.{ActorAttributes, FlowShape, KillSwitches}
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.scalatest.concurrent.{Eventually, ScalaFutures}
-import org.scalatest.{FlatSpecLike, Matchers}
+import org.scalatest.flatspec.AnyFlatSpecLike
+import org.scalatest.matchers.should.Matchers
 
 import scala.collection.immutable
 import scala.concurrent.duration._
@@ -21,7 +22,7 @@ import scala.concurrent.{Await, Future}
 
 abstract class SpecBase(kafkaPort: Int)
   extends ScalatestKafkaSpec(kafkaPort)
-    with FlatSpecLike
+    with AnyFlatSpecLike
     with Matchers
     with ScalaFutures
     with Eventually {

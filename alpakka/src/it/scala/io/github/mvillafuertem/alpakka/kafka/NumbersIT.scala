@@ -14,7 +14,9 @@ import com.dimafeng.testcontainers.{DockerComposeContainer, ExposedService}
 import io.github.mvillafuertem.alpakka.kafka.NumbersIT.NumbersConfigurationIT
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.{BeforeAndAfterAll, FlatSpecLike, Matchers}
+import org.scalatest.flatspec.AnyFlatSpecLike
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.BeforeAndAfterAll
 import org.testcontainers.containers
 import org.testcontainers.containers.wait.strategy.Wait
 
@@ -26,7 +28,7 @@ import scala.concurrent.duration._
  */
 final class NumbersIT extends NumbersConfigurationIT
 with EventConfiguration
-  with FlatSpecLike
+  with AnyFlatSpecLike
   with Matchers
   with ScalaFutures
   with BeforeAndAfterAll {

@@ -1,9 +1,10 @@
 package io.github.mvillafuertem.advanced.typeclasses
 
 import io.github.mvillafuertem.advanced.typeclasses.Show64._
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class Show64Test extends FlatSpec with Matchers {
+class Show64Test extends AnyFlatSpec with Matchers {
 
   behavior of "Show 64"
 

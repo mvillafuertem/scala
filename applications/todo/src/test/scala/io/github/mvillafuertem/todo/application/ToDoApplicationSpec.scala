@@ -2,15 +2,14 @@ package io.github.mvillafuertem.todo.application
 
 import akka.actor.testkit.typed.scaladsl.{ScalaTestWithActorTestKit, TestProbe}
 import io.github.mvillafuertem.todo.domain.ToDo
-import io.github.mvillafuertem.todo.infrastructure.ToDoFSM.{GetToDo, Opened, State, Uninitialized}
-import io.github.mvillafuertem.todo.domain.ToDo
 import io.github.mvillafuertem.todo.infrastructure.ToDoFSM
-import org.scalatest.FlatSpecLike
+import io.github.mvillafuertem.todo.infrastructure.ToDoFSM.{GetToDo, State, Uninitialized}
+import org.scalatest.flatspec.AnyFlatSpecLike
 
 /**
  * @author Miguel Villafuerte
  */
-class ToDoApplicationSpec extends ScalaTestWithActorTestKit with FlatSpecLike {
+class ToDoApplicationSpec extends ScalaTestWithActorTestKit with AnyFlatSpecLike {
 
   behavior of "ToDoApplicationSpec"
 
