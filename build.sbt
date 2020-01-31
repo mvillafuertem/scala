@@ -23,7 +23,7 @@ lazy val scala = (project in file("."))
     algorithms,
     basic,
     cats,
-    circe,
+    json,
     slick,
     todo,
     products,
@@ -107,11 +107,11 @@ lazy val cats = (project in file("cats"))
   .settings(commonSettings)
   .settings(libraryDependencies ++= Dependencies.cats)
 
-lazy val circe = (project in file("circe"))
+lazy val json = (project in file("json"))
   .dependsOn(algorithms)
   // S E T T I N G S
   .settings(commonSettings)
-  .settings(libraryDependencies ++= Dependencies.circe)
+  .settings(libraryDependencies ++= Dependencies.json)
 
 lazy val slick = (project in file("slick"))
   // S E T T I N G S

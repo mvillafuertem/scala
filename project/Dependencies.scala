@@ -145,12 +145,15 @@ object Dependencies {
     Artifact.scalaTest % Version.scalaTest
   ).map(_ % Test)
 
-  val circe: Seq[ModuleID] = Seq(
-    // C I R C E
+  val json: Seq[ModuleID] = Seq(
+    // J S O N
     Artifact.circeParser,
     Artifact.circeGeneric
   ).map(_ % Version.circe) ++ Seq(
-    // C I R C E  T E S T
+    Artifact.jsoniterCore % Version.jsoniter,
+    Artifact.jsoniterMacros % Version.jsoniter
+  ) ++ Seq(
+    // J S O N  T E S T
     Artifact.scalaTest % Version.scalaTest
   ).map(_ % Test)
 
@@ -193,11 +196,12 @@ object Dependencies {
     //val akkaPersistenceCassandraLauncher = "com.typesafe.akka" %% "akka-persistence-cassandra-launcher"
     //val akkaPersistenceInmemory = "com.github.dnvriend" %% "akka-persistence-inmemory"
     //val akkaPersistenceJdbc = "com.github.dnvriend" %% "akka-persistence-jdbc"
+    //"org.iq80.leveldb" % "leveldb" % "0.12",
+    val akkaKafka = "com.typesafe.akka" %% "akka-stream-kafka"
     val akkaPersistenceTyped = "com.typesafe.akka" %% "akka-persistence-typed"
     val akkaSlf4f = "com.typesafe.akka" %% "akka-slf4j"
     val akkaStream = "com.typesafe.akka" %% "akka-stream"
     val akkaStreamKafkaTestkit = "com.typesafe.akka" %% "akka-stream-kafka-testkit"
-    val akkaKafka = "com.typesafe.akka" %% "akka-stream-kafka"
     val akkaStreamTestkit = "com.typesafe.akka" %% "akka-stream-testkit"
     val akkaStreamTyped = "com.typesafe.akka" %% "akka-stream-typed"
     val akkaTestKit = "com.typesafe.akka" %% "akka-testkit"
@@ -207,7 +211,8 @@ object Dependencies {
     val circeGeneric = "io.circe" %% "circe-generic"
     val circeParser = "io.circe" %% "circe-parser"
     val h2 = "com.h2database" % "h2"
-    //"org.iq80.leveldb" % "leveldb" % "0.12",
+    val jsoniterCore = "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-core"
+    val jsoniterMacros = "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-macros"
     val leveldbjniAll = "org.fusesource.leveldbjni" % "leveldbjni-all"
     val logback = "ch.qos.logback" % "logback-classic"
     val postgresql = "org.postgresql" % "postgresql"
@@ -215,19 +220,19 @@ object Dependencies {
     val slick = "com.typesafe.slick" %% "slick"
     val specs2Core = "org.specs2" %% "specs2-core"
     val specs2MatcherExtra = "org.specs2" %% "specs2-matcher-extra"
+    val swaggerUi = "org.webjars" % "swagger-ui"
     val tapirAkkaHttpServer = "com.softwaremill.sttp.tapir" %% "tapir-akka-http-server"
     val tapirCore = "com.softwaremill.sttp.tapir" %% "tapir-core"
     val tapirJsonCirce = "com.softwaremill.sttp.tapir" %% "tapir-json-circe"
     val tapirOpenapiCirceYaml = "com.softwaremill.sttp.tapir" %% "tapir-openapi-circe-yaml"
     val tapirOpenapiDocs = "com.softwaremill.sttp.tapir" %% "tapir-openapi-docs"
     val tapirSwaggerUiAkkaHttp = "com.softwaremill.sttp.tapir" %% "tapir-swagger-ui-akka-http"
-    val swaggerUi = "org.webjars" % "swagger-ui"
     val testcontainers = "com.dimafeng" %% "testcontainers-scala"
     val testcontainersKafka = "org.testcontainers" % "kafka"
     val zio = "dev.zio" %% "zio"
+    val zioAkkaCluster = "dev.zio" %% "zio-akka-cluster"
     val zioInteropReactiveStreams = "dev.zio" %% "zio-interop-reactivestreams"
     val zioStreams = "dev.zio" %% "zio-streams"
-    val zioAkkaCluster = "dev.zio" %% "zio-akka-cluster"
     val zioTest = "dev.zio" %% "zio-test"
     val zioTestSbt = "dev.zio" %% "zio-test-sbt"
   }
@@ -243,14 +248,15 @@ object Dependencies {
     val cats = "2.1.0"
     val circe = "0.12.3"
     val h2 = "1.4.200"
+    val jsoniter = "2.1.6"
     val leveldbjniAll = "1.8"
     val logback = "1.2.3"
     val postgres = "42.2.9"
     val scalaTest = "3.1.0"
-    val specs2 = "4.8.3"
     val slick = "3.3.2"
-    val tapir = "0.12.17"
+    val specs2 = "4.8.3"
     val swaggerUi = "3.24.3"
+    val tapir = "0.12.19"
     val testcontainers = "0.35.0"
     val testcontainersKafka = "1.12.5"
     val zio = "1.0.0-RC17"

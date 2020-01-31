@@ -1,4 +1,4 @@
-package io.github.mvillafuertem.circe
+package io.github.mvillafuertem.json
 
 import io.circe.generic.auto._
 import io.circe.parser._
@@ -17,7 +17,7 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
 
   it should "parse" in {
 
-    // G I V E N
+    // g i v e n
     val json: String =
       """
         |  {
@@ -32,10 +32,10 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
         |  }
         |""".stripMargin
 
-    // W H E N
+    // w h e n
     val actual: Json = parse(json).getOrElse(Json.Null)
 
-    // T H E N
+    // t h e n
     val expected = Json.obj(
       ("id", Json.fromString("c730433b-082c-4984-9d66-855c243266f0")),
       ("name", Json.fromString("Foo")),
