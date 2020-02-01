@@ -151,7 +151,8 @@ object Dependencies {
     Artifact.circeGeneric
   ).map(_ % Version.circe) ++ Seq(
     Artifact.jsoniterCore % Version.jsoniter,
-    Artifact.jsoniterMacros % Version.jsoniter
+    Artifact.jsoniterMacros % Version.jsoniter,
+    Artifact.dijon % Version.dijon
   ) ++ Seq(
     // J S O N  T E S T
     Artifact.scalaTest % Version.scalaTest
@@ -213,6 +214,7 @@ object Dependencies {
     val h2 = "com.h2database" % "h2"
     val jsoniterCore = "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-core"
     val jsoniterMacros = "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-macros"
+    val dijon = "com.github.pathikrit" %% "dijon"
     val leveldbjniAll = "org.fusesource.leveldbjni" % "leveldbjni-all"
     val logback = "ch.qos.logback" % "logback-classic"
     val postgresql = "org.postgresql" % "postgresql"
@@ -249,6 +251,7 @@ object Dependencies {
     val circe = "0.12.3"
     val h2 = "1.4.200"
     val jsoniter = "2.1.6"
+    val dijon = "0.3.0"
     val leveldbjniAll = "1.8"
     val logback = "1.2.3"
     val postgres = "42.2.9"
