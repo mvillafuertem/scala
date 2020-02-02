@@ -8,29 +8,32 @@ import io.circe.Json.{JArray, JBoolean, JNull, JNumber, JObject, JString}
 object CirceJsoniterFlatten {
 
   implicit val codec: JsonValueCodec[Json] = new JsonValueCodec[Json] {
-    override def decodeValue(in: JsonReader, default: Json): Json = {
-      var b = in.nextToken()
-      if (b == 'n') in.readNullOrError(default, "expected `null` value")
-      else if (b == '"') {
+
+    override def decodeValue(in: JsonReader, default: Json): Json = in.nextToken() match {
+      case 'n' => in.readNullOrError(default, "expected `null` value")
+      case '"' =>
         in.rollbackToken()
-        new JString(in.readString(null))
-      } else if (b == 'f' || b == 't') {
+        JString(in.readString(null))
+      case 'f' | 't' =>
         in.rollbackToken()
         if (in.readBoolean()) Json.True
         else Json.False
-      } else if ((b >= '0' && b <= '9') || b == '-') {
-        new JNumber({
+      case n@('0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '-') =>
+        JNumber({
           in.rollbackToken()
           in.setMark() // TODO: add in.readNumberAsString() to Core API of jsoniter-scala
+          var b = n
           try {
             do b = in.nextByte()
             while (b >= '0' && b <= '9')
-          } catch { case _: JsonReaderException => /* ignore end of input error */} finally in.rollbackToMark()
-          if (b == '.' || b == 'e' || b == 'E') new JsonDouble(in.readDouble())
-          else new JsonLong(in.readLong())
+          } catch {
+            case _: JsonReaderException => /* ignore end of input error */
+          } finally in.rollbackToMark()
+          if (b == '.' || b == 'e' || b == 'E') JsonDouble(in.readDouble())
+          else JsonLong(in.readLong())
         })
-      } else if (b == '[') {
-        new JArray(if (in.isNextToken(']')) Vector.empty
+      case '[' =>
+        JArray(if (in.isNextToken(']')) Vector.empty
         else {
           in.rollbackToken()
           var x = new Array[Json](4)
@@ -46,7 +49,7 @@ object CirceJsoniterFlatten {
           else in.arrayEndOrCommaError()
           jsons.toVector
         })
-      } else if (b == '{') {
+      case '{' =>
         JObject(if (in.isNextToken('}')) JsonObject.empty
         else {
           val x = new util.LinkedHashMap[String, Json]
@@ -56,7 +59,7 @@ object CirceJsoniterFlatten {
           if (!in.isCurrentToken('}')) in.objectEndOrCommaError()
           JsonObject.fromLinkedHashMap(x)
         })
-      } else in.decodeError("expected JSON value")
+      case _ => in.decodeError("expected JSON value")
     }
 
     override def encodeValue(x: Json, out: JsonWriter): Unit = x match {
