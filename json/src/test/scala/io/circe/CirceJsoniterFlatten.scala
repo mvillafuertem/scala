@@ -7,6 +7,60 @@ import io.circe.Json.{JArray, JBoolean, JNull, JNumber, JObject, JString}
 
 object CirceJsoniterFlatten {
 
+  def flatten(blownUp: Json): Json = _flatten(blownUp)
+
+  private def _flatten(json: Json, path: String = ""): Json = {
+
+    json match {
+      case JObject(value) => value
+        .toIterable
+        .map { case (k, v) => _flatten(v, buildPath(path, k)) }
+        .fold(JObject(JsonObject.empty))(_ deepMerge _)
+
+      case JArray(value) => value
+        .zipWithIndex
+        .map { case (j, index) => _flatten(j, buildPath(path, s"[$index]")) }
+        .fold(JObject(JsonObject.empty))(_ deepMerge _)
+
+      case _ => JObject(JsonObject((path, json)))
+    }
+
+  }
+
+  private def buildPath(path: String, key: String): String =
+    if (path.isEmpty) key else s"$path.$key"
+
+  private val ArrayElem = """^\[(\d+)\]$""".r
+
+
+  def blowup(flattened: Json): Json = flattened match {
+
+    case JObject(tuples) => tuples
+      .toIterable
+      .map { case (k, v) => _blowup(k.split('.'), v, Vector.empty[Json]) }
+      .fold(JObject(JsonObject.empty))(_ deepMerge _)
+
+    case JArray(_) => throw new RuntimeException("The parser doesn't support array type")
+
+    case _ => throw new RuntimeException("The type was not expected at this position of the document")
+  }
+
+  private def _blowup(keys: Array[String] = Array(), value: Json, vector: Vector[Json]): Json = {
+    if (keys.isEmpty) value match {
+      case JArray(v) => JArray(v)
+      case _ => value
+    }
+    else keys.head match {
+      case ArrayElem(k) => {
+         val vc = vector.appended(value)
+         _blowup(keys.tail, JArray(vc), vc)
+      }
+      case _ => JObject(JsonObject(keys.head -> _blowup(keys.tail, value, vector)))
+    }
+
+
+  }
+
   implicit val codec: JsonValueCodec[Json] = new JsonValueCodec[Json] {
 
     override def decodeValue(in: JsonReader, default: Json): Json = in.nextToken() match {
