@@ -92,7 +92,7 @@ final class JsoniterApplicationSpec extends AnyFlatSpecLike with Matchers {
         |  }
         |""".stripMargin
 
-    implicit val codec: JsonValueCodec[Json] = CirceJsoniterFlatten.codec
+    implicit val codec: JsonValueCodec[Json] = CirceJsoniter.codec
 
 
     // w h e n
@@ -133,7 +133,7 @@ final class JsoniterApplicationSpec extends AnyFlatSpecLike with Matchers {
         |  }
         |""".stripMargin
 
-    implicit val codec: JsonValueCodec[Json] = CirceJsoniterFlatten.codec
+    implicit val codec: JsonValueCodec[Json] = CirceJsoniter.codec
 
 
     // w h e n

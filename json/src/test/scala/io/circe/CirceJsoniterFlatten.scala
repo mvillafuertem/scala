@@ -63,57 +63,55 @@ object CirceJsoniterFlatten {
 
   implicit val codec: JsonValueCodec[Json] = new JsonValueCodec[Json] {
 
-    override def decodeValue(in: JsonReader, default: Json): Json = in.nextToken() match {
+    def decodeValueRecursive(k: String, in: JsonReader, default: Json): Json = in.nextToken() match {
       case 'n' => in.readNullOrError(default, "expected `null` value")
-      case '"' =>
-        in.rollbackToken()
-        JString(in.readString(null))
-      case 'f' | 't' =>
-        in.rollbackToken()
-        if (in.readBoolean()) Json.True
-        else Json.False
-      case n@('0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '-') =>
-        JNumber({
-          in.rollbackToken()
-          in.setMark() // TODO: add in.readNumberAsString() to Core API of jsoniter-scala
-          var b = n
-          try {
-            do b = in.nextByte()
-            while (b >= '0' && b <= '9')
-          } catch {
-            case _: JsonReaderException => /* ignore end of input error */
-          } finally in.rollbackToMark()
-          if (b == '.' || b == 'e' || b == 'E') JsonDouble(in.readDouble())
-          else JsonLong(in.readLong())
-        })
-      case '[' =>
-        JArray(if (in.isNextToken(']')) Vector.empty
-        else {
-          in.rollbackToken()
-          var x = new Array[Json](4)
-          var i = 0
-          do {
-            if (i == x.length) x = java.util.Arrays.copyOf(x, i << 1)
-            x(i) = decodeValue(in, default)
-            i += 1
-          } while (in.isNextToken(','))
-          val jsons: Array[Json] = if (in.isCurrentToken(']'))
-            if (i == x.length) x
-            else java.util.Arrays.copyOf(x, i)
-          else in.arrayEndOrCommaError()
-          jsons.toVector
-        })
-      case '{' =>
-        JObject(if (in.isNextToken('}')) JsonObject.empty
-        else {
-          val x = new util.LinkedHashMap[String, Json]
-          in.rollbackToken()
-          do x.put(in.readKeyAsString(), decodeValue(in, default))
-          while (in.isNextToken(','))
-          if (!in.isCurrentToken('}')) in.objectEndOrCommaError()
-          JsonObject.fromLinkedHashMap(x)
-        })
+      case '"' => decodeString(in)
+      case 'f' | 't' => decodeBoolean(in)
+      case n@('0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '-') => decodeNumber(in, n)
+      case '[' => decodeArray(in, default)
+      case '{' => decodeObject(k, in, default)
       case _ => in.decodeError("expected JSON value")
+    }
+
+    override def decodeValue(in: JsonReader, default: Json): Json = decodeValueRecursive("", in, default)
+
+    private def decodeObject(k: String, in: JsonReader, default: Json) = {
+      JObject(if (in.isNextToken('}')) JsonObject.empty
+      else {
+        val x = new util.LinkedHashMap[String, Json]
+        in.rollbackToken()
+        do {
+          val key = in.readKeyAsString()
+          if (k.isEmpty) {
+            x.put(key, decodeValueRecursive(key, in, default))
+          } else {
+            val str = k.concat(".").concat(key)
+            x.put(str, decodeValueRecursive(str, in, default))
+          }
+        }
+        while (in.isNextToken(','))
+        if (!in.isCurrentToken('}')) in.objectEndOrCommaError()
+        JsonObject.fromLinkedHashMap(x)
+      })
+    }
+
+    private def decodeArray(in: JsonReader, default: Json) = {
+      JArray(if (in.isNextToken(']')) Vector.empty
+      else {
+        in.rollbackToken()
+        var x = new Array[Json](4)
+        var i = 0
+        do {
+          if (i == x.length) x = java.util.Arrays.copyOf(x, i << 1)
+          x(i) = decodeValue(in, default)
+          i += 1
+        } while (in.isNextToken(','))
+        val jsons: Array[Json] = if (in.isCurrentToken(']'))
+          if (i == x.length) x
+          else java.util.Arrays.copyOf(x, i)
+        else in.arrayEndOrCommaError()
+        jsons.toVector
+      })
     }
 
     override def encodeValue(x: Json, out: JsonWriter): Unit = x match {
@@ -141,4 +139,30 @@ object CirceJsoniterFlatten {
   }
 
 
+  private def decodeNumber(in: JsonReader, n: Byte) = {
+    JNumber({
+      in.rollbackToken()
+      in.setMark() // TODO: add in.readNumberAsString() to Core API of jsoniter-scala
+      var b = n
+      try {
+        do b = in.nextByte()
+        while (b >= '0' && b <= '9')
+      } catch {
+        case _: JsonReaderException => /* ignore end of input error */
+      } finally in.rollbackToMark()
+      if (b == '.' || b == 'e' || b == 'E') JsonDouble(in.readDouble())
+      else JsonLong(in.readLong())
+    })
+  }
+
+  private def decodeBoolean(in: JsonReader) = {
+    in.rollbackToken()
+    if (in.readBoolean()) Json.True
+    else Json.False
+  }
+
+  private def decodeString(in: JsonReader) = {
+    in.rollbackToken()
+    JString(in.readString(null))
+  }
 }
