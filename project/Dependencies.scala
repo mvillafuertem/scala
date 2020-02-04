@@ -152,7 +152,8 @@ object Dependencies {
   ).map(_ % Version.circe) ++ Seq(
     Artifact.jsoniterCore % Version.jsoniter,
     Artifact.jsoniterMacros % Version.jsoniter,
-    Artifact.dijon % Version.dijon
+    Artifact.dijon % Version.dijon,
+    Artifact.jslt % Version.jslt
   ) ++ Seq(
     // J S O N  T E S T
     Artifact.scalaTest % Version.scalaTest
@@ -237,6 +238,8 @@ object Dependencies {
     val zioStreams = "dev.zio" %% "zio-streams"
     val zioTest = "dev.zio" %% "zio-test"
     val zioTestSbt = "dev.zio" %% "zio-test-sbt"
+    // J S L T
+    val jslt = "com.schibsted.spt.data" % "jslt"
   }
 
   private object Version {
@@ -265,6 +268,8 @@ object Dependencies {
     val zio = "1.0.0-RC17"
     val zioAkkaCluster = "0.1.10"
     val zioInteropReactiveStreams = "1.0.3.4-RC1"
+    val jslt = "0.1.8"
+
   }
 
 }
