@@ -268,7 +268,7 @@ object Dependencies {
     val zio = "1.0.0-RC17"
     val zioAkkaCluster = "0.1.10"
     val zioInteropReactiveStreams = "1.0.3.4-RC1"
-    val jslt = "0.1.8"
+    val jslt = "0.1.9"
 
   }
 
