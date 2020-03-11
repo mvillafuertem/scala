@@ -126,7 +126,7 @@ object Dependencies {
       Artifact.akkaKafka % Version.akkaKafka,
       "com.iheart" %% "ficus" % "1.4.7",
       "org.apache.curator" % "curator-test" % "4.2.0",
-      "org.apache.kafka" %% "kafka" % "2.4.0",
+      "org.apache.kafka" %% "kafka" % "2.4.1",
       Artifact.logback % Version.logback
     ) ++ Seq(
       // S E N S O R  C O N T R O L L E R  T E S T
