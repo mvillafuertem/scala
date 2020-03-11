@@ -3,8 +3,9 @@ package io.github.mvillafuertem.zio.akka.cluster
 import org.scalatest.flatspec.AnyFlatSpecLike
 import org.scalatest.matchers.should.Matchers
 import zio.console.Console
-import zio.stream.ZStream
-import zio.{DefaultRuntime, Schedule, ZIO}
+import zio.stream.{ZSink, ZStream}
+import zio.{DefaultRuntime, Schedule, Task, UIO, ZIO}
+import zio.duration._
 
 
 final class MyClassSpec extends AnyFlatSpecLike with DefaultRuntime with Matchers {
@@ -17,6 +18,40 @@ final class MyClassSpec extends AnyFlatSpecLike with DefaultRuntime with Matcher
     val value = unsafeRun(clazz.a.runCollect)
 
     value should have size 10
+
+
+  }
+
+  it should "Stream pull" in {
+
+    val value: Int = 1
+
+    val actual = unsafeRun(ZStream.fromPull(
+      Task.effect(value)
+        .mapError(Some(_))
+        .flatMap { a =>
+          if (a == 1) ZIO.fail(None)
+          else ZIO.succeed(a)
+
+        }
+    ).runCollect)
+
+    actual shouldBe List()
+
+
+  }
+
+  it should "Stream repeat effect with" in {
+
+//    val value: Int = 1
+//
+//    val actual = unsafeRun(ZStream.repeatEffectWith(
+//      Task.effect(value), Schedule.spaced(5.seconds)
+//    ).tap(a => UIO(println(a)))
+//      .runCollect
+//    )
+//
+//    actual shouldBe List()
 
 
   }

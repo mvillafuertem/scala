@@ -103,8 +103,7 @@ object Dependencies {
       Artifact.zioInteropReactiveStreams % Version.zioInteropReactiveStreams,
       Artifact.slick % Version.slick,
       Artifact.h2 % Version.h2,
-      Artifact.logback % Version.logback,
-      Artifact.swaggerUi % Version.swaggerUi
+      Artifact.logback % Version.logback
     ) ++ Seq(
       Artifact.tapirCore,
       Artifact.tapirAkkaHttpServer,
@@ -245,26 +244,25 @@ object Dependencies {
   private object Version {
     val akka = "2.6.3"
     val akkaHttp = "10.1.11"
-    val akkaKafka = "2.0.1"
+    val akkaKafka = "2.0.2"
     val akkaPersistenceCassandra = "0.100"
     val akkaPersistenceInmemory = "2.5.15.2"
     val akkaPersistenceJdbc = "3.5.2"
     val alpakkaSlick = "1.1.2"
-    val cats = "2.1.0"
-    val circe = "0.12.3"
+    val cats = "2.1.1"
+    val circe = "0.13.0"
     val h2 = "1.4.200"
-    val jsoniter = "2.1.6"
+    val jsoniter = "2.1.7"
     val dijon = "0.3.0"
     val leveldbjniAll = "1.8"
     val logback = "1.2.3"
-    val postgres = "42.2.9"
-    val scalaTest = "3.1.0"
+    val postgres = "42.2.10"
+    val scalaTest = "3.1.1"
     val slick = "3.3.2"
     val specs2 = "4.8.3"
-    val swaggerUi = "3.24.3"
-    val tapir = "0.12.19"
-    val testcontainers = "0.35.0"
-    val testcontainersKafka = "1.13.0"
+    val tapir = "0.12.23"
+    val testcontainers = "0.35.2"
+    val testcontainersKafka = "1.12.5"
     val zio = "1.0.0-RC17"
     val zioAkkaCluster = "0.1.10"
     val zioInteropReactiveStreams = "1.0.3.4-RC1"
