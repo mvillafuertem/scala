@@ -125,8 +125,8 @@ object Dependencies {
       Artifact.akkaStreamTyped % Version.akka,
       Artifact.akkaKafka % Version.akkaKafka,
       "com.iheart" %% "ficus" % "1.4.7",
-      "org.apache.curator" % "curator-test" % "4.2.0",
-      "org.apache.kafka" %% "kafka" % "2.4.0",
+      "org.apache.curator" % "curator-test" % "4.3.0",
+      "org.apache.kafka" %% "kafka" % "2.4.1",
       Artifact.logback % Version.logback
     ) ++ Seq(
       // S E N S O R  C O N T R O L L E R  T E S T
@@ -256,17 +256,17 @@ object Dependencies {
     val dijon = "0.3.0"
     val leveldbjniAll = "1.8"
     val logback = "1.2.3"
-    val postgres = "42.2.10"
+    val postgres = "42.2.11"
     val scalaTest = "3.1.1"
     val slick = "3.3.2"
-    val specs2 = "4.8.3"
-    val tapir = "0.12.23"
-    val testcontainers = "0.35.2"
-    val testcontainersKafka = "1.12.5"
-    val zio = "1.0.0-RC17"
-    val zioAkkaCluster = "0.1.10"
-    val zioInteropReactiveStreams = "1.0.3.5-RC6"
-    val jslt = "0.1.8"
+    val specs2 = "4.9.2"
+    val tapir = "0.12.24"
+    val testcontainers = "0.36.0"
+    val testcontainersKafka = "1.13.0"
+    val zio = "1.0.0-RC18"
+    val zioAkkaCluster = "0.1.12"
+    val zioInteropReactiveStreams = "1.0.3.5-RC5"
+    val jslt = "0.1.9"
 
   }
 
