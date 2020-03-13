@@ -7,7 +7,7 @@ import io.github.mvillafuertem.products.domain.repository.ProductsRepository
 import io.github.mvillafuertem.products.infrastructure.tables.ProductTable
 import slick.dbio.{DBIO, StreamingDBIO}
 import slick.driver.H2Driver.api._
-import zio.interop.reactiveStreams._
+import zio.interop.reactivestreams._
 import zio.stream.ZStream
 import zio.{IO, UIO, ZIO}
 

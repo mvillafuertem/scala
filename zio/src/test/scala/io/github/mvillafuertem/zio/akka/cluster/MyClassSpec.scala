@@ -3,12 +3,11 @@ package io.github.mvillafuertem.zio.akka.cluster
 import org.scalatest.flatspec.AnyFlatSpecLike
 import org.scalatest.matchers.should.Matchers
 import zio.console.Console
-import zio.stream.{ZSink, ZStream}
-import zio.{DefaultRuntime, Schedule, Task, UIO, ZIO}
-import zio.duration._
+import zio.stream.ZStream
+import zio.{BootstrapRuntime, Schedule, Task, ZIO}
 
 
-final class MyClassSpec extends AnyFlatSpecLike with DefaultRuntime with Matchers {
+final class MyClassSpec extends AnyFlatSpecLike with BootstrapRuntime with Matchers {
 
   "MyClass" should "Stream" in {
 

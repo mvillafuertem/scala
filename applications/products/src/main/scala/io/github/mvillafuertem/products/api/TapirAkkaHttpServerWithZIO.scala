@@ -5,12 +5,12 @@ import sttp.tapir.Endpoint
 import sttp.tapir.server.ServerEndpoint
 import sttp.tapir.server.akkahttp.{AkkaHttpServerOptions, AkkaStream, EndpointToAkkaServer}
 import sttp.tapir.typelevel.{ParamsToTuple, ReplaceFirstInTuple}
-import zio.{DefaultRuntime, IO}
+import zio.{BootstrapRuntime, IO}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.reflect.ClassTag
 
-trait TapirAkkaHttpServerWithZIO extends DefaultRuntime {
+trait TapirAkkaHttpServerWithZIO extends BootstrapRuntime {
   implicit class RichAkkaHttpEndpoint[I, E, O](e: Endpoint[I, E, O, AkkaStream]) {
     def toDirective[T](implicit paramsToTuple: ParamsToTuple.Aux[I, T], akkaHttpOptions: AkkaHttpServerOptions): Directive[T] =
       new EndpointToAkkaServer(akkaHttpOptions).toDirective(e)

@@ -8,12 +8,12 @@ import org.scalatest.flatspec.AnyFlatSpecLike
 import org.scalatest.matchers.should.Matchers
 import slick.basic.BasicBackend
 import slick.jdbc.H2Profile.backend._
-import zio.{DefaultRuntime, UIO, ZIO}
+import zio.{BootstrapRuntime, UIO, ZIO}
 
 
 final class SlickProductsRepositorySpec extends SlickProductsRepositoryConfigurationSpec with AnyFlatSpecLike
   with Matchers
-  with DefaultRuntime {
+  with BootstrapRuntime {
 
   behavior of "SlickProductsRepositorySpec"
 

@@ -5,16 +5,15 @@ import java.util.{Timer, TimerTask}
 import org.specs2.Specification
 import org.specs2.execute.AsResult
 import org.specs2.specification.core.{AsExecution, Execution}
-import zio.{DefaultRuntime, FiberFailure, ZIO}
-import zio.duration.Duration
-import zio.duration._
+import zio.duration.{Duration, _}
+import zio.{BootstrapRuntime, FiberFailure, ZIO}
 
 import scala.concurrent.{ExecutionContext, Future}
 
 /**
  * @author Miguel Villafuerte
  */
-abstract class TestRuntime extends Specification with DefaultRuntime {
+abstract class TestRuntime extends Specification with BootstrapRuntime {
   val DefaultTimeout: Duration = 60 seconds
   val timer = new Timer()
   implicit val ec: ExecutionContext = ExecutionContext.Implicits.global

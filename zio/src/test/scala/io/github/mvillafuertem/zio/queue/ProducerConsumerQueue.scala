@@ -5,10 +5,10 @@ import org.scalatest.flatspec.AnyFlatSpecLike
 import org.scalatest.matchers.should.Matchers
 import zio.clock.Clock
 import zio.console.{Console, putStrLn}
-import zio.{DefaultRuntime, Queue, ZIO}
 import zio.duration._
+import zio.{BootstrapRuntime, Queue, ZIO}
 
-final class ProducerConsumerQueue extends DefaultRuntime
+final class ProducerConsumerQueue extends BootstrapRuntime
   with AnyFlatSpecLike with Matchers {
 
   "A Queue" should "be shared by a producer and a consumer" in {
