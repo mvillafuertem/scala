@@ -261,7 +261,7 @@ object Dependencies {
     val slick = "3.3.2"
     val specs2 = "4.9.2"
     val tapir = "0.12.24"
-    val testcontainers = "0.36.0"
+    val testcontainers = "0.36.1"
     val testcontainersKafka = "1.13.0"
     val zio = "1.0.0-RC18-2"
     val zioAkkaCluster = "0.1.12"
