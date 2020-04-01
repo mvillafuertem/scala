@@ -256,7 +256,7 @@ object Dependencies {
     val dijon = "0.3.0"
     val leveldbjniAll = "1.8"
     val logback = "1.2.3"
-    val postgres = "42.2.11"
+    val postgres = "42.2.12"
     val scalaTest = "3.1.1"
     val slick = "3.3.2"
     val specs2 = "4.9.2"
