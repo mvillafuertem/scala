@@ -1,3 +1,17 @@
+Global / onLoad := {
+  sLog.value.info(
+    s"""*
+       |*    ███████╗  ██████╗  █████╗  ██╗       █████╗
+       |*    ██╔════╝ ██╔════╝ ██╔══██╗ ██║      ██╔══██╗
+       |*    ███████╗ ██║      ███████║ ██║      ███████║
+       |*    ╚════██║ ██║      ██╔══██║ ██║      ██╔══██║
+       |*    ███████║ ╚██████╗ ██║  ██║ ███████╗ ██║  ██║
+       |*    ╚══════╝  ╚═════╝ ╚═╝  ╚═╝ ╚══════╝ ╚═╝  ╚═╝
+       |*    v.${version.value}
+       |*""".stripMargin)
+  (Global / onLoad).value
+}
+
 lazy val commonSettings = Settings.value ++ Seq(
   organization := "io.github.mvillafuertem",
   version := "0.1",
@@ -28,7 +42,7 @@ lazy val scala = (project in file("."))
     todo,
     products,
     `sensor-controller`,
-    zio
+    //zio
   )
   // S E T T I N G S
   .settings(commonSettings)
