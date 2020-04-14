@@ -42,7 +42,7 @@ lazy val scala = (project in file("."))
     todo,
     products,
     `sensor-controller`,
-    //zio
+    zio
   )
   // S E T T I N G S
   .settings(commonSettings)
