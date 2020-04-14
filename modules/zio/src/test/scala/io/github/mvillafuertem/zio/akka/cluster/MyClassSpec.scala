@@ -25,7 +25,7 @@ final class MyClassSpec extends AnyFlatSpecLike with BootstrapRuntime with Match
 
     val value: Int = 1
 
-    val actual = unsafeRun(ZStream.fromPull(
+    val actual = unsafeRun(ZStream.fromEffect(
       Task.effect(value)
         .mapError(Some(_))
         .flatMap { a =>

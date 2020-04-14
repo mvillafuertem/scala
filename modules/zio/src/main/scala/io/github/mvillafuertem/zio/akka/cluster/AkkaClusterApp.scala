@@ -54,7 +54,7 @@ object AkkaClusterApp extends App {
       _ <- pubSub.publish(entity.id, toSend).ignore
     } yield ()
 
-  val startChatServer: ZIO[Has[ActorSystem], Throwable, Sharding[ChatMessage]] =
+  lazy val startChatServer: ZIO[Has[ActorSystem], Throwable, Sharding[ChatMessage]] =
     for {
       pubSub <- PubSub.createPublisher[String]
       sharding <- Sharding.start[ChatMessage, List[String]]("Chat", chatroomBehavior(pubSub))
@@ -68,7 +68,7 @@ object AkkaClusterApp extends App {
     for {
       pubSub <- PubSub.createSubscriber[String].provideLayer(actorSystem)
       messages <- pubSub.listen(room)
-      _ <- messages.take.flatMap(console.putStrLn).forever.fork
+      _ <- messages.take.flatMap(msg => console.putStrLn(msg)).forever.fork
       _ <- sharding.send(room, Join(name))
       _ <- chat(name, room, sharding)
     } yield ()

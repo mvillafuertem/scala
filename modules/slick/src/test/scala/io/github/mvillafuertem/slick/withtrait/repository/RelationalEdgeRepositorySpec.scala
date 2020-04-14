@@ -4,7 +4,9 @@ import java.sql.SQLIntegrityConstraintViolationException
 
 import io.github.mvillafuertem.slick.withtrait.configuration.InfrastructureConfigurationSpec
 import io.github.mvillafuertem.slick.withtrait.model.{EdgeDBO, VertexDBO}
-import org.scalatest.{AsyncFlatSpecLike, BeforeAndAfterEach, Matchers, OptionValues}
+import org.scalatest.{BeforeAndAfterEach, OptionValues}
+import org.scalatest.flatspec.AsyncFlatSpecLike
+import org.scalatest.matchers.should.Matchers
 
 import scala.concurrent.duration.{FiniteDuration, _}
 import scala.concurrent.{Await, Future}
