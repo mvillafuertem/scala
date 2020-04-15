@@ -126,7 +126,7 @@ object Dependencies {
       Artifact.akkaKafka % Version.akkaKafka,
       "com.iheart" %% "ficus" % "1.4.7",
       "org.apache.curator" % "curator-test" % "4.3.0",
-      "org.apache.kafka" %% "kafka" % "2.4.1",
+      "org.apache.kafka" %% "kafka" % "2.5.0",
       Artifact.logback % Version.logback
     ) ++ Seq(
       // S E N S O R  C O N T R O L L E R  T E S T
@@ -242,7 +242,7 @@ object Dependencies {
   }
 
   private object Version {
-    val akka = "2.6.3"
+    val akka = "2.6.4"
     val akkaHttp = "10.1.11"
     val akkaKafka = "2.0.2"
     val akkaPersistenceCassandra = "0.100"
@@ -252,7 +252,7 @@ object Dependencies {
     val cats = "2.1.1"
     val circe = "0.13.0"
     val h2 = "1.4.200"
-    val jsoniter = "2.1.13"
+    val jsoniter = "2.1.14"
     val dijon = "0.3.0"
     val leveldbjniAll = "1.8"
     val logback = "1.2.3"
@@ -260,11 +260,11 @@ object Dependencies {
     val scalaTest = "3.1.1"
     val slick = "3.3.2"
     val specs2 = "4.9.3"
-    val tapir = "0.12.24"
+    val tapir = "0.13.2"
     val testcontainers = "0.36.1"
     val testcontainersKafka = "1.14.0"
     val zio = "1.0.0-RC18-2"
-    val zioAkkaCluster = "0.1.12"
+    val zioAkkaCluster = "0.1.13"
     val zioInteropReactiveStreams = "1.0.3.5-RC6"
     val jslt = "0.1.9"
 

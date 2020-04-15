@@ -4,19 +4,20 @@ import akka.http.scaladsl.model
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.server.directives.DebuggingDirectives
 import io.circe.generic.auto._
-import io.circe.parser.decode
+import io.circe.parser.{decode, parse}
 import io.circe.syntax._
 import io.circe.{Decoder, Encoder, HCursor, Json}
 import io.github.mvillafuertem.todo.BuildInfo
 import org.slf4j.LoggerFactory
 import sttp.model.StatusCode
+import sttp.tapir.Codec.JsonCodec
 import sttp.tapir.docs.openapi._
 import sttp.tapir.json.circe._
 import sttp.tapir.openapi.OpenAPI
 import sttp.tapir.openapi.circe.yaml._
 import sttp.tapir.server.akkahttp._
 import sttp.tapir.swagger.akkahttp.SwaggerAkka
-import sttp.tapir.{Endpoint, endpoint, jsonBody, oneOf, statusCode, statusDefaultMapping, _}
+import sttp.tapir.{Endpoint, endpoint, oneOf, statusCode, statusDefaultMapping, _}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -95,16 +96,10 @@ object ToDoAPI {
     "builtAtString" -> builtAtString,
     "builtAtMillis" -> builtAtMillis)
 
-  // TODO: Estudiar que forma es mas cómoda de hacer encode
-//  implicit val buildInfoCodec: JsonCodec[HealthInfo] =
-//    implicitly[JsonCodec[]]
-//      .map(a => (decode[HealthInfo](a)).getOrElse(BuildInfo.toMap))(a => a.asJson.noSpaces)
+  implicit val buildInfoCodec: JsonCodec[HealthInfo] =
+    implicitly[JsonCodec[Json]]
+      .map(a => (decode[HealthInfo](a.noSpaces)).getOrElse(BuildInfo.toMap))(a => a.asJson)
 
-  // TODO: Estudiar que forma es mas cómoda de hacer encode
-  implicit val buildInfoCodec: Codec[HealthInfo, CodecFormat.Json, String] =
-    Codec.stringPlainCodecUtf8.codecFormat(CodecFormat.Json()).mapDecode[HealthInfo](a => (DecodeResult.Value(decode[HealthInfo](a) match {
-      case Right(value) => value
-    })))(a => a.asJson.noSpaces)
 
   private val notFoundErrorInfoValue: EndpointOutput[(StatusCode, ErrorInfo)] = statusCode
     .and(jsonBody[ErrorInfo]
@@ -175,7 +170,7 @@ object ToDoAPI {
       .description("ToDo Application Service Health Check Endpoint")
       .get
       .in("health")
-      .out(jsonBody[HealthInfo].example(BuildInfo.toMap))
+      .out(anyJsonBody[HealthInfo].example(BuildInfo.toMap))
       //.errorOut(statusCode)
 
 

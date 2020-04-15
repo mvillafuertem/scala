@@ -16,7 +16,7 @@ trait ProductsCodec {
 
   // p r o d u c t  t y p e  c o d e c
   implicit def plainCodecForProductType: PlainCodec[ProductType] = {
-    Codec.stringPlainCodecUtf8.map[ProductType]({
+    Codec.string.map[ProductType]((_: String) match {
       case "new"  => New
       case "used" => Used
   })(_.toString.toLowerCase)
