@@ -42,7 +42,8 @@ lazy val scala = (project in file("."))
     todo,
     products,
     `sensor-controller`,
-    zio
+    `zio-akka-cluster-pubsub`,
+    `zio-akka-cluster-sharding`
   )
   // S E T T I N G S
   .settings(commonSettings)
@@ -132,7 +133,13 @@ lazy val slick = (project in file("modules/slick"))
   .settings(commonSettings)
   .settings(libraryDependencies ++= Dependencies.slick)
 
-lazy val zio = (project in file("modules/zio"))
+lazy val `zio-akka-cluster-pubsub` = (project in file("modules/zio/akka-cluster-pubsub"))
+  // S E T T I N G S
+  .settings(commonSettings)
+  .settings(libraryDependencies ++= Dependencies.zio)
+  .settings(testFrameworks := Seq(new TestFramework("zio.test.sbt.ZTestFramework")))
+
+lazy val `zio-akka-cluster-sharding` = (project in file("modules/zio/akka-cluster-sharding"))
   // S E T T I N G S
   .settings(commonSettings)
   .settings(libraryDependencies ++= Dependencies.zio)

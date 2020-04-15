@@ -180,10 +180,6 @@ object Dependencies {
       Artifact.zioTest,
       Artifact.zioTestSbt
     ).map(_ % Version.zio % Test) ++ Seq(
-      // S P E C  T E S T
-      Artifact.specs2Core,
-      Artifact.specs2MatcherExtra
-    ).map(_ % Version.specs2 % Test) ++ Seq(
       Artifact.scalaTest % Version.scalaTest
     ).map(_ % Test)
 
@@ -220,8 +216,6 @@ object Dependencies {
     val postgresql = "org.postgresql" % "postgresql"
     val scalaTest = "org.scalatest" %% "scalatest"
     val slick = "com.typesafe.slick" %% "slick"
-    val specs2Core = "org.specs2" %% "specs2-core"
-    val specs2MatcherExtra = "org.specs2" %% "specs2-matcher-extra"
     val swaggerUi = "org.webjars" % "swagger-ui"
     val tapirAkkaHttpServer = "com.softwaremill.sttp.tapir" %% "tapir-akka-http-server"
     val tapirCore = "com.softwaremill.sttp.tapir" %% "tapir-core"
@@ -259,7 +253,6 @@ object Dependencies {
     val postgres = "42.2.12"
     val scalaTest = "3.1.1"
     val slick = "3.3.2"
-    val specs2 = "4.9.3"
     val tapir = "0.13.2"
     val testcontainers = "0.36.1"
     val testcontainersKafka = "1.14.0"
