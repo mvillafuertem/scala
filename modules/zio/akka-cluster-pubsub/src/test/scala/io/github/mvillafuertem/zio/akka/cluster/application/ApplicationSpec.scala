@@ -36,7 +36,8 @@ object ApplicationSpec extends DefaultRunnableSpec {
       testBehaviorWhenReceivedSendMessage,
       testBehaviorWhenReceivedJoinMessage,
       testBehaviorWhenReceivedLeaveMessage,
-      testJoinAChat
+      testChatWithSomeBody,
+      testJoinToTheChat
     )
 
   lazy val testBehaviorWhenReceivedSendMessage: ZSpec[Any, Throwable] =
@@ -83,8 +84,8 @@ object ApplicationSpec extends DefaultRunnableSpec {
         .provideLayer(actorSystem)
     }
 
-  lazy val testJoinAChat: ZSpec[Any with Console with TestConsole, Throwable] =
-    testM("join a chat") {
+  lazy val testChatWithSomeBody: ZSpec[Any with Console with TestConsole, Throwable] =
+    testM("chat with somebody") {
       assertM(
         for {
           _ <- TestConsole.feedLines(msg)
@@ -114,6 +115,23 @@ object ApplicationSpec extends DefaultRunnableSpec {
         } yield r
         // t h e n
       )(isTrue)
+        .provideLayer(actorSystem ++ TestConsole.any)
+    }
+
+  lazy val testJoinToTheChat: ZSpec[Any with Console with TestConsole, Throwable] =
+    testM("join to the chat") {
+      assertM(
+        for {
+          _ <- TestConsole.feedLines(msg)
+          pubSub <- PubSub.createPubSub[String]
+          queue <- pubSub.listen(topic)
+          sharding <- Sharding.start[ChatMessage, List[String]]("Chat", chatroomBehavior(pubSub))
+          joinChat <- joinChat(user, topic, sharding).fork
+          item <- queue.take
+          _ <- joinChat.interrupt
+        } yield item
+        // t h e n
+      )(equalTo(s"$user joined the room. There are now () participant(s)."))
         .provideLayer(actorSystem ++ TestConsole.any)
     }
 
