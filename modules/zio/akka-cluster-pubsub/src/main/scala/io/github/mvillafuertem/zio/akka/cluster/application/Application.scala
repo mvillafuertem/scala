@@ -1,7 +1,5 @@
 package io.github.mvillafuertem.zio.akka.cluster.application
 
-import java.io.IOException
-
 import akka.actor.ActorSystem
 import io.github.mvillafuertem.zio.akka.cluster.domain._
 import zio.akka.cluster.pubsub.{PubSub, Publisher}
@@ -38,22 +36,14 @@ trait Application {
       messages <- pubSub.listen(room)
       _        <- messages.take.flatMap(a => console.putStrLn(a)).forever.fork
       _        <- sharding.send(room, Join(name))
-      _        <- chat(name, room, sharding).forever
+      _        <- chat(name, room, sharding)
     } yield ()
 
   def chat(name: String, room: String, sharding: Sharding[ChatMessage]): ZIO[Console, Throwable, Unit] =
-    for {
+    (for {
       msg <- console.getStrLn
       _   <- ZIO.when(msg.toLowerCase == "exit")(sharding.send(room, Leave(name)) *> ZIO.interrupt)
       _   <- ZIO.when(msg.trim.nonEmpty)(sharding.send(room, Message(name, msg)))
-    } yield ()
-
-  def program(): ZIO[Console, Throwable, Unit] =
-    (for  {
-      msg <- console.getStrLn
-      _ <- ZIO.when(msg equalsIgnoreCase "exit")(ZIO.interrupt)
-      _ <- ZIO.when(msg.trim.nonEmpty)(console.putStrLn(s"New message: $msg"))
-    } yield ())
-
+    } yield ()).forever
 
 }
