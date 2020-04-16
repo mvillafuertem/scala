@@ -1,6 +1,5 @@
 package io.github.mvillafuertem.akka.untyped.stream.graph
 
-import akka.NotUsed
 import akka.actor.ActorSystem
 import akka.stream.scaladsl.{Broadcast, Concat, Flow, GraphDSL, Sink, Source}
 import akka.stream.{FlowShape, Materializer, SinkShape, SourceShape}
@@ -109,6 +108,7 @@ object OpenGraphs extends App {
       }
     )
 
-  private val f: Flow[String, Int, NotUsed] = Flow.fromSinkAndSourceCoupled(Sink.foreach[String](println), Source(1 to 10))
+  // uncomment
+  //private val f: Flow[String, Int, NotUsed] = Flow.fromSinkAndSourceCoupled(Sink.foreach[String](println), Source(1 to 10))
 
 }

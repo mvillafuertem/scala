@@ -46,7 +46,7 @@ class Stack[A] extends Equals {
     var result = ""
     var aux = front
     while (aux != null) {
-      result += aux.value + "\n"
+      result += s"${aux.value}\n"
       aux = aux.next
     }
     result

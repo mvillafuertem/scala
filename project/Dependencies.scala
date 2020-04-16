@@ -45,7 +45,7 @@ object Dependencies {
     // A L P A K K A
     Seq(
       Artifact.akkaSlf4f
-    ).map(_ % "2.5.29") ++ Seq(
+    ).map(_ % "2.5.31") ++ Seq(
       Artifact.logback % Version.logback
     ) ++ Seq(
       // A L P A K K A  T E S T

@@ -29,7 +29,7 @@ object ActorIntroLogging extends App {
   val actorWithLogging = system.actorOf(Props[ActorWithLogging])
   actorWithLogging ! "Logging a simple message by extending a trait"
 
-  actorWithLogging ! (42, 65)
+  actorWithLogging ! ((42, 65))
 
 
 }

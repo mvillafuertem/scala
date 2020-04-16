@@ -4,7 +4,7 @@ import akka.http.scaladsl.model
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.server.directives.DebuggingDirectives
 import io.circe.generic.auto._
-import io.circe.parser.{decode, parse}
+import io.circe.parser.decode
 import io.circe.syntax._
 import io.circe.{Decoder, Encoder, HCursor, Json}
 import io.github.mvillafuertem.todo.BuildInfo

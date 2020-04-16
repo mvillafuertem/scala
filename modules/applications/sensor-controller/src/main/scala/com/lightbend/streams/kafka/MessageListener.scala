@@ -1,5 +1,7 @@
 package com.lightbend.streams.kafka
 
+import java.time.Duration
+
 import org.apache.kafka.clients.consumer.internals.NoOpConsumerRebalanceListener
 import org.apache.kafka.clients.consumer.{ConsumerConfig, KafkaConsumer}
 import org.apache.kafka.common.serialization.ByteArrayDeserializer
@@ -37,7 +39,7 @@ class MessageListener[K, V](brokers: String, topic: String, group: String, keyDe
                             processor: RecordProcessorTrait[K, V]) extends Runnable {
 
   import MessageListener._
-  import scala.collection.JavaConverters._
+  import scala.jdk.CollectionConverters._
 
   val consumer = new KafkaConsumer[K, V](consumerProperties(brokers, group, keyDeserealizer, valueDeserealizer).asJava)
   consumer.subscribe(Seq(topic).asJava, new NoOpConsumerRebalanceListener())
@@ -49,7 +51,7 @@ class MessageListener[K, V](brokers: String, topic: String, group: String, keyDe
 
   override def run(): Unit = {
     while (!completed) {
-      val records = consumer.poll(100).asScala
+      val records = consumer.poll(Duration.ofMillis(200)).asScala
       for (record <- records) {
         processor.processRecord(record)
       }

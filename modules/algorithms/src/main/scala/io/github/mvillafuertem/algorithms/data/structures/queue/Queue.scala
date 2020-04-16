@@ -9,7 +9,7 @@ class Queue[A] {
   var numElem = 0
 
   def enqueue(value: A): Unit = {
-    var nuevo = Node(value, null)
+    val nuevo = Node(value, null)
     if (cabeza != null) {
 
       fin.next = nuevo
@@ -40,18 +40,18 @@ class Queue[A] {
   def peek: A = { //Devuelve el elemento del cabeza de la cola Si la cola está vacía, devuelve como resultado -999 y un mensaje de error
     var resul: A = ???
     if (!this.isEmpty) resul = cabeza.value
-    else System.out.println("Error, la cola está vacía")
+    else println("Error, la cola está vacía")
     resul
   }
 
   def show(): Unit = { // Muestra por pantalla el contenido de la cola
     var aux: Node[A] = ???
-    System.out.println("Contenido de la cola: ")
+    println("Contenido de la cola: ")
     aux = cabeza
     while ( {
       aux != null
     }) {
-      System.out.print(aux.value + "  ")
+      println(s"${aux.value}  ")
       aux = aux.next
     }
   }

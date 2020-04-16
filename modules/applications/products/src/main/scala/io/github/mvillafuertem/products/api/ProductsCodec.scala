@@ -26,6 +26,7 @@ trait ProductsCodec {
   private[api] implicit lazy val productTypeCodec: JsonCodec[ProductType] =
     implicitly[JsonCodec[Json]].map(json => json.as[ProductType](decodeProductType) match {
       case Right(value) => value
+      case Left(value) => throw value
     })(productType => productType.asJson(encodeProductType))
 
   private[api] implicit lazy val decodeProductType: Decoder[ProductType] = (c: HCursor) => for {

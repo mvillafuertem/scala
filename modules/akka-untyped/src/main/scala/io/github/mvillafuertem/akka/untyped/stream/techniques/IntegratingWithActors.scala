@@ -1,8 +1,9 @@
 package io.github.mvillafuertem.akka.untyped.stream.techniques
 
+import akka.Done
 import akka.actor.{Actor, ActorLogging, ActorSystem, Props}
 import akka.stream.scaladsl.{Flow, Sink, Source}
-import akka.stream.{Materializer, OverflowStrategy}
+import akka.stream.{CompletionStrategy, Materializer, OverflowStrategy}
 import akka.util.Timeout
 
 import scala.concurrent.duration._
@@ -33,7 +34,7 @@ object IntegratingWithActors extends App {
 
 
   // Actor as a Flow
-  implicit val timeout = Timeout(1 seconds)
+  implicit val timeout: Timeout = Timeout(1 seconds)
   val actorBasedFlow = Flow[Int].ask(parallelism = 4)(simpleActor)
 
   // numberSource.via(actorBasedFlow).to(Sink.ignore).run()
@@ -41,8 +42,18 @@ object IntegratingWithActors extends App {
   // numberSource.ask[Int](parallelism = 4)(simpleActor).to(Sink.ignore).run()
 
 
+  private val completionMatcher: PartialFunction[Any, CompletionStrategy] = {
+    case Done =>
+      // complete stream immediately if we send it Done
+      CompletionStrategy.immediately
+  }
   // Actor as a Source
-  val actorPoweredSource = Source.actorRef[Int](bufferSize = 10, overflowStrategy = OverflowStrategy.dropHead)
+  val actorPoweredSource = Source.actorRef[Int](completionMatcher,
+    // never fail the stream because of a message
+    failureMatcher = PartialFunction.empty,
+    bufferSize = 10,
+    overflowStrategy = OverflowStrategy.dropHead
+  )
   val materializedActorRef = actorPoweredSource.to(Sink.foreach[Int](number => println(s"Actor powered flow got number: $number"))).run()
   materializedActorRef ! 10
 

@@ -2,7 +2,7 @@ package io.github.mvillafuertem.products.domain.repository
 
 import io.github.mvillafuertem.products.domain.error.ProductException
 import io.github.mvillafuertem.products.domain.model.{Product, ProductId}
-import zio.{IO, UIO}
+import zio.IO
 import zio.stream.ZStream
 
 trait ProductsRepository {

@@ -38,11 +38,13 @@ class MessageSender[K, V](val brokers: String, val keySerializer: String, val va
 
   def writeKeyValue(topic: String, key: K, value: V): Unit = {
     val result = producer.send(new ProducerRecord[K, V](topic, key, value)).get
+    println(result)
     producer.flush()
   }
 
   def writeValue(topic: String, value: V): Unit = {
     val result = producer.send(new ProducerRecord[K, V](topic, null.asInstanceOf[K], value)).get
+    println(result)
     producer.flush()
   }
 

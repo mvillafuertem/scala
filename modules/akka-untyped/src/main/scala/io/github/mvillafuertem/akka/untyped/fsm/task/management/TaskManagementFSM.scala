@@ -25,8 +25,8 @@ final class TaskManagementFSM extends FSM[TaskState, TaskData] {
   }
 
   when(Opened) {
-    case Event(Close(id), Open(task)) =>
-      val task = taskRepository(id)
+    case Event(Close(id), Open(_)) =>
+      taskRepository(id)
       sender() ! TaskManagementInfo("Task closed")
       //context.become(closed(task))
       goto(Closed) using Close(id)

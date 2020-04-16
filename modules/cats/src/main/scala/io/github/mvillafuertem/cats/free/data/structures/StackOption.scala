@@ -16,9 +16,9 @@ object StackOption {
         case Push(a) =>
           val element = a.asInstanceOf[Int]
           Option(stack.push(element).asInstanceOf[A])
-        //case Pop() => stack.pop.asInstanceOf[Option[A]]
-        //case Peek() => stack.peek.asInstanceOf[Option[A]]
-        //case Show() => stack.show().asInstanceOf[Option[A]]
+        case Pop() => stack.pop.asInstanceOf[Option[A]]
+        case Peek() => stack.peek.asInstanceOf[Option[A]]
+        case Show() => stack.show().asInstanceOf[Option[A]]
       }
     }
 

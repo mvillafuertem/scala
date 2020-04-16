@@ -7,7 +7,7 @@ import io.github.mvillafuertem.algorithms.data.structures.stack.Stack
 import io.github.mvillafuertem.cats.free.calculator.CalculatorOperationsADT
 import io.github.mvillafuertem.cats.free.calculator.CalculatorOperationsADT.{Sub, Sum}
 import io.github.mvillafuertem.cats.free.data.structures.StackADT
-import io.github.mvillafuertem.cats.free.data.structures.StackADT.Push
+import io.github.mvillafuertem.cats.free.data.structures.StackADT.{Peek, Pop, Push, Show}
 
 object EitherKApplication extends App {
 
@@ -28,6 +28,8 @@ object EitherKApplication extends App {
     def apply[A](fa: CalculatorOperationsADT[A]) = fa match {
       case Sum(a, b) => (a.asInstanceOf[Int] + b.asInstanceOf[Int]).asInstanceOf[A]
       case Sub(a, b) => (a.asInstanceOf[Int] - b.asInstanceOf[Int]).asInstanceOf[A]
+      case CalculatorOperationsADT.Mul(a, b) => (a.asInstanceOf[Int] * b.asInstanceOf[Int]).asInstanceOf[A]
+      case CalculatorOperationsADT.Div(a, b) => (a.asInstanceOf[Int] / b.asInstanceOf[Int]).asInstanceOf[A]
     }
   }
 
@@ -37,7 +39,10 @@ object EitherKApplication extends App {
 
     def apply[A](fa: StackADT[A]) = fa match {
       case Push(a) => stack.push(a.asInstanceOf[Int]).asInstanceOf[A]
-      //case Show() => stack.show().asInstanceOf[A]
+      case Show() => stack.show().asInstanceOf[A]
+      // TODO
+      case Pop() => stack.show().asInstanceOf[A]
+      case Peek() => stack.show().asInstanceOf[A]
     }
   }
 

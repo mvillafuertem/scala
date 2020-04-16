@@ -1,8 +1,7 @@
 package io.github.mvillafuertem.products.api
 
 import io.github.mvillafuertem.products.api.ProductsEndpoint.ProductsQuery
-import io.github.mvillafuertem.products.domain.model.ProductType.New
-import io.github.mvillafuertem.products.domain.model.{Product, ProductId, ProductType}
+import io.github.mvillafuertem.products.domain.model.ProductType
 import sttp.model.StatusCode
 import sttp.tapir._
 import sttp.tapir.json.circe._
@@ -53,7 +52,7 @@ trait ProductsEndpoint extends ProductsCodec {
 
   // e x a m p l e
 
-  private val vectorProductsExample: Vector[Product] = Vector(Product(ProductId(), "", New))
+  //private val vectorProductsExample: Vector[Product] = Vector(Product(ProductId(), "", New))
 
 }
 
