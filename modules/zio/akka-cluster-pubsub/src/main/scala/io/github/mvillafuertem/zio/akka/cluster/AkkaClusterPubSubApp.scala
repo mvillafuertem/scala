@@ -12,8 +12,10 @@ import zio.console.Console
 object AkkaClusterPubSubApp extends App {
 
   override def run(args: List[String]): ZIO[zio.ZEnv, Nothing, Int] = program
+    .provideLayer(Console.live ++ actorSystem)
+    .catchAll(e => console.putStrLn(e.toString).as(1))
 
-  val program: ZIO[Console, Nothing, Int] =
+  val program =
     (for {
       sharding <- startChatServer
       _ <- console.putStrLn("Hi! What's your name? (Type [exit] to stop)")
@@ -24,7 +26,5 @@ object AkkaClusterPubSubApp extends App {
       _ <- ZIO.when(room.toLowerCase == "exit" || room.trim.isEmpty)(ZIO.interrupt)
       _ <- joinChat(name, room, sharding)
     } yield 0)
-      .provideLayer(Console.live ++ actorSystem)
-      .catchAll(e => console.putStrLn(e.toString).as(1))
 
 }
