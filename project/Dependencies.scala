@@ -93,31 +93,6 @@ object Dependencies {
       Artifact.scalaTest % Version.scalaTest
     ).map(_ % Test)
 
-  val products: Seq[ModuleID] =
-  // P R O D U C T S
-    Seq(
-      //"org.iq80.leveldb" % "leveldb" % "0.12",
-      Artifact.akkaActorTyped % Version.akka,
-      Artifact.akkaStreamTyped % Version.akka,
-      Artifact.zio % Version.zio,
-      Artifact.zioInteropReactiveStreams % Version.zioInteropReactiveStreams,
-      Artifact.slick % Version.slick,
-      Artifact.h2 % Version.h2,
-      Artifact.logback % Version.logback
-    ) ++ Seq(
-      Artifact.tapirCore,
-      Artifact.tapirAkkaHttpServer,
-      Artifact.tapirJsonCirce,
-      Artifact.tapirOpenapiCirceYaml,
-      Artifact.tapirOpenapiDocs,
-      Artifact.tapirSwaggerUiAkkaHttp
-    ).map(_ % Version.tapir) ++ Seq(
-      // P R O D U C T S  T E S T
-      Artifact.akkaHttpTestkit % Version.akkaHttp,
-      Artifact.scalaTest % Version.scalaTest,
-      Artifact.zioTest % Version.zio
-    ).map(_ % Test)
-
   val `sensor-controller`: Seq[ModuleID] =
   // S E N S O R  C O N T R O L L E R
     Seq(
@@ -166,6 +141,31 @@ object Dependencies {
     ) ++ Seq(
       // S L I C K  T E S T
       Artifact.scalaTest % Version.scalaTest
+    ).map(_ % Test)
+
+  val tapir: Seq[ModuleID] =
+  // T A P I R
+    Seq(
+      //"org.iq80.leveldb" % "leveldb" % "0.12",
+      Artifact.akkaActorTyped % Version.akka,
+      Artifact.akkaStreamTyped % Version.akka,
+      Artifact.zio % Version.zio,
+      Artifact.zioInteropReactiveStreams % Version.zioInteropReactiveStreams,
+      Artifact.slick % Version.slick,
+      Artifact.h2 % Version.h2,
+      Artifact.logback % Version.logback
+    ) ++ Seq(
+      Artifact.tapirCore,
+      Artifact.tapirAkkaHttpServer,
+      Artifact.tapirJsonCirce,
+      Artifact.tapirOpenapiCirceYaml,
+      Artifact.tapirOpenapiDocs,
+      Artifact.tapirSwaggerUiAkkaHttp
+    ).map(_ % Version.tapir) ++ Seq(
+      // T A P I R  T E S T
+      Artifact.akkaHttpTestkit % Version.akkaHttp,
+      Artifact.scalaTest % Version.scalaTest,
+      Artifact.zioTest % Version.zio
     ).map(_ % Test)
 
   val zio: Seq[ModuleID] =

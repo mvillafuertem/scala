@@ -39,10 +39,10 @@ lazy val scala = (project in file("."))
     cats,
     json,
     slick,
+    tapir,
     todo,
-    products,
     `sensor-controller`,
-    `zio-akka-cluster-pubsub`,
+    `zio-akka-cluster-chat`,
     `zio-akka-cluster-sharding`
   )
   // S E T T I N G S
@@ -91,15 +91,6 @@ lazy val todo = (project in file("modules/applications/todo"))
   .enablePlugins(BuildInfoPlugin)
   .enablePlugins(GitVersioning)
 
-lazy val products = (project in file("modules/applications/products"))
-  // S E T T I N G S
-  .settings(commonSettings)
-  .settings(BuildInfoSettings.value)
-  .settings(libraryDependencies ++= Dependencies.products)
-  // P L U G I N S
-  .enablePlugins(BuildInfoPlugin)
-  .enablePlugins(GitVersioning)
-
 lazy val `sensor-controller` = (project in file("modules/applications/sensor-controller"))
   // S E T T I N G S
   .settings(commonSettings)
@@ -133,7 +124,16 @@ lazy val slick = (project in file("modules/slick"))
   .settings(commonSettings)
   .settings(libraryDependencies ++= Dependencies.slick)
 
-lazy val `zio-akka-cluster-pubsub` = (project in file("modules/zio/akka-cluster-pubsub"))
+lazy val tapir = (project in file("modules/tapir"))
+  // S E T T I N G S
+  .settings(commonSettings)
+  .settings(BuildInfoSettings.value)
+  .settings(libraryDependencies ++= Dependencies.tapir)
+  // P L U G I N S
+  .enablePlugins(BuildInfoPlugin)
+  .enablePlugins(GitVersioning)
+
+lazy val `zio-akka-cluster-chat` = (project in file("modules/zio/akka-cluster-chat"))
   // S E T T I N G S
   .settings(commonSettings)
   .settings(libraryDependencies ++= Dependencies.zio)
