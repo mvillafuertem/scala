@@ -1,9 +1,10 @@
 package io.github.mvillafuertem.zio.akka.cluster.chat
 
+import akka.actor.ActorSystem
 import io.github.mvillafuertem.zio.akka.cluster.chat.application._
 import io.github.mvillafuertem.zio.akka.cluster.chat.configuration._
-import zio._
 import zio.console.Console
+import zio.{App, Has, ZIO, console}
 
 // TODO
 //  sbt zio/run -J-Dconfig.resource=application1.conf
@@ -14,7 +15,7 @@ object AkkaClusterPubSubApp extends App {
     .provideLayer(Console.live ++ actorSystem)
     .catchAll(e => console.putStrLn(e.toString).as(1))
 
-  val program =
+  val program: ZIO[Console with Has[ActorSystem], Throwable, Int] =
     (for {
       sharding <- startChatServer
       _ <- console.putStrLn("Hi! What's your name? (Type [exit] to stop)")
