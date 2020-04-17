@@ -31,8 +31,10 @@ lazy val commonSettings = Settings.value ++ Seq(
 lazy val scala = (project in file("."))
   .aggregate(
     advanced,
-    `akka-untyped`,
+    `akka-classic`,
     `akka-typed`,
+    `akka-fsm`,
+    `sensor-controller`,
     alpakka,
     algorithms,
     basic,
@@ -40,8 +42,6 @@ lazy val scala = (project in file("."))
     json,
     slick,
     tapir,
-    todo,
-    `sensor-controller`,
     `zio-akka-cluster-chat`,
     `zio-akka-cluster-sharding`
   )
@@ -54,15 +54,15 @@ lazy val advanced = (project in file("modules/advanced"))
   .settings(commonSettings)
   .settings(libraryDependencies ++= Dependencies.advanced)
 
-lazy val `akka-untyped` = (project in file("modules/akka-untyped"))
+lazy val `akka-classic` = (project in file("modules/akka/classic"))
   .configs(IntegrationTest)
   .settings(Defaults.itSettings)
   // S E T T I N G S
   .settings(commonSettings)
   .settings(NexusSettings.value)
-  .settings(libraryDependencies ++= Dependencies.`akka-untyped`)
+  .settings(libraryDependencies ++= Dependencies.`akka-classic`)
 
-lazy val `akka-typed` = (project in file("modules/akka-typed"))
+lazy val `akka-typed` = (project in file("modules/akka/typed"))
   .configs(IntegrationTest)
   .settings(Defaults.itSettings)
   // S E T T I N G S
@@ -70,7 +70,7 @@ lazy val `akka-typed` = (project in file("modules/akka-typed"))
   .settings(NexusSettings.value)
   .settings(libraryDependencies ++= Dependencies.`akka-typed`)
 
-lazy val alpakka = (project in file("modules/alpakka"))
+lazy val alpakka = (project in file("modules/akka/alpakka"))
   .configs(IntegrationTest)
   .settings(Defaults.itSettings)
   // S E T T I N G S
@@ -82,16 +82,17 @@ lazy val basic = (project in file("modules/basic"))
   .settings(commonSettings)
   .settings(libraryDependencies ++= Dependencies.basic)
 
-lazy val todo = (project in file("modules/applications/todo"))
+lazy val `akka-fsm` = (project in file("modules/akka/fsm"))
   // S E T T I N G S
   .settings(commonSettings)
   .settings(BuildInfoSettings.value)
-  .settings(libraryDependencies ++= Dependencies.todo)
+  .settings(buildInfoPackage := s"${organization.value}.akka.fsm")
+  .settings(libraryDependencies ++= Dependencies.`akka-fsm`)
   // P L U G I N S
   .enablePlugins(BuildInfoPlugin)
   .enablePlugins(GitVersioning)
 
-lazy val `sensor-controller` = (project in file("modules/applications/sensor-controller"))
+lazy val `sensor-controller` = (project in file("modules/akka/sensor-controller"))
   // S E T T I N G S
   .settings(commonSettings)
   .settings(libraryDependencies ++= Dependencies.`sensor-controller`)

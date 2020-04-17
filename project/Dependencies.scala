@@ -2,7 +2,7 @@ import sbt._
 
 object Dependencies {
 
-  val `akka-untyped`: Seq[ModuleID] =
+  val `akka-classic`: Seq[ModuleID] =
     // A K K A
     Seq(
       Artifact.akkaPersistence,
@@ -70,7 +70,7 @@ object Dependencies {
     Artifact.scalaTest % Version.scalaTest % Test
   )
 
-  val todo: Seq[ModuleID] =
+  val `akka-fsm`: Seq[ModuleID] =
     // T O D O
     Seq(
       Artifact.akkaPersistenceTyped % Version.akka,
