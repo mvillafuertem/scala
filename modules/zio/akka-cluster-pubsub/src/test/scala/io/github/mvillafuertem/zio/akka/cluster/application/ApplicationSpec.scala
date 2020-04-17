@@ -37,7 +37,8 @@ object ApplicationSpec extends DefaultRunnableSpec {
       testBehaviorWhenReceivedJoinMessage,
       testBehaviorWhenReceivedLeaveMessage,
       testChatWithSomeBody,
-      testJoinToTheChat
+      testJoinToTheChat,
+      testExitToTheChat
     )
 
   lazy val testBehaviorWhenReceivedSendMessage: ZSpec[Any, Throwable] =
@@ -101,23 +102,6 @@ object ApplicationSpec extends DefaultRunnableSpec {
         .provideLayer(actorSystem ++ TestConsole.any)
     }
 
-  // TODO verify interrupt
-  lazy val testExitToTheChat: ZSpec[Any with Console with TestConsole, Throwable] =
-    testM("exit to the chat") {
-      assertM(
-        for {
-          interrupted <- Ref.make(false)
-          _ <- TestConsole.feedLines("exit")
-          pubSub <- PubSub.createPubSub[String]
-          sharding <- Sharding.start[ChatMessage, List[String]]("Chat", chatroomBehavior(pubSub))
-          _ <- chat(user, topic, sharding).onInterrupt(interrupted.set(true))
-          r <- interrupted.get
-        } yield r
-        // t h e n
-      )(isTrue)
-        .provideLayer(actorSystem ++ TestConsole.any)
-    }
-
   lazy val testJoinToTheChat: ZSpec[Any with Console with TestConsole, Throwable] =
     testM("join to the chat") {
       assertM(
@@ -132,6 +116,25 @@ object ApplicationSpec extends DefaultRunnableSpec {
         } yield item
         // t h e n
       )(equalTo(s"$user joined the room. There are now () participant(s)."))
+        .provideLayer(actorSystem ++ TestConsole.any)
+    }
+
+  lazy val testExitToTheChat: ZSpec[Any with Console with TestConsole, Throwable] =
+    testM("exit to the chat") {
+      assertM(
+        for {
+          interrupted <- Ref.make(false)
+          _ <- TestConsole.feedLines("exit")
+          pubSub <- PubSub.createPubSub[String]
+          queue <- pubSub.listen(topic)
+          sharding <- Sharding.start[ChatMessage, List[String]]("Chat", chatroomBehavior(pubSub))
+          chat <- chat(user, topic, sharding).onInterrupt(interrupted.set(true)).fork
+          _    <- chat.await
+          item <- queue.take
+          i <- interrupted.get
+        } yield (i, item)
+        // t h e n
+      )(equalTo(true, s"$user left the room. There are now () participant(s)."))
         .provideLayer(actorSystem ++ TestConsole.any)
     }
 
