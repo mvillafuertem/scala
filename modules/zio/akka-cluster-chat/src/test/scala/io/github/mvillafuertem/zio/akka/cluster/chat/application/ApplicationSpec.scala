@@ -6,7 +6,6 @@ import io.github.mvillafuertem.zio.akka.cluster.chat.domain._
 import zio._
 import zio.akka.cluster.pubsub.PubSub
 import zio.akka.cluster.sharding.Sharding
-import zio.console.Console
 import zio.test.Assertion._
 import zio.test._
 import zio.test.environment.{TestConsole, TestEnvironment}
@@ -52,7 +51,8 @@ object ApplicationSpec extends DefaultRunnableSpec {
           item <- queue.take
         } yield item
         // t h e n
-      )(equalTo(user + ": " + msg)).provideLayer(actorSystem)
+      )(equalTo(user + ": " + msg))
+        .provideLayer(actorSystem)
     }
 
   lazy val testBehaviorWhenReceivedJoinMessage: ZSpec[Any, Throwable] =
@@ -85,7 +85,7 @@ object ApplicationSpec extends DefaultRunnableSpec {
         .provideLayer(actorSystem)
     }
 
-  lazy val testChatWithSomeBody: ZSpec[Any with Console with TestConsole, Throwable] =
+  lazy val testChatWithSomeBody: ZSpec[TestEnvironment, Throwable] =
     testM("chat with somebody") {
       assertM(
         for {
@@ -99,10 +99,10 @@ object ApplicationSpec extends DefaultRunnableSpec {
         } yield item
         // t h e n
       )(equalTo(s"$user: $msg"))
-        .provideLayer(actorSystem ++ TestConsole.any)
+        .provideSomeLayer[TestEnvironment](actorSystem)
     }
 
-  lazy val testJoinToTheChat: ZSpec[Any with Console with TestConsole, Throwable] =
+  lazy val testJoinToTheChat: ZSpec[TestEnvironment, Throwable] =
     testM("join to the chat") {
       assertM(
         for {
@@ -116,10 +116,10 @@ object ApplicationSpec extends DefaultRunnableSpec {
         } yield item
         // t h e n
       )(equalTo(s"$user joined the room. There are now () participant(s)."))
-        .provideLayer(actorSystem ++ TestConsole.any)
+        .provideSomeLayer[TestEnvironment](actorSystem)
     }
 
-  lazy val testExitToTheChat: ZSpec[Any with Console with TestConsole, Throwable] =
+  lazy val testExitToTheChat: ZSpec[TestEnvironment, Throwable] =
     testM("exit to the chat") {
       assertM(
         for {
@@ -135,7 +135,7 @@ object ApplicationSpec extends DefaultRunnableSpec {
         } yield (i, item)
         // t h e n
       )(equalTo(true, s"$user left the room. There are now () participant(s)."))
-        .provideLayer(actorSystem ++ TestConsole.any)
+        .provideSomeLayer[TestEnvironment](actorSystem)
     }
 
   override def aspects: List[TestAspect[Nothing, TestEnvironment, Nothing, Any]] =
