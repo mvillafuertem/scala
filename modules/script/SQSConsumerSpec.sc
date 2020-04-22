@@ -1,6 +1,6 @@
 #!/usr/bin/env amm
 
-import $file.ShelloWorld
+import $file.SQSConsumer
 import $ivy.`dev.zio::zio-test-sbt:1.0.0-RC18-2`
 import $ivy.`dev.zio::zio-test:1.0.0-RC18-2`
 import zio._
@@ -9,7 +9,7 @@ import zio.test.Assertion._
 import zio.test._
 import zio.test.environment._
 
-// amm `pwd`/ShelloWorldSpec.sc
+// amm `pwd`/SQSConsumerSpec.sc
 MyAppSpec.main(Array())
 
 import HelloWorld._
