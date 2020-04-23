@@ -1,5 +1,7 @@
 #!/usr/bin/env amm
 
+import java.io.{BufferedOutputStream, File, FileOutputStream}
+
 import $ivy.`ch.qos.logback:logback-classic:1.2.3`
 import $ivy.`com.jsoniter:jsoniter:0.9.23`
 import $ivy.`dev.zio::zio-sqs:0.2.2`
@@ -24,65 +26,82 @@ import org.slf4j.{Logger, LoggerFactory}
 import software.amazon.awssdk.auth.credentials.{AwsBasicCredentials, StaticCredentialsProvider}
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.sqs.SqsAsyncClient
+import software.amazon.awssdk.services.sqs.model.Message
 import zio.clock._
 import zio.console._
 import zio.duration._
-import zio.sqs.{SqsStream, SqsStreamSettings, Utils}
+import zio.sqs.{SqsStream, Utils}
 import zio.{Task, UIO, ZIO, _}
 
 val rootLogger = LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME).asInstanceOf[ch.qos.logback.classic.Logger]
-rootLogger.setLevel(ch.qos.logback.classic.Level.ERROR)
+rootLogger.setLevel(ch.qos.logback.classic.Level.INFO)
 
 // amm `pwd`/SQSConsumer.sc
 @main
-def main(key: String @doc("access key"),
-         secret: String @doc("access secret"),
-         region: String @doc("region"),
-         queue: String @doc("name of queue")): Unit =
-  MyApp.main(Array(key, secret, region, queue))
+def main(key: String@doc("access key"),
+         secret: String@doc("access secret"),
+         region: String@doc("region"),
+         queue: String@doc("name of queue")): Unit =
+  SQSConsumer.main(Array(key, secret, region, queue))
 
-object MyApp extends zio.App {
+case class SQSConsumerProperties(key: String, secret: String, region: String, queue: String)
+type ZSQSConsumerProperties = Has[SQSConsumerProperties]
+
+object SQSConsumer extends zio.App {
 
   private val log = LoggerFactory.getLogger(getClass)
 
   def run(args: List[String]) =
-    myAppLogic(args.head, args(1), args(2), args(3))
+    myAppLogic.provideCustomLayer(
+      ZLayer.succeed(
+        SQSConsumerProperties(args.head, args(1), args(2), args(3))))
       .fold(_ => 1, _ => 0)
 
-  def myAppLogic(key: String,
-                 secret: String,
-                 region: String,
-                 queue: String) =
+  val myAppLogic =
     (for {
-      credential <- credentialsProvider(key, secret)
-      client <- clientEffect(credential, region)
-      _ <- consumer(client, queue).forever
+      queue <- ZIO.access[ZSQSConsumerProperties](_.get.queue)
+      credential <- credentialsProvider
+      client <- clientEffect(credential)
+      queueUrl <- Utils.getQueueUrl(client, queue)
+      consumer <- consumer(client, queueUrl).forever.fork
+      _ <- UIO(log.info(s"Ready to receive messages from ${queueUrl}"))
+      _ <- consumer.join
     } yield ())
-      .tapError(e => UIO(log.error(s"$e")))
+      //.tapError(e => UIO(log.error(s"$e")))
 
-
-  private def credentialsProvider(key: String,
-                                  secret: String) =
-    Task(StaticCredentialsProvider
-      .create(AwsBasicCredentials
-        .create(key, secret)))
-
-
-  private def clientEffect(credentialsProvider: StaticCredentialsProvider,
-                           region: String): Task[SqsAsyncClient] =
-    Task(SqsAsyncClient
-      .builder()
-      .region(Region.of(region))
-      .credentialsProvider(credentialsProvider)
-      .build())
-
-  private def consumer(client: SqsAsyncClient, name: String): ZIO[Console with Clock, Throwable, Unit] =
+  private lazy val credentialsProvider =
     for {
-      queueUrl <- Utils.getQueueUrl(client, name)
-      _ <- SqsStream(client, queueUrl)
-        .schedule(Schedule.spaced(1.second))
-        .tap(msg => putStrLn(JsonStream.serialize(msg)))
-        .runCollect
+      properties <- ZIO.access[ZSQSConsumerProperties](_.get)
+      credential <- Task(StaticCredentialsProvider
+        .create(AwsBasicCredentials
+          .create(properties.key, properties.secret)))
+    } yield credential
+
+
+  private def clientEffect(credentialsProvider: StaticCredentialsProvider) =
+    for {
+      region <- ZIO.access[ZSQSConsumerProperties](_.get.region)
+      client <- Task(SqsAsyncClient
+        .builder()
+        .region(Region.of(region))
+        .credentialsProvider(credentialsProvider)
+        .build())
+    } yield client
+
+  private def consumer(client: SqsAsyncClient, queueUrl: String) =
+    SqsStream(client, queueUrl)
+      .schedule(Schedule.spaced(1.second))
+      .tap(writeToFile)
+      .runCollect
+
+  private def writeToFile(message: Message) = {
+    for {
+      file <- Task.effect(new File("/tmp/sqsconsumer.json"))
+      json <- Task.effect(JsonStream.serialize(message)).tap(msg => putStrLn(msg))
+      _ <- Task(new BufferedOutputStream(new FileOutputStream(file, true))).bracket(
+        os => UIO(os.close()))(
+        os => Task.effect(os.write(json.map(_.toByte).toArray)))
     } yield ()
+  }
 
 }

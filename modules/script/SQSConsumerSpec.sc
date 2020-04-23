@@ -26,7 +26,6 @@ object MyAppSpec extends DefaultRunnableSpec {
       testM("sayHello correctly displays output") {
         for {
           _ <- TestConsole.feedLines("Pepe", "1")
-          _ <- ShelloWorld.MyApp.myAppLogic
           _ <- sayHello
           output <- TestConsole.output
         } yield assert(output)(equalTo(Vector("Hello, World!\n")))
