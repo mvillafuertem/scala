@@ -6,31 +6,27 @@ import $ivy.`dev.zio::zio-sqs:0.2.2`
 import $ivy.`dev.zio::zio-streams:1.0.0-RC18-2`
 import $ivy.`dev.zio::zio:1.0.0-RC18-2`
 import $ivy.`org.slf4j:slf4j-api:1.7.30`
-import $ivy.`software.amazon.awssdk:annotations:2.13.0`
-import $ivy.`software.amazon.awssdk:apache-client:2.13.0`
-import $ivy.`software.amazon.awssdk:auth:2.13.0`
-import $ivy.`software.amazon.awssdk:aws-core:2.13.0`
-import $ivy.`software.amazon.awssdk:aws-query-protocol:2.13.0`
-import $ivy.`software.amazon.awssdk:http-client-spi:2.13.0`
-import $ivy.`software.amazon.awssdk:netty-nio-client:2.13.0`
-import $ivy.`software.amazon.awssdk:profiles:2.13.0`
-import $ivy.`software.amazon.awssdk:protocol-core:2.13.0`
-import $ivy.`software.amazon.awssdk:regions:2.13.0`
-import $ivy.`software.amazon.awssdk:sdk-core:2.13.0`
-import $ivy.`software.amazon.awssdk:sns:2.13.0`
-import $ivy.`software.amazon.awssdk:sqs:2.13.0`
-import $ivy.`software.amazon.awssdk:utils:2.13.0`
+import $ivy.`software.amazon.awssdk:annotations:2.13.1`
+import $ivy.`software.amazon.awssdk:apache-client:2.13.1`
+import $ivy.`software.amazon.awssdk:auth:2.13.1`
+import $ivy.`software.amazon.awssdk:aws-core:2.13.1`
+import $ivy.`software.amazon.awssdk:aws-query-protocol:2.13.1`
+import $ivy.`software.amazon.awssdk:http-client-spi:2.13.1`
+import $ivy.`software.amazon.awssdk:netty-nio-client:2.13.1`
+import $ivy.`software.amazon.awssdk:profiles:2.13.1`
+import $ivy.`software.amazon.awssdk:protocol-core:2.13.1`
+import $ivy.`software.amazon.awssdk:regions:2.13.1`
+import $ivy.`software.amazon.awssdk:sdk-core:2.13.1`
+import $ivy.`software.amazon.awssdk:sns:2.13.1`
+import $ivy.`software.amazon.awssdk:utils:2.13.1`
 import org.slf4j.{Logger, LoggerFactory}
 import software.amazon.awssdk.auth.credentials.{AwsBasicCredentials, StaticCredentialsProvider}
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.sns.SnsAsyncClient
-import software.amazon.awssdk.services.sns.model.Topic
-import software.amazon.awssdk.services.sqs.model.GetQueueUrlRequest
+import software.amazon.awssdk.services.sns.model.{PublishRequest, PublishResponse}
 import zio.clock._
 import zio.console._
 import zio.{Task, UIO, ZIO, _}
-
-import scala.jdk.CollectionConverters._
 
 val rootLogger = LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME).asInstanceOf[ch.qos.logback.classic.Logger]
 rootLogger.setLevel(ch.qos.logback.classic.Level.INFO)
@@ -65,16 +61,21 @@ object SNSProducer extends zio.App {
       queue <- ZIO.access[ZSNSProducerProperties](_.get.queue)
       credential <- credentialsProvider
       client <- clientEffect(credential)
-      listTopics <- Task.effectAsync[List[Topic]] { cb =>
-        client.listTopics().handle[Unit] { (result, err) =>
-            err match {
-              case null => cb(IO.succeed(result.topics().asScala.toList))
-              case ex   => cb(IO.fail(ex))
-            }
+      response <- Task.effectAsync[PublishResponse] { cb =>
+        client.publish(PublishRequest
+          .builder()
+          .targetArn("")
+          .message("Hello World")
+          .build())
+          .handle[Unit] { (result, err) =>
+          err match {
+            case null => cb(IO.succeed(result))
+            case ex   => cb(IO.fail(ex))
           }
+        }
         ()
       }
-      _ <- UIO(log.info(s"List of topics ${listTopics.map(_.topicArn())}"))
+      _ <- UIO(log.info(s"List of topics ${response}"))
     } yield ())
       .tapError(e => UIO(log.error(s"$e")))
 
