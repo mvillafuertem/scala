@@ -1,3 +1,5 @@
+import zio.clock.Clock
+
 #!/usr/bin/env amm
 
 import java.io.{BufferedOutputStream, File, FileOutputStream}
@@ -27,7 +29,6 @@ import software.amazon.awssdk.auth.credentials.{AwsBasicCredentials, StaticCrede
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.sqs.SqsAsyncClient
 import software.amazon.awssdk.services.sqs.model.Message
-import zio.clock._
 import zio.console._
 import zio.duration._
 import zio.sqs.{SqsStream, Utils}
@@ -52,12 +53,12 @@ object SQSConsumer extends zio.App {
   private val log = LoggerFactory.getLogger(getClass)
 
   def run(args: List[String]) =
-    myAppLogic.provideCustomLayer(
+    program.provideCustomLayer(
       ZLayer.succeed(
         SQSConsumerProperties(args.head, args(1), args(2), args(3))))
       .fold(_ => 1, _ => 0)
 
-  val myAppLogic =
+  val program: ZIO[Console with Clock with ZSQSConsumerProperties, Throwable, Unit] =
     (for {
       queue <- ZIO.access[ZSQSConsumerProperties](_.get.queue)
       credential <- credentialsProvider
@@ -67,7 +68,7 @@ object SQSConsumer extends zio.App {
       _ <- UIO(log.info(s"Ready to receive messages from ${queueUrl}"))
       _ <- consumer.join
     } yield ())
-      //.tapError(e => UIO(log.error(s"$e")))
+      .tapError(e => UIO(log.error(s"$e")))
 
   private lazy val credentialsProvider =
     for {

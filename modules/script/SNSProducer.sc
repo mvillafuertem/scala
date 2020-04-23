@@ -17,20 +17,20 @@ import $ivy.`software.amazon.awssdk:profiles:2.13.0`
 import $ivy.`software.amazon.awssdk:protocol-core:2.13.0`
 import $ivy.`software.amazon.awssdk:regions:2.13.0`
 import $ivy.`software.amazon.awssdk:sdk-core:2.13.0`
-import $ivy.`software.amazon.awssdk:sqs:2.13.0`
 import $ivy.`software.amazon.awssdk:sns:2.13.0`
+import $ivy.`software.amazon.awssdk:sqs:2.13.0`
 import $ivy.`software.amazon.awssdk:utils:2.13.0`
-import com.jsoniter.output.JsonStream
 import org.slf4j.{Logger, LoggerFactory}
 import software.amazon.awssdk.auth.credentials.{AwsBasicCredentials, StaticCredentialsProvider}
 import software.amazon.awssdk.regions.Region
-import software.amazon.awssdk.services.sqs.SqsAsyncClient
-import software.amazon.awssdk.services.sqs.model.Message
+import software.amazon.awssdk.services.sns.SnsAsyncClient
+import software.amazon.awssdk.services.sns.model.Topic
+import software.amazon.awssdk.services.sqs.model.GetQueueUrlRequest
 import zio.clock._
 import zio.console._
-import zio.duration._
-import zio.sqs.{SqsStream, Utils}
 import zio.{Task, UIO, ZIO, _}
+
+import scala.jdk.CollectionConverters._
 
 val rootLogger = LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME).asInstanceOf[ch.qos.logback.classic.Logger]
 rootLogger.setLevel(ch.qos.logback.classic.Level.INFO)
@@ -53,5 +53,49 @@ object SNSProducer extends zio.App {
 
   private val log = LoggerFactory.getLogger(getClass)
 
-  override def run(args: List[String]) = ???
+  override def run(args: List[String]) =
+    program.provideCustomLayer(
+      ZLayer.succeed(
+        SNSProducerProperties(args.head, args(1), args(2), args(3))))
+      .fold(_ => 1, _ => 0)
+
+
+  val program: ZIO[Console with Clock with ZSNSProducerProperties, Throwable, Unit] =
+    (for {
+      queue <- ZIO.access[ZSNSProducerProperties](_.get.queue)
+      credential <- credentialsProvider
+      client <- clientEffect(credential)
+      listTopics <- Task.effectAsync[List[Topic]] { cb =>
+        client.listTopics().handle[Unit] { (result, err) =>
+            err match {
+              case null => cb(IO.succeed(result.topics().asScala.toList))
+              case ex   => cb(IO.fail(ex))
+            }
+          }
+        ()
+      }
+      _ <- UIO(log.info(s"List of topics ${listTopics.map(_.topicArn())}"))
+    } yield ())
+      .tapError(e => UIO(log.error(s"$e")))
+
+  private lazy val credentialsProvider =
+    for {
+      properties <- ZIO.access[ZSNSProducerProperties](_.get)
+      credential <- Task(StaticCredentialsProvider
+        .create(AwsBasicCredentials
+          .create(properties.key, properties.secret)))
+    } yield credential
+
+
+  private def clientEffect(credentialsProvider: StaticCredentialsProvider): ZIO[ZSNSProducerProperties, Throwable, SnsAsyncClient] =
+    for {
+      region <- ZIO.access[ZSNSProducerProperties](_.get.region)
+      client <- Task(SnsAsyncClient
+        .builder()
+        .region(Region.of(region))
+        .credentialsProvider(credentialsProvider)
+        .build())
+    } yield client
+
+
 }
