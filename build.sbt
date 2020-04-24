@@ -15,7 +15,7 @@ Global / onLoad := {
 lazy val commonSettings = Settings.value ++ Seq(
   organization := "io.github.mvillafuertem",
   version := "0.1",
-  scalaVersion := "2.13.1",
+  scalaVersion := "2.13.2",
   homepage := Some(url("https://github.com/mvillafuertem/scala")),
   licenses := List("MIT" -> url("http://www.apache.org/licenses/LICENSE-2.0")),
   developers := List(
@@ -43,7 +43,8 @@ lazy val scala = (project in file("."))
     slick,
     tapir,
     `zio-akka-cluster-chat`,
-    `zio-akka-cluster-sharding`
+    `zio-akka-cluster-sharding`,
+    `zio-queues-fibers`,
   )
   // S E T T I N G S
   .settings(commonSettings)
@@ -134,14 +135,17 @@ lazy val tapir = (project in file("modules/tapir"))
   .enablePlugins(BuildInfoPlugin)
   .enablePlugins(GitVersioning)
 
-lazy val `zio-akka-cluster-chat` = (project in file("modules/zio/akka-cluster-chat"))
+lazy val zio: Project => Project =
   // S E T T I N G S
-  .settings(commonSettings)
-  .settings(libraryDependencies ++= Dependencies.zio)
-  .settings(testFrameworks := Seq(new TestFramework("zio.test.sbt.ZTestFramework")))
+  _.settings(commonSettings)
+    .settings(libraryDependencies ++= Dependencies.zio)
+    .settings(testFrameworks := Seq(new TestFramework("zio.test.sbt.ZTestFramework")))
+
+lazy val `zio-akka-cluster-chat` = (project in file("modules/zio/akka-cluster-chat"))
+  .configure(zio)
 
 lazy val `zio-akka-cluster-sharding` = (project in file("modules/zio/akka-cluster-sharding"))
-  // S E T T I N G S
-  .settings(commonSettings)
-  .settings(libraryDependencies ++= Dependencies.zio)
-  .settings(testFrameworks := Seq(new TestFramework("zio.test.sbt.ZTestFramework")))
+  .configure(zio)
+
+lazy val `zio-queues-fibers` = (project in file("modules/zio/queues-fibers"))
+  .configure(zio)
