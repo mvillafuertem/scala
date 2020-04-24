@@ -26,7 +26,8 @@ import software.amazon.awssdk.services.sns.SnsAsyncClient
 import software.amazon.awssdk.services.sns.model.{PublishRequest, PublishResponse}
 import zio.clock._
 import zio.console._
-import zio.{Task, UIO, ZIO, _}
+import zio.{Promise, Queue, Task, UIO, ZIO, _}
+import zio.stream.{Stream, ZSink, ZStream}
 
 val rootLogger = LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME).asInstanceOf[ch.qos.logback.classic.Logger]
 rootLogger.setLevel(ch.qos.logback.classic.Level.INFO)
@@ -56,26 +57,47 @@ object SNSProducer extends zio.App {
       .fold(_ => 1, _ => 0)
 
 
-  val program: ZIO[Console with Clock with ZSNSProducerProperties, Throwable, Unit] =
-    (for {
-      queue <- ZIO.access[ZSNSProducerProperties](_.get.queue)
-      credential <- credentialsProvider
-      client <- clientEffect(credential)
-      response <- Task.effectAsync[PublishResponse] { cb =>
-        client.publish(PublishRequest
-          .builder()
-          .targetArn("")
-          .message("Hello World")
-          .build())
-          .handle[Unit] { (result, err) =>
+  def sendStream: Stream[Throwable, PublishRequest] => ZStream[ZSNSProducerProperties, Throwable, PublishResponse] =
+    stream => {
+      val value = make()
+      stream.mapMPar(10)(p => value.use(snsAsyncClient => produce(snsAsyncClient)(p)) )
+    }
+
+  private def produce(snsAsyncClient: SnsAsyncClient)(publishRequest: PublishRequest):
+  RIO[ZSNSProducerProperties, PublishResponse] =
+    Task.effectAsync[PublishResponse] { cb =>
+      snsAsyncClient.publish(publishRequest)
+        .handle[Unit] { (result, err) =>
           err match {
             case null => cb(IO.succeed(result))
             case ex   => cb(IO.fail(ex))
           }
         }
-        ()
-      }
-      _ <- UIO(log.info(s"List of topics ${response}"))
+      ()
+    }
+
+  private def make(): ZManaged[ZSNSProducerProperties, Throwable, SnsAsyncClient] =
+    ZManaged.fromEffect(
+      for {
+        credential <- credentialsProvider
+        client <- clientEffect(credential)
+      } yield client
+    )
+
+  val program: ZIO[Console with Clock with ZSNSProducerProperties, Throwable, Unit] =
+    (for {
+      queue <- ZIO.access[ZSNSProducerProperties](_.get.queue)
+      request = List.fill(10)("Hello World")
+        .map(msg => PublishRequest
+        .builder()
+        .targetArn(queue)
+        .message(msg)
+        .build())
+      result <- sendStream(zio.stream.Stream(request:_*))
+        .map(_.toString)
+        .tap(r => UIO(log.info(s"List of results ${r}")))
+        .run(ZSink.drain)
+      _ <- UIO(log.info(s"List of results ${result}"))
     } yield ())
       .tapError(e => UIO(log.error(s"$e")))
 
