@@ -7,7 +7,7 @@ import zio.test._
 import zio.test.environment.{ TestConsole, TestEnvironment }
 import io.github.mvillafuertem.zio.akka.cluster.chat.configuration.actorSystem
 
-object AkkaClusterPubSubAppSpec extends DefaultRunnableSpec {
+object AkkaClusterChatAppSpec extends DefaultRunnableSpec {
 
   // g i v e n
   private val topic = "room1"
@@ -25,7 +25,7 @@ object AkkaClusterPubSubAppSpec extends DefaultRunnableSpec {
           _     <- TestConsole.feedLines(user, topic, msg)
           sub   <- PubSub.createSubscriber[String]
           queue <- sub.listen(topic)
-          p     <- AkkaClusterPubSubApp.program.fork
+          p     <- AkkaClusterChatApp.program.fork
           _     <- p.await
           out   <- TestConsole.output
           item  <- queue.take

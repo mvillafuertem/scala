@@ -9,7 +9,7 @@ import zio.{ console, App, Has, ZIO }
 // TODO
 //  sbt zio/run -J-Dconfig.resource=application1.conf
 //  sbt zio/run -J-Dconfig.resource=application2.conf
-object AkkaClusterPubSubApp extends App {
+object AkkaClusterChatApp extends App {
 
   override def run(args: List[String]): ZIO[zio.ZEnv, Nothing, Int] =
     program

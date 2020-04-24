@@ -48,6 +48,7 @@ lazy val scala = (project in file("."))
   // S E T T I N G S
   .settings(commonSettings)
   .settings(Settings.noPublish)
+  .settings(commands ++= Commands.value)
 
 lazy val advanced = (project in file("modules/advanced"))
 // S E T T I N G S
@@ -150,5 +151,5 @@ lazy val `zio-akka-cluster-sharding` = (project in file("modules/zio/akka-cluste
 lazy val `zio-queues-fibers` = (project in file("modules/zio/queues-fibers"))
   .configure(zio)
 
-addCommandAlias("fmt", "all scalafmtSbt scalafmt test:scalafmt")
-addCommandAlias("check", "all scalafmtSbtCheck scalafmtCheck test:scalafmtCheck")
+lazy val `zio-streams` = (project in file("modules/zio/streams"))
+  .configure(zio)
