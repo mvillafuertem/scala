@@ -1,15 +1,13 @@
-import sbt.Keys.{isSnapshot, publishTo, resolvers}
+import sbt.Keys.{ isSnapshot, publishTo, resolvers }
 import sbt._
 
 object NexusSettings {
 
-  val host = ""
+  val host    = ""
   val baseUrl = ""
 
   val value: Seq[Def.Setting[_]] = Seq(
-
     resolvers += Resolver.bintrayRepo("dnvriend", "maven"),
-
     publishTo := {
 
       if (isSnapshot.value)

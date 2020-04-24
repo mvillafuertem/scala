@@ -1,10 +1,9 @@
-import sbt.Keys.{exportJars, _}
-import sbt.{Def, Tests, _}
+import sbt.Keys.{ exportJars, _ }
+import sbt.{ Def, Tests, _ }
 
 object Settings {
 
   val value: Seq[Def.Setting[_]] = Seq(
-    
     scalacOptions := {
       val default = Seq(
         "-deprecation",
@@ -24,18 +23,13 @@ object Settings {
         default
       } // check against early initialization
     },
-    
     javaOptions += "-Duser.timezone=UTC",
-    
     Test / fork := false,
-
     Test / parallelExecution := false,
-
     Test / testOptions ++= Seq(
       Tests.Argument(TestFrameworks.ScalaTest, "-u", "target/test-reports"),
       Tests.Argument("-oDF")
     ),
-
     Global / cancelable := true,
     // OneJar
     exportJars := true
@@ -50,5 +44,5 @@ object Settings {
 //  val noAssemblyTest: Seq[Def.Setting[_]] = Seq(
 //    assembly / test := {}
 //  )
-  
+
 }
