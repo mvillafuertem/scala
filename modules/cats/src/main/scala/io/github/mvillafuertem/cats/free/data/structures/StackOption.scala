@@ -2,7 +2,7 @@ package io.github.mvillafuertem.cats.free.data.structures
 
 import cats.~>
 import io.github.mvillafuertem.algorithms.data.structures.stack.Stack
-import io.github.mvillafuertem.cats.free.data.structures.StackADT.{Push, _}
+import io.github.mvillafuertem.cats.free.data.structures.StackADT.{ Push, _ }
 
 object StackOption {
 
@@ -16,7 +16,7 @@ object StackOption {
         case Push(a) =>
           val element = a.asInstanceOf[Int]
           Option(stack.push(element).asInstanceOf[A])
-        case Pop() => stack.pop.asInstanceOf[Option[A]]
+        case Pop()  => stack.pop.asInstanceOf[Option[A]]
         case Peek() => stack.peek.asInstanceOf[Option[A]]
         case Show() => stack.show().asInstanceOf[Option[A]]
       }

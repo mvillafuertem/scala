@@ -22,9 +22,7 @@ final class TraverseSpec extends AsyncFlatSpec with Matchers {
 
     val result = Future.foldLeft(seq)(0)((a, b) => a + b)
 
-    result map { actual =>
-      actual shouldBe 6
-    }
+    result map { actual => actual shouldBe 6 }
   }
 
   "Future list execution" should "return a full valid response list" in {
@@ -37,9 +35,7 @@ final class TraverseSpec extends AsyncFlatSpec with Matchers {
     val result: Future[List[ValidatedNel[Throwable, String]]] =
       resultList.traverse(res => res.toValidatedNel)
 
-    result map { actual =>
-      actual.count(_.isValid) shouldBe 3
-    }
+    result map { actual => actual.count(_.isValid) shouldBe 3 }
   }
 
   it should "return a response list with valid and invalid responses" in {
@@ -66,9 +62,7 @@ final class TraverseSpec extends AsyncFlatSpec with Matchers {
     val result: Future[List[ValidatedNel[Throwable, String]]] =
       resultList.traverse(res => res.toValidatedNel)
 
-    result map { actual =>
-      actual.count(_.isInvalid) shouldBe 2
-    }
+    result map { actual => actual.count(_.isInvalid) shouldBe 2 }
   }
 
   "Future Use Case simulator" should "run 3 parallel tasks + 1 task depending on the 3 previous ones" in {
@@ -80,16 +74,16 @@ final class TraverseSpec extends AsyncFlatSpec with Matchers {
       val f3 = buildOkResponseFuture(3)
 
       val results = for {
-        repo <- f1
+        repo    <- f1
         flatten <- f2
-        shadow <- f3
+        shadow  <- f3
       } yield Results(repo, flatten, shadow)
 
       results
     }
 
     val result = for {
-      r3 <- f3() // parallel tasks
+      r3 <- f3()                                     // parallel tasks
       r4 <- Future(r3.repo + r3.flatten + r3.shadow) // task waiting for 3 previous tasks
     } yield r4
 
@@ -111,16 +105,16 @@ final class TraverseSpec extends AsyncFlatSpec with Matchers {
       val f3 = buildOkResponseFuture(3)
 
       val results = for {
-        repo <- f1
+        repo    <- f1
         flatten <- f2
-        shadow <- f3
+        shadow  <- f3
       } yield Results(repo, flatten, shadow)
 
       results
     }
 
     val result4 = for {
-      r3 <- f3() // parallel tasks
+      r3 <- f3()                                     // parallel tasks
       r4 <- Future(r3.repo + r3.flatten + r3.shadow) // task waiting for 3 previous tasks
     } yield r4
 
@@ -128,9 +122,7 @@ final class TraverseSpec extends AsyncFlatSpec with Matchers {
       case e: RuntimeException => Future(e.getMessage)
     }
 
-    result map { actual =>
-      actual shouldBe "Service result F[102] failed"
-    }
+    result map { actual => actual shouldBe "Service result F[102] failed" }
   }
 }
 
@@ -140,35 +132,32 @@ object TraverseSpec {
   import scala.concurrent.ExecutionContext.Implicits.global
 
   implicit class EnrichedFuture[A](future: Future[A]) {
-    def toValidatedNel: Future[ValidatedNel[Throwable, A]] = {
+    def toValidatedNel: Future[ValidatedNel[Throwable, A]] =
       future.map(Validated.valid).recover {
         case e =>
           Validated.invalidNel(e)
       }
-    }
   }
 
   def buildOkResponseFuture(
     number: Int
-  )(implicit maxDelay: Int): Future[String] = {
+  )(implicit maxDelay: Int): Future[String] =
     Future {
       val delay = getDelay(maxDelay)
       println(s"Service S[$number] request with delay[$delay]")
       Thread.sleep(getDelay(delay))
       s"Service result S[$number] successful"
     }
-  }
 
   def buildKoResponseFuture(
     number: Int
-  )(implicit maxDelay: Int): Future[String] = {
+  )(implicit maxDelay: Int): Future[String] =
     Future {
       val delay = getDelay(maxDelay)
       println(s"Service F[$number] request with delay[$delay]")
       Thread.sleep(getDelay(delay))
       throw new RuntimeException(s"Service result F[$number] failed")
     }
-  }
 
   /*
     returns a delay between 5 and maxDelay

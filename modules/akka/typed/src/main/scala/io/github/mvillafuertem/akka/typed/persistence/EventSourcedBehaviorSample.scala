@@ -2,22 +2,20 @@ package io.github.mvillafuertem.akka.typed.persistence
 
 import akka.actor.typed.ActorRef
 import akka.persistence.typed.PersistenceId
-import akka.persistence.typed.scaladsl.{Effect, EventSourcedBehavior}
+import akka.persistence.typed.scaladsl.{ Effect, EventSourcedBehavior }
 
-final class EventSourcedBehaviorSample {
-
-}
+final class EventSourcedBehaviorSample {}
 
 object EventSourcedBehaviorSample {
 
   sealed trait Command
-  final case class Add(data: String) extends Command
-  case object Clear extends Command
+  final case class Add(data: String)            extends Command
+  case object Clear                             extends Command
   case class GetValue(replyTo: ActorRef[State]) extends Command
 
   sealed trait Event
   final case class Added(data: String) extends Event
-  case object Cleared extends Event
+  case object Cleared                  extends Event
 
   final case class State(history: List[String] = Nil)
 
@@ -26,7 +24,8 @@ object EventSourcedBehaviorSample {
       persistenceId = PersistenceId.ofUniqueId(id),
       emptyState = State(Nil),
       commandHandler = commandHandler,
-      eventHandler = eventHandler)
+      eventHandler = eventHandler
+    )
 
   val commandHandler: (State, Command) => Effect[Event, State] = { (state, command) =>
     command match {

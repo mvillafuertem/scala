@@ -4,8 +4,8 @@ import akka.actor.typed.ActorRef
 import akka.actor.typed.scaladsl.Behaviors
 
 /**
-  * @author Miguel Villafuerte
-  */
+ * @author Miguel Villafuerte
+ */
 object RequestResponseWithAsk {
 
   val behavior = Behaviors.receiveMessage[Request] {
@@ -16,8 +16,6 @@ object RequestResponseWithAsk {
 
   case class Request(query: String, respondTo: ActorRef[Response])
   case class Response(result: String)
-
-
   //  import ActorRequester._
 //
 //  val system = ActorSystem(behavior, "request-and-response-with-ask")

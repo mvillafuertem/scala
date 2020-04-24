@@ -2,14 +2,14 @@ package io.github.mvillafuertem.akka.fsm.configuration
 
 import akka.actor.typed.Behavior
 import akka.actor.typed.scaladsl.adapter._
-import akka.actor.typed.scaladsl.{ActorContext, Behaviors}
+import akka.actor.typed.scaladsl.{ ActorContext, Behaviors }
 import akka.http.scaladsl.Http
 import akka.stream.Materializer
-import akka.{Done, actor}
+import akka.{ actor, Done }
 import org.slf4j.LoggerFactory
 
-import scala.concurrent.{ExecutionContextExecutor, Future}
-import scala.util.{Failure, Success}
+import scala.concurrent.{ ExecutionContextExecutor, Future }
+import scala.util.{ Failure, Success }
 
 /**
  * @author Miguel Villafuerte
@@ -19,15 +19,13 @@ final class ToDoApplicationConfiguration(context: ActorContext[Done]) extends To
   private val log = LoggerFactory.getLogger(getClass)
 
   //override lazy val log: Logger = context.system.log
-  implicit lazy val untypedSystem: actor.ActorSystem = context.system.toClassic
-  implicit lazy val materializer: Materializer = Materializer(untypedSystem)
+  implicit lazy val untypedSystem: actor.ActorSystem          = context.system.toClassic
+  implicit lazy val materializer: Materializer                = Materializer(untypedSystem)
   implicit lazy val contextExecutor: ExecutionContextExecutor = context.system.executionContext
 
   val serverBinding: Future[Http.ServerBinding] =
     Http()(untypedSystem)
-      .bindAndHandle(toDoAPI.routes,
-        toDoConfigurationProperties.interface,
-        toDoConfigurationProperties.port)
+      .bindAndHandle(toDoAPI.routes, toDoConfigurationProperties.interface, toDoConfigurationProperties.port)
 
   serverBinding.onComplete {
     case Success(bound) =>
@@ -48,6 +46,6 @@ final class ToDoApplicationConfiguration(context: ActorContext[Done]) extends To
 
 object ToDoApplicationConfiguration {
 
-  def apply(): Behavior[Done] = Behaviors.setup[Done] { context => new ToDoApplicationConfiguration(context).behavior}
+  def apply(): Behavior[Done] = Behaviors.setup[Done](context => new ToDoApplicationConfiguration(context).behavior)
 
 }

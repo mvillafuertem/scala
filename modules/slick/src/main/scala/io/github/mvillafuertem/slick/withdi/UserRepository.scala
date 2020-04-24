@@ -1,6 +1,5 @@
 package io.github.mvillafuertem.slick.withdi
 
-
 trait UserRepository[F[_], T] {
 
   def findAll(): F[Seq[T]]

@@ -4,7 +4,6 @@ import com.github.pathikrit.dijon._
 import org.scalatest.flatspec.AnyFlatSpecLike
 import org.scalatest.matchers.should.Matchers
 
-
 final class DijonApplicationSpec extends AnyFlatSpecLike with Matchers {
 
   behavior of "Dijon"
@@ -45,9 +44,6 @@ final class DijonApplicationSpec extends AnyFlatSpecLike with Matchers {
         |  }
         |""".stripMargin
 
-
-
-
     // w h e n
     val actual = json"""$jsonString"""
 
@@ -56,7 +52,6 @@ final class DijonApplicationSpec extends AnyFlatSpecLike with Matchers {
     println(actual -- ("values.id"))
     println(actual.updateDynamic("values.qux[0]")("qux[0]"))
     println(actual.updateDynamic("values.qux[1]")("qux[1]"))
-
 
     // t h e n
     val expectedJsonString: String =
@@ -71,9 +66,6 @@ final class DijonApplicationSpec extends AnyFlatSpecLike with Matchers {
         |  "qux": ["a", "b"]
         |}
         |""".stripMargin
-
-
-
 
   }
 

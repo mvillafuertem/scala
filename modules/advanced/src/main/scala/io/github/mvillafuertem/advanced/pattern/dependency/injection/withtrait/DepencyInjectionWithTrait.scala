@@ -4,5 +4,4 @@ object DepencyInjectionWithTrait extends App {
 
   DonutStoreApp.bookOrder("Vanilla Donut", 10)
 
-
 }

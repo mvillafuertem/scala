@@ -6,8 +6,7 @@ import io.github.mvillafuertem.tapir.configuration.ProductsConfigurationProperti
 /**
  * @author Miguel Villafuerte
  */
-final case class ProductsConfigurationProperties
-(
+final case class ProductsConfigurationProperties(
   name: String = ConfigFactory.load().getString(s"$path.name"),
   interface: String = ConfigFactory.load().getString(s"$path.server.interface"),
   port: Int = ConfigFactory.load().getInt(s"$path.server.port")

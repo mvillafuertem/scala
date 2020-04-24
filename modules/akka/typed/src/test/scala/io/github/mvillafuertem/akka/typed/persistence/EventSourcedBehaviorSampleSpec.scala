@@ -1,16 +1,17 @@
 package io.github.mvillafuertem.akka.typed.persistence
 
-import akka.actor.testkit.typed.scaladsl.{ScalaTestWithActorTestKit, TestProbe}
-import com.typesafe.config.{Config, ConfigFactory}
+import akka.actor.testkit.typed.scaladsl.{ ScalaTestWithActorTestKit, TestProbe }
+import com.typesafe.config.{ Config, ConfigFactory }
 import io.github.mvillafuertem.akka.typed.persistence.EventSourcedBehaviorSample._
 import org.scalatest.flatspec.AnyFlatSpecLike
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.BeforeAndAfterAll
 
-class EventSourcedBehaviorSampleSpec extends ScalaTestWithActorTestKit(EventSourcedBehaviorSampleSpec.conf)
-  with AnyFlatSpecLike
-  with Matchers
-  with BeforeAndAfterAll {
+class EventSourcedBehaviorSampleSpec
+    extends ScalaTestWithActorTestKit(EventSourcedBehaviorSampleSpec.conf)
+    with AnyFlatSpecLike
+    with Matchers
+    with BeforeAndAfterAll {
 
   override def afterAll(): Unit = testKit.shutdownTestKit()
 
@@ -51,7 +52,6 @@ class EventSourcedBehaviorSampleSpec extends ScalaTestWithActorTestKit(EventSour
 }
 
 object EventSourcedBehaviorSampleSpec {
-
 
   def conf: Config = ConfigFactory.parseString(s"""
     akka.loglevel = INFO

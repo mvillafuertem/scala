@@ -1,6 +1,6 @@
 package io.github.mvillafuertem.akka.untyped.actor.intro
 
-import akka.actor.{Actor, ActorRef, ActorSystem, Props}
+import akka.actor.{ Actor, ActorRef, ActorSystem, Props }
 import io.github.mvillafuertem.akka.untyped.actor.intro.ChangingActorBehavior.Mom.MomStart
 
 object ChangingActorBehavior extends App {
@@ -9,7 +9,7 @@ object ChangingActorBehavior extends App {
     case object KidAccept
     case object KidReject
     val HAPPY = "happy"
-    val SAD = "sad"
+    val SAD   = "sad"
   }
 
   class FussyKid extends Actor {
@@ -44,12 +44,12 @@ object ChangingActorBehavior extends App {
     def happyReceive: Receive = {
       case Food(VEGETABLE) => context.become(sadReceive)
       case Food(CHOCOLATE) =>
-      case Ask(_) => sender() ! KidAccept
+      case Ask(_)          => sender() ! KidAccept
     }
     def sadReceive: Receive = {
       case Food(VEGETABLE) =>
       case Food(CHOCOLATE) => context.become(happyReceive)
-      case Ask(_) => sender() ! KidReject
+      case Ask(_)          => sender() ! KidReject
     }
   }
 
@@ -65,12 +65,11 @@ object ChangingActorBehavior extends App {
     }
   }
 
-  val system = ActorSystem("ChangingActorBehavior")
-  val fussyKid: ActorRef = system.actorOf(Props[FussyKid])
+  val system                      = ActorSystem("ChangingActorBehavior")
+  val fussyKid: ActorRef          = system.actorOf(Props[FussyKid])
   val statelessFussyKid: ActorRef = system.actorOf(Props[StatelessFussyKid])
-  val mom: ActorRef = system.actorOf(Props[Mom])
+  val mom: ActorRef               = system.actorOf(Props[Mom])
 
   mom ! MomStart(statelessFussyKid)
-
 
 }

@@ -3,23 +3,19 @@ package io.github.mvillafuertem.akka.typed.actor
 import akka.actor.typed._
 import akka.actor.typed.scaladsl._
 
-final class SynchronousBehavior {
-
-}
+final class SynchronousBehavior {}
 
 object SynchronousBehavior {
 
   sealed trait Cmd
-  case object CreateAnonymousChild extends Cmd
-  case class CreateChild(childName: String) extends Cmd
-  case class SayHelloToChild(childName: String) extends Cmd
-  case object SayHelloToAnonymousChild extends Cmd
-  case class SayHello(who: ActorRef[String]) extends Cmd
+  case object CreateAnonymousChild                 extends Cmd
+  case class CreateChild(childName: String)        extends Cmd
+  case class SayHelloToChild(childName: String)    extends Cmd
+  case object SayHelloToAnonymousChild             extends Cmd
+  case class SayHello(who: ActorRef[String])       extends Cmd
   case class LogAndSayHello(who: ActorRef[String]) extends Cmd
 
-  val childActor = Behaviors.receiveMessage[String] { _ =>
-    Behaviors.same[String]
-  }
+  val childActor = Behaviors.receiveMessage[String](_ => Behaviors.same[String])
 
   val myBehavior = Behaviors.receivePartial[Cmd] {
     case (context, CreateChild(name)) =>
@@ -44,6 +40,5 @@ object SynchronousBehavior {
       who ! "hello"
       Behaviors.same
   }
-
 
 }

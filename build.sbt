@@ -1,14 +1,13 @@
 Global / onLoad := {
-  sLog.value.info(
-    s"""*
-       |*    ███████╗  ██████╗  █████╗  ██╗       █████╗
-       |*    ██╔════╝ ██╔════╝ ██╔══██╗ ██║      ██╔══██╗
-       |*    ███████╗ ██║      ███████║ ██║      ███████║
-       |*    ╚════██║ ██║      ██╔══██║ ██║      ██╔══██║
-       |*    ███████║ ╚██████╗ ██║  ██║ ███████╗ ██║  ██║
-       |*    ╚══════╝  ╚═════╝ ╚═╝  ╚═╝ ╚══════╝ ╚═╝  ╚═╝
-       |*    v.${version.value}
-       |*""".stripMargin)
+  sLog.value.info(s"""*
+                     |*    ███████╗  ██████╗  █████╗  ██╗       █████╗
+                     |*    ██╔════╝ ██╔════╝ ██╔══██╗ ██║      ██╔══██╗
+                     |*    ███████╗ ██║      ███████║ ██║      ███████║
+                     |*    ╚════██║ ██║      ██╔══██║ ██║      ██╔══██║
+                     |*    ███████║ ╚██████╗ ██║  ██║ ███████╗ ██║  ██║
+                     |*    ╚══════╝  ╚═════╝ ╚═╝  ╚═╝ ╚══════╝ ╚═╝  ╚═╝
+                     |*    v.${version.value}
+                     |*""".stripMargin)
   (Global / onLoad).value
 }
 
@@ -44,14 +43,14 @@ lazy val scala = (project in file("."))
     tapir,
     `zio-akka-cluster-chat`,
     `zio-akka-cluster-sharding`,
-    `zio-queues-fibers`,
+    `zio-queues-fibers`
   )
   // S E T T I N G S
   .settings(commonSettings)
   .settings(Settings.noPublish)
 
 lazy val advanced = (project in file("modules/advanced"))
-  // S E T T I N G S
+// S E T T I N G S
   .settings(commonSettings)
   .settings(libraryDependencies ++= Dependencies.advanced)
 
@@ -79,12 +78,12 @@ lazy val alpakka = (project in file("modules/akka/alpakka"))
   .settings(libraryDependencies ++= Dependencies.alpakka)
 
 lazy val basic = (project in file("modules/basic"))
-  // S E T T I N G S
+// S E T T I N G S
   .settings(commonSettings)
   .settings(libraryDependencies ++= Dependencies.basic)
 
 lazy val `akka-fsm` = (project in file("modules/akka/fsm"))
-  // S E T T I N G S
+// S E T T I N G S
   .settings(commonSettings)
   .settings(BuildInfoSettings.value)
   .settings(buildInfoPackage := s"${organization.value}.akka.fsm")
@@ -94,18 +93,19 @@ lazy val `akka-fsm` = (project in file("modules/akka/fsm"))
   .enablePlugins(GitVersioning)
 
 lazy val `sensor-controller` = (project in file("modules/akka/sensor-controller"))
-  // S E T T I N G S
+// S E T T I N G S
   .settings(commonSettings)
   .settings(libraryDependencies ++= Dependencies.`sensor-controller`)
   .settings(
     PB.targets in Compile := Seq(
       scalapb.gen() -> (sourceManaged in Compile).value
-    ))
+    )
+  )
   // P L U G I N S
   .enablePlugins(GitVersioning)
 
 lazy val algorithms = (project in file("modules/algorithms"))
-  // S E T T I N G S
+// S E T T I N G S
   .settings(commonSettings)
   .settings(libraryDependencies ++= Dependencies.algorithms)
 
@@ -122,12 +122,12 @@ lazy val json = (project in file("modules/json"))
   .settings(libraryDependencies ++= Dependencies.json)
 
 lazy val slick = (project in file("modules/slick"))
-  // S E T T I N G S
+// S E T T I N G S
   .settings(commonSettings)
   .settings(libraryDependencies ++= Dependencies.slick)
 
 lazy val tapir = (project in file("modules/tapir"))
-  // S E T T I N G S
+// S E T T I N G S
   .settings(commonSettings)
   .settings(BuildInfoSettings.value)
   .settings(libraryDependencies ++= Dependencies.tapir)
@@ -149,3 +149,6 @@ lazy val `zio-akka-cluster-sharding` = (project in file("modules/zio/akka-cluste
 
 lazy val `zio-queues-fibers` = (project in file("modules/zio/queues-fibers"))
   .configure(zio)
+
+addCommandAlias("fmt", "all scalafmtSbt scalafmt test:scalafmt")
+addCommandAlias("check", "all scalafmtSbtCheck scalafmtCheck test:scalafmtCheck")

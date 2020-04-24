@@ -8,12 +8,11 @@ import java.nio.file.Paths
 import java.util.Properties
 
 import org.apache.curator.test.TestingServer
-import org.slf4j.{Logger, LoggerFactory}
-import kafka.server.{KafkaConfig, KafkaServerStartable}
+import org.slf4j.{ Logger, LoggerFactory }
+import kafka.server.{ KafkaConfig, KafkaServerStartable }
 
 import scala.jdk.CollectionConverters._
 import java.util.Comparator
-
 
 class KafkaLocalServer private (kafkaProperties: Properties, zooKeeperServer: ZooKeeperLocalServer) {
 
@@ -25,18 +24,17 @@ class KafkaLocalServer private (kafkaProperties: Properties, zooKeeperServer: Zo
     broker.startup()
   }
 
-  def stop(): Unit = {
+  def stop(): Unit =
     if (broker != null) {
       broker.shutdown()
       zooKeeperServer.stop()
       broker = null.asInstanceOf[KafkaServerStartable]
     }
-  }
 
 }
 
 object KafkaLocalServer {
-  final val DefaultPort = 9092
+  final val DefaultPort         = 9092
   final val DefaultResetOnStart = true
   //private val DEFAULT_ZK_CONNECT = "localhost:2181"
   //private val DEFAULT_ZK_SESSION_TIMEOUT_MS = 10 * 1000
@@ -90,7 +88,7 @@ object KafkaLocalServer {
     kafkaProperties
   }
 
-  def deleteDirectory(directory: File): Unit = {
+  def deleteDirectory(directory: File): Unit =
     if (directory.exists()) try {
       val rootPath = Paths.get(directory.getAbsolutePath)
 
@@ -100,7 +98,6 @@ object KafkaLocalServer {
     } catch {
       case e: Exception => Log.warn(s"Failed to delete directory ${directory.getAbsolutePath}.", e)
     }
-  }
 
   def dataDirectory(directoryName: String): File = {
 
@@ -129,7 +126,7 @@ private class ZooKeeperLocalServer(port: Int, cleanOnStart: Boolean) {
     zooKeeper.start() // blocking operation
   }
 
-  def stop(): Unit = {
+  def stop(): Unit =
     if (zooKeeper != null)
       try {
         zooKeeper.stop()
@@ -137,12 +134,11 @@ private class ZooKeeperLocalServer(port: Int, cleanOnStart: Boolean) {
       } catch {
         case _: IOException => () // nothing to do if an exception is thrown while shutting down
       }
-  }
 
   def getPort(): Int = port
 }
 
 object ZooKeeperLocalServer {
-  final val DefaultPort = 2181
+  final val DefaultPort                     = 2181
   private final val ZookeeperDataFolderName = "zookeeper_data"
 }

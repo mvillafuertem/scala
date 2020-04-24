@@ -1,7 +1,7 @@
 package io.github.mvillafuertem.algorithms.data.structures.node
 
 class TreeNode { // Constructor vacío
-  private var clave = 0
+  private var clave        = 0
   private var iz: TreeNode = _
   private var de: TreeNode = _
 
@@ -26,15 +26,12 @@ class TreeNode { // Constructor vacío
 
   def getClave: Int = clave
 
-  def setIz(nuevoIz: TreeNode): Unit = {
+  def setIz(nuevoIz: TreeNode): Unit =
     iz = nuevoIz
-  }
 
-  def setDe(nuevoDe: TreeNode): Unit = {
+  def setDe(nuevoDe: TreeNode): Unit =
     de = nuevoDe
-  }
 
-  def setClave(nuevaClave: Int): Unit = {
+  def setClave(nuevaClave: Int): Unit =
     clave = nuevaClave
-  }
 }

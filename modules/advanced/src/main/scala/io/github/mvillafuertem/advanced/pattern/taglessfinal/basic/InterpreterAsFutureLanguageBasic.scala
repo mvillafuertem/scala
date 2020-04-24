@@ -12,12 +12,12 @@ object InterpreterAsFutureLanguageBasic {
     override def increment(a: F[Int]): F[Int] =
       for {
         av <- a
-      } yield av+1
+      } yield av + 1
     override def add(a: F[Int], b: F[Int]): F[Int] =
       for {
         av <- a
         bv <- b
-      } yield av+bv
+      } yield av + bv
 
     override def text(v: String): F[String] = Future.successful(v)
     override def toUpper(a: F[String]): F[String] =
@@ -29,7 +29,7 @@ object InterpreterAsFutureLanguageBasic {
       for {
         av <- a
         bv <- b
-      } yield av+bv
+      } yield av + bv
 
     override def toString(v: F[Int]): F[String] = v.map(_.toString)
   }

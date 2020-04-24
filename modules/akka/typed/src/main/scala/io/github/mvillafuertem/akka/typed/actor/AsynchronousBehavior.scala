@@ -1,11 +1,9 @@
 package io.github.mvillafuertem.akka.typed.actor
 
 import akka.actor.typed.scaladsl.Behaviors
-import akka.actor.typed.{ActorRef, Behavior}
+import akka.actor.typed.{ ActorRef, Behavior }
 
-final class AsynchronousBehavior {
-
-}
+final class AsynchronousBehavior {}
 
 object AsynchronousBehavior {
 

@@ -2,15 +2,14 @@ package io.github.mvillafuertem.akka.untyped.stream.init
 
 import akka.actor.ActorSystem
 import akka.stream.Materializer
-import akka.stream.scaladsl.{Flow, Sink, Source}
+import akka.stream.scaladsl.{ Flow, Sink, Source }
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-
 object FirstPrinciples extends App {
 
-  implicit val actorSystem: ActorSystem = ActorSystem("FirstPrinciples")
+  implicit val actorSystem: ActorSystem        = ActorSystem("FirstPrinciples")
   implicit val actorMaterializer: Materializer = Materializer(actorSystem)
 
   // Producer
@@ -24,29 +23,29 @@ object FirstPrinciples extends App {
   graph.run()
 
   // Transform Element
-  val flow = Flow[Int].map(x => x + 1)
+  val flow           = Flow[Int].map(x => x + 1)
   val sourceWithFlow = source.via(flow)
-  val flowWithSink = flow.to(sink)
+  val flowWithSink   = flow.to(sink)
 
   sourceWithFlow.to(sink).run()
   source.to(flowWithSink).run()
   source.via(flow).to(sink).run()
 
   // Kind of Producers
-  val finiteSource = Source.single(1)
+  val finiteSource        = Source.single(1)
   val anotherFiniteSource = Source(List(1, 2, 3))
-  val emptySource = Source.empty[Int]
-  val infiniteSource = Source(LazyList(1))
-  val futureSource = Source.future(Future(42))
+  val emptySource         = Source.empty[Int]
+  val infiniteSource      = Source(LazyList(1))
+  val futureSource        = Source.future(Future(42))
 
   // Kind of Consumer
   val theMostBoringSink = Sink.ignore
-  val foreachSink = Sink.foreach[String](println)
-  val headSink = Sink.head[Int]
-  val foldSink = Sink.fold[Int, Int](0)((a, b) => a + b)
+  val foreachSink       = Sink.foreach[String](println)
+  val headSink          = Sink.head[Int]
+  val foldSink          = Sink.fold[Int, Int](0)((a, b) => a + b)
 
   // Kind of Flow
-  val mapFlow = Flow[Int].map(x => x * 2)
+  val mapFlow  = Flow[Int].map(x => x * 2)
   val takeFlow = Flow[Int].take(5)
 
   // Pipes
@@ -63,13 +62,13 @@ object FirstPrinciples extends App {
   // Operators = Components
 
   /**
-    * Stream that takes the names of persons,
-    * then you will keep the first 2 names with
-    * length > 5 characters
-    */
+   * Stream that takes the names of persons,
+   * then you will keep the first 2 names with
+   * length > 5 characters
+   */
   val namesOfPersonsSource = Source(List("Amanda", "Miranda", "Cassandra"))
-  val businessRuleFlow = Flow[String].take(2).filter(name => name.length > 5)
-  val namesOfPersonsSink = Sink.foreach[String](println)
+  val businessRuleFlow     = Flow[String].take(2).filter(name => name.length > 5)
+  val namesOfPersonsSink   = Sink.foreach[String](println)
 
   // Without Syntactic Sugar
   namesOfPersonsSource.via(businessRuleFlow).to(namesOfPersonsSink).run()

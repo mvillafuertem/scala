@@ -4,8 +4,8 @@ import akka.actor.typed.ActorRef
 import akka.actor.typed.scaladsl.Behaviors
 
 /**
-  * @author Miguel Villafuerte
-  */
+ * @author Miguel Villafuerte
+ */
 object RequestResponse {
 
   case class Request(query: String, respondTo: ActorRef[Response])
@@ -19,8 +19,6 @@ object RequestResponse {
         Behaviors.same
     }
 
-
-
   }
 
   object ResponseActor {
@@ -33,8 +31,6 @@ object RequestResponse {
 
   }
 }
-
-
 //object RequestResponse extends App {
 //
 //  import RequestActor._

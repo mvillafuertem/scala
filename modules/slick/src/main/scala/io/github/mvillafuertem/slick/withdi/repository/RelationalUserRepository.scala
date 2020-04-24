@@ -19,11 +19,11 @@ final class RelationalUserRepository(databaseConfig: DatabaseConfig[JdbcProfile]
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
 
     // C O L U M N S
-    def userId= column[Long]("user_id")
+    def userId = column[Long]("user_id")
 
-    def name= column[String]("name")
+    def name = column[String]("name")
 
-    def username= column[String]("username")
+    def username = column[String]("username")
 
     // D E F A U L T  P R O J E C T I O N
     def * = (userId, name, username, id.?).mapTo[User]
@@ -32,7 +32,7 @@ final class RelationalUserRepository(databaseConfig: DatabaseConfig[JdbcProfile]
     def idUserIdIndex = index("id_userid_index", (id, userId), unique = true)
   }
 
-  val userTable =  TableQuery[UserTable]
+  val userTable = TableQuery[UserTable]
 
   implicit def executeFromDb[A](action: DBIO[A]): Future[A] = databaseConfig.db.run(action)
 

@@ -11,7 +11,7 @@ final class TaskManagementFSM extends FSM[TaskState, TaskData] {
 
   when(Idle) {
     case Event(Open(task), NotExist) =>
-      if(taskRepository.contains(task.id)) {
+      if (taskRepository.contains(task.id)) {
         sender() ! TaskManagementError("Task duplicated")
         stay()
       } else {
@@ -20,7 +20,8 @@ final class TaskManagementFSM extends FSM[TaskState, TaskData] {
         //context.become(opened(task))
         goto(Opened) using Open(task)
       }
-    case _ => sender() ! TaskManagementError("Task not exits")
+    case _ =>
+      sender() ! TaskManagementError("Task not exits")
       stay()
   }
 
@@ -41,7 +42,6 @@ final class TaskManagementFSM extends FSM[TaskState, TaskData] {
       stay()
   }
 
-
   initialize()
 
 }
@@ -53,13 +53,13 @@ object TaskManagementFSM {
 
   // E V E N T
   sealed trait TaskData
-  case object NotExist extends TaskData
+  case object NotExist        extends TaskData
   case class Open(task: Task) extends TaskData
-  case class Close(id: Long) extends TaskData
+  case class Close(id: Long)  extends TaskData
 
   // S T A T E
   sealed trait TaskState
-  case object Idle extends TaskState
+  case object Idle   extends TaskState
   case object Opened extends TaskState
   case object Closed extends TaskState
 

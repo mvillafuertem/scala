@@ -1,9 +1,10 @@
 package io.github.mvillafuertem.advanced.pattern.dependency.injection.withtrait
 
-class DonutShoppingCartService[T] (
-                                    donutInventoryService: DonutInventoryService[T],
-                                    donutPricingService: DonutPricingService[T],
-                                    donutOrderService: DonutOrderService[T]) {
+class DonutShoppingCartService[T](
+  donutInventoryService: DonutInventoryService[T],
+  donutPricingService: DonutPricingService[T],
+  donutOrderService: DonutOrderService[T]
+) {
 
   def bookOrder(donut: T, quantity: Int): Int = {
     println("DonutShoppingCartService->bookOrder")

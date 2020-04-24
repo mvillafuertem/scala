@@ -2,11 +2,10 @@ package io.github.mvillafuertem.akka.fsm
 
 import java.net.URI
 
-import akka.actor.testkit.typed.scaladsl.{ScalaTestWithActorTestKit, TestProbe}
+import akka.actor.testkit.typed.scaladsl.{ ScalaTestWithActorTestKit, TestProbe }
 import akka.actor.typed.scaladsl.Behaviors
-import akka.actor.typed.{ActorRef, Behavior}
+import akka.actor.typed.{ ActorRef, Behavior }
 import org.scalatest.flatspec.AnyFlatSpecLike
-
 
 class InteractionPatternsSpec extends ScalaTestWithActorTestKit with AnyFlatSpecLike {
 
@@ -18,7 +17,7 @@ class InteractionPatternsSpec extends ScalaTestWithActorTestKit with AnyFlatSpec
 
     // G I V E N
     val backend = spawn(Behaviors.receiveMessage[Backend.Request] {
-      case Backend.StartTranslationJob(taskId, site@_, replyTo) =>
+      case Backend.StartTranslationJob(taskId, site @ _, replyTo) =>
         replyTo ! Backend.JobStarted(taskId)
         replyTo ! Backend.JobProgress(taskId, 0.25)
         replyTo ! Backend.JobProgress(taskId, 0.50)
@@ -28,7 +27,7 @@ class InteractionPatternsSpec extends ScalaTestWithActorTestKit with AnyFlatSpec
     })
 
     val frontend = spawn(Frontend.translator(backend))
-    val probe = TestProbe[URI]()
+    val probe    = TestProbe[URI]()
 
     // W H E N
     frontend ! Frontend.Translate(new URI("https://akka.io/docs/"), probe.ref)
@@ -72,7 +71,7 @@ object InteractionPatternsSpec {
         val backendResponseMapper: ActorRef[Backend.Response] =
           context.messageAdapter(rsp => WrappedBackendResponse(rsp))
 
-        def active(inProgress: Map[Int, ActorRef[URI]], count: Int): Behavior[Command] = {
+        def active(inProgress: Map[Int, ActorRef[URI]], count: Int): Behavior[Command] =
           Behaviors.receiveMessage[Command] {
             case Translate(site, replyTo) =>
               val taskId = count + 1
@@ -93,7 +92,6 @@ object InteractionPatternsSpec {
                   active(inProgress - taskId, count)
               }
           }
-        }
 
         active(inProgress = Map.empty, count = 0)
       }

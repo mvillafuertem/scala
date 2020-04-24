@@ -3,12 +3,12 @@ package io.github.mvillafuertem.akka.untyped.stream.graph
 import java.util.Date
 
 import akka.actor.ActorSystem
-import akka.stream.scaladsl.{Broadcast, Flow, GraphDSL, RunnableGraph, Sink, Source, ZipWith}
-import akka.stream.{ClosedShape, FanOutShape2, Materializer, UniformFanInShape}
+import akka.stream.scaladsl.{ Broadcast, Flow, GraphDSL, RunnableGraph, Sink, Source, ZipWith }
+import akka.stream.{ ClosedShape, FanOutShape2, Materializer, UniformFanInShape }
 
 object ComplexOpenGraphs extends App {
 
-  implicit val actorSystem: ActorSystem = ActorSystem("ComplexOpenGraphs")
+  implicit val actorSystem: ActorSystem        = ActorSystem("ComplexOpenGraphs")
   implicit val actorMaterializer: Materializer = Materializer(actorSystem)
 
   /**
@@ -68,51 +68,52 @@ object ComplexOpenGraphs extends App {
    * - Output1 ~ Let the transaction go through
    * - Output2 ~ Suspicious Tx ids
    */
-
   case class Transaction(id: String, source: String, recipient: String, amount: Int, date: Date)
 
-  val transactionSource = Source(List(
-    Transaction("1234567890", "Pepe", "Juan", 100, new Date),
-    Transaction("0987654321", "Pedro", "Juan", 10001, new Date),
-    Transaction("6789012345", "Maria", "Ana", 100, new Date)
-  ))
+  val transactionSource = Source(
+    List(
+      Transaction("1234567890", "Pepe", "Juan", 100, new Date),
+      Transaction("0987654321", "Pedro", "Juan", 10001, new Date),
+      Transaction("6789012345", "Maria", "Ana", 100, new Date)
+    )
+  )
 
-  val bankProcessor = Sink.foreach[Transaction](println)
+  val bankProcessor             = Sink.foreach[Transaction](println)
   val suspiciousAnalysisService = Sink.foreach[String](txId => println(s"Suspicious transaction ID $txId"))
 
   // Step 1 - Setting up the fundamentals for the graph
   val suspiciousTxStaticGraph = GraphDSL.create() { implicit builder =>
-      import GraphDSL.Implicits._
+    import GraphDSL.Implicits._
 
-      // Step 2 - Declaring auxiliary shapes
-      val broadcast = builder.add(Broadcast[Transaction](2))
-      val suspiciousTxFilter = builder.add(Flow[Transaction].filter(tx => tx.amount > 10000))
-      val txIdExtractor = builder.add(Flow[Transaction].map[String](tx => tx.id))
+    // Step 2 - Declaring auxiliary shapes
+    val broadcast          = builder.add(Broadcast[Transaction](2))
+    val suspiciousTxFilter = builder.add(Flow[Transaction].filter(tx => tx.amount > 10000))
+    val txIdExtractor      = builder.add(Flow[Transaction].map[String](tx => tx.id))
 
-      // Step 3 - tying up the shapes
-      broadcast.out(0) ~> suspiciousTxFilter ~> txIdExtractor
+    // Step 3 - tying up the shapes
+    broadcast.out(0) ~> suspiciousTxFilter ~> txIdExtractor
 
-      // Step 4 - Return a shape
-      new FanOutShape2(broadcast.in, broadcast.out(1), txIdExtractor.out)
-    }
+    // Step 4 - Return a shape
+    new FanOutShape2(broadcast.in, broadcast.out(1), txIdExtractor.out)
+  }
 
-  val suspiciousTRunnableGraph = RunnableGraph.fromGraph(
-    GraphDSL.create() { implicit builder =>
-      import GraphDSL.Implicits._
+  val suspiciousTRunnableGraph = RunnableGraph
+    .fromGraph(
+      GraphDSL.create() { implicit builder =>
+        import GraphDSL.Implicits._
 
-      // Step 2 - Declaring auxiliary shapes
-      val suspiciousTxShape = builder.add(suspiciousTxStaticGraph)
+        // Step 2 - Declaring auxiliary shapes
+        val suspiciousTxShape = builder.add(suspiciousTxStaticGraph)
 
-      // Step 3 - tying up the shapes
-      transactionSource ~> suspiciousTxShape.in
-      suspiciousTxShape.out0 ~> bankProcessor
-      suspiciousTxShape.out1 ~> suspiciousAnalysisService
+        // Step 3 - tying up the shapes
+        transactionSource ~> suspiciousTxShape.in
+        suspiciousTxShape.out0 ~> bankProcessor
+        suspiciousTxShape.out1 ~> suspiciousAnalysisService
 
-      // Step 4 - Return a shape
-      ClosedShape
-    }
-  ).run()
-
-
+        // Step 4 - Return a shape
+        ClosedShape
+      }
+    )
+    .run()
 
 }

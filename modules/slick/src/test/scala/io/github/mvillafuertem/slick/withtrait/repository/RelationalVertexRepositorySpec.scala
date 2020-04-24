@@ -3,17 +3,18 @@ package io.github.mvillafuertem.slick.withtrait.repository
 import java.sql.SQLIntegrityConstraintViolationException
 
 import io.github.mvillafuertem.slick.withtrait.configuration.InfrastructureConfigurationSpec
-import io.github.mvillafuertem.slick.withtrait.model.{EdgeDBO, VertexDBO}
-import org.scalatest.{AsyncFlatSpecLike, BeforeAndAfterEach, Matchers, OptionValues}
+import io.github.mvillafuertem.slick.withtrait.model.{ EdgeDBO, VertexDBO }
+import org.scalatest.{ AsyncFlatSpecLike, BeforeAndAfterEach, Matchers, OptionValues }
 
-import scala.concurrent.duration.{FiniteDuration, _}
-import scala.concurrent.{Await, Future}
+import scala.concurrent.duration.{ FiniteDuration, _ }
+import scala.concurrent.{ Await, Future }
 
-final class RelationalVertexRepositorySpec extends InfrastructureConfigurationSpec
-  with AsyncFlatSpecLike
-  with Matchers
-  with BeforeAndAfterEach
-  with OptionValues {
+final class RelationalVertexRepositorySpec
+    extends InfrastructureConfigurationSpec
+    with AsyncFlatSpecLike
+    with Matchers
+    with BeforeAndAfterEach
+    with OptionValues {
 
   import RelationalVertexRepositorySpec._
 
@@ -42,7 +43,7 @@ final class RelationalVertexRepositorySpec extends InfrastructureConfigurationSp
 
   it should "find a vertex by its code" in {
     val result = for {
-      _ <- relationalRepositories.vertexRepository.insert(vertexOne)
+      _      <- relationalRepositories.vertexRepository.insert(vertexOne)
       vertex <- relationalRepositories.vertexRepository.findByCode(tenantIdOne, assetIdOne)
     } yield vertex
 
@@ -67,8 +68,8 @@ final class RelationalVertexRepositorySpec extends InfrastructureConfigurationSp
 
   it should "update a vertex from the database" in {
     val result = for {
-      cid <- relationalRepositories.vertexRepository.insert(vertexOne)
-      _ <- relationalRepositories.vertexRepository.update(vertexTwo.copy(id = Option(cid)))
+      cid     <- relationalRepositories.vertexRepository.insert(vertexOne)
+      _       <- relationalRepositories.vertexRepository.update(vertexTwo.copy(id = Option(cid)))
       updated <- relationalRepositories.vertexRepository.findById(cid)
     } yield (cid, updated.value)
 
@@ -80,8 +81,8 @@ final class RelationalVertexRepositorySpec extends InfrastructureConfigurationSp
 
   it should "delete a vertex from the database" in {
     val result = for {
-      vid <- relationalRepositories.vertexRepository.insert(vertexOne)
-      n <- relationalRepositories.vertexRepository.delete(vid)
+      vid   <- relationalRepositories.vertexRepository.insert(vertexOne)
+      n     <- relationalRepositories.vertexRepository.delete(vid)
       count <- relationalRepositories.vertexRepository.count()
     } yield (n, count)
 
@@ -93,13 +94,11 @@ final class RelationalVertexRepositorySpec extends InfrastructureConfigurationSp
 
   it should "retrieve all vertexes from the database" in {
     val result: Future[Seq[VertexDBO]] = for {
-      _ <- relationalRepositories.vertexRepository.insert(vertexSeq)
+      _  <- relationalRepositories.vertexRepository.insert(vertexSeq)
       vs <- relationalRepositories.vertexRepository.findAll()
     } yield vs
 
-    result map { seq =>
-      assert(seq.size == vertexSeq.size)
-    }
+    result map { seq => assert(seq.size == vertexSeq.size) }
   }
 
 }
@@ -109,17 +108,16 @@ object RelationalVertexRepositorySpec {
   val timeout: FiniteDuration = 5.second
 
   val tenantIdOne = 1111L
-  val assetIdOne = 5555L
-  val vertexOne = VertexDBO(tenantIdOne, assetIdOne)
+  val assetIdOne  = 5555L
+  val vertexOne   = VertexDBO(tenantIdOne, assetIdOne)
 
   val tenantIdTwo = 2222L
-  val assetIdTwo = 6666L
-  val vertexTwo = VertexDBO(tenantIdTwo, assetIdTwo)
-
+  val assetIdTwo  = 6666L
+  val vertexTwo   = VertexDBO(tenantIdTwo, assetIdTwo)
 
   var startVertexIdOne: Long = tenantIdOne
-  var endVertexIdOne: Long = tenantIdTwo
-  val metaModel = "{ ...json... }"
+  var endVertexIdOne: Long   = tenantIdTwo
+  val metaModel              = "{ ...json... }"
 
   val edgeOne = EdgeDBO(startVertexIdOne, endVertexIdOne, metaModel)
   val edgeTwo = EdgeDBO(tenantIdTwo, tenantIdOne, metaModel)

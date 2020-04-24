@@ -1,6 +1,6 @@
 package io.github.mvillafuertem.akka.untyped.actor.intro
 
-import akka.actor.{Actor, ActorLogging, ActorSystem, Props}
+import akka.actor.{ Actor, ActorLogging, ActorSystem, Props }
 import com.typesafe.config.ConfigFactory
 
 object ActorIntroConfiguration extends App {
@@ -21,13 +21,13 @@ object ActorIntroConfiguration extends App {
 
   val config = ConfigFactory.parseString(configString)
   val system = ActorSystem("ActorIntroConfiguration", config)
-  val actor = system.actorOf(Props[SimpleLoggingActor])
+  val actor  = system.actorOf(Props[SimpleLoggingActor])
 
   actor ! "A message to remember"
 
   // Configuration Filesystem
   val defaultConfigFileSystem = ActorSystem("DefaultConfigFileSystem")
-  val defaultConfigActor = defaultConfigFileSystem.actorOf(Props[SimpleLoggingActor])
+  val defaultConfigActor      = defaultConfigFileSystem.actorOf(Props[SimpleLoggingActor])
   defaultConfigActor ! "Remember me"
 
   // Separate config in the same file
@@ -41,6 +41,5 @@ object ActorIntroConfiguration extends App {
   // - Properties
   // - YAML
   val configInAnotherFileFormat = ConfigFactory.load("anotherFolder/myConfig.yaml")
-
 
 }

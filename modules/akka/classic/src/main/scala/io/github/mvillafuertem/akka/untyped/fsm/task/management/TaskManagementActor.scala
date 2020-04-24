@@ -1,6 +1,6 @@
 package io.github.mvillafuertem.akka.untyped.fsm.task.management
 
-import akka.actor.{Actor, ActorLogging}
+import akka.actor.{ Actor, ActorLogging }
 import io.github.mvillafuertem.akka.untyped.fsm.task.management.TaskManagementActor._
 
 import scala.collection.mutable
@@ -25,7 +25,7 @@ final class TaskManagementActor extends Actor with ActorLogging {
   def idle: Receive = {
 
     case Open(task) =>
-      if(taskRepository.contains(task.id)) {
+      if (taskRepository.contains(task.id)) {
         sender() ! TaskManagementError("Task duplicated")
       } else {
         taskRepository += (task.id -> task)

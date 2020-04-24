@@ -11,7 +11,7 @@ class InterpreterAsStringLanguageBasicSpec extends AnyFlatSpecLike with Matchers
   it should "interpreted basic as string" in {
 
     // g i v e n
-    val increment = LanguageBasic.buildIncrementNumber(0)
+    val increment       = LanguageBasic.buildIncrementNumber(0)
     val basicExpression = LanguageBasic.buildIncrementExpression(increment)
 
     // w h e n

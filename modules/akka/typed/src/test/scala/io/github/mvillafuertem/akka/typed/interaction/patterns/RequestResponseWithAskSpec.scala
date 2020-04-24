@@ -9,10 +9,7 @@ import scala.concurrent.Future
 /**
  * @author Miguel Villafuerte
  */
-final class RequestResponseWithAskSpec extends ScalaTestWithActorTestKit
-  with AsyncFlatSpecLike
-  with Matchers {
-
+final class RequestResponseWithAskSpec extends ScalaTestWithActorTestKit with AsyncFlatSpecLike with Matchers {
 
   behavior of "Request Response With Ask"
 
@@ -27,9 +24,7 @@ final class RequestResponseWithAskSpec extends ScalaTestWithActorTestKit
     val future: Future[Response] = value ? (ref => Request("request", ref))
 
     // t h e n
-    future.map { actual =>
-      actual shouldBe Response("Hello!")
-    }
+    future.map(actual => actual shouldBe Response("Hello!"))
 
   }
 

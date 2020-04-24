@@ -1,9 +1,9 @@
 package io.github.mvillafuertem.akka.fsm.infrastructure
 
-import akka.actor.typed.scaladsl.{ActorContext, Behaviors}
-import akka.actor.typed.{ActorRef, Behavior}
+import akka.actor.typed.scaladsl.{ ActorContext, Behaviors }
+import akka.actor.typed.{ ActorRef, Behavior }
 import akka.persistence.typed.PersistenceId
-import akka.persistence.typed.scaladsl.{Effect, EventSourcedBehavior}
+import akka.persistence.typed.scaladsl.{ Effect, EventSourcedBehavior }
 import ToDoBehavior.Command
 import io.github.mvillafuertem.akka.fsm.domain.ToDo
 
@@ -19,12 +19,12 @@ final class ToDoBehavior(context: ActorContext[Command]) {
       persistenceId = PersistenceId.ofUniqueId(id),
       emptyState = State(ToDo("", "", 0L), false),
       commandHandler = commandHandler,
-      eventHandler = eventHandler)
+      eventHandler = eventHandler
+    )
 
   val commandHandler: (State, Command) => Effect[Event, State] = { (state, command) =>
     command match {
       case Open(toDo) =>
-
         //        PersistenceQuery(actorSystem).readJournalFor[LeveldbReadJournal](LeveldbReadJournal.Identifier)
         //          .currentEventsByPersistenceId(toDo.id.toString,0, Long.MaxValue)
         //          .map(_.event)
@@ -43,18 +43,16 @@ final class ToDoBehavior(context: ActorContext[Command]) {
   val eventHandler: (State, Event) => State = { (state, event) =>
     event match {
       case Opened(toDo) => State(toDo, true)
-      case Closed => State(state.toDo, false)
+      case Closed       => State(state.toDo, false)
     }
   }
-
 
 }
 
 object ToDoBehavior {
 
   //  def apply(id: String)(implicit actorSystem: ActorSystem, actorMaterializer: ActorMaterializer): Behavior[Command] = Behaviors.setup[Command](context => {
-  def apply(id: String): Behavior[Command] = Behaviors.setup[Command](context => {
-
+  def apply(id: String): Behavior[Command] = Behaviors.setup[Command] { context =>
     //    PersistenceQuery(actorSystem).readJournalFor[LeveldbReadJournal](LeveldbReadJournal.Identifier)
     //      .currentPersistenceIds()
     //      .runForeach(a => context.log.info(s"$a"))
@@ -71,7 +69,7 @@ object ToDoBehavior {
 
     context.log.info(s"ToDo behavior started $id")
     new ToDoBehavior(context).behavior(id)
-  })
+  }
 
   // S T A T E
   final case class State(toDo: ToDo, opened: Boolean)
@@ -95,5 +93,3 @@ object ToDoBehavior {
   final case object Closed extends Event
 
 }
-
-

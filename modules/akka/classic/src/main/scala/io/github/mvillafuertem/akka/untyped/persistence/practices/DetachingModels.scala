@@ -1,10 +1,10 @@
 package io.github.mvillafuertem.akka.untyped.persistence.practices
 
-import akka.actor.{ActorLogging, ActorSystem, Props}
+import akka.actor.{ ActorLogging, ActorSystem, Props }
 import akka.persistence.PersistentActor
-import akka.persistence.journal.{EventAdapter, EventSeq}
+import akka.persistence.journal.{ EventAdapter, EventSeq }
 import com.typesafe.config.ConfigFactory
-import io.github.mvillafuertem.akka.untyped.persistence.practices.DomainModel.{ApplyCoupon, Coupon, User}
+import io.github.mvillafuertem.akka.untyped.persistence.practices.DomainModel.{ ApplyCoupon, Coupon, User }
 
 import scala.collection.mutable
 
@@ -31,18 +31,18 @@ object DetachingModels extends App {
     }
 
     override def receiveRecover: Receive = {
-      case event@CouponApplied(code, user) =>
+      case event @ CouponApplied(code, user) =>
         log.info(s"Recovered $event")
         coupons.put(code, user)
     }
   }
 
-  val actorSystem = ActorSystem("DetachingModels", ConfigFactory.load().getConfig("detachingModels"))
+  val actorSystem   = ActorSystem("DetachingModels", ConfigFactory.load().getConfig("detachingModels"))
   val couponManager = actorSystem.actorOf(Props[CouponManager], "couponManager")
 
   for (i <- 1 to 5) {
     val coupon = Coupon(s"MEGA_COUPON_$i", 100)
-    val user = User(s"$i", s"user_$i@email.com")
+    val user   = User(s"$i", s"user_$i@email.com")
 
     couponManager ! ApplyCoupon(coupon, user)
   }
@@ -83,7 +83,3 @@ class ModelAdapter extends EventAdapter {
       WrittenCouponApplied(code, user.id, user.email)
   }
 }
-
-
-
-

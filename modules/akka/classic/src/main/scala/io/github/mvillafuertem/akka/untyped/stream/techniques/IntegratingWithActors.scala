@@ -1,16 +1,16 @@
 package io.github.mvillafuertem.akka.untyped.stream.techniques
 
 import akka.Done
-import akka.actor.{Actor, ActorLogging, ActorSystem, Props}
-import akka.stream.scaladsl.{Flow, Sink, Source}
-import akka.stream.{CompletionStrategy, Materializer, OverflowStrategy}
+import akka.actor.{ Actor, ActorLogging, ActorSystem, Props }
+import akka.stream.scaladsl.{ Flow, Sink, Source }
+import akka.stream.{ CompletionStrategy, Materializer, OverflowStrategy }
 import akka.util.Timeout
 
 import scala.concurrent.duration._
 
 object IntegratingWithActors extends App {
 
-  implicit val actorSystem: ActorSystem = ActorSystem("IntegratingWithActors")
+  implicit val actorSystem: ActorSystem        = ActorSystem("IntegratingWithActors")
   implicit val actorMaterializer: Materializer = Materializer(actorSystem)
 
   class SimpleActor extends Actor with ActorLogging {
@@ -27,20 +27,17 @@ object IntegratingWithActors extends App {
 
   }
 
-
   val simpleActor = actorSystem.actorOf(Props[SimpleActor], "simpleActor")
 
   val numberSource = Source(1 to 10)
 
-
   // Actor as a Flow
   implicit val timeout: Timeout = Timeout(1 seconds)
-  val actorBasedFlow = Flow[Int].ask(parallelism = 4)(simpleActor)
+  val actorBasedFlow            = Flow[Int].ask(parallelism = 4)(simpleActor)
 
   // numberSource.via(actorBasedFlow).to(Sink.ignore).run()
   // Equivalent ^
   // numberSource.ask[Int](parallelism = 4)(simpleActor).to(Sink.ignore).run()
-
 
   private val completionMatcher: PartialFunction[Any, CompletionStrategy] = {
     case Done =>
@@ -48,7 +45,8 @@ object IntegratingWithActors extends App {
       CompletionStrategy.immediately
   }
   // Actor as a Source
-  val actorPoweredSource = Source.actorRef[Int](completionMatcher,
+  val actorPoweredSource = Source.actorRef[Int](
+    completionMatcher,
     // never fail the stream because of a message
     failureMatcher = PartialFunction.empty,
     bufferSize = 10,
@@ -97,7 +95,5 @@ object IntegratingWithActors extends App {
   Source(1 to 10).to(actorPoweredSink).run()
 
   // Sink.actorRef() not recommended, unable to backpressure
-
-
 
 }

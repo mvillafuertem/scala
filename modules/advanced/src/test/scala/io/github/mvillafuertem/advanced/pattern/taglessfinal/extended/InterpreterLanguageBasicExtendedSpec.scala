@@ -11,7 +11,7 @@ class InterpreterLanguageBasicExtendedSpec extends AnyFlatSpecLike with Matchers
   it should "interpreterExtended" in {
 
     // g i v e n
-    val multiplyExpression = LanguageBasicExtended.multiply(2,3)
+    val multiplyExpression = LanguageBasicExtended.multiply(2, 3)
 
     // w h e n
     val actual: F[Int] = multiplyExpression(InterpreterLanguageBasicExtended.interpreterExtended)

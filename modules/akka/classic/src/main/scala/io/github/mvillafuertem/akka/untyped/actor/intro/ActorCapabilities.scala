@@ -1,30 +1,30 @@
 package io.github.mvillafuertem.akka.untyped.actor.intro
 
-import akka.actor.{Actor, ActorRef, ActorSystem, Props}
+import akka.actor.{ Actor, ActorRef, ActorSystem, Props }
 
 object ActorCapabilities extends App {
 
   class SimpleActor extends Actor {
     override def receive: Receive = {
       // Actor can be response to another actor
-      case "Hi!" => context.sender() ! "Hello, there!"
+      case "Hi!"           => context.sender() ! "Hello, there!"
       case message: String =>
         // Actors have information about their context and about themselves
         // context.self === `this` in OOP
         println(s"[${context.self.path}]")
         println(s"[${self.path}]")
         println(s"[simple actor] I have received $message")
-      case number: Int => println(s"[simple actor] I have received a number $number")
+      case number: Int              => println(s"[simple actor] I have received a number $number")
       case SpecialMessage(contents) => println(s"[simple actor] I have received siomething special $contents")
       case SendMessageToYourself(content) =>
         self ! content
-      case SayHiTo(ref) => ref ! "Hi!"
+      case SayHiTo(ref)                       => ref ! "Hi!"
       case WirelessPhoneMessage(content, ref) => ref forward (content + "[forwarding]")
     }
   }
 
   val actorSystem: ActorSystem = ActorSystem("ActorCapabilities")
-  val simpleActor: ActorRef = actorSystem.actorOf(Props[SimpleActor], "simpleActor")
+  val simpleActor: ActorRef    = actorSystem.actorOf(Props[SimpleActor], "simpleActor")
 
   case class SpecialMessage(contents: String)
 
@@ -40,7 +40,7 @@ object ActorCapabilities extends App {
   simpleActor ! SendMessageToYourself("I am an actor a I am proud of it")
 
   // Actors can be reply to messages
-  val pepe = actorSystem.actorOf(Props[SimpleActor], "pepe")
+  val pepe   = actorSystem.actorOf(Props[SimpleActor], "pepe")
   val alicia = actorSystem.actorOf(Props[SimpleActor], "alicia")
 
   case class SayHiTo(actorRef: ActorRef)

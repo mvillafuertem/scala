@@ -1,8 +1,8 @@
 package io.github.mvillafuertem.akka.typed.actor
 
 import akka.actor.testkit.typed.CapturedLogEvent
-import akka.actor.testkit.typed.Effect.{Spawned, SpawnedAnonymous}
-import akka.actor.testkit.typed.scaladsl.{BehaviorTestKit, TestInbox}
+import akka.actor.testkit.typed.Effect.{ Spawned, SpawnedAnonymous }
+import akka.actor.testkit.typed.scaladsl.{ BehaviorTestKit, TestInbox }
 import io.github.mvillafuertem.akka.typed.actor.SynchronousBehavior._
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
@@ -42,7 +42,7 @@ class SynchronousBehaviorSpec extends AnyFlatSpec with Matchers {
 
     // G I V E N
     val testKit = BehaviorTestKit(myBehavior)
-    val inbox = TestInbox[String]()
+    val inbox   = TestInbox[String]()
 
     // W H E N
     testKit.run(SayHello(inbox.ref))
@@ -75,7 +75,7 @@ class SynchronousBehaviorSpec extends AnyFlatSpec with Matchers {
     testKit.run(SayHelloToAnonymousChild)
 
     // T H E N
-    val child = testKit.expectEffectType[SpawnedAnonymous[String]]
+    val child      = testKit.expectEffectType[SpawnedAnonymous[String]]
     val childInbox = testKit.childInbox(child.ref)
     childInbox.expectMessage("hello stranger")
 
@@ -85,7 +85,7 @@ class SynchronousBehaviorSpec extends AnyFlatSpec with Matchers {
 
     // G I V E N
     val testKit = BehaviorTestKit(myBehavior)
-    val inbox = TestInbox[String]("Inboxer")
+    val inbox   = TestInbox[String]("Inboxer")
 
     // W H E N
     testKit.run(LogAndSayHello(inbox.ref))

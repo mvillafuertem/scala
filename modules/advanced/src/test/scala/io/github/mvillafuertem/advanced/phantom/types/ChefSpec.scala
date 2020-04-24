@@ -1,6 +1,6 @@
 package io.github.mvillafuertem.advanced.phantom.types
 
-import io.github.mvillafuertem.advanced.phantom.types.Chef.{Food, Pizza}
+import io.github.mvillafuertem.advanced.phantom.types.Chef.{ Food, Pizza }
 import org.scalatest.flatspec.AnyFlatSpecLike
 import org.scalatest.matchers.should.Matchers
 

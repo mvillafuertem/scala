@@ -10,7 +10,7 @@ final case class ToDoConfigurationProperties(
   name: String = ConfigFactory.load().getString(s"$basePath.name"),
   port: Int = ConfigFactory.load().getInt(s"$basePath.port"),
   interface: String = ConfigFactory.load().getString(s"$basePath.interface")
-                                            )
+)
 
 object ToDoConfigurationProperties {
 

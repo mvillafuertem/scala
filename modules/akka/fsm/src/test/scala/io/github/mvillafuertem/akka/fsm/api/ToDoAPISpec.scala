@@ -7,17 +7,14 @@ import akka.http.scaladsl.testkit.ScalatestRouteTest
 import io.circe.parser.decode
 import io.github.mvillafuertem.akka.fsm.configuration.ToDoConfiguration
 import io.github.mvillafuertem.akka.fsm.BuildInfo
-import ToDoAPI.{HealthInfo, _}
+import ToDoAPI.{ HealthInfo, _ }
 import org.scalatest.flatspec.AnyFlatSpecLike
 import org.scalatest.matchers.should.Matchers
 
 /**
  * @author Miguel Villafuerte
  */
-final class ToDoAPISpec extends ToDoConfiguration
-  with AnyFlatSpecLike
-  with ScalatestRouteTest
-  with Matchers {
+final class ToDoAPISpec extends ToDoConfiguration with AnyFlatSpecLike with ScalatestRouteTest with Matchers {
 
   behavior of "ToDo API"
 
@@ -31,10 +28,7 @@ final class ToDoAPISpec extends ToDoConfiguration
         status shouldBe StatusCodes.OK
         header[`Content-Type`] shouldBe Some(`Content-Type`(`application/json`))
         val json = entityAs[String]
-        decode[HealthInfo](json).map { result =>
-          result.keys shouldBe BuildInfo.toMap.keys
-
-        }
+        decode[HealthInfo](json).map(result => result.keys shouldBe BuildInfo.toMap.keys)
       }
   }
 

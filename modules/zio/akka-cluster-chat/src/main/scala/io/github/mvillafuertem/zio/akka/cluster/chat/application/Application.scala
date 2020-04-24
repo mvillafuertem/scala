@@ -2,10 +2,10 @@ package io.github.mvillafuertem.zio.akka.cluster.chat.application
 
 import akka.actor.ActorSystem
 import io.github.mvillafuertem.zio.akka.cluster.chat.domain._
-import zio.akka.cluster.pubsub.{PubSub, Publisher}
-import zio.akka.cluster.sharding.{Entity, Sharding}
+import zio.akka.cluster.pubsub.{ PubSub, Publisher }
+import zio.akka.cluster.sharding.{ Entity, Sharding }
 import zio.console.Console
-import zio.{Has, IO, ZIO, console}
+import zio.{ console, Has, IO, ZIO }
 
 trait Application {
 
@@ -13,24 +13,24 @@ trait Application {
     for {
       entity <- ZIO.environment[Entity[List[String]]]
       toSend <- msg match {
-        case Message(name, m) => IO.succeed(s"$name: $m")
-        case Join(name) =>
-          entity.state
-            .update(state => Some(name :: state.getOrElse(Nil)))
-            .map(state => s"$name joined the room. There are now ${state} participant(s).")
-        case Leave(name) =>
-          entity.state
-            .update(state => Some(state.getOrElse(Nil).filterNot(_ equalsIgnoreCase name)))
-            .map(state => s"$name left the room. There are now ${state} participant(s).")
-      }
+                 case Message(name, m) => IO.succeed(s"$name: $m")
+                 case Join(name) =>
+                   entity.state
+                     .update(state => Some(name :: state.getOrElse(Nil)))
+                     .map(state => s"$name joined the room. There are now ${state} participant(s).")
+                 case Leave(name) =>
+                   entity.state
+                     .update(state => Some(state.getOrElse(Nil).filterNot(_ equalsIgnoreCase name)))
+                     .map(state => s"$name left the room. There are now ${state} participant(s).")
+               }
       _ <- pubSub.publish(entity.id, toSend).ignore
     } yield ()
 
   def joinChat(
-                name: String,
-                room: String,
-                sharding: Sharding[ChatMessage]
-              ): ZIO[Console with Has[ActorSystem], Throwable, Unit] =
+    name: String,
+    room: String,
+    sharding: Sharding[ChatMessage]
+  ): ZIO[Console with Has[ActorSystem], Throwable, Unit] =
     for {
       pubSub   <- PubSub.createSubscriber[String]
       messages <- pubSub.listen(room)

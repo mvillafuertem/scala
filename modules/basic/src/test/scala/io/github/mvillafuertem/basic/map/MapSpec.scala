@@ -15,18 +15,16 @@ final class MapSpec extends AnyFlatSpecLike with Matchers {
       Map("predicate" -> false),
       Map("predicate" -> true),
       Map("predicate" -> false),
-      Map("name" -> "false")
+      Map("name"      -> "false")
     )
 
     // w h e n
     val actual = mapSequence.groupMapReduce(_.keys.head)(_.values.toSeq)(_ ++ _)
 
-
     // t h e n
     actual shouldBe Map("predicate" -> Seq(true, false, true, false), "name" -> Seq("false"))
 
   }
-
 
   it should "group map reduce by key and type" in {
 
@@ -36,16 +34,14 @@ final class MapSpec extends AnyFlatSpecLike with Matchers {
       Map("predicate" -> false),
       Map("predicate" -> true),
       Map("predicate" -> false),
-      Map("name" -> "false")
+      Map("name"      -> "false")
     )
 
     // w h e n
     val actual = mapSequence.foldLeft(Map.empty[String, Any]) {
       case (a: Map[String, Any], b: Map[String, Any]) =>
-
         if (a.contains(b.keys.head)) {
-          a.filter { case (k, v) => k.equals(b.keys.head) }
-            .map { case (k, v) => k -> b.values.toSeq.appended(v) }
+          a.filter { case (k, v) => k.equals(b.keys.head) }.map { case (k, v) => k -> b.values.toSeq.appended(v) }
         } else {
           a ++ b
         }

@@ -1,11 +1,11 @@
 package io.github.mvillafuertem.akka.typed.interaction.patterns
 
-import akka.actor.typed.{ActorRef, Behavior}
+import akka.actor.typed.{ ActorRef, Behavior }
 import akka.actor.typed.scaladsl.Behaviors
 
 /**
-  * @author Miguel Villafuerte
-  */
+ * @author Miguel Villafuerte
+ */
 object AdaptedResponse {
 
   case class Request(query: String, respondTo: ActorRef[WrappedResponse])
@@ -29,10 +29,9 @@ object AdaptedResponse {
       //val responseAdapter =
       context.messageAdapter(response => WrappedResponse(response))
 
-      Behaviors.receiveMessage[WrappedResponse] {
-        wrappedResponse: WrappedResponse =>
-          println(s"Here is your response: ${wrappedResponse.response}")
-          Behaviors.same
+      Behaviors.receiveMessage[WrappedResponse] { wrappedResponse: WrappedResponse =>
+        println(s"Here is your response: ${wrappedResponse.response}")
+        Behaviors.same
       }
     }
 

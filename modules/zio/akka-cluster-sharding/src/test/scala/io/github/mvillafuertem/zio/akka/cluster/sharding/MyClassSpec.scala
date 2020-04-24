@@ -4,13 +4,11 @@ import org.scalatest.flatspec.AnyFlatSpecLike
 import org.scalatest.matchers.should.Matchers
 import zio.console.Console
 import zio.stream.ZStream
-import zio.{BootstrapRuntime, Schedule, Task, ZIO}
-
+import zio.{ BootstrapRuntime, Schedule, Task, ZIO }
 
 final class MyClassSpec extends AnyFlatSpecLike with BootstrapRuntime with Matchers {
 
   "MyClass" should "Stream" in {
-
 
     val clazz = new MyClass
 
@@ -18,25 +16,28 @@ final class MyClassSpec extends AnyFlatSpecLike with BootstrapRuntime with Match
 
     value should have size 10
 
-
   }
 
   it should "Stream pull" in {
 
     val value: Int = 1
 
-    val actual = unsafeRun(ZStream.fromEffect(
-      Task.effect(value)
-        .mapError(Some(_))
-        .flatMap { a =>
-          if (a == 1) ZIO.fail(None)
-          else ZIO.succeed(a)
+    val actual = unsafeRun(
+      ZStream
+        .fromEffect(
+          Task
+            .effect(value)
+            .mapError(Some(_))
+            .flatMap { a =>
+              if (a == 1) ZIO.fail(None)
+              else ZIO.succeed(a)
 
-        }
-    ).runCollect)
+            }
+        )
+        .runCollect
+    )
 
     actual shouldBe List()
-
 
   }
 
@@ -52,31 +53,26 @@ final class MyClassSpec extends AnyFlatSpecLike with BootstrapRuntime with Match
 //
 //    actual shouldBe List()
 
-
   }
 
   it should "Stream combine" in {
-
 
     val clazz = new MyClass
 
     val program: ZIO[Console, Nothing, Seq[Int]] = for {
 
-      _ <- zio.console.putStrLn("Hola")
+      _      <- zio.console.putStrLn("Hola")
       stream <- clazz.a.runCollect
-      _ <- zio.console.putStrLn("Adios")
+      _      <- zio.console.putStrLn("Adios")
 
     } yield stream
 
     val value: Seq[Int] = unsafeRun(program)
     value should have size 10
 
-
   }
 
-
   "Pepe" should "Stream" in {
-
 
     //val clazz = new MyClass
     //val pepe = new Pepe(clazz)
@@ -85,19 +81,15 @@ final class MyClassSpec extends AnyFlatSpecLike with BootstrapRuntime with Match
 
     //value shouldBe 1
 
-
   }
 
 }
-
-
 
 // MY TRAIT
 trait My[F[_]] {
 
   def a: F[_]
 }
-
 
 // MY CLASS
 import io.github.mvillafuertem.zio.akka.cluster.sharding.MyClass._
@@ -112,7 +104,6 @@ object MyClass {
 
 }
 
-
 // action repeat policy
 class Pepe(my: My[MyType]) {
 
@@ -122,9 +113,9 @@ class Pepe(my: My[MyType]) {
   def b =
     (for {
 
-      _ <- zio.console.putStrLn("Hola")
+      _      <- zio.console.putStrLn("Hola")
       stream <- my.a.runCollect
-      _ <- zio.console.putStrLn("Adios")
+      _      <- zio.console.putStrLn("Adios")
 
     } yield stream) repeat foo.tapOutput(a => zio.console.putStrLn(s"Completed $a"))
 

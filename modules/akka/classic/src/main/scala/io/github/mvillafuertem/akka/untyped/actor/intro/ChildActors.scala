@@ -1,7 +1,7 @@
 package io.github.mvillafuertem.akka.untyped.actor.intro
 
-import akka.actor.{Actor, ActorRef, ActorSystem, Props}
-import io.github.mvillafuertem.akka.untyped.actor.intro.ChildActors.CreditCard.{AttachToAccount, CheckStatus}
+import akka.actor.{ Actor, ActorRef, ActorSystem, Props }
+import io.github.mvillafuertem.akka.untyped.actor.intro.ChildActors.CreditCard.{ AttachToAccount, CheckStatus }
 
 object ChildActors extends App {
 
@@ -14,7 +14,7 @@ object ChildActors extends App {
   class Parent extends Actor {
     import Parent._
 
-    var  child: ActorRef = null
+    var child: ActorRef = null
 
     override def receive: Receive = {
       case CreateChild(name) =>
@@ -51,7 +51,6 @@ object ChildActors extends App {
   // - /user   = user-level guardian
   // - /       = the root guardian
 
-
   // Actor Selection
   val childSelection = system.actorSelection("/user/parent/child2")
   childSelection ! "I found you"
@@ -78,7 +77,7 @@ object ChildActors extends App {
       case InitializeAccount =>
         val creditCardRef = context.actorOf(Props[CreditCard], "card")
         creditCardRef ! AttachToAccount(this) // ¡DANGER!
-      case Deposit(funds) => deposit(funds)
+      case Deposit(funds)  => deposit(funds)
       case Withdraw(funds) => withdraw(funds)
     }
 

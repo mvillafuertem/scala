@@ -1,6 +1,6 @@
 package io.github.mvillafuertem.tapir.api
 
 /**
-  * @author Miguel Villafuerte
-  */
+ * @author Miguel Villafuerte
+ */
 trait ProductsServerOptions {}

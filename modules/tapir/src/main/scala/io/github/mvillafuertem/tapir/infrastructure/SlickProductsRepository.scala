@@ -2,14 +2,14 @@ package io.github.mvillafuertem.tapir.infrastructure
 
 import io.github.mvillafuertem.tapir.configuration.InfrastructureConfiguration
 import io.github.mvillafuertem.tapir.domain.error.ProductException
-import io.github.mvillafuertem.tapir.domain.model.{Product, ProductId}
+import io.github.mvillafuertem.tapir.domain.model.{ Product, ProductId }
 import io.github.mvillafuertem.tapir.domain.repository.ProductsRepository
 import io.github.mvillafuertem.tapir.infrastructure.tables.ProductTable
-import slick.dbio.{DBIO, StreamingDBIO}
+import slick.dbio.{ DBIO, StreamingDBIO }
 import slick.driver.H2Driver.api._
 import zio.interop.reactivestreams._
 import zio.stream.ZStream
-import zio.{IO, UIO, ZIO}
+import zio.{ IO, UIO, ZIO }
 
 import scala.concurrent.ExecutionContext.Implicits.global
 

@@ -35,6 +35,4 @@ final class SimplePersistentActor extends PersistentActor with ActorLogging {
       nMessages += 1
   }
 
-
-
 }

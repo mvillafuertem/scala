@@ -1,6 +1,6 @@
 package io.github.mvillafuertem.slick.withtrait.configuration
 
-import io.github.mvillafuertem.slick.withtrait.repository.{Profile, RelationalRepositories}
+import io.github.mvillafuertem.slick.withtrait.repository.{ Profile, RelationalRepositories }
 import slick.basic.DatabaseConfig
 import slick.jdbc.JdbcProfile
 

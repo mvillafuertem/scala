@@ -2,7 +2,7 @@ package com.lightbend.streams.transform
 
 import java.io.ByteArrayOutputStream
 
-import com.lightbend.stream.messages.messages.{HeaterControl, SensorData, TemperatureControl}
+import com.lightbend.stream.messages.messages.{ HeaterControl, SensorData, TemperatureControl }
 
 import scala.util.Try
 
@@ -18,7 +18,7 @@ object DataTransformer {
     SensorData.parseFrom(message)
   }
 
-  def toByteArray(control : HeaterControl): Array[Byte] = {
+  def toByteArray(control: HeaterControl): Array[Byte] = {
     bos.reset()
     control.writeTo(bos)
     bos.toByteArray
@@ -26,4 +26,4 @@ object DataTransformer {
 }
 
 // Control
-case class MayBeHeaterControl(sensorID : Option[Int], command : Int)
+case class MayBeHeaterControl(sensorID: Option[Int], command: Int)

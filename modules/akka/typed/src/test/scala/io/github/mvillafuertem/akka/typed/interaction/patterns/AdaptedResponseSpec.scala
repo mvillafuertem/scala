@@ -1,13 +1,12 @@
 package io.github.mvillafuertem.akka.typed.interaction.patterns
 
-import akka.actor.testkit.typed.scaladsl.{ScalaTestWithActorTestKit, TestProbe}
+import akka.actor.testkit.typed.scaladsl.{ ScalaTestWithActorTestKit, TestProbe }
 import org.scalatest.flatspec.AnyFlatSpecLike
 
 /**
  * @author Miguel Villafuerte
  */
-final class AdaptedResponseSpec extends ScalaTestWithActorTestKit
-  with AnyFlatSpecLike {
+final class AdaptedResponseSpec extends ScalaTestWithActorTestKit with AnyFlatSpecLike {
 
   behavior of "Adapted Response"
 
@@ -15,7 +14,7 @@ final class AdaptedResponseSpec extends ScalaTestWithActorTestKit
 
     // g i v e n
     import AdaptedResponse._
-    val actorRequester = spawn(ActorRequester.behavior)
+    val actorRequester     = spawn(ActorRequester.behavior)
     val probeResponseActor = TestProbe[WrappedResponse]
 
     // w h e n

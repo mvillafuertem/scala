@@ -1,18 +1,18 @@
 package io.github.mvillafuertem.akka.untyped.stream.init
 
-import akka.actor.{Actor, ActorSystem, Props}
+import akka.actor.{ Actor, ActorSystem, Props }
 import akka.stream.Materializer
-import akka.stream.scaladsl.{Flow, Sink, Source}
+import akka.stream.scaladsl.{ Flow, Sink, Source }
 
 object OperatorFusion extends App {
 
-  implicit val actorSystem: ActorSystem = ActorSystem("FirstPrinciples")
+  implicit val actorSystem: ActorSystem        = ActorSystem("FirstPrinciples")
   implicit val actorMaterializer: Materializer = Materializer(actorSystem)
 
   val simpleSource = Source(1 to 10)
-  val simpleFlow = Flow[Int].map(_ + 1)
-  val simpleFlow2 = Flow[Int].map(_ * 10)
-  val simpleSink = Sink.foreach[Int](println)
+  val simpleFlow   = Flow[Int].map(_ + 1)
+  val simpleFlow2  = Flow[Int].map(_ * 10)
+  val simpleSink   = Sink.foreach[Int](println)
 
   // This run on the SAME ACTOR
   simpleSource.via(simpleFlow).via(simpleFlow2).to(simpleSink)
@@ -37,7 +37,7 @@ object OperatorFusion extends App {
       case x: Int =>
         // flow operations
         val x2 = x + 1
-        val y = x2 * 10
+        val y  = x2 * 10
         // sink operation
         println(y)
     }
@@ -47,23 +47,18 @@ object OperatorFusion extends App {
   // simpleSource.via(complexFlow).via(complexFlow2).to(simpleSink).run()
 
   // Async boundary
-  simpleSource.via(complexFlow).async // runs on one actor
-    .via(complexFlow2).async // runs on a second actor
+  simpleSource
+    .via(complexFlow)
+    .async // runs on one actor
+    .via(complexFlow2)
+    .async          // runs on a second actor
     .to(simpleSink) // runs on a third actor
   //.run()
 
   // Ordering guarantees without async
-  Source(1 to 3)
-    .map(element => {
-      println(s"Flow A: $element"); element
-    }) //.async
-    .map(element => {
-    println(s"Flow B: $element"); element
-  }) //.async
-    .map(element => {
-    println(s"Flow C: $element"); element
-  }) //.async
+  Source(1 to 3).map { element => println(s"Flow A: $element"); element } //.async
+  .map { element => println(s"Flow B: $element"); element }               //.async
+  .map { element => println(s"Flow C: $element"); element }               //.async
     .runWith(Sink.ignore)
-
 
 }

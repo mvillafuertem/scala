@@ -4,7 +4,7 @@ import io.github.mvillafuertem.algorithms.data.structures.node.Node
 
 class Stack[A] extends Equals {
 
-  private var front: Node[A] = _
+  private var front: Node[A]   = _
   private var numElements: Int = 0
 
   def isEmpty: Boolean = front == null
@@ -35,8 +35,7 @@ class Stack[A] extends Equals {
     var value: A = ???
     if (isEmpty) {
       System.out.println("Error, la pila está vacía")
-    }
-    else value = front.value
+    } else value = front.value
     value
   }
 
@@ -44,7 +43,7 @@ class Stack[A] extends Equals {
 
   def show(): String = {
     var result = ""
-    var aux = front
+    var aux    = front
     while (aux != null) {
       result += s"${aux.value}\n"
       aux = aux.next
@@ -56,11 +55,10 @@ class Stack[A] extends Equals {
 
   override def equals(obj: Any): Boolean = obj match {
     case that: Stack[A] => that.canEqual(this) && this.hashCode == that.hashCode
-    case _ => false
+    case _              => false
   }
 
-  override def hashCode(): Int = {
+  override def hashCode(): Int =
     show().hashCode()
-  }
 
 }

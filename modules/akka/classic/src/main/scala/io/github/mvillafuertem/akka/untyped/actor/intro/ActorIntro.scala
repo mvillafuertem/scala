@@ -1,6 +1,6 @@
 package io.github.mvillafuertem.akka.untyped.actor.intro
 
-import akka.actor.{Actor, ActorSystem, Props}
+import akka.actor.{ Actor, ActorSystem, Props }
 
 object ActorIntro extends App {
 
@@ -24,7 +24,7 @@ object ActorIntro extends App {
   }
 
   // Instantiate Actor
-  val wordCounterActor = actorSystem.actorOf(Props[WordCountActor], "wordCounter")
+  val wordCounterActor        = actorSystem.actorOf(Props[WordCountActor], "wordCounter")
   val anotherWordCounterActor = actorSystem.actorOf(Props[WordCountActor], "anotherWordCounter")
 
   // Communicate Asynchronous
@@ -37,11 +37,11 @@ object ActorIntro extends App {
   class Person(name: String) extends Actor {
     override def receive: Receive = {
       case "hi" => println(s"Hi, my name is $name")
-      case _ =>
+      case _    =>
     }
   }
 
-  val pepe = actorSystem.actorOf(Props(new Person("Pepe")))
+  val pepe  = actorSystem.actorOf(Props(new Person("Pepe")))
   val alice = actorSystem.actorOf(Person.props("Alice"))
 
   pepe ! "hi"

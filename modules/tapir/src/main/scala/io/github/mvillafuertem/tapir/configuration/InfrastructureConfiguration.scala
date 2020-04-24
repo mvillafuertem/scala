@@ -9,6 +9,4 @@ trait InfrastructureConfiguration {
 
 }
 
-object InfrastructureConfiguration {
-
-}
+object InfrastructureConfiguration {}

@@ -3,14 +3,13 @@ package io.github.mvillafuertem.json
 import io.circe.generic.auto._
 import io.circe.parser._
 import io.circe.syntax._
-import io.circe.{Decoder, Encoder, HCursor, Json}
+import io.circe.{ Decoder, Encoder, HCursor, Json }
 import org.scalatest.flatspec.AnyFlatSpecLike
 import org.scalatest.matchers.should.Matchers
 
-
 /**
-  * @author Miguel Villafuerte
-  */
+ * @author Miguel Villafuerte
+ */
 final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
 
   behavior of "Circe"
@@ -40,11 +39,12 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
       ("id", Json.fromString("c730433b-082c-4984-9d66-855c243266f0")),
       ("name", Json.fromString("Foo")),
       ("counts", Json.arr(Json.fromInt(1), Json.fromInt(2), Json.fromInt(3))),
-      ("values",
+      (
+        "values",
         Json.obj(
           ("bar", Json.fromBoolean(true)),
           ("baz", Json.fromDoubleOrNull(100.001)),
-          ("qux", Json.arr(Json.fromString("a"), Json.fromString("b"))),
+          ("qux", Json.arr(Json.fromString("a"), Json.fromString("b")))
         )
       )
     )
@@ -57,10 +57,11 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
     // G I V E N
     class Thing(val foo: String, val bar: Int)
 
-    implicit val encodeThing: Encoder[Thing] = (a: Thing) => Json.obj(
-      ("foo", Json.fromString(a.foo)),
-      ("bar", Json.fromInt(a.bar))
-    )
+    implicit val encodeThing: Encoder[Thing] = (a: Thing) =>
+      Json.obj(
+        ("foo", Json.fromString(a.foo)),
+        ("bar", Json.fromInt(a.bar))
+      )
 
     // W H E N
     val actual: Json = new Thing("a", 1).asJson
@@ -80,10 +81,11 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
     // G I V E N
     class Thing(val foo: String, val bar: Int)
 
-    implicit val decodeThing: Decoder[Thing] = (c: HCursor) => for {
-      foo <- c.downField("foo").as[String]
-      bar <- c.downField("bar").as[Int]
-    } yield new Thing(foo, bar)
+    implicit val decodeThing: Decoder[Thing] = (c: HCursor) =>
+      for {
+        foo <- c.downField("foo").as[String]
+        bar <- c.downField("bar").as[Int]
+      } yield new Thing(foo, bar)
 
     // W H E N
     val actual = decode[Thing]("""{"foo":"a","bar":1}""")
@@ -91,7 +93,7 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
     // T H E N
     val expected = new Thing("a", 1)
 
-    actual.map{ result =>
+    actual.map { result =>
       result.bar shouldBe expected.bar
       result.foo shouldBe expected.foo
     }
@@ -103,15 +105,15 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
     // G I V E N
     sealed trait Thing
     case class SomeThing(someThing: String) extends Thing
-    case class OtherThing(otherThing: Int) extends Thing
+    case class OtherThing(otherThing: Int)  extends Thing
 
     implicit val encodeThing: Encoder[Thing] = Encoder.instance {
-      case someThing @ SomeThing(_) => someThing.asJson
+      case someThing @ SomeThing(_)   => someThing.asJson
       case otherThing @ OtherThing(_) => otherThing.asJson
     }
 
     // W H E N
-    val someThing = SomeThing("a").asJson
+    val someThing  = SomeThing("a").asJson
     val otherThing = OtherThing(1).asJson
 
     // T H E N
@@ -132,26 +134,23 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
     // G I V E N
     sealed trait Thing
     case class SomeThing(someThing: String) extends Thing
-    case class OtherThing(otherThing: Int) extends Thing
+    case class OtherThing(otherThing: Int)  extends Thing
 
     implicit val decodeThing: Decoder[Thing] =
-      Decoder[SomeThing].map[Thing](identity)
+      Decoder[SomeThing]
+        .map[Thing](identity)
         .or(Decoder[OtherThing].map[Thing](identity))
 
     // W H E N
-    val someThing = decode[SomeThing]("""{"someThing":"a"}""")
+    val someThing  = decode[SomeThing]("""{"someThing":"a"}""")
     val otherThing = decode[OtherThing]("""{"otherThing":1}""")
 
     // T H E N
-    val expectedSomeThing = SomeThing("a")
+    val expectedSomeThing  = SomeThing("a")
     val expectedOtherThing = OtherThing(1)
 
-    someThing.map{ result =>
-      result.someThing shouldBe expectedSomeThing.someThing
-    }
-    otherThing.map{ result =>
-      result.otherThing shouldBe expectedOtherThing.otherThing
-    }
+    someThing.map(result => result.someThing shouldBe expectedSomeThing.someThing)
+    otherThing.map(result => result.otherThing shouldBe expectedOtherThing.otherThing)
 
   }
 
@@ -161,16 +160,17 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
     sealed trait Thing
     case object SomeThing extends Thing
 
-    implicit val encodeThing: Encoder[Thing] = (a: Thing) => Json.obj(
-      ("value", Json.fromString(a.toString))
-    )
+    implicit val encodeThing: Encoder[Thing] = (a: Thing) =>
+      Json.obj(
+        ("value", Json.fromString(a.toString))
+      )
 
     // W H E N
     val actual: Thing = SomeThing
 
     // T H E N
     val expected = Json.obj(
-      ("value", Json.fromString("SomeThing")),
+      ("value", Json.fromString("SomeThing"))
     )
 
     actual.asJson shouldBe expected
@@ -184,17 +184,16 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
     case object SomeThing extends Thing
     type SomeThingResult = (String, Thing)
 
-    implicit val decodeThing: Decoder[SomeThingResult] = (c: HCursor) => for {
-      foo <- c.downField("value").as[String]
-    } yield new SomeThingResult("value", Seq[Thing](SomeThing).filter(_.toString.equalsIgnoreCase(foo)).head)
+    implicit val decodeThing: Decoder[SomeThingResult] = (c: HCursor) =>
+      for {
+        foo <- c.downField("value").as[String]
+      } yield new SomeThingResult("value", Seq[Thing](SomeThing).filter(_.toString.equalsIgnoreCase(foo)).head)
 
     // W H E N
     val actual = decode[SomeThingResult]("""{"value":"SomeThing"}""")
 
     // T H E N
-    actual.map{ result =>
-        result shouldBe ("value", SomeThing)
-    }
+    actual.map(result => result shouldBe ("value", SomeThing))
 
   }
 
@@ -227,9 +226,10 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
     sealed trait Thing
     case object SomeThing extends Thing
 
-    implicit val decodeThing: Decoder[Thing] = (c: HCursor) => for {
-      foo <- c.field("thing").as[String]
-    } yield Seq[Thing](SomeThing).filter(_.toString.equalsIgnoreCase(foo)).head
+    implicit val decodeThing: Decoder[Thing] = (c: HCursor) =>
+      for {
+        foo <- c.field("thing").as[String]
+      } yield Seq[Thing](SomeThing).filter(_.toString.equalsIgnoreCase(foo)).head
 
     // W H E N
     val actual = decode[User]("""{"id": 0,"thing":"SomeThing"}""")
@@ -238,9 +238,7 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
     val expected: User = User(0L, SomeThing)
 
     // T H E N
-    actual.map{ result =>
-      result shouldBe expected
-    }
+    actual.map(result => result shouldBe expected)
 
   }
 
@@ -249,7 +247,7 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
     // G I V E N
     case class User(id: Long, thing: Seq[Thing])
     sealed trait Thing
-    case object SomeThing extends Thing
+    case object SomeThing  extends Thing
     case object OtherThing extends Thing
 
     implicit val encodeThing: Encoder[Thing] = (a: Thing) => Json.fromString(a.toString)
@@ -260,9 +258,7 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
     // T H E N
     val expected = Json.obj(
       ("id", Json.fromInt(0)),
-      ("thing", Json.arr(
-        Json.fromString("SomeThing"),
-        Json.fromString("OtherThing")))
+      ("thing", Json.arr(Json.fromString("SomeThing"), Json.fromString("OtherThing")))
     )
 
     actual.asJson shouldBe expected
@@ -274,12 +270,13 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
     // G I V E N
     case class User(id: Long, thing: Seq[Thing])
     sealed trait Thing
-    case object SomeThing extends Thing
+    case object SomeThing  extends Thing
     case object OtherThing extends Thing
 
-    implicit val decodeThing: Decoder[Thing] = (c: HCursor) => for {
-      foo <- c.field("thing").as[String]
-    } yield Seq[Thing](SomeThing).filter(_.toString.equalsIgnoreCase(foo)).head
+    implicit val decodeThing: Decoder[Thing] = (c: HCursor) =>
+      for {
+        foo <- c.field("thing").as[String]
+      } yield Seq[Thing](SomeThing).filter(_.toString.equalsIgnoreCase(foo)).head
 
     // W H E N
     val actual = decode[User]("""{"id": 0,"things":["SomeThing", "OtherThing"]}""")
@@ -287,9 +284,7 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
     // T H E N
     val expected: User = User(0L, Seq(SomeThing, OtherThing))
 
-    actual.map{ result =>
-      result shouldBe expected
-    }
+    actual.map(result => result shouldBe expected)
 
   }
 

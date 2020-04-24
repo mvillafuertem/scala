@@ -6,8 +6,7 @@ import org.scalatest.flatspec.AnyFlatSpecLike
 /**
  * @author Miguel Villafuerte
  */
-final class FireAndForgetSpec extends ScalaTestWithActorTestKit
-  with AnyFlatSpecLike {
+final class FireAndForgetSpec extends ScalaTestWithActorTestKit with AnyFlatSpecLike {
 
   behavior of "Fire And Forget"
 

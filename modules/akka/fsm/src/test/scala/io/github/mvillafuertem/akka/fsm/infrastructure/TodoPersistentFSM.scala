@@ -3,28 +3,24 @@ package io.github.mvillafuertem.akka.fsm.infrastructure
 import java.util.UUID
 import java.util.concurrent.atomic.AtomicInteger
 
-import akka.actor.testkit.typed.scaladsl.{ScalaTestWithActorTestKit, TestProbe}
-import akka.actor.typed.receptionist.Receptionist.{Find, Register}
-import akka.actor.typed.receptionist.{Receptionist, ServiceKey}
-import akka.actor.typed.scaladsl.{ActorContext, Behaviors}
-import akka.actor.typed.{ActorRef, Behavior}
-import akka.persistence.typed.scaladsl.{Effect, EventSourcedBehavior, RetentionCriteria}
-import akka.persistence.typed.{DeleteSnapshotsFailed, PersistenceId, SnapshotFailed}
-import com.typesafe.config.{Config, ConfigFactory}
+import akka.actor.testkit.typed.scaladsl.{ ScalaTestWithActorTestKit, TestProbe }
+import akka.actor.typed.receptionist.Receptionist.{ Find, Register }
+import akka.actor.typed.receptionist.{ Receptionist, ServiceKey }
+import akka.actor.typed.scaladsl.{ ActorContext, Behaviors }
+import akka.actor.typed.{ ActorRef, Behavior }
+import akka.persistence.typed.scaladsl.{ Effect, EventSourcedBehavior, RetentionCriteria }
+import akka.persistence.typed.{ DeleteSnapshotsFailed, PersistenceId, SnapshotFailed }
+import com.typesafe.config.{ Config, ConfigFactory }
 import TodoPersistentFSM.EventSeedBehavior
 import TodoPersistentFSM.EventSeedBehavior._
 import org.scalatest.OneInstancePerTest
 import org.scalatest.flatspec.AnyFlatSpecLike
 
-final class TodoPersistentFSM extends ScalaTestWithActorTestKit(TodoPersistentFSM.conf)
-  with AnyFlatSpecLike
-  with OneInstancePerTest {
-
+final class TodoPersistentFSM extends ScalaTestWithActorTestKit(TodoPersistentFSM.conf) with AnyFlatSpecLike with OneInstancePerTest {
 
   val pidCounter = new AtomicInteger(0)
 
   private def nextPid(): PersistenceId = PersistenceId.ofUniqueId(s"alert${pidCounter.incrementAndGet()})")
-
 
   it should "process an alert" in {
 
@@ -32,16 +28,15 @@ final class TodoPersistentFSM extends ScalaTestWithActorTestKit(TodoPersistentFS
     val eventSeed = EventSeed("12", "12")
 
     val alertSeedBehavior = EventSeedBehavior(nextPid())
-    val c = spawn(alertSeedBehavior)
-    val probe = TestProbe[EventSeedState]
+    val c                 = spawn(alertSeedBehavior)
+    val probe             = TestProbe[EventSeedState]
 
     // W H E N
     c ! Check(eventSeed)
     c ! GetValue(probe.ref)
 
     // T H E N
-    probe.expectMessage(
-      AlertInProgressState(eventSeed, Vector(eventSeed)))
+    probe.expectMessage(AlertInProgressState(eventSeed, Vector(eventSeed)))
 
   }
 
@@ -64,8 +59,7 @@ final class TodoPersistentFSM extends ScalaTestWithActorTestKit(TodoPersistentFS
     value2 ! GetValue(probe.ref)
 
     // T H E N
-    probe.expectMessage(
-      AlertInProgressState(eventSeed, Vector(eventSeed)))
+    probe.expectMessage(AlertInProgressState(eventSeed, Vector(eventSeed)))
 
   }
 
@@ -73,8 +67,7 @@ final class TodoPersistentFSM extends ScalaTestWithActorTestKit(TodoPersistentFS
 
 object TodoPersistentFSM {
 
-  def conf: Config = ConfigFactory.parseString(
-    s"""
+  def conf: Config = ConfigFactory.parseString(s"""
     akka.loglevel = DEBUG
     akka.loggers = [akka.testkit.TestEventListener]
     #
@@ -91,7 +84,6 @@ object TodoPersistentFSM {
 
   object EventSeedBehavior {
 
-
 //    def adapter(replyTo: ActorRef[EventSeedState]): ActorRef[Receptionist.Listing] =
 //      Behaviors.messageAdapter[Receptionist.Listing] {
 //        case key.Listing(a) =>
@@ -99,10 +91,9 @@ object TodoPersistentFSM {
 //          Behaviors.same
 //      }
 
-
-    def receptionist(id: String): Behavior[EventSeedCommand] = Behaviors.setup[EventSeedCommand](context => {
+    def receptionist(id: String): Behavior[EventSeedCommand] = Behaviors.setup[EventSeedCommand] { context =>
       val key: ServiceKey[EventSeedCommand] = ServiceKey(id)
-      val receptionist = context.system.receptionist
+      val receptionist                      = context.system.receptionist
       val adapter = context.messageAdapter[Receptionist.Listing] {
         case key.Listing(ref) if (ref.nonEmpty) =>
           context.log.info("REF NON EMPTY")
@@ -116,13 +107,10 @@ object TodoPersistentFSM {
       }
       receptionist ! Find(key, adapter)
       apply(PersistenceId.ofUniqueId(id))
-    })
+    }
 
     def apply(persistenceId: PersistenceId): Behavior[EventSeedCommand] =
-      Behaviors.setup[EventSeedCommand](context =>
-        new EventSeedBehavior(context, persistenceId).value
-      )
-
+      Behaviors.setup[EventSeedCommand](context => new EventSeedBehavior(context, persistenceId).value)
 
     // M O D E L
     final case class EventSeed(id: String, name: String)
@@ -140,8 +128,6 @@ object TodoPersistentFSM {
 
     final case class GetValues(set: Set[ActorRef[EventSeedCommand]]) extends EventSeedCommand
 
-
-
     // E V E N T
     sealed trait EventSeedEvent
 
@@ -152,7 +138,6 @@ object TodoPersistentFSM {
     final case class EventSeedInProgress(value: EventSeed) extends EventSeedEvent
 
     final case class EventSeedSent(value: EventSeed) extends EventSeedEvent
-
 
     // S T A T E
     sealed trait EventSeedState {
@@ -173,14 +158,13 @@ object TodoPersistentFSM {
 
   final class EventSeedBehavior(context: ActorContext[EventSeedCommand], persistenceId: PersistenceId) {
 
-
     val value: EventSourcedBehavior[EventSeedCommand, EventSeedEvent, EventSeedState] =
       EventSourcedBehavior[EventSeedCommand, EventSeedEvent, EventSeedState](
         persistenceId,
         emptyState = AlertReceivedState(null, Vector.empty[EventSeed]),
         commandHandler = commandHandler(context),
-        eventHandler = eventHandler())
-        .withRetention(RetentionCriteria.snapshotEvery(numberOfEvents = 100, keepNSnapshots = 2))
+        eventHandler = eventHandler()
+      ).withRetention(RetentionCriteria.snapshotEvery(numberOfEvents = 100, keepNSnapshots = 2))
         .receiveSignal { // optionally respond to signals
           case (state, _: SnapshotFailed)        => // react to failure
           case (state, _: DeleteSnapshotsFailed) => // react to failure
@@ -193,7 +177,6 @@ object TodoPersistentFSM {
           case Check(alert) =>
             context.log.info(s"check $alert")
             Effect.persist(EventSeedChecked(alert))
-
 
           case InProgress(alert) =>
             context.log.info(s"Alerta en progreso $alert")
@@ -213,39 +196,36 @@ object TodoPersistentFSM {
         }
     }
 
-    private def eventHandler(): (EventSeedState, EventSeedEvent) => EventSeedState = {
+    private def eventHandler(): (EventSeedState, EventSeedEvent) => EventSeedState = { (state, event) =>
+      state match {
 
-      (state, event) =>
-        state match {
+        case AlertReceivedState(_, _) =>
+          event match {
+            // Se verifica si se puede pasar al estado de in-progress
+            case EventSeedChecked(delta) =>
+              AlertInProgressState(delta, state.history :+ delta)
+            case _ => throw new IllegalStateException(s"unexpected event [$event] in state [$state]")
+          }
 
-          case AlertReceivedState(_, _) =>
-            event match {
-              // Se verifica si se puede pasar al estado de in-progress
-              case EventSeedChecked(delta) =>
+        case AlertInProgressState(_, _) =>
+          event match {
+            // Se verifica las ocurrencias de esa misma alerta
+            case EventSeedChecked(delta) =>
+              if (state.history.size >= 2) {
+                AlertSentState(delta, state.history :+ delta)
+              } else {
                 AlertInProgressState(delta, state.history :+ delta)
-              case _ => throw new IllegalStateException(s"unexpected event [$event] in state [$state]")
-            }
+              }
 
-          case AlertInProgressState(_, _) =>
-            event match {
-              // Se verifica las ocurrencias de esa misma alerta
-              case EventSeedChecked(delta) =>
-                if (state.history.size >= 2) {
-                  AlertSentState(delta, state.history :+ delta)
-                } else {
-                  AlertInProgressState(delta, state.history :+ delta)
-                }
+            case _ => throw new IllegalStateException(s"unexpected event [$event] in state [$state]")
+          }
 
-              case _ => throw new IllegalStateException(s"unexpected event [$event] in state [$state]")
-            }
-
-          // Debe crear otra alerta
-          case _: AlertSentState =>
-            throw new IllegalStateException(s"unexpected event [$event] in state [$state]")
-        }
+        // Debe crear otra alerta
+        case _: AlertSentState =>
+          throw new IllegalStateException(s"unexpected event [$event] in state [$state]")
+      }
     }
 
   }
-
 
 }

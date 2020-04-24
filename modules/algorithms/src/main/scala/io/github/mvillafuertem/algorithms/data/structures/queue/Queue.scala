@@ -4,7 +4,7 @@ import io.github.mvillafuertem.algorithms.data.structures.node.Node
 
 class Queue[A] {
   private var cabeza: Node[A] = _
-  private var fin: Node[A] = _
+  private var fin: Node[A]    = _
 
   var numElem = 0
 
@@ -13,14 +13,16 @@ class Queue[A] {
     if (cabeza != null) {
 
       fin.next = nuevo
-    } else { cabeza = nuevo
-    fin = nuevo
-    numElem += 1}
+    } else {
+      cabeza = nuevo
+      fin = nuevo
+      numElem += 1
+    }
   }
 
   def dequeue: A = { //Devuelve el elemento del cabeza de la cola y lo elimina Si la cola está vacía, devuelve como resultado 0 y un mensaje de error
     var nodo: Node[A] = ???
-    var resul: A = ???
+    var resul: A      = ???
     if (cabeza == null)
       println("Error, la cola está vacía")
     else {
@@ -33,9 +35,8 @@ class Queue[A] {
     resul
   }
 
-  def isEmpty: Boolean = { // Comprueba si la cola está vacía
+  def isEmpty: Boolean = // Comprueba si la cola está vacía
     cabeza == null
-  }
 
   def peek: A = { //Devuelve el elemento del cabeza de la cola Si la cola está vacía, devuelve como resultado -999 y un mensaje de error
     var resul: A = ???
@@ -48,7 +49,7 @@ class Queue[A] {
     var aux: Node[A] = ???
     println("Contenido de la cola: ")
     aux = cabeza
-    while ( {
+    while ({
       aux != null
     }) {
       println(s"${aux.value}  ")

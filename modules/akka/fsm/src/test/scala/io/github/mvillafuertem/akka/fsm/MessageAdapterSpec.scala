@@ -1,9 +1,9 @@
 package io.github.mvillafuertem.akka.fsm
 
-import akka.actor.testkit.typed.scaladsl.{ScalaTestWithActorTestKit, TestProbe}
-import akka.actor.typed.scaladsl.{ActorContext, Behaviors}
-import akka.actor.typed.{ActorRef, Behavior}
-import MessageAdapterSpec.Infrastructure.{Closed, State}
+import akka.actor.testkit.typed.scaladsl.{ ScalaTestWithActorTestKit, TestProbe }
+import akka.actor.typed.scaladsl.{ ActorContext, Behaviors }
+import akka.actor.typed.{ ActorRef, Behavior }
+import MessageAdapterSpec.Infrastructure.{ Closed, State }
 import org.scalatest.flatspec.AnyFlatSpecLike
 
 /**
@@ -20,7 +20,7 @@ final class MessageAdapterSpec extends ScalaTestWithActorTestKit with AnyFlatSpe
     // G I V E N
     val infra = spawn(Infrastructure.behavior)
 
-    val app = spawn(Application(infra))
+    val app   = spawn(Application(infra))
     val probe = TestProbe[State]()
 
     // W H E N
@@ -66,7 +66,7 @@ object MessageAdapterSpec {
 
     import Application._
 
-    def behavior(inProgress: Set[ActorRef[State]], ref: ActorRef[Infrastructure.State]): Behavior[Application.Command] = {
+    def behavior(inProgress: Set[ActorRef[State]], ref: ActorRef[Infrastructure.State]): Behavior[Application.Command] =
       Behaviors.receiveMessage[Application.Command] {
 
         case o: Open =>
@@ -84,40 +84,38 @@ object MessageAdapterSpec {
             case a: Infrastructure.Opened =>
               context.log.info(s"${adapter.state} ~> {}: {}")
               inProgress.foreach(b => b ! a)
-              inProgress.foreach(b => {
+              inProgress.foreach { b =>
                 context.log.info(s"Tell ${a} ~> {}: {}")
                 b ! a
-              })
+              }
               behavior(inProgress, ref)
             case a: Infrastructure.Closed =>
               context.log.info(s"${adapter.state} ~> {}: {}")
-              inProgress.foreach(b => {
+              inProgress.foreach { b =>
                 context.log.info(s"Tell ${a} ~> {}: {}")
                 b ! a
-              })
+              }
               behavior(inProgress, ref)
           }
       }
-    }
 
   }
 
   object Application {
 
-    def apply(backend: ActorRef[Infrastructure.Command]): Behavior[Application.Command] = Behaviors.setup[Application.Command] { context: ActorContext[Application.Command] =>
-
-      val adapter: ActorRef[Infrastructure.State] = context.messageAdapter(InfrastructureStateAdapter)
-      new Application(context, backend).behavior(Set.empty, adapter)
+    def apply(backend: ActorRef[Infrastructure.Command]): Behavior[Application.Command] = Behaviors.setup[Application.Command] {
+      context: ActorContext[Application.Command] =>
+        val adapter: ActorRef[Infrastructure.State] = context.messageAdapter(InfrastructureStateAdapter)
+        new Application(context, backend).behavior(Set.empty, adapter)
 
     }
 
     sealed trait Command
 
-    final case class Open(task: String, replyTo: ActorRef[State]) extends Command
+    final case class Open(task: String, replyTo: ActorRef[State])  extends Command
     final case class Close(task: String, replyTo: ActorRef[State]) extends Command
 
     private final case class InfrastructureStateAdapter(state: Infrastructure.State) extends Command
   }
-
 
 }

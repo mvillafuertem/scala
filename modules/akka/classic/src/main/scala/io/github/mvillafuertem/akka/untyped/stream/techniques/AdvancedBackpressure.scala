@@ -3,14 +3,14 @@ package io.github.mvillafuertem.akka.untyped.stream.techniques
 import java.util.Date
 
 import akka.actor.ActorSystem
-import akka.stream.scaladsl.{Flow, Sink, Source}
-import akka.stream.{Materializer, OverflowStrategy}
+import akka.stream.scaladsl.{ Flow, Sink, Source }
+import akka.stream.{ Materializer, OverflowStrategy }
 
 import scala.concurrent.duration._
 
 object AdvancedBackpressure extends App {
 
-  implicit val actorSystem: ActorSystem = ActorSystem("AdvancedBackpressure")
+  implicit val actorSystem: ActorSystem        = ActorSystem("AdvancedBackpressure")
   implicit val actorMaterializer: Materializer = Materializer(actorSystem)
 
   // Control Backpressure
@@ -34,8 +34,9 @@ object AdvancedBackpressure extends App {
   def sendEmail(notification: Notification) =
     println(s"Dear ${notification.email}, you have an event ${notification.pagerEvent}")
 
-  val notificationSink = Flow[PagerEvent].map(event => Notification(oncallEngineer, event))
-  .to(Sink.foreach[Notification](sendEmail))
+  val notificationSink = Flow[PagerEvent]
+    .map(event => Notification(oncallEngineer, event))
+    .to(Sink.foreach[Notification](sendEmail))
 
   // Standard
   // eventSource.to(notificationSink).run()
@@ -46,29 +47,25 @@ object AdvancedBackpressure extends App {
     println(s"Dear ${notification.email}, you have an event ${notification.pagerEvent}")
   }
 
-  val aggregateNotificationFlow = Flow[PagerEvent]
-    .conflate((event1, event2) => {
-      val numberInstances = event1.numberInstances + event2.numberInstances
-      PagerEvent(s"You have $numberInstances events that require your attention", new Date, numberInstances)
-    })
-    .map(resultingEvent => Notification(oncallEngineer, resultingEvent))
+  val aggregateNotificationFlow = Flow[PagerEvent].conflate { (event1, event2) =>
+    val numberInstances = event1.numberInstances + event2.numberInstances
+    PagerEvent(s"You have $numberInstances events that require your attention", new Date, numberInstances)
+  }.map(resultingEvent => Notification(oncallEngineer, resultingEvent))
 
   // Alternative to backpressure
   // eventSource.via(aggregateNotificationFlow).async.to(Sink.foreach[Notification](sendEmailSlow)).run()
 
-
   // Slow producers: extrapolate/expand
   val slowCounter = Source(LazyList(1)).throttle(1, 1 second)
-  val hungrySink = Sink.foreach[Int](println)
+  val hungrySink  = Sink.foreach[Int](println)
 
   val extrapolator = Flow[Int].extrapolate(element => Iterator.from(element))
-  val repeater = Flow[Int].extrapolate(element => Iterator.continually(element))
+  val repeater     = Flow[Int].extrapolate(element => Iterator.continually(element))
 
   //slowCounter.via(extrapolator).to(hungrySink).run()
   //slowCounter.via(repeater).to(hungrySink).run()
 
   val expander = Flow[Int].expand(element => Iterator.from(element))
   slowCounter.via(expander).to(hungrySink).run()
-
 
 }

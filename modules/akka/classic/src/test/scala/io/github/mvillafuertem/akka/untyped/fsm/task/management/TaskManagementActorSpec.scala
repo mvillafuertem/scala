@@ -2,17 +2,18 @@ package io.github.mvillafuertem.akka.untyped.fsm.task.management
 
 import java.util.Date
 
-import akka.actor.{ActorSystem, Props}
-import akka.testkit.{ImplicitSender, TestKit}
+import akka.actor.{ ActorSystem, Props }
+import akka.testkit.{ ImplicitSender, TestKit }
 import io.github.mvillafuertem.akka.untyped.fsm.task.management.TaskManagementActor._
 import org.scalatest.flatspec.AnyFlatSpecLike
-import org.scalatest.{BeforeAndAfterAll, OneInstancePerTest}
+import org.scalatest.{ BeforeAndAfterAll, OneInstancePerTest }
 
-class TaskManagementActorSpec extends TestKit(ActorSystem("TaskManagementActorSpec"))
-  with ImplicitSender
-  with AnyFlatSpecLike
-  with BeforeAndAfterAll
-  with OneInstancePerTest {
+class TaskManagementActorSpec
+    extends TestKit(ActorSystem("TaskManagementActorSpec"))
+    with ImplicitSender
+    with AnyFlatSpecLike
+    with BeforeAndAfterAll
+    with OneInstancePerTest {
 
   override protected def afterAll(): Unit = TestKit.shutdownActorSystem(system)
 
@@ -35,7 +36,7 @@ class TaskManagementActorSpec extends TestKit(ActorSystem("TaskManagementActorSp
 
     // G I V E N
     val taskManagement = system.actorOf(Props[TaskManagementActor])
-    val task: Task = Task(123456789L, "Title", "Content", new Date().toInstant.toEpochMilli)
+    val task: Task     = Task(123456789L, "Title", "Content", new Date().toInstant.toEpochMilli)
 
     // W H E N
     taskManagement ! Open(task)
@@ -49,7 +50,7 @@ class TaskManagementActorSpec extends TestKit(ActorSystem("TaskManagementActorSp
 
     // G I V E N
     val taskManagement = system.actorOf(Props[TaskManagementActor])
-    val task: Task = Task(987654321L, "Title", "Content", new Date().toInstant.toEpochMilli)
+    val task: Task     = Task(987654321L, "Title", "Content", new Date().toInstant.toEpochMilli)
     taskManagement ! Open(task)
     expectMsg(TaskManagementInfo("Task opened"))
 
@@ -65,7 +66,7 @@ class TaskManagementActorSpec extends TestKit(ActorSystem("TaskManagementActorSp
 
     // G I V E N
     val taskManagement = system.actorOf(Props[TaskManagementActor])
-    val task: Task = Task(876543219L, "Title", "Content", new Date().toInstant.toEpochMilli)
+    val task: Task     = Task(876543219L, "Title", "Content", new Date().toInstant.toEpochMilli)
     taskManagement ! Open(task)
     expectMsg(TaskManagementInfo("Task opened"))
 

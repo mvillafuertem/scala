@@ -1,7 +1,7 @@
 package io.github.mvillafuertem.slick.withtrait.repository
 
-import io.github.mvillafuertem.slick.withtrait.model.{EdgeDBO, VertexDBO}
-import io.github.mvillafuertem.slick.withtrait.{EdgeRepository, VertexRepository}
+import io.github.mvillafuertem.slick.withtrait.model.{ EdgeDBO, VertexDBO }
+import io.github.mvillafuertem.slick.withtrait.{ EdgeRepository, VertexRepository }
 import slick.jdbc.JdbcBackend
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -27,7 +27,6 @@ trait RelationalRepositories extends RelationalInfrastructure {
 
   lazy val vertexTable = TableQuery[Vertexes]
 
-
   final class Edges(tag: Tag) extends RelationalTable[EdgeDBO](tag, "EDGES") {
     // C O L U M N S
     def startVertexId = column[Long]("START_VERTEX_ID")
@@ -51,66 +50,53 @@ trait RelationalRepositories extends RelationalInfrastructure {
 
   lazy val edgeTable = TableQuery[Edges]
 
-
   /**
-    *
-    * @param db database back-end definition for the Vertex repository
-    */
-  class RelationalVertexRepository(val db: JdbcBackend#DatabaseDef) extends RelationalRepository[VertexDBO, Vertexes](db)
-    with VertexRepository[Future, VertexDBO] {
+   *
+   * @param db database back-end definition for the Vertex repository
+   */
+  class RelationalVertexRepository(val db: JdbcBackend#DatabaseDef)
+      extends RelationalRepository[VertexDBO, Vertexes](db)
+      with VertexRepository[Future, VertexDBO] {
     override lazy val entities = vertexTable
 
     /**
-      * Searches for an Vertex Entity into the repository.
-      *
-      * @param tenantId tenant identifier
-      * @param assetId  device identifier
-      * @return a Vertex if exists and is unique, otherwise returns a domain error
-      */
-    def findByCode(tenantId: Long, assetId: Long): Future[VertexDBO] = {
-      vertexTable.filter(vertex =>
-        vertex.tenantId === tenantId && vertex.assetId === assetId)
-        .result.flatMap { xs =>
+     * Searches for an Vertex Entity into the repository.
+     *
+     * @param tenantId tenant identifier
+     * @param assetId  device identifier
+     * @return a Vertex if exists and is unique, otherwise returns a domain error
+     */
+    def findByCode(tenantId: Long, assetId: Long): Future[VertexDBO] =
+      vertexTable.filter(vertex => vertex.tenantId === tenantId && vertex.assetId === assetId).result.flatMap { xs =>
         xs.length match {
           case 1 => DBIO.successful(xs.head)
           //TODO case _ => DBIO.failed(AssetComposerException(NonExistentEntityError))
         }
       }
-    }
 
   }
 
   /**
-    *
-    * @param db database back-end definition for the Edge repository
-    */
-  class RelationalEdgeRepository(val db: JdbcBackend#DatabaseDef) extends RelationalRepository[EdgeDBO, Edges](db)
-    with EdgeRepository[Future, EdgeDBO] {
+   *
+   * @param db database back-end definition for the Edge repository
+   */
+  class RelationalEdgeRepository(val db: JdbcBackend#DatabaseDef) extends RelationalRepository[EdgeDBO, Edges](db) with EdgeRepository[Future, EdgeDBO] {
 
     override lazy val entities = edgeTable
 
-    def findByStartVertexId(startVertexId: Long): Future[Seq[EdgeDBO]] = {
-      edgeTable.filter(edge =>
-        edge.startVertexId === startVertexId)
-        .result
-    }
+    def findByStartVertexId(startVertexId: Long): Future[Seq[EdgeDBO]] =
+      edgeTable.filter(edge => edge.startVertexId === startVertexId).result
 
-    def findByEndVertexId(endVertexId: Long): Future[Seq[EdgeDBO]] = {
-      edgeTable.filter(edge =>
-        edge.endVertexId === endVertexId)
-        .result
-    }
+    def findByEndVertexId(endVertexId: Long): Future[Seq[EdgeDBO]] =
+      edgeTable.filter(edge => edge.endVertexId === endVertexId).result
 
-    def findByStartAndEndVertexIds(startVertexId: Long, endVertexId: Long): Future[EdgeDBO] = {
-      edgeTable.filter(edge =>
-        edge.startVertexId === startVertexId && edge.endVertexId === endVertexId)
-        .result.flatMap { xs =>
+    def findByStartAndEndVertexIds(startVertexId: Long, endVertexId: Long): Future[EdgeDBO] =
+      edgeTable.filter(edge => edge.startVertexId === startVertexId && edge.endVertexId === endVertexId).result.flatMap { xs =>
         xs.length match {
           case 1 => DBIO.successful(xs.head)
           //TODO case _ => DBIO.failed(AssetComposerException(NonExistentEntityError))
         }
       }
-    }
   }
 
 }

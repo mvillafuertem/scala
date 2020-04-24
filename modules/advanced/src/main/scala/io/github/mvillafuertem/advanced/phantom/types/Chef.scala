@@ -23,11 +23,10 @@ object Chef {
   sealed trait Pizza
   object Pizza {
     sealed trait EmptyPizza extends Pizza
-    sealed trait Cheese extends Pizza
-    sealed trait Topping extends Pizza
-    sealed trait Dough extends Pizza
+    sealed trait Cheese     extends Pizza
+    sealed trait Topping    extends Pizza
+    sealed trait Dough      extends Pizza
 
     type FullPizza = EmptyPizza with Cheese with Topping with Dough
   }
 }
-

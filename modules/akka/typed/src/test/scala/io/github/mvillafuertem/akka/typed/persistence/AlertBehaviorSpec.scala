@@ -2,18 +2,19 @@ package io.github.mvillafuertem.akka.typed.persistence
 
 import java.util.Date
 
-import akka.actor.testkit.typed.scaladsl.{ScalaTestWithActorTestKit, TestProbe}
-import com.typesafe.config.{Config, ConfigFactory}
+import akka.actor.testkit.typed.scaladsl.{ ScalaTestWithActorTestKit, TestProbe }
+import com.typesafe.config.{ Config, ConfigFactory }
 import io.github.mvillafuertem.akka.typed.persistence.AlertBehavior._
 import org.scalatest.flatspec.AnyFlatSpecLike
 import org.scalatest.matchers.should.Matchers
-import org.scalatest.{BeforeAndAfterAll, OneInstancePerTest}
+import org.scalatest.{ BeforeAndAfterAll, OneInstancePerTest }
 
-final class AlertBehaviorSpec extends ScalaTestWithActorTestKit(EventSourcedBehaviorSampleSpec.conf)
-  with AnyFlatSpecLike
-  with Matchers
-  with BeforeAndAfterAll
-  with OneInstancePerTest {
+final class AlertBehaviorSpec
+    extends ScalaTestWithActorTestKit(EventSourcedBehaviorSampleSpec.conf)
+    with AnyFlatSpecLike
+    with Matchers
+    with BeforeAndAfterAll
+    with OneInstancePerTest {
 
   override def afterAll(): Unit = testKit.shutdownTestKit()
 

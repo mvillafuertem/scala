@@ -1,12 +1,11 @@
 package io.github.mvillafuertem.akka.untyped.fsm.vending.machine
 
-import akka.actor.{ActorRef, FSM}
+import akka.actor.{ ActorRef, FSM }
 import io.github.mvillafuertem.akka.untyped.fsm.vending.machine.VendingMachineFSM._
 
 import scala.concurrent.duration._
 
 final class VendingMachineFSM extends FSM[VendingState, VendingData] {
-
 
   startWith(Idle, Uninitialized)
 
@@ -15,23 +14,25 @@ final class VendingMachineFSM extends FSM[VendingState, VendingData] {
     case Event(Initialize(inventory, prices), Uninitialized) =>
       // equivalent with context.become(operational(inventory, prices))
       goto(Operational) using Initialized(inventory, prices)
-    case _ => sender() ! VendingError("MachineNotInitialized")
+    case _ =>
+      sender() ! VendingError("MachineNotInitialized")
       stay()
 
   }
 
   when(Operational) {
-    case Event(RequestProduct(product), Initialized(inventory, prices)) => inventory.get(product) match {
+    case Event(RequestProduct(product), Initialized(inventory, prices)) =>
+      inventory.get(product) match {
 
-      case None | Some(0) =>
-        sender() ! VendingError("ProductNotAvailable")
-        stay()
-      case Some(_) =>
-        val price = prices(product)
-        sender() ! Instruction(s"Please insert $price dollars")
-        //context.become(waitForMoney(inventory, prices, product, 0, startReceiveMoneyTimeoutSchedule(), sender()))
-        goto(WaitForMoney) using WaitForMoneyData(inventory, prices, product, 0, sender())
-    }
+        case None | Some(0) =>
+          sender() ! VendingError("ProductNotAvailable")
+          stay()
+        case Some(_) =>
+          val price = prices(product)
+          sender() ! Instruction(s"Please insert $price dollars")
+          //context.become(waitForMoney(inventory, prices, product, 0, startReceiveMoneyTimeoutSchedule(), sender()))
+          goto(WaitForMoney) using WaitForMoneyData(inventory, prices, product, 0, sender())
+      }
   }
 
   when(WaitForMoney, stateTimeout = 1 second) {
@@ -46,7 +47,7 @@ final class VendingMachineFSM extends FSM[VendingState, VendingData] {
         requester ! Deliver(product)
 
         if (money + amount - price > 0) requester ! GiveBackChange(money + amount - price)
-        val newStock = inventory(product) - 1
+        val newStock     = inventory(product) - 1
         val newInventory = inventory + (product -> newStock)
         // context.become(operational(newInventory, prices))
         goto(Operational) using Initialized(newInventory, prices)
@@ -82,17 +83,13 @@ object VendingMachineFSM {
 
   // S T A T E
   trait VendingState
-  case object Idle extends VendingState
-  case object Operational extends VendingState
+  case object Idle         extends VendingState
+  case object Operational  extends VendingState
   case object WaitForMoney extends VendingState
 
   // D A T A
   trait VendingData
-  case object Uninitialized extends VendingData
-  case class Initialized(inventory: Map[String, Int], prices: Map[String, Int]) extends VendingData
-  case class WaitForMoneyData(inventory: Map[String, Int],
-                              prices: Map[String, Int],
-                              product: String,
-                              money: Int,
-                              requester: ActorRef) extends VendingData
+  case object Uninitialized                                                                                                            extends VendingData
+  case class Initialized(inventory: Map[String, Int], prices: Map[String, Int])                                                        extends VendingData
+  case class WaitForMoneyData(inventory: Map[String, Int], prices: Map[String, Int], product: String, money: Int, requester: ActorRef) extends VendingData
 }

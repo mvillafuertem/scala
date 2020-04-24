@@ -1,9 +1,8 @@
 package io.github.mvillafuertem.slick.withtrait
 
-import io.github.mvillafuertem.slick.withtrait.model.{Connection, ConnectionId}
+import io.github.mvillafuertem.slick.withtrait.model.{ Connection, ConnectionId }
 
 import scala.concurrent.Future
-
 
 trait PersonConnector[F[_]] {
 

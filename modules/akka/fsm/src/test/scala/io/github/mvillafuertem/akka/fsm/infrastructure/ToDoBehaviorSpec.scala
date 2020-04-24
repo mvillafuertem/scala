@@ -3,16 +3,16 @@ package io.github.mvillafuertem.akka.fsm.infrastructure
 import java.util.Date
 
 import akka.actor.ActorSystem
-import akka.actor.testkit.typed.scaladsl.{ScalaTestWithActorTestKit, TestProbe}
+import akka.actor.testkit.typed.scaladsl.{ ScalaTestWithActorTestKit, TestProbe }
 import akka.stream.Materializer
 import akka.util.Timeout
-import com.typesafe.config.{Config, ConfigFactory}
-import io.github.mvillafuertem.akka.fsm.infrastructure.ToDoBehavior.{Close, State}
-import ToDoBehavior.{Close, GetToDo, Open, State}
+import com.typesafe.config.{ Config, ConfigFactory }
+import io.github.mvillafuertem.akka.fsm.infrastructure.ToDoBehavior.{ Close, State }
+import ToDoBehavior.{ Close, GetToDo, Open, State }
 import io.github.mvillafuertem.akka.fsm.domain.ToDo
 import org.scalatest.flatspec.AnyFlatSpecLike
 import org.scalatest.matchers.should.Matchers
-import org.scalatest.{BeforeAndAfterAll, OneInstancePerTest}
+import org.scalatest.{ BeforeAndAfterAll, OneInstancePerTest }
 
 import scala.concurrent.duration._
 import scala.language.postfixOps
@@ -20,15 +20,16 @@ import scala.language.postfixOps
 /**
  * @author Miguel Villafuerte
  */
-final class ToDoBehaviorSpec extends ScalaTestWithActorTestKit(ToDoBehaviorSpec.conf)
-  with AnyFlatSpecLike
-  with Matchers
-  with BeforeAndAfterAll
-  with OneInstancePerTest {
+final class ToDoBehaviorSpec
+    extends ScalaTestWithActorTestKit(ToDoBehaviorSpec.conf)
+    with AnyFlatSpecLike
+    with Matchers
+    with BeforeAndAfterAll
+    with OneInstancePerTest {
 
   override implicit val timeout: Timeout = 10 second
 
-  implicit val actorSystem = ActorSystem()
+  implicit val actorSystem       = ActorSystem()
   implicit val actorMaterializer = Materializer(actorSystem)
 
   behavior of "ToDo Behavior Spec"
@@ -36,10 +37,10 @@ final class ToDoBehaviorSpec extends ScalaTestWithActorTestKit(ToDoBehaviorSpec.
   it should "open" in {
 
     // G I V E N
-    val toDo = ToDo("ToDo", "ToDo with id 1234567890", new Date().toInstant.toEpochMilli)
-    val value = spawn(ToDoBehavior(s"ToDo-123"))
+    val toDo   = ToDo("ToDo", "ToDo with id 1234567890", new Date().toInstant.toEpochMilli)
+    val value  = spawn(ToDoBehavior(s"ToDo-123"))
     val value1 = spawn(ToDoBehavior(s"ToDo-123"))
-    val probe = TestProbe[State]
+    val probe  = TestProbe[State]
 
     // W H E N
     value ! Open(toDo)
@@ -53,7 +54,7 @@ final class ToDoBehaviorSpec extends ScalaTestWithActorTestKit(ToDoBehaviorSpec.
   it should "close" in {
 
     // G I V E N
-    val toDo = ToDo("ToDo1", "ToDo with id 1", new Date().toInstant.toEpochMilli)
+    val toDo  = ToDo("ToDo1", "ToDo with id 1", new Date().toInstant.toEpochMilli)
     val value = spawn(ToDoBehavior(s"ToDo-${toDo.id}"))
     val probe = TestProbe[State]
 

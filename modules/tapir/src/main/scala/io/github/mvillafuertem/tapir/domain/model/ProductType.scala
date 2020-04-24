@@ -7,7 +7,7 @@ sealed trait ProductType
 
 object ProductType {
 
-  case object New extends ProductType
+  case object New  extends ProductType
   case object Used extends ProductType
 
   val productTypes: Set[ProductType] = Set(New, Used)
@@ -15,7 +15,7 @@ object ProductType {
   def find(productType: String): ProductType =
     productTypes.find(_.toString.equalsIgnoreCase(productType)) match {
       case Some(value) => value
-      case None => throw new RuntimeException()
+      case None        => throw new RuntimeException()
     }
 
 }

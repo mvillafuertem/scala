@@ -3,8 +3,8 @@ package io.github.mvillafuertem.akka.typed.interaction.patterns
 import akka.actor.typed.scaladsl.Behaviors
 
 /**
-  * @author Miguel Villafuerte
-  */
+ * @author Miguel Villafuerte
+ */
 object FireAndForget {
 
   case class PrintMe(message: String)

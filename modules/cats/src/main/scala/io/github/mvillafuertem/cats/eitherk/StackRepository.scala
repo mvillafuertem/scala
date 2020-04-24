@@ -4,7 +4,7 @@ import cats.InjectK
 import cats.free.Free
 import io.github.mvillafuertem.algorithms.data.structures.stack.Stack
 import io.github.mvillafuertem.cats.free.data.structures.StackADT
-import io.github.mvillafuertem.cats.free.data.structures.StackADT.{Push, Show}
+import io.github.mvillafuertem.cats.free.data.structures.StackADT.{ Push, Show }
 
 class StackRepository[F[_]](implicit I: InjectK[StackADT, F]) {
 

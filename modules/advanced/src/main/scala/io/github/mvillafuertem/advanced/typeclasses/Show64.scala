@@ -3,8 +3,8 @@ package io.github.mvillafuertem.advanced.typeclasses
 import java.util.Base64
 
 /**
-  * @tparam A is the type
-  */
+ * @tparam A is the type
+ */
 trait Show64[A] {
 
   def encode(a: A): String
@@ -14,11 +14,11 @@ trait Show64[A] {
 object Show64 {
 
   /**
-    * @see io.github.mvillafuertem.advanced.pattern.taglessfinal
-    *      Simplemente con esto podemos instanciar la interface
-    *      sin hacer uso de `new`, es muy util si lo juntamos con
-    *      implicitos, mirar los test
-    */
+   * @see io.github.mvillafuertem.advanced.pattern.taglessfinal
+   *      Simplemente con esto podemos instanciar la interface
+   *      sin hacer uso de `new`, es muy util si lo juntamos con
+   *      implicitos, mirar los test
+   */
   def apply[A](implicit sh: Show64[A]): Show64[A] = sh
 
   implicit class ShowOps[A: Show64](a: A) {

@@ -1,21 +1,19 @@
 package io.github.mvillafuertem.akka.typed.persistent
 
-import akka.actor.testkit.typed.scaladsl.{ScalaTestWithActorTestKit, TestProbe}
+import akka.actor.testkit.typed.scaladsl.{ ScalaTestWithActorTestKit, TestProbe }
 import akka.stream.scaladsl.Source
 import akka.stream.typed.javadsl.ActorSink
-import com.typesafe.config.{Config, ConfigFactory}
-import io.github.mvillafuertem.akka.typed.persistent.PersistentActor.{AddPerson, GetPerson, ModifyLastName, Person}
+import com.typesafe.config.{ Config, ConfigFactory }
+import io.github.mvillafuertem.akka.typed.persistent.PersistentActor.{ AddPerson, GetPerson, ModifyLastName, Person }
 import org.scalatest.flatspec.AnyFlatSpecLike
 import org.scalatest.matchers.should.Matchers
 
 import scala.concurrent.duration._
 
-
 /**
-  * @author Miguel Villafuerte
-  */
-final class PersistentActorSpec extends ScalaTestWithActorTestKit(PersistentActorSpec.conf)
-  with AnyFlatSpecLike with Matchers {
+ * @author Miguel Villafuerte
+ */
+final class PersistentActorSpec extends ScalaTestWithActorTestKit(PersistentActorSpec.conf) with AnyFlatSpecLike with Matchers {
 
   behavior of "Persistent Actor"
 
@@ -23,8 +21,8 @@ final class PersistentActorSpec extends ScalaTestWithActorTestKit(PersistentActo
 
     // g i v e n
     val person = Person("Pepe", "Pipo")
-    val value = spawn(PersistentActor.supervisedBehavior("id"))
-    val probe = TestProbe[Person]
+    val value  = spawn(PersistentActor.supervisedBehavior("id"))
+    val probe  = TestProbe[Person]
 
     // w h e n
     value ! AddPerson(person)
@@ -38,8 +36,8 @@ final class PersistentActorSpec extends ScalaTestWithActorTestKit(PersistentActo
   it should "modify person" in {
     // g i v e n
     val person = Person("Pepe", "Pipo")
-    val value = spawn(PersistentActor.supervisedBehavior("id"))
-    val probe = TestProbe[Person]
+    val value  = spawn(PersistentActor.supervisedBehavior("id"))
+    val probe  = TestProbe[Person]
 
     // w h e n
     value ! AddPerson(person)
@@ -53,12 +51,10 @@ final class PersistentActorSpec extends ScalaTestWithActorTestKit(PersistentActo
   it should "integrate with streams source person" in {
     // g i v e n
     val person = Person("Pepe", "Pipo")
-    val value = spawn(PersistentActor.supervisedBehavior("id"))
-    val probe = TestProbe[Person]
+    val value  = spawn(PersistentActor.supervisedBehavior("id"))
+    val probe  = TestProbe[Person]
 
-    val actorSink = ActorSink.actorRef[PersistentActor.Command](value.ref,
-      GetPerson(probe.ref),
-      _ => AddPerson(person))
+    val actorSink = ActorSink.actorRef[PersistentActor.Command](value.ref, GetPerson(probe.ref), _ => AddPerson(person))
 
     Source(1 to 10)
       .throttle(1, 1 second)
@@ -67,7 +63,6 @@ final class PersistentActorSpec extends ScalaTestWithActorTestKit(PersistentActo
       .map(p => AddPerson(p))
       .to(actorSink)
       .run()
-
 
     // w h e n
     value ! AddPerson(person)

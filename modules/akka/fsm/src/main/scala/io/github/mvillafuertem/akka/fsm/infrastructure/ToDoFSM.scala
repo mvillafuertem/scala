@@ -1,7 +1,7 @@
 package io.github.mvillafuertem.akka.fsm.infrastructure
 
-import akka.actor.typed.scaladsl.{ActorContext, Behaviors}
-import akka.actor.typed.{ActorRef, Behavior}
+import akka.actor.typed.scaladsl.{ ActorContext, Behaviors }
+import akka.actor.typed.{ ActorRef, Behavior }
 import ToDoFSM.Command
 import io.github.mvillafuertem.akka.fsm.domain.ToDo
 
@@ -15,7 +15,6 @@ final class ToDoFSM(context: ActorContext[Command]) {
   def initialState: Behavior[Command] = idle(Uninitialized)
 
   private def idle(state: State): Behavior[Command] =
-
     Behaviors.receiveMessage[Command] { command: Command =>
       (state, command) match {
 
@@ -43,7 +42,7 @@ final class ToDoFSM(context: ActorContext[Command]) {
 
 object ToDoFSM {
 
-  def apply():Behavior[Command] =
+  def apply(): Behavior[Command] =
     Behaviors.setup[Command](context => new ToDoFSM(context).initialState)
 
   // S T A T E

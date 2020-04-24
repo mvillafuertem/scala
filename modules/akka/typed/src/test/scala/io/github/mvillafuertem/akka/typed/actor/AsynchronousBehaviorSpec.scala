@@ -20,7 +20,7 @@ class AsynchronousBehaviorSpec extends AnyFlatSpec with Matchers with BeforeAndA
 
     // G I V E N
     val pinger = testKit.spawn(echoActor, "ping")
-    val probe = testKit.createTestProbe[Pong]()
+    val probe  = testKit.createTestProbe[Pong]()
 
     // W H E N
     pinger ! Ping("hello", probe.ref)
@@ -34,7 +34,7 @@ class AsynchronousBehaviorSpec extends AnyFlatSpec with Matchers with BeforeAndA
 
     // G I V E N
     val pinger = testKit.spawn(echoActor)
-    val probe = testKit.createTestProbe[Pong]()
+    val probe  = testKit.createTestProbe[Pong]()
 
     // W H E N
     pinger ! Ping("hello", probe.ref)
@@ -48,7 +48,7 @@ class AsynchronousBehaviorSpec extends AnyFlatSpec with Matchers with BeforeAndA
 
     // G I V E N
     val pinger1 = testKit.spawn(echoActor, "pinger")
-    val probe = testKit.createTestProbe[Pong]()
+    val probe   = testKit.createTestProbe[Pong]()
 
     // W H E N
     pinger1 ! Ping("hello", probe.ref)
