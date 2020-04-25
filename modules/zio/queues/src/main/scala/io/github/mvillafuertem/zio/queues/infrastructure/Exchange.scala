@@ -13,11 +13,11 @@ case class Exchange[A]() {
 
   def run: UIO[(Queue[Request[A]], Topic[A], Topic[A], Fiber.Runtime[Nothing, Nothing])] =
     for {
-      jobQueue       <- jobQueueM
-      kitchen        <- kitchen
-      bar            <- bar
-      hipTopicQueue  = Topic(kitchen, Map.empty)
-      kneeTopicQueue = Topic(bar, Map.empty)
+      jobQueue     <- jobQueueM
+      kitchen      <- kitchen
+      bar          <- bar
+      kitchenTopic = Topic(kitchen, Map.empty)
+      barTopic     = Topic(bar, Map.empty)
       loop = for {
         job <- jobQueue.take
         _ <- job.order match {
@@ -27,7 +27,7 @@ case class Exchange[A]() {
             }
       } yield ()
       fiber <- loop.forever.fork
-    } yield (jobQueue, hipTopicQueue, kneeTopicQueue, fiber)
+    } yield (jobQueue, kitchenTopic, barTopic, fiber)
 }
 
 object Exchange {

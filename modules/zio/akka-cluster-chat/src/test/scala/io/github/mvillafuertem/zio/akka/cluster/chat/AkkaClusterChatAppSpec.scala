@@ -31,14 +31,16 @@ object AkkaClusterChatAppSpec extends DefaultRunnableSpec {
           item  <- queue.take
           item1 <- queue.take
           _     <- p.interrupt
-        } yield (out(0), out(1), item, item1)
+        } yield List(out(0), out(1), item, item1)
         // t h e n
       )(
         equalTo(
-          "Hi! What's your name? (Type [exit] to stop)\n",
-          "Hi! Which chatroom do you want to join? (Type [exit] to stop)\n",
-          s"$user joined the room. There are now () participant(s).",
-          s"$user: $msg"
+          List(
+            "Hi! What's your name? (Type [exit] to stop)\n",
+            "Hi! Which chatroom do you want to join? (Type [exit] to stop)\n",
+            s"$user joined the room. There are now () participant(s).",
+            s"$user: $msg"
+          )
         )
       ).provideLayer(actorSystem ++ Console.live ++ TestConsole.any)
     }

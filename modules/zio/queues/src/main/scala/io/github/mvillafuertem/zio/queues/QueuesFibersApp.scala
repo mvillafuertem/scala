@@ -1,16 +1,15 @@
 package io.github.mvillafuertem.zio.queues
 
 import io.github.mvillafuertem.zio.queues.consumer.{ Consumer, ConsumerSettings }
-import io.github.mvillafuertem.zio.queues.consumer.{ Consumer, ConsumerSettings }
-import io.github.mvillafuertem.zio.queues.model.OrderGenerator.IntRequestGenerator
-import io.github.mvillafuertem.zio.queues.producer.{ Producer, ProducerSettings }
 import io.github.mvillafuertem.zio.queues.infrastructure.Exchange
+import io.github.mvillafuertem.zio.queues.model.OrderGenerator.IntRequestGenerator
 import io.github.mvillafuertem.zio.queues.producer.{ Producer, ProducerSettings }
 import zio._
 
 object QueuesFibersApp extends App {
 
-  override def run(args: List[String]) = program.map(_ => 0)
+  override def run(args: List[String]): ZIO[ZEnv, Nothing, Int] =
+    program.map(_ => 0)
 
   val program = for {
 
@@ -19,8 +18,8 @@ object QueuesFibersApp extends App {
     (listenerTopic, kitchenTopic, barTopic, _) = ctxExchange
 
     generator = IntRequestGenerator()
-    xRayRoom  <- Producer.make[Int](ProducerSettings("Waiter", listenerTopic))
-    _         <- xRayRoom.produce(generator)
+    producer  <- Producer.make[Int](ProducerSettings("Waiter", listenerTopic))
+    _         <- producer.produce(generator)
 
     chef    <- Consumer.make[Int](ConsumerSettings("Chef", 10, scala.Console.GREEN))
     barman1 <- Consumer.make[Int](ConsumerSettings("Barman 1", 10, scala.Console.BLUE))
