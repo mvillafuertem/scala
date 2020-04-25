@@ -1,6 +1,6 @@
 package io.github.mvillafuertem.zio.queues.fibers
 
-import io.github.mvillafuertem.zio.queues.fibers.application.Consumer
+import io.github.mvillafuertem.zio.queues.fibers.application.{Consumer, Exchange, Producer}
 import io.github.mvillafuertem.zio.queues.fibers.model.RequestGenerator.IntRequestGenerator
 import zio._
 
