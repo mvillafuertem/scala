@@ -43,7 +43,7 @@ lazy val scala = (project in file("."))
     tapir,
     `zio-akka-cluster-chat`,
     `zio-akka-cluster-sharding`,
-    `zio-queues-fibers`
+    `zio-queues`
   )
   // S E T T I N G S
   .settings(commonSettings)
@@ -148,7 +148,7 @@ lazy val `zio-akka-cluster-chat` = (project in file("modules/zio/akka-cluster-ch
 lazy val `zio-akka-cluster-sharding` = (project in file("modules/zio/akka-cluster-sharding"))
   .configure(zio)
 
-lazy val `zio-queues-fibers` = (project in file("modules/zio/queues-fibers"))
+lazy val `zio-queues` = (project in file("modules/zio/queues"))
   .configure(zio)
 
 lazy val `zio-streams` = (project in file("modules/zio/streams"))

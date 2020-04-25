@@ -164,11 +164,10 @@ object TodoPersistentFSM {
         emptyState = AlertReceivedState(null, Vector.empty[EventSeed]),
         commandHandler = commandHandler(context),
         eventHandler = eventHandler()
-      ).withRetention(RetentionCriteria.snapshotEvery(numberOfEvents = 100, keepNSnapshots = 2))
-        .receiveSignal { // optionally respond to signals
-          case (state, _: SnapshotFailed)        => // react to failure
-          case (state, _: DeleteSnapshotsFailed) => // react to failure
-        }
+      ).withRetention(RetentionCriteria.snapshotEvery(numberOfEvents = 100, keepNSnapshots = 2)).receiveSignal { // optionally respond to signals
+        case (state, _: SnapshotFailed)        => // react to failure
+        case (state, _: DeleteSnapshotsFailed) => // react to failure
+      }
 
     private def commandHandler(context: ActorContext[EventSeedCommand]): (EventSeedState, EventSeedCommand) => Effect[EventSeedEvent, EventSeedState] = {
       (state, cmd) =>
