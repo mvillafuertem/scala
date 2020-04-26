@@ -1,28 +1,28 @@
 package io.github.mvillafuertem.zio.queues.producer
 
-import java.util.concurrent.TimeUnit
-
-import io.github.mvillafuertem.zio.queues.model.Order.{ Bacon, Coffee, Sandwich }
+import io.github.mvillafuertem.zio.queues.model.Order.{Bacon, Coffee, Sandwich}
 import io.github.mvillafuertem.zio.queues.model.OrderGenerator
 import zio._
-import zio.clock.Clock
-import zio.console.{ putStrLn, Console }
-import zio.duration.Duration
+import zio.clock.{Clock, _}
+import zio.console.{Console, putStrLn}
+import zio.duration._
+import zio.random.Random
+
 
 case class Producer[A](producerSettings: ProducerSettings[A]) {
 
-  def produce(generator: OrderGenerator[A]): URIO[Clock with Console, Fiber.Runtime[Nothing, Nothing]] = {
-    val loop = for {
-      _ <- console.putStr(scala.Console.CYAN)
-      _ <- putStrLn(s"[${producerSettings.name}] ~ Generating Order ")
-      _ <- console.putStr(scala.Console.RESET)
-      _ <- producerSettings.topic.offer(generator.generate(Coffee))
-      _ <- producerSettings.topic.offer(generator.generate(Sandwich))
-      _ <- producerSettings.topic.offer(generator.generate(Bacon))
-      _ <- ZIO.sleep(Duration(2, TimeUnit.SECONDS))
-    } yield ()
-    loop.forever.fork
-  }
+  def produce(generator: OrderGenerator[A]): URIO[Clock with Console with Random, Fiber.Runtime[Nothing, Nothing]] =
+    (for {
+      _ <- putStrLn(s"${scala.Console.CYAN}[${producerSettings.name}] ~ Generating Order ${scala.Console.RESET}")
+      a <- generator.generate(Coffee)
+      b <- generator.generate(Sandwich)
+      c <- generator.generate(Bacon)
+      _ <- producerSettings.topic.offer(a)
+      _ <- producerSettings.topic.offer(b)
+      _ <- producerSettings.topic.offer(c)
+      _ <- sleep(2.seconds)
+    } yield ()).forever.fork
+
 }
 
 object Producer {

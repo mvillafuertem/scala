@@ -11,10 +11,12 @@ import akka.actor.typed.{ ActorRef, Behavior }
 import akka.persistence.typed.scaladsl.{ Effect, EventSourcedBehavior, RetentionCriteria }
 import akka.persistence.typed.{ DeleteSnapshotsFailed, PersistenceId, SnapshotFailed }
 import com.typesafe.config.{ Config, ConfigFactory }
-import TodoPersistentFSM.EventSeedBehavior
-import TodoPersistentFSM.EventSeedBehavior._
+import io.github.mvillafuertem.akka.fsm.infrastructure.TodoPersistentFSM.EventSeedBehavior
+import io.github.mvillafuertem.akka.fsm.infrastructure.TodoPersistentFSM.EventSeedBehavior._
 import org.scalatest.OneInstancePerTest
 import org.scalatest.flatspec.AnyFlatSpecLike
+
+import scala.concurrent.duration._
 
 final class TodoPersistentFSM extends ScalaTestWithActorTestKit(TodoPersistentFSM.conf) with AnyFlatSpecLike with OneInstancePerTest {
 
@@ -49,17 +51,15 @@ final class TodoPersistentFSM extends ScalaTestWithActorTestKit(TodoPersistentFS
     //val c = spawn(alertSeedBehavior)
     val probe = TestProbe[EventSeedState]
 
-    val value = spawn(receptionist("1"))
-
-    Thread.sleep(2000)
-    val value2 = spawn(receptionist("1"))
-
     // W H E N
+    val value = spawn(receptionist("1"))
     value ! Check(eventSeed)
+
+    val value2 = spawn(receptionist("1"))
     value2 ! GetValue(probe.ref)
 
     // T H E N
-    probe.expectMessage(AlertInProgressState(eventSeed, Vector(eventSeed)))
+    probe.awaitAssert(AlertInProgressState(eventSeed, Vector(eventSeed)), 5.seconds)
 
   }
 
