@@ -1,13 +1,12 @@
 package io.github.mvillafuertem.zio.queues.producer
 
-import io.github.mvillafuertem.zio.queues.model.Order.{Bacon, Coffee, Sandwich}
+import io.github.mvillafuertem.zio.queues.model.Order.{ Bacon, Coffee, Sandwich }
 import io.github.mvillafuertem.zio.queues.model.OrderGenerator
 import zio._
-import zio.clock.{Clock, _}
-import zio.console.{Console, putStrLn}
+import zio.clock.{ Clock, _ }
+import zio.console.{ putStrLn, Console }
 import zio.duration._
 import zio.random.Random
-
 
 case class Producer[A](producerSettings: ProducerSettings[A]) {
 
@@ -20,7 +19,7 @@ case class Producer[A](producerSettings: ProducerSettings[A]) {
       _ <- producerSettings.topic.offer(a)
       _ <- producerSettings.topic.offer(b)
       _ <- producerSettings.topic.offer(c)
-      _ <- sleep(2.seconds)
+      // <- sleep(2.seconds)
     } yield ()).forever.fork
 
 }

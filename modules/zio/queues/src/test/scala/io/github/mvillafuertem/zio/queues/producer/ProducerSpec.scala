@@ -1,20 +1,17 @@
 package io.github.mvillafuertem.zio.queues.producer
 
-import io.github.mvillafuertem.zio.queues.model.OrderGenerator.{IntRequestGenerator, Request}
-import org.scalatest.Ignore
+import io.github.mvillafuertem.zio.queues.model.Order.{ Bacon, Coffee, Sandwich }
+import io.github.mvillafuertem.zio.queues.model.OrderGenerator.{ IntRequestGenerator, Request }
 import zio.Queue
 import zio.duration._
 import zio.test.Assertion.equalTo
 import zio.test._
-import zio.test.environment.{TestClock, TestConsole, TestEnvironment, TestRandom}
+import zio.test.environment.{ TestClock, TestEnvironment, TestRandom }
 
-import scala.Console.{CYAN, RESET}
-
-@Ignore
 object ProducerSpec extends DefaultRunnableSpec {
 
   override def spec: ZSpec[TestEnvironment, Any] =
-    suite(getClass.getSimpleName)(produce) @@ TestAspect.ignore
+    suite(getClass.getSimpleName)(produce)
 
   lazy val produce =
     testM("produce") {
@@ -24,26 +21,15 @@ object ProducerSpec extends DefaultRunnableSpec {
           topic     <- Queue.bounded[Request[Int]](10)
           generator = IntRequestGenerator()
           producer  <- Producer.make[Int](ProducerSettings("Test", topic))
+          _         <- TestClock.adjust(2.seconds)
           p         <- producer.produce(generator)
-          _ <- TestClock.adjust(2.second)
-          _ <- p.interrupt.awaitAllChildren
-          s         <- TestClock.sleeps
-          output    <- TestConsole.output
-        } yield (output, s)
+          a         <- topic.take
+          b         <- topic.take
+          c         <- topic.take
+          _         <- p.interrupt.awaitAllChildren
+        } yield List(a, b, c)
         // t h e n
-      )(
-        equalTo(
-          (
-            Vector(
-              s"$CYAN[Test] ~ Generating Order $RESET\n",
-              s"$CYAN     1 ~ Request Coffee $RESET\n",
-              s"$CYAN     2 ~ Request Sandwich $RESET\n",
-              s"$CYAN     3 ~ Request Bacon $RESET\n"
-            ),
-            List()
-          )
-        )
-      )
+      )(equalTo(List(Request(Coffee, 1), Request(Sandwich, 2), Request(Bacon, 3))))
     }
 
 }

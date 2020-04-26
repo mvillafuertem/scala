@@ -24,7 +24,7 @@ object ConsumerSpec extends DefaultRunnableSpec {
           c              <- consumer.consume()
           (queue, fiber) = c
           _              <- queue.offer(1)
-          _              <- TestClock.adjust(1.seconds)
+          _              <- TestClock.adjust(2.seconds)
           _              <- fiber.interrupt.awaitAllChildren
           sleep          <- TestClock.sleeps
           output         <- TestConsole.output
