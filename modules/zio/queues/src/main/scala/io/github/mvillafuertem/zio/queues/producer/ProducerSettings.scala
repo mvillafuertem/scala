@@ -1,6 +1,11 @@
 package io.github.mvillafuertem.zio.queues.producer
 
-import io.github.mvillafuertem.zio.queues.model.OrderGenerator.Request
-import zio.Queue
+import zio.{Has, Queue}
 
-case class ProducerSettings[A](name: String, topic: Queue[Request[A]])
+case class ProducerSettings[A](name: String, topic: Queue[ProducerRecord[A]])
+
+object ProducerSettings {
+
+  type ZProducerSettings[A] = Has[ProducerSettings[A]]
+
+}

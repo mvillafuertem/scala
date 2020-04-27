@@ -7,22 +7,22 @@ import zio.duration._
 import zio.random.{ Random, _ }
 import zio.{ Queue, _ }
 
-trait Consumer[A] {
+trait Consumer[T] {
 
-  def consume(): ZIO[Console with Clock with Random, Nothing, (Queue[A], Fiber.Runtime[Nothing, Nothing])]
+  def consume(): ZIO[Console with Clock with Random, Nothing, (Queue[ConsumerRecord[T]], Fiber.Runtime[Nothing, Nothing])]
 
 }
 
 object Consumer {
 
-  def make[A](consumerSettings: ConsumerSettings): UIO[Consumer[A]] =
-    UIO.succeed(Live[A](consumerSettings))
+  def make[T](consumerSettings: ConsumerSettings): UIO[Consumer[T]] =
+    UIO.succeed(Live[T](consumerSettings))
 
-  type ZConsumer[A] = Has[Consumer[A]]
+  type ZConsumer[T] = Has[Consumer[T]]
 
-  case class Live[A](consumerSettings: ConsumerSettings) extends Consumer[A] {
+  case class Live[T](consumerSettings: ConsumerSettings) extends Consumer[T] {
 
-    private val queueM: UIO[Queue[A]] = Queue.bounded[A](consumerSettings.size)
+    private val queueM: UIO[Queue[ConsumerRecord[T]]] = Queue.bounded[ConsumerRecord[T]](consumerSettings.size)
 
     def consume() =
       for {
@@ -30,7 +30,7 @@ object Consumer {
         fiber <- loop(queue).forever.fork
       } yield (queue, fiber)
 
-    def loop(queue: Queue[A]) =
+    def loop(queue: Queue[ConsumerRecord[T]]) =
       for {
         nOrder   <- queue.take
         _        <- putStrLn(s"${consumerSettings.color}[${consumerSettings.name}] worker: Starting preparing order $nOrder${scala.Console.RESET}")
