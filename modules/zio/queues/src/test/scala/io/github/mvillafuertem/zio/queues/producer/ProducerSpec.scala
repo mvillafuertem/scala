@@ -13,7 +13,7 @@ object ProducerSpec extends DefaultRunnableSpec {
       produce,
       produceChunk,
       produceMPar
-    ) @@ TestAspect.timed @@ TestAspect.parallel
+    ) @@ TestAspect.timed
 
   lazy val produce =
     testM("produce") {
