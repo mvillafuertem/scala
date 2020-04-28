@@ -62,4 +62,7 @@ object ProducerSpec extends DefaultRunnableSpec {
       )(equalTo((List.fill(3)(true), (1 to 3).map(n => ProducerRecord[Order](n, Bacon)).toList)))
     }
 
+  override def aspects: List[TestAspect[Nothing, TestEnvironment, Nothing, Any]] =
+    List(TestAspect.executionStrategy(ExecutionStrategy.Sequential))
+
 }

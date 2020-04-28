@@ -51,4 +51,7 @@ object App extends DefaultRunnableSpec {
       }
     ) @@ TestAspect.timed
 
+  override def aspects: List[TestAspect[Nothing, TestEnvironment, Nothing, Any]] =
+    List(TestAspect.executionStrategy(ExecutionStrategy.Sequential))
+
 }
