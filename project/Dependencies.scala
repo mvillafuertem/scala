@@ -242,7 +242,7 @@ object Dependencies {
     val akkaPersistenceCassandra  = "0.100"
     val akkaPersistenceInmemory   = "2.5.15.2"
     val akkaPersistenceJdbc       = "3.5.2"
-    val alpakkaSlick              = "1.1.2"
+    val alpakkaSlick              = "2.0.0"
     val cats                      = "2.1.1"
     val circe                     = "0.13.0"
     val h2                        = "1.4.200"
