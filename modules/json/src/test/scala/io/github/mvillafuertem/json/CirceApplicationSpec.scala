@@ -292,7 +292,7 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
   it should "encode case class with snake case member name" in {
     // G I V E N
     implicit val config: Configuration = Configuration.default.withSnakeCaseMemberNames
-    @ConfiguredJsonCodec case class Auth(access_token: String, expires_in: Long)
+    @ConfiguredJsonCodec case class Auth(accessToken: String, expiresIn: Long)
 
     // W H E N
     val actual = decode[Auth]("""{"access_token": "L7Re1aQ64oi-Tk3WM1CSz0zAPrF_5_f2gTqOkWujN2jJn8C2gTqOkWujN22gTqOkWujG","expires_in": 4000}""")
