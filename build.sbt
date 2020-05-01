@@ -33,6 +33,7 @@ lazy val scala = (project in file("."))
     `akka-classic`,
     `akka-typed`,
     `akka-fsm`,
+    `akka-http`,
     `sensor-controller`,
     alpakka,
     algorithms,
@@ -89,6 +90,16 @@ lazy val `akka-fsm` = (project in file("modules/akka/fsm"))
   .settings(BuildInfoSettings.value)
   .settings(buildInfoPackage := s"${organization.value}.akka.fsm")
   .settings(libraryDependencies ++= Dependencies.`akka-fsm`)
+  // P L U G I N S
+  .enablePlugins(BuildInfoPlugin)
+  .enablePlugins(GitVersioning)
+
+lazy val `akka-http` = (project in file("modules/akka/http"))
+// S E T T I N G S
+  .settings(commonSettings)
+  .settings(BuildInfoSettings.value)
+  .settings(buildInfoPackage := s"${organization.value}.akka.http")
+  .settings(libraryDependencies ++= Dependencies.`akka-http`)
   // P L U G I N S
   .enablePlugins(BuildInfoPlugin)
   .enablePlugins(GitVersioning)

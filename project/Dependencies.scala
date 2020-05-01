@@ -71,7 +71,7 @@ object Dependencies {
   )
 
   val `akka-fsm`: Seq[ModuleID] =
-    // T O D O
+    // A K K A  F S M
     Seq(
       Artifact.akkaPersistenceTyped % Version.akka,
       //"org.iq80.leveldb" % "leveldb" % "0.12",
@@ -86,9 +86,26 @@ object Dependencies {
       Artifact.tapirOpenapiDocs,
       Artifact.tapirSwaggerUiAkkaHttp
     ).map(_ % Version.tapir) ++ Seq(
-      // T O D O  T E S T
+      // A K K A  F S M  T E S T
       Artifact.akkaActorTestkitTyped % Version.akka,
       Artifact.akkaStreamTestkit     % Version.akka,
+      Artifact.akkaHttpTestkit       % Version.akkaHttp,
+      Artifact.scalaTest             % Version.scalaTest
+    ).map(_ % Test)
+
+  val `akka-http`: Seq[ModuleID] =
+    // A K K A  H T T P
+    Seq(
+      Artifact.logback % Version.logback
+    ) ++ Seq(
+      Artifact.tapirCore,
+      Artifact.tapirAkkaHttpServer,
+      Artifact.tapirJsonCirce,
+      Artifact.tapirOpenapiCirceYaml,
+      Artifact.tapirOpenapiDocs,
+      Artifact.tapirSwaggerUiAkkaHttp
+    ).map(_ % Version.tapir) ++ Seq(
+      // A K K A  H T T P  T E S T
       Artifact.akkaHttpTestkit       % Version.akkaHttp,
       Artifact.scalaTest             % Version.scalaTest
     ).map(_ % Test)
