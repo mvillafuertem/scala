@@ -1,6 +1,7 @@
 package io.github.mvillafuertem.json
 
 import io.circe.generic.auto._
+import io.circe.generic.extras._
 import io.circe.parser._
 import io.circe.syntax._
 import io.circe.{ Decoder, Encoder, HCursor, Json }
@@ -283,6 +284,21 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
 
     // T H E N
     val expected: User = User(0L, Seq(SomeThing, OtherThing))
+
+    actual.map(result => result shouldBe expected)
+
+  }
+
+  it should "encode case class with snake case member name" in {
+    // G I V E N
+    implicit val config: Configuration = Configuration.default.withSnakeCaseMemberNames
+    @ConfiguredJsonCodec case class Auth(access_token: String, expires_in: Long)
+
+    // W H E N
+    val actual = decode[Auth]("""{"access_token": "L7Re1aQ64oi-Tk3WM1CSz0zAPrF_5_f2gTqOkWujN2jJn8C2gTqOkWujN22gTqOkWujG","expires_in": 4000}""")
+
+    // T H E N
+    val expected: Auth = Auth("L7Re1aQ64oi-Tk3WM1CSz0zAPrF_5_f2gTqOkWujN2jJn8C2gTqOkWujN22gTqOkWujG", 4000)
 
     actual.map(result => result shouldBe expected)
 

@@ -122,15 +122,14 @@ lazy val algorithms = (project in file("modules/algorithms"))
   .settings(libraryDependencies ++= Dependencies.algorithms)
 
 lazy val cats = (project in file("modules/cats"))
-  .dependsOn(algorithms)
   // S E T T I N G S
   .settings(commonSettings)
   .settings(libraryDependencies ++= Dependencies.cats)
 
 lazy val json = (project in file("modules/json"))
-  .dependsOn(algorithms)
   // S E T T I N G S
   .settings(commonSettings)
+  .settings(scalacOptions += "-Ymacro-annotations")
   .settings(libraryDependencies ++= Dependencies.json)
 
 lazy val slick = (project in file("modules/slick"))

@@ -106,8 +106,8 @@ object Dependencies {
       Artifact.tapirSwaggerUiAkkaHttp
     ).map(_ % Version.tapir) ++ Seq(
       // A K K A  H T T P  T E S T
-      Artifact.akkaHttpTestkit       % Version.akkaHttp,
-      Artifact.scalaTest             % Version.scalaTest
+      Artifact.akkaHttpTestkit % Version.akkaHttp,
+      Artifact.scalaTest       % Version.scalaTest
     ).map(_ % Test)
 
   val `sensor-controller`: Seq[ModuleID] =
@@ -139,7 +139,8 @@ object Dependencies {
   val json: Seq[ModuleID] = Seq(
     // J S O N
     Artifact.circeParser,
-    Artifact.circeGeneric
+    Artifact.circeGeneric,
+    Artifact.circeGenericExtras
   ).map(_                   % Version.circe) ++ Seq(
     Artifact.jsoniterCore   % Version.jsoniter,
     Artifact.jsoniterMacros % Version.jsoniter,
@@ -224,6 +225,7 @@ object Dependencies {
     val catsFree                  = "org.typelevel"                         %% "cats-free"
     val circeGeneric              = "io.circe"                              %% "circe-generic"
     val circeParser               = "io.circe"                              %% "circe-parser"
+    val circeGenericExtras        = "io.circe"                              %% "circe-generic-extras"
     val h2                        = "com.h2database"                        % "h2"
     val jsoniterCore              = "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-core"
     val jsoniterMacros            = "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-macros"
