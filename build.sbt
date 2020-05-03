@@ -41,6 +41,7 @@ lazy val scala = (project in file("."))
     cats,
     json,
     slick,
+    sttp,
     tapir,
     `zio-akka-cluster-chat`,
     `zio-akka-cluster-sharding`,
@@ -138,6 +139,12 @@ lazy val slick = (project in file("modules/slick"))
 // S E T T I N G S
   .settings(commonSettings)
   .settings(libraryDependencies ++= Dependencies.slick)
+
+lazy val sttp = (project in file("modules/sttp"))
+// S E T T I N G S
+  .settings(commonSettings)
+  .settings(libraryDependencies ++= Dependencies.sttp)
+  .settings(testFrameworks := Seq(new TestFramework("zio.test.sbt.ZTestFramework")))
 
 lazy val tapir = (project in file("modules/tapir"))
 // S E T T I N G S
