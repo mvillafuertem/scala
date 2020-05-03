@@ -143,6 +143,7 @@ lazy val slick = (project in file("modules/slick"))
 lazy val sttp = (project in file("modules/sttp"))
 // S E T T I N G S
   .settings(commonSettings)
+  .settings(scalacOptions += "-Ymacro-annotations")
   .settings(libraryDependencies ++= Dependencies.sttp)
   .settings(testFrameworks := Seq(new TestFramework("zio.test.sbt.ZTestFramework")))
 

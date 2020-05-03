@@ -168,9 +168,11 @@ object Dependencies {
       Artifact.sttpAsyncZioStreams,
       Artifact.sttpCore,
       Artifact.sttpCirce
-    ).map(_               % Version.sttp) ++ Seq(
-      Artifact.akkaStream % Version.akka,
-      Artifact.circeGeneric % Version.circe
+    ).map(_ % Version.sttp) ++ Seq(
+      Artifact.circeGeneric,
+      Artifact.circeGenericExtras
+    ).map(_               % Version.circe) ++ Seq(
+      Artifact.akkaStream % Version.akka
     ) ++ Seq(
       // S T T P  T E S T
       Artifact.zioTest,
