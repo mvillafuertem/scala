@@ -1,11 +1,13 @@
 package io.github.mvillafuertem.akka.typed.persistence
 
-import akka.actor.testkit.typed.scaladsl.{ ScalaTestWithActorTestKit, TestProbe }
-import com.typesafe.config.{ Config, ConfigFactory }
+import akka.actor.testkit.typed.scaladsl.{ScalaTestWithActorTestKit, TestProbe}
+import com.typesafe.config.{Config, ConfigFactory}
 import io.github.mvillafuertem.akka.typed.persistence.EventSourcedBehaviorSample._
+import org.scalatest.BeforeAndAfterAll
 import org.scalatest.flatspec.AnyFlatSpecLike
 import org.scalatest.matchers.should.Matchers
-import org.scalatest.BeforeAndAfterAll
+
+import scala.concurrent.duration._
 
 class EventSourcedBehaviorSampleSpec
     extends ScalaTestWithActorTestKit(EventSourcedBehaviorSampleSpec.conf)
@@ -46,7 +48,7 @@ class EventSourcedBehaviorSampleSpec
     value ! GetValue(probe.ref)
 
     // T H E N
-    probe.expectMessage(State(Nil))
+    probe.expectMessage(10 seconds, State(Nil))
 
   }
 }

@@ -2,7 +2,7 @@ package io.github.mvillafuertem.cats.traverse
 
 import cats.data._
 import cats.implicits._
-import org.scalatest.AsyncFlatSpec
+import org.scalatest.flatspec.AsyncFlatSpec
 import org.scalatest.matchers.should.Matchers
 
 import scala.concurrent.Future
@@ -83,7 +83,7 @@ final class TraverseSpec extends AsyncFlatSpec with Matchers {
     }
 
     val result = for {
-      r3 <- f3()                                     // parallel tasks
+      r3 <- f3() // parallel tasks
       r4 <- Future(r3.repo + r3.flatten + r3.shadow) // task waiting for 3 previous tasks
     } yield r4
 
@@ -114,7 +114,7 @@ final class TraverseSpec extends AsyncFlatSpec with Matchers {
     }
 
     val result4 = for {
-      r3 <- f3()                                     // parallel tasks
+      r3 <- f3() // parallel tasks
       r4 <- Future(r3.repo + r3.flatten + r3.shadow) // task waiting for 3 previous tasks
     } yield r4
 
@@ -162,7 +162,7 @@ object TraverseSpec {
   /*
     returns a delay between 5 and maxDelay
    */
-  def getDelay(maxDelay: Int): Int = {
+  def getDelay(maxDelay: Int): Int          = {
     val minDelay = 5
     if (maxDelay < minDelay) minDelay
     else {
