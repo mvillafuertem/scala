@@ -34,26 +34,27 @@ object IntegratingWithExternalServices extends App {
 
   object PagerService {
     private val engineers = List("Daniel", "John", "Pepe")
-    private val emails = Map(
+    private val emails    = Map(
       "Daniel" -> "daniel@email.com",
       "John"   -> "john@email.com",
       "Pepe"   -> "pepe@email.com"
     )
 
-    def processEvent(pagerEvent: PagerEvent) = Future {
-      val engineerIndex = (pagerEvent.date.toInstant.getEpochSecond / (24 * 3600)) % engineers.length
-      val engineer      = engineers(engineerIndex.toInt)
-      val engineerEmail = emails(engineer)
+    def processEvent(pagerEvent: PagerEvent) =
+      Future {
+        val engineerIndex = (pagerEvent.date.toInstant.getEpochSecond / (24 * 3600)) % engineers.length
+        val engineer      = engineers(engineerIndex.toInt)
+        val engineerEmail = emails(engineer)
 
-      // Page the Engineer
-      println(
-        s"Sending engineer $engineerEmail a high priority notification $pagerEvent"
-      )
-      Thread.sleep(1000)
+        // Page the Engineer
+        println(
+          s"Sending engineer $engineerEmail a high priority notification $pagerEvent"
+        )
+        Thread.sleep(1000)
 
-      // Return the email that was paged
-      engineerEmail
-    }
+        // Return the email that was paged
+        engineerEmail
+      }
 
   }
 
@@ -67,26 +68,27 @@ object IntegratingWithExternalServices extends App {
 
   class PagerActor extends Actor with ActorLogging {
     private val engineers = List("Daniel", "John", "Pepe")
-    private val emails = Map(
+    private val emails    = Map(
       "Daniel" -> "daniel@email.com",
       "John"   -> "john@email.com",
       "Pepe"   -> "pepe@email.com"
     )
 
-    def processEvent(pagerEvent: PagerEvent) = Future {
-      val engineerIndex = (pagerEvent.date.toInstant.getEpochSecond / (24 * 3600)) % engineers.length
-      val engineer      = engineers(engineerIndex.toInt)
-      val engineerEmail = emails(engineer)
+    def processEvent(pagerEvent: PagerEvent) =
+      Future {
+        val engineerIndex = (pagerEvent.date.toInstant.getEpochSecond / (24 * 3600)) % engineers.length
+        val engineer      = engineers(engineerIndex.toInt)
+        val engineerEmail = emails(engineer)
 
-      // Page the Engineer
-      log.info(
-        s"Sending engineer $engineerEmail a high priority notification $pagerEvent"
-      )
-      Thread.sleep(1000)
+        // Page the Engineer
+        log.info(
+          s"Sending engineer $engineerEmail a high priority notification $pagerEvent"
+        )
+        Thread.sleep(1000)
 
-      engineerEmail
-    }
-    override def receive: Receive = {
+        engineerEmail
+      }
+    override def receive: Receive            = {
       case pagerEvent: PagerEvent =>
         sender() ! processEvent(pagerEvent)
     }
@@ -95,8 +97,8 @@ object IntegratingWithExternalServices extends App {
   import akka.pattern.ask
 
   import scala.concurrent.duration._
-  implicit val timeout = Timeout(2 seconds)
-  val pagerActor       = actorSystem.actorOf(Props[PagerActor], "pagerActor")
+  implicit val timeout               = Timeout(2 seconds)
+  val pagerActor                     = actorSystem.actorOf(Props[PagerActor], "pagerActor")
   val alternativePagedEngineerEmails =
     infraEvents.mapAsync(parallelism = 4)(event => (pagerActor ? event).mapTo[String])
 

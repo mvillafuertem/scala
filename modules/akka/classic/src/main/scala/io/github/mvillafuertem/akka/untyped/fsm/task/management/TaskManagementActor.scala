@@ -19,15 +19,15 @@ final class TaskManagementActor extends Actor with ActorLogging {
       val task = taskRepository(id)
       sender() ! TaskManagementInfo("Task closed")
       context.become(closed(task))
-    case _ => sender() ! TaskManagementInfo("Task is already open")
+    case _         => sender() ! TaskManagementInfo("Task is already open")
   }
 
   def idle: Receive = {
 
     case Open(task) =>
-      if (taskRepository.contains(task.id)) {
+      if (taskRepository.contains(task.id))
         sender() ! TaskManagementError("Task duplicated")
-      } else {
+      else {
         taskRepository += (task.id -> task)
         sender() ! TaskManagementInfo("Task opened")
         context.become(opened(task))

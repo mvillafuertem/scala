@@ -5,12 +5,13 @@ import java.util.Properties
 
 import org.apache.kafka.common.serialization.ByteArraySerializer
 
-object MessageSender {
-  private val ACKCONFIGURATION = "all"     // Blocking on the full commit of the record
-  private val RETRYCOUNT       = "1"       // Number of retries on put
-  private val BATCHSIZE        = "1024"    // Buffers for unsent records for each partition - controlls batching
-  private val LINGERTIME       = "1"       // Timeout for more records to arive - controlls batching
-  private val BUFFERMEMORY     = "1024000" // Controls the total amount of memory available to the producer for buffering. If records are sent faster than they can be transmitted to the server then this buffer space will be exhausted. When the buffer space is exhausted additional send calls will block. The threshold for time to block is determined by max.block.ms after which it throws a TimeoutException.
+object MessageSender                                                                                   {
+  private val ACKCONFIGURATION = "all"  // Blocking on the full commit of the record
+  private val RETRYCOUNT       = "1"    // Number of retries on put
+  private val BATCHSIZE        = "1024" // Buffers for unsent records for each partition - controlls batching
+  private val LINGERTIME       = "1"    // Timeout for more records to arive - controlls batching
+  private val BUFFERMEMORY     =
+    "1024000" // Controls the total amount of memory available to the producer for buffering. If records are sent faster than they can be transmitted to the server then this buffer space will be exhausted. When the buffer space is exhausted additional send calls will block. The threshold for time to block is determined by max.block.ms after which it throws a TimeoutException.
 
   def providerProperties(brokers: String, keySerializer: String, valueSerializer: String): Properties = {
     val props = new Properties
@@ -27,7 +28,7 @@ object MessageSender {
 
   def apply[K, V](brokers: String, keySerializer: String, valueSerializer: String): MessageSender[K, V] =
     new MessageSender[K, V](brokers, keySerializer, valueSerializer)
-  def apply[K, V](brokers: String): MessageSender[K, V] =
+  def apply[K, V](brokers: String): MessageSender[K, V]                                                 =
     new MessageSender[K, V](brokers, classOf[ByteArraySerializer].getName, classOf[ByteArraySerializer].getName)
 }
 

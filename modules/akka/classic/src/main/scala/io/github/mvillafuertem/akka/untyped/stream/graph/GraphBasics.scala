@@ -18,7 +18,7 @@ object GraphBasics extends App {
   val output      = Sink.foreach[(Int, Int)](println)
 
   // Step 1 - Setting up the fundamentals for the graph
-  val graph = RunnableGraph.fromGraph(
+  val graph      = RunnableGraph.fromGraph(
     GraphDSL.create() { implicit builder: GraphDSL.Builder[NotUsed] =>
       import GraphDSL.Implicits._
 
@@ -68,15 +68,15 @@ object GraphBasics extends App {
   /**
    * Balance
    */
-  val fastSource = input.throttle(5, 1 second)
-  val slowSource = input.throttle(2, 1 second)
+  val fastSource            = input.throttle(5, 1 second)
+  val slowSource            = input.throttle(2, 1 second)
 
   val sink1 = Sink.fold[Int, Int](0) { (count, element) =>
     println(s"Sink 1 number of elements: $count")
     count + 1
   }
 
-  val sink2 = Sink.fold[Int, Int](0) { (count, element) =>
+  val sink2        = Sink.fold[Int, Int](0) { (count, element) =>
     println(s"Sink 2 number of elements: $count")
     count + 1
   }

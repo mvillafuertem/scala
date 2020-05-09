@@ -10,13 +10,15 @@ object DataTransformer {
 
   val bos = new ByteArrayOutputStream
 
-  def controlFromByteArray(message: Array[Byte]): Try[TemperatureControl] = Try {
-    TemperatureControl.parseFrom(message)
-  }
+  def controlFromByteArray(message: Array[Byte]): Try[TemperatureControl] =
+    Try {
+      TemperatureControl.parseFrom(message)
+    }
 
-  def sensorFromByteArray(message: Array[Byte]): Try[SensorData] = Try {
-    SensorData.parseFrom(message)
-  }
+  def sensorFromByteArray(message: Array[Byte]): Try[SensorData] =
+    Try {
+      SensorData.parseFrom(message)
+    }
 
   def toByteArray(control: HeaterControl): Array[Byte] = {
     bos.reset()

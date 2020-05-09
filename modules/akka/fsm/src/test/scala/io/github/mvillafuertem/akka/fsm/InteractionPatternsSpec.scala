@@ -80,13 +80,13 @@ object InteractionPatternsSpec {
 
             case wrapped: WrappedBackendResponse =>
               wrapped.response match {
-                case Backend.JobStarted(taskId) =>
+                case Backend.JobStarted(taskId)            =>
                   context.log.info(s"${wrapped.response} ~> Started {}", taskId)
                   Behaviors.same
                 case Backend.JobProgress(taskId, progress) =>
                   context.log.info(s"${wrapped.response} ~> Progress {}: {}", taskId, progress)
                   Behaviors.same
-                case Backend.JobCompleted(taskId, result) =>
+                case Backend.JobCompleted(taskId, result)  =>
                   context.log.info(s"${wrapped.response} ~> Completed {}: {}", taskId, result)
                   inProgress(taskId) ! result
                   active(inProgress - taskId, count)

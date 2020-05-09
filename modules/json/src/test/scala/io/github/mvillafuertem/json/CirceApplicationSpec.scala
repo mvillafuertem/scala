@@ -65,7 +65,7 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
       )
 
     // W H E N
-    val actual: Json = new Thing("a", 1).asJson
+    val actual: Json                         = new Thing("a", 1).asJson
 
     // T H E N
     val expected = Json.obj(
@@ -89,7 +89,7 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
       } yield new Thing(foo, bar)
 
     // W H E N
-    val actual = decode[Thing]("""{"foo":"a","bar":1}""")
+    val actual                               = decode[Thing]("""{"foo":"a","bar":1}""")
 
     // T H E N
     val expected = new Thing("a", 1)
@@ -114,11 +114,11 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
     }
 
     // W H E N
-    val someThing  = SomeThing("a").asJson
-    val otherThing = OtherThing(1).asJson
+    val someThing                            = SomeThing("a").asJson
+    val otherThing                           = OtherThing(1).asJson
 
     // T H E N
-    val expectedSomeThing = Json.obj(
+    val expectedSomeThing  = Json.obj(
       ("someThing", Json.fromString("a"))
     )
     val expectedOtherThing = Json.obj(
@@ -143,8 +143,8 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
         .or(Decoder[OtherThing].map[Thing](identity))
 
     // W H E N
-    val someThing  = decode[SomeThing]("""{"someThing":"a"}""")
-    val otherThing = decode[OtherThing]("""{"otherThing":1}""")
+    val someThing                            = decode[SomeThing]("""{"someThing":"a"}""")
+    val otherThing                           = decode[OtherThing]("""{"otherThing":1}""")
 
     // T H E N
     val expectedSomeThing  = SomeThing("a")
@@ -167,7 +167,7 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
       )
 
     // W H E N
-    val actual: Thing = SomeThing
+    val actual: Thing                        = SomeThing
 
     // T H E N
     val expected = Json.obj(
@@ -191,7 +191,7 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
       } yield new SomeThingResult("value", Seq[Thing](SomeThing).filter(_.toString.equalsIgnoreCase(foo)).head)
 
     // W H E N
-    val actual = decode[SomeThingResult]("""{"value":"SomeThing"}""")
+    val actual                                         = decode[SomeThingResult]("""{"value":"SomeThing"}""")
 
     // T H E N
     actual.map(result => result shouldBe ("value", SomeThing))
@@ -233,7 +233,7 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
       } yield Seq[Thing](SomeThing).filter(_.toString.equalsIgnoreCase(foo)).head
 
     // W H E N
-    val actual = decode[User]("""{"id": 0,"thing":"SomeThing"}""")
+    val actual                               = decode[User]("""{"id": 0,"thing":"SomeThing"}""")
 
     // T H E N
     val expected: User = User(0L, SomeThing)
@@ -280,7 +280,7 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
       } yield Seq[Thing](SomeThing).filter(_.toString.equalsIgnoreCase(foo)).head
 
     // W H E N
-    val actual = decode[User]("""{"id": 0,"things":["SomeThing", "OtherThing"]}""")
+    val actual                               = decode[User]("""{"id": 0,"things":["SomeThing", "OtherThing"]}""")
 
     // T H E N
     val expected: User = User(0L, Seq(SomeThing, OtherThing))
@@ -295,7 +295,7 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
     @ConfiguredJsonCodec case class Auth(accessToken: String, expiresIn: Long)
 
     // W H E N
-    val actual = decode[Auth]("""{"access_token": "L7Re1aQ64oi-Tk3WM1CSz0zAPrF_5_f2gTqOkWujN2jJn8C2gTqOkWujN22gTqOkWujG","expires_in": 4000}""")
+    val actual                         = decode[Auth]("""{"access_token": "L7Re1aQ64oi-Tk3WM1CSz0zAPrF_5_f2gTqOkWujN2jJn8C2gTqOkWujN22gTqOkWujG","expires_in": 4000}""")
 
     // T H E N
     val expected: Auth = Auth("L7Re1aQ64oi-Tk3WM1CSz0zAPrF_5_f2gTqOkWujN2jJn8C2gTqOkWujN22gTqOkWujG", 4000)

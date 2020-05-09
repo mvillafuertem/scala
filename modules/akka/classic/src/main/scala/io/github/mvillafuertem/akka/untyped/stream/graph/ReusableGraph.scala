@@ -26,7 +26,7 @@ object ReusableGraph extends App {
   eventualDone.onComplete {
     case Success(Done) =>
       println("Stream finished successfully.")
-    case Failure(e) =>
+    case Failure(e)    =>
       println(s"Stream failed with $e")
   }
 

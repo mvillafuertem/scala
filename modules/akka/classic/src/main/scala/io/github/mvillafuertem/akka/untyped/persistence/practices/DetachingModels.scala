@@ -21,12 +21,11 @@ object DetachingModels extends App {
     override def receiveCommand: Receive = {
 
       case ApplyCoupon(coupon, user) =>
-        if (!coupons.contains(coupon.code)) {
+        if (!coupons.contains(coupon.code))
           persist(CouponApplied(coupon.code, user)) { e =>
             log.info(s"Persisted $e")
             coupons.put(coupon.code, user)
           }
-        }
 
     }
 
@@ -69,17 +68,19 @@ class ModelAdapter extends EventAdapter {
   override def manifest(event: Any): String = "CMA"
 
   // Journal -> Serializer -> fromJournal -> to the Actor
-  override def fromJournal(event: Any, manifest: String): EventSeq = event match {
-    case event @ WrittenCouponApplied(code, userId, userEmail) =>
-      println(s"Converting $event to DomainModel")
-      EventSeq.single(CouponApplied(code, User(userId, userEmail)))
-    case other => EventSeq.single(other)
-  }
+  override def fromJournal(event: Any, manifest: String): EventSeq =
+    event match {
+      case event @ WrittenCouponApplied(code, userId, userEmail) =>
+        println(s"Converting $event to DomainModel")
+        EventSeq.single(CouponApplied(code, User(userId, userEmail)))
+      case other                                                 => EventSeq.single(other)
+    }
 
   // Actor -> toJournal -> Serializer -> Journal
-  override def toJournal(event: Any): Any = event match {
-    case event @ CouponApplied(code, user) =>
-      println(s"Converting $event to DataModel")
-      WrittenCouponApplied(code, user.id, user.email)
-  }
+  override def toJournal(event: Any): Any                          =
+    event match {
+      case event @ CouponApplied(code, user) =>
+        println(s"Converting $event to DataModel")
+        WrittenCouponApplied(code, user.id, user.email)
+    }
 }

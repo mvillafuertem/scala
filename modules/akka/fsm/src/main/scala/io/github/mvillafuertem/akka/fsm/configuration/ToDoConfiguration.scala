@@ -11,6 +11,6 @@ trait ToDoConfiguration {
 
   lazy val toDoConfigurationProperties = ToDoConfigurationProperties()
 //  lazy val toDoAPI: ToDoAPI = ToDoAPI(log)
-  lazy val toDoAPI: ToDoAPI = ToDoAPI()
+  lazy val toDoAPI: ToDoAPI            = ToDoAPI()
 
 }

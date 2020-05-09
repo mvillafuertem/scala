@@ -17,7 +17,7 @@ final class Chef[Pizza <: Chef.Pizza](ingredients: Seq[String] = Seq()) {
   def build(implicit ev: Pizza =:= FullPizza): Food = Food(ingredients)
 }
 
-object Chef {
+object Chef                                                             {
 
   case class Food(ingredients: Seq[String])
   sealed trait Pizza

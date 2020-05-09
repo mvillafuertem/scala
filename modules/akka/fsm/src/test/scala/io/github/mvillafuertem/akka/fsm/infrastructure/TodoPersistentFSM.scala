@@ -91,23 +91,24 @@ object TodoPersistentFSM {
 //          Behaviors.same
 //      }
 
-    def receptionist(id: String): Behavior[EventSeedCommand] = Behaviors.setup[EventSeedCommand] { context =>
-      val key: ServiceKey[EventSeedCommand] = ServiceKey(id)
-      val receptionist                      = context.system.receptionist
-      val adapter = context.messageAdapter[Receptionist.Listing] {
-        case key.Listing(ref) if (ref.nonEmpty) =>
-          context.log.info("REF NON EMPTY")
-          GetValues(ref)
-        case key.Listing(ref) if (ref.isEmpty) =>
-          context.log.info("REF EMPTY")
-          val value = context.spawnAnonymous(apply(PersistenceId.ofUniqueId(id)))
-          receptionist ! Register(key, value)
-          value ! Check(EventSeed("", ""))
-          GetValues(ref)
+    def receptionist(id: String): Behavior[EventSeedCommand] =
+      Behaviors.setup[EventSeedCommand] { context =>
+        val key: ServiceKey[EventSeedCommand] = ServiceKey(id)
+        val receptionist                      = context.system.receptionist
+        val adapter                           = context.messageAdapter[Receptionist.Listing] {
+          case key.Listing(ref) if (ref.nonEmpty) =>
+            context.log.info("REF NON EMPTY")
+            GetValues(ref)
+          case key.Listing(ref) if (ref.isEmpty)  =>
+            context.log.info("REF EMPTY")
+            val value = context.spawnAnonymous(apply(PersistenceId.ofUniqueId(id)))
+            receptionist ! Register(key, value)
+            value ! Check(EventSeed("", ""))
+            GetValues(ref)
+        }
+        receptionist ! Find(key, adapter)
+        apply(PersistenceId.ofUniqueId(id))
       }
-      receptionist ! Find(key, adapter)
-      apply(PersistenceId.ofUniqueId(id))
-    }
 
     def apply(persistenceId: PersistenceId): Behavior[EventSeedCommand] =
       Behaviors.setup[EventSeedCommand](context => new EventSeedBehavior(context, persistenceId).value)
@@ -203,18 +204,17 @@ object TodoPersistentFSM {
             // Se verifica si se puede pasar al estado de in-progress
             case EventSeedChecked(delta) =>
               AlertInProgressState(delta, state.history :+ delta)
-            case _ => throw new IllegalStateException(s"unexpected event [$event] in state [$state]")
+            case _                       => throw new IllegalStateException(s"unexpected event [$event] in state [$state]")
           }
 
         case AlertInProgressState(_, _) =>
           event match {
             // Se verifica las ocurrencias de esa misma alerta
             case EventSeedChecked(delta) =>
-              if (state.history.size >= 2) {
+              if (state.history.size >= 2)
                 AlertSentState(delta, state.history :+ delta)
-              } else {
+              else
                 AlertInProgressState(delta, state.history :+ delta)
-              }
 
             case _ => throw new IllegalStateException(s"unexpected event [$event] in state [$state]")
           }

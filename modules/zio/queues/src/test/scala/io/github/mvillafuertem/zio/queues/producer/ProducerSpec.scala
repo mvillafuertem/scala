@@ -1,6 +1,6 @@
 package io.github.mvillafuertem.zio.queues.producer
 
-import io.github.mvillafuertem.zio.queues.RestaurantOrderExchangeApp.{Bacon, Coffee, Order, Sandwich}
+import io.github.mvillafuertem.zio.queues.RestaurantOrderExchangeApp.{ Bacon, Coffee, Order, Sandwich }
 import zio.Queue
 import zio.stream._
 import zio.test.Assertion.equalTo
@@ -37,7 +37,7 @@ object ProducerSpec extends DefaultRunnableSpec {
       assertM(
         for {
           topic    <- Queue.bounded[ProducerRecord[Order]](3)
-          iterable = (1 to 3).map(n => ProducerRecord[Order](n, Coffee))
+          iterable  = (1 to 3).map(n => ProducerRecord[Order](n, Coffee))
           producer <- Producer.make[Order](ProducerSettings("Test", topic))
           result   <- producer.produceChunk(iterable).runCollect
           a        <- topic.take
@@ -53,7 +53,7 @@ object ProducerSpec extends DefaultRunnableSpec {
       assertM(
         for {
           topic    <- Queue.bounded[ProducerRecord[Order]](3)
-          iterable = (1 to 3).map(n => ProducerRecord[Order](n, Bacon))
+          iterable  = (1 to 3).map(n => ProducerRecord[Order](n, Bacon))
           producer <- Producer.make[Order](ProducerSettings("Test", topic))
           result   <- Stream.fromIterable(iterable).via(producer.produceMPar).runCollect
           records  <- Stream.fromQueue(topic).take(3).runCollect

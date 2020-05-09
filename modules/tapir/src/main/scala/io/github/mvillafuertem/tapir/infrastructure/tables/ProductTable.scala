@@ -11,15 +11,17 @@ trait ProductTable {
 
   implicit object ProductShape extends CaseClassShape(LiftedProduct.tupled, Product.tupled)
 
-  implicit def productIdMapper: BaseColumnType[ProductId] = MappedColumnType.base[ProductId, UUID](
-    vo => vo.id,
-    dbo => model.ProductId(dbo)
-  )
+  implicit def productIdMapper: BaseColumnType[ProductId] =
+    MappedColumnType.base[ProductId, UUID](
+      vo => vo.id,
+      dbo => model.ProductId(dbo)
+    )
 
-  implicit def productTypeMapper: BaseColumnType[ProductType] = MappedColumnType.base[ProductType, String](
-    vo => vo.toString.toLowerCase,
-    dbo => model.ProductType.find(dbo)
-  )
+  implicit def productTypeMapper: BaseColumnType[ProductType] =
+    MappedColumnType.base[ProductType, String](
+      vo => vo.toString.toLowerCase,
+      dbo => model.ProductType.find(dbo)
+    )
 
   case class LiftedProduct(productId: Rep[ProductId], name: Rep[String], productType: Rep[ProductType])
 

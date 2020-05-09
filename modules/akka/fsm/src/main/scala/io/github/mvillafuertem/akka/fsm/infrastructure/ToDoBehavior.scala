@@ -31,7 +31,7 @@ final class ToDoBehavior(context: ActorContext[Command]) {
         //          .runForeach(a => context.log.info(s"PEPE ~ $a"))
         context.log.info(s"$command")
         Effect.persist(Opened(toDo))
-      case Close =>
+      case Close      =>
         Effect.persist(Closed)
 
       case GetToDo(replyTo) =>
@@ -52,24 +52,25 @@ final class ToDoBehavior(context: ActorContext[Command]) {
 object ToDoBehavior {
 
   //  def apply(id: String)(implicit actorSystem: ActorSystem, actorMaterializer: ActorMaterializer): Behavior[Command] = Behaviors.setup[Command](context => {
-  def apply(id: String): Behavior[Command] = Behaviors.setup[Command] { context =>
-    //    PersistenceQuery(actorSystem).readJournalFor[LeveldbReadJournal](LeveldbReadJournal.Identifier)
-    //      .currentPersistenceIds()
-    //      .runForeach(a => context.log.info(s"$a"))
-    //    journal.currentEventsByPersistenceId(id, 0, Long.MaxValue)
-    //      .log("asdf")
-    //      .map(_.event)
-    //      .map {
-    //        case State(toDo, true) => context.log.info(s"true")
-    //          throw new RuntimeException("ToDo is already open")
-    //        case State(toDo, false) =>
-    //          Effect.persist(Opened(toDo)).thenStop()
-    //          context.log.info(s"true")
-    //      }.runForeach(a => context.log.info("$a"))
+  def apply(id: String): Behavior[Command] =
+    Behaviors.setup[Command] { context =>
+      //    PersistenceQuery(actorSystem).readJournalFor[LeveldbReadJournal](LeveldbReadJournal.Identifier)
+      //      .currentPersistenceIds()
+      //      .runForeach(a => context.log.info(s"$a"))
+      //    journal.currentEventsByPersistenceId(id, 0, Long.MaxValue)
+      //      .log("asdf")
+      //      .map(_.event)
+      //      .map {
+      //        case State(toDo, true) => context.log.info(s"true")
+      //          throw new RuntimeException("ToDo is already open")
+      //        case State(toDo, false) =>
+      //          Effect.persist(Opened(toDo)).thenStop()
+      //          context.log.info(s"true")
+      //      }.runForeach(a => context.log.info("$a"))
 
-    context.log.info(s"ToDo behavior started $id")
-    new ToDoBehavior(context).behavior(id)
-  }
+      context.log.info(s"ToDo behavior started $id")
+      new ToDoBehavior(context).behavior(id)
+    }
 
   // S T A T E
   final case class State(toDo: ToDo, opened: Boolean)

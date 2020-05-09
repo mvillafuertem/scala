@@ -19,9 +19,9 @@ object OperatorFusion extends App {
 
   //.run()
   // Operator/Component FUSION
-  val simpleActor = actorSystem.actorOf(Props[SimpleActor])
+  val simpleActor  = actorSystem.actorOf(Props[SimpleActor])
   // Complex flows
-  val complexFlow = Flow[Int].map { x =>
+  val complexFlow  = Flow[Int].map { x =>
     Thread.sleep(1000)
     x + 1
   }
@@ -51,8 +51,8 @@ object OperatorFusion extends App {
     .via(complexFlow)
     .async // runs on one actor
     .via(complexFlow2)
-    .async          // runs on a second actor
-    .to(simpleSink) // runs on a third actor
+    .async                                                                // runs on a second actor
+    .to(simpleSink)                                                       // runs on a third actor
   //.run()
 
   // Ordering guarantees without async

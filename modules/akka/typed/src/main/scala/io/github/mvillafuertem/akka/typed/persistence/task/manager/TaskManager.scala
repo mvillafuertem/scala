@@ -22,16 +22,17 @@ object TaskManager extends App {
 
   final case class State(taskIdInProgress: Option[String])
 
-  def apply(persistenceId: PersistenceId): Behavior[Command] = Behaviors.setup { context =>
-    context.setLoggerName(this.getClass)
+  def apply(persistenceId: PersistenceId): Behavior[Command] =
+    Behaviors.setup { context =>
+      context.setLoggerName(this.getClass)
 
-    EventSourcedBehavior[Command, Event, State](
-      persistenceId = persistenceId,
-      emptyState = State(None),
-      commandHandler = (state, command) => onCommand(context, state, command),
-      eventHandler = (state, event) => applyEvent(context, state, event)
-    ).onPersistFailure(SupervisorStrategy.restartWithBackoff(1.second, 30.seconds, 0.2))
-  }
+      EventSourcedBehavior[Command, Event, State](
+        persistenceId = persistenceId,
+        emptyState = State(None),
+        commandHandler = (state, command) => onCommand(context, state, command),
+        eventHandler = (state, event) => applyEvent(context, state, event)
+      ).onPersistFailure(SupervisorStrategy.restartWithBackoff(1.second, 30.seconds, 0.2))
+    }
 
   private def onCommand(context: ActorContext[Command], state: State, command: Command): Effect[Event, State] =
     state.taskIdInProgress match {
@@ -40,7 +41,7 @@ object TaskManager extends App {
           case StartTask(taskId) =>
             context.log.info(s"1. $taskId")
             Effect.persist(TaskStarted(taskId))
-          case _ =>
+          case _                 =>
             Effect.unhandled
         }
 
@@ -74,10 +75,10 @@ object TaskManager extends App {
       case TaskStarted(taskId) =>
         context.log.info(s"2. $taskId")
         State(Option(taskId))
-      case TaskStep(_, _) =>
+      case TaskStep(_, _)      =>
         context.log.info(s"3. $state")
         state
-      case TaskCompleted(_) => State(None)
+      case TaskCompleted(_)    => State(None)
     }
 
   val typedSystem = ActorSystem(apply(PersistenceId.ofUniqueId("taskManager")), "TaskManagerTypedSystem", ConfigFactory.load().getConfig("postgres"))

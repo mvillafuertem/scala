@@ -43,7 +43,7 @@ object AkkaTemperatureController {
     .withProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest")
 
   // Sink
-  val heaterSettings =
+  val heaterSettings  =
     ProducerSettings(controllerManager.settings.config.getConfig("akka.kafka.producer"), new ByteArraySerializer, new ByteArraySerializer)
       .withBootstrapServers(kafkaConfig.brokers)
 
@@ -73,7 +73,7 @@ object AkkaTemperatureController {
           case Some(value) =>
             println(s"sending new control ${result.command} for sensor $value")
             Some(HeaterControl(value, HeaterCommand.fromValue(result.command)))
-          case _ =>
+          case _           =>
             None
         }
       }

@@ -18,24 +18,24 @@ object SynchronousBehavior {
   val childActor = Behaviors.receiveMessage[String](_ => Behaviors.same[String])
 
   val myBehavior = Behaviors.receivePartial[Cmd] {
-    case (context, CreateChild(name)) =>
+    case (context, CreateChild(name))          =>
       context.spawn(childActor, name)
       Behaviors.same
-    case (context, CreateAnonymousChild) =>
+    case (context, CreateAnonymousChild)       =>
       context.spawnAnonymous(childActor)
       Behaviors.same
     case (context, SayHelloToChild(childName)) =>
       val child: ActorRef[String] = context.spawn(childActor, childName)
       child ! "hello"
       Behaviors.same
-    case (context, SayHelloToAnonymousChild) =>
+    case (context, SayHelloToAnonymousChild)   =>
       val child: ActorRef[String] = context.spawnAnonymous(childActor)
       child ! "hello stranger"
       Behaviors.same
-    case (_, SayHello(who)) =>
+    case (_, SayHello(who))                    =>
       who ! "hello"
       Behaviors.same
-    case (context, LogAndSayHello(who)) =>
+    case (context, LogAndSayHello(who))        =>
       context.log.info("Saying hello to {}", who.path.name)
       who ! "hello"
       Behaviors.same

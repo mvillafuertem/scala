@@ -14,7 +14,7 @@ final class VendingMachineFSM extends FSM[VendingState, VendingData] {
     case Event(Initialize(inventory, prices), Uninitialized) =>
       // equivalent with context.become(operational(inventory, prices))
       goto(Operational) using Initialized(inventory, prices)
-    case _ =>
+    case _                                                   =>
       sender() ! VendingError("MachineNotInitialized")
       stay()
 
@@ -27,7 +27,7 @@ final class VendingMachineFSM extends FSM[VendingState, VendingData] {
         case None | Some(0) =>
           sender() ! VendingError("ProductNotAvailable")
           stay()
-        case Some(_) =>
+        case Some(_)        =>
           val price = prices(product)
           sender() ! Instruction(s"Please insert $price dollars")
           //context.become(waitForMoney(inventory, prices, product, 0, startReceiveMoneyTimeoutSchedule(), sender()))
@@ -36,7 +36,7 @@ final class VendingMachineFSM extends FSM[VendingState, VendingData] {
   }
 
   when(WaitForMoney, stateTimeout = 1 second) {
-    case Event(StateTimeout, WaitForMoneyData(inventory, prices, product, money, requester)) =>
+    case Event(StateTimeout, WaitForMoneyData(inventory, prices, product, money, requester))         =>
       requester ! VendingError("RequestTimedOut")
       if (money > 0) requester ! GiveBackChange(money)
       //context.become(operational(inventory, prices))

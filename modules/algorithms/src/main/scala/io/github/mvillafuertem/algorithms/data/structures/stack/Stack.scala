@@ -21,9 +21,9 @@ class Stack[A] extends Equals {
 
   def pop: A = {
     var value: A = ???
-    if (isEmpty) {
+    if (isEmpty)
       System.out.println("Error, la pila está vacía")
-    } else {
+    else {
       value = front.value
       front = front.next
       numElements -= 1
@@ -33,9 +33,9 @@ class Stack[A] extends Equals {
 
   def peek: A = {
     var value: A = ???
-    if (isEmpty) {
+    if (isEmpty)
       System.out.println("Error, la pila está vacía")
-    } else value = front.value
+    else value = front.value
     value
   }
 
@@ -53,10 +53,11 @@ class Stack[A] extends Equals {
 
   override def canEqual(that: Any): Boolean = that.isInstanceOf[Stack[A]]
 
-  override def equals(obj: Any): Boolean = obj match {
-    case that: Stack[A] => that.canEqual(this) && this.hashCode == that.hashCode
-    case _              => false
-  }
+  override def equals(obj: Any): Boolean =
+    obj match {
+      case that: Stack[A] => that.canEqual(this) && this.hashCode == that.hashCode
+      case _              => false
+    }
 
   override def hashCode(): Int =
     show().hashCode()

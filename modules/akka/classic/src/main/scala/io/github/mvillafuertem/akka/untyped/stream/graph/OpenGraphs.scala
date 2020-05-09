@@ -42,7 +42,7 @@ object OpenGraphs extends App {
   val secondSink = Sink.foreach[Int](x => println(s"Meaningful thin 2: $x"))
 
   // Step 1 - Setting up the fundamentals for the graph
-  val sinkGraph = Sink.fromGraph(
+  val sinkGraph   = Sink.fromGraph(
     GraphDSL.create() { implicit builder =>
       import GraphDSL.Implicits._
 
@@ -70,7 +70,7 @@ object OpenGraphs extends App {
   val multiplier  = Flow[Int].map(_ * 10)
 
   // Step 1 - Setting up the fundamentals for the graph
-  val flowGraph = Flow.fromGraph(
+  val flowGraph                                                                      = Flow.fromGraph(
     GraphDSL.create() { implicit builder =>
       import GraphDSL.Implicits._
 

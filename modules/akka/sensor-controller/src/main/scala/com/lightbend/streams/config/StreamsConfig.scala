@@ -27,44 +27,38 @@ object StreamsConfig {
   val config = ConfigFactory.load()
 
   val kafkaConfig =
-    try {
-      config.as[KafkaConfig]("kafkaConfig")
-    } catch {
+    try config.as[KafkaConfig]("kafkaConfig")
+    catch {
       case _: Throwable => KafkaConfig()
     }
 
   val temperatureUpRate =
-    try {
-      config.as[TemperatureUpRate]("temperatureUpRate")
-    } catch {
+    try config.as[TemperatureUpRate]("temperatureUpRate")
+    catch {
       case _: Throwable => TemperatureUpRate()
     }
 
   val temperatureDownRate =
-    try {
-      config.as[TemperatureDownRate]("temperatureDownRate")
-    } catch {
+    try config.as[TemperatureDownRate]("temperatureDownRate")
+    catch {
       case _: Throwable => TemperatureDownRate()
     }
 
   val sensorPublishInterval =
-    try {
-      config.as[SensorPublishInterval]("sensorPublishInterval")
-    } catch {
+    try config.as[SensorPublishInterval]("sensorPublishInterval")
+    catch {
       case _: Throwable => SensorPublishInterval()
     }
 
   val flinkConfig =
-    try {
-      config.as[FlinkConfiguration]("flinkConfiguration")
-    } catch {
+    try config.as[FlinkConfiguration]("flinkConfiguration")
+    catch {
       case _: Throwable => FlinkConfiguration()
     }
 
   val sparkConfig =
-    try {
-      config.as[SparkConfiguration]("sparkConfiguration")
-    } catch {
+    try config.as[SparkConfiguration]("sparkConfiguration")
+    catch {
       case _: Throwable => SparkConfiguration()
     }
 }

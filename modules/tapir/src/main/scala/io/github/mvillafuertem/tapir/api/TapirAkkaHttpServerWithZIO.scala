@@ -57,7 +57,7 @@ trait TapirAkkaHttpServerWithZIO extends BootstrapRuntime {
     )(implicit replaceFirst: ReplaceFirstInTuple[T, U, T_TUPLE, U_TUPLE]): T_TUPLE => Future[Either[E, O]] = { tTuple =>
       val t = replaceFirst.first(tTuple)
       a(t).flatMap {
-        case Left(e) => Future.successful(Left(e))
+        case Left(e)  => Future.successful(Left(e))
         case Right(u) =>
           val uTuple = replaceFirst.replace(tTuple, u)
           l(uTuple)

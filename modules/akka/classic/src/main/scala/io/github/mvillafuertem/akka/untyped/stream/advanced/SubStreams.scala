@@ -13,8 +13,8 @@ object SubStreams extends App {
   import actorSystem.dispatcher
 
   // 1. Grouping a stream by a certain function
-  val wordsSource = Source(List("Akka", "is", "amazing", "learning", "subStreams"))
-  val groups      = wordsSource.groupBy(30, word => if (word.isEmpty) '\u0000' else word.toLowerCase().charAt(0))
+  val wordsSource                              = Source(List("Akka", "is", "amazing", "learning", "subStreams"))
+  val groups                                   = wordsSource.groupBy(30, word => if (word.isEmpty) '\u0000' else word.toLowerCase().charAt(0))
 
   groups.to(Sink.fold(0) { (count, word) =>
     val newCount = count + 1
@@ -34,7 +34,7 @@ object SubStreams extends App {
 
   val totalCharCountFuture = testSource
     .groupBy(2, string => string.length % 2)
-    .map(_.length)   // Do your expensive computation here
+    .map(_.length) // Do your expensive computation here
     .mergeSubstreams //WithParallelism(2)
     .toMat(Sink.reduce[Int](_ + _))(Keep.right)
     .run()

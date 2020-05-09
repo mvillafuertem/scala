@@ -26,12 +26,12 @@ trait ProductsEndpoint extends ProductsCodec {
       .description(apiDescriptionResource)
 
   // i n f o r m a t i o n
-  private[api] lazy val productsResource                    = "products"
-  private[api] lazy val productsResourceName: String        = "products-resource"
-  private[api] lazy val productsResourceDescription: String = "Get all products"
-  private[api] lazy val limitParameter                      = query[Option[Int]]("limit").description("Maximum number of products to retrieve")
-  private[api] lazy val offsetParameter                     = query[Option[Int]]("offset").description("Position the initial product to retrieve")
-  private[api] lazy val productsQuery: EndpointInput[ProductsQuery] =
+  private[api] lazy val productsResource                                  = "products"
+  private[api] lazy val productsResourceName: String                      = "products-resource"
+  private[api] lazy val productsResourceDescription: String               = "Get all products"
+  private[api] lazy val limitParameter                                    = query[Option[Int]]("limit").description("Maximum number of products to retrieve")
+  private[api] lazy val offsetParameter                                   = query[Option[Int]]("offset").description("Position the initial product to retrieve")
+  private[api] lazy val productsQuery: EndpointInput[ProductsQuery]       =
     path[ProductType]("type")
       .map(Some(_))(_.get)
       .and(offsetParameter)

@@ -7,16 +7,16 @@ object ActorCapabilities extends App {
   class SimpleActor extends Actor {
     override def receive: Receive = {
       // Actor can be response to another actor
-      case "Hi!"           => context.sender() ! "Hello, there!"
-      case message: String =>
+      case "Hi!"                              => context.sender() ! "Hello, there!"
+      case message: String                    =>
         // Actors have information about their context and about themselves
         // context.self === `this` in OOP
         println(s"[${context.self.path}]")
         println(s"[${self.path}]")
         println(s"[simple actor] I have received $message")
-      case number: Int              => println(s"[simple actor] I have received a number $number")
-      case SpecialMessage(contents) => println(s"[simple actor] I have received siomething special $contents")
-      case SendMessageToYourself(content) =>
+      case number: Int                        => println(s"[simple actor] I have received a number $number")
+      case SpecialMessage(contents)           => println(s"[simple actor] I have received siomething special $contents")
+      case SendMessageToYourself(content)     =>
         self ! content
       case SayHiTo(ref)                       => ref ! "Hi!"
       case WirelessPhoneMessage(content, ref) => ref forward (content + "[forwarding]")

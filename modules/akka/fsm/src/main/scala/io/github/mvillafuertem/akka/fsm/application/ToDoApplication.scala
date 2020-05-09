@@ -2,7 +2,7 @@ package io.github.mvillafuertem.akka.fsm.application
 
 import akka.actor.typed.ActorRef
 import io.github.mvillafuertem.akka.fsm.domain.ToDo
-import io.github.mvillafuertem.akka.fsm.infrastructure.ToDoFSM.{Close, Command, Open}
+import io.github.mvillafuertem.akka.fsm.infrastructure.ToDoFSM.{ Close, Command, Open }
 
 /**
  * @author Miguel Villafuerte
@@ -10,11 +10,10 @@ import io.github.mvillafuertem.akka.fsm.infrastructure.ToDoFSM.{Close, Command, 
 final class ToDoApplication(fsm: ActorRef[Command]) {
 
   def apply(toDo: ToDo): Unit =
-    if (toDo.content.isEmpty) {
+    if (toDo.content.isEmpty)
       fsm ! Close
-    } else {
+    else
       fsm ! Open(toDo)
-    }
 
 }
 

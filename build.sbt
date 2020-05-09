@@ -170,6 +170,11 @@ lazy val `zio-akka-cluster-chat` = (project in file("modules/zio/akka-cluster-ch
 lazy val `zio-akka-cluster-sharding` = (project in file("modules/zio/akka-cluster-sharding"))
   .configure(zio)
 
+lazy val `zio-kafka` = (project in file("modules/zio/kafka"))
+  .configure(zio)
+  .configs(IntegrationTest)
+  .settings(Defaults.itSettings)
+
 lazy val `zio-queues` = (project in file("modules/zio/queues"))
   .configure(zio)
 

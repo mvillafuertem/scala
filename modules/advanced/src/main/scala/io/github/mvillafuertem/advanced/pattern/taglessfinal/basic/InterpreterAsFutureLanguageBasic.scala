@@ -8,8 +8,8 @@ object InterpreterAsFutureLanguageBasic {
   type F[ScalaValue] = Future[ScalaValue]
 
   val interpreterAsFuture: LanguageBasic[F] = new LanguageBasic[F] {
-    override def number(v: Int): F[Int] = Future.successful(v)
-    override def increment(a: F[Int]): F[Int] =
+    override def number(v: Int): F[Int]            = Future.successful(v)
+    override def increment(a: F[Int]): F[Int]      =
       for {
         av <- a
       } yield av + 1
@@ -19,7 +19,7 @@ object InterpreterAsFutureLanguageBasic {
         bv <- b
       } yield av + bv
 
-    override def text(v: String): F[String] = Future.successful(v)
+    override def text(v: String): F[String]       = Future.successful(v)
     override def toUpper(a: F[String]): F[String] =
       for {
         av <- a

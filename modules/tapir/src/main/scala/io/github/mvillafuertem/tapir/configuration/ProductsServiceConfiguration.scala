@@ -24,7 +24,7 @@ trait ProductsServiceConfiguration extends InfrastructureConfiguration {
 
     implicit lazy val untypedSystem: actor.ActorSystem = actorSystem.toClassic
     implicit lazy val materializer: Materializer       = Materializer(actorSystem)
-    val eventualBinding = Http()(untypedSystem).bindAndHandle(
+    val eventualBinding                                = Http()(untypedSystem).bindAndHandle(
       SwaggerApi.route ~ new ProductsApi(new SlickProductsRepository() {
         override def db: UIO[BasicBackend#DatabaseDef] = ZIO.effectTotal(Database.forConfig("infrastructure.h2"))
       }).route,
@@ -34,15 +34,15 @@ trait ProductsServiceConfiguration extends InfrastructureConfiguration {
     for {
       //actorSystem <- ZIO.environment[ActorSystem[_]]
       _ <- Task
-            .fromFuture(_ => eventualBinding)
-            .mapError { exception =>
-              actorSystem.log.error(
-                s"Server could not start with parameters [host:port]=[${productsConfigurationProperties.interface},${productsConfigurationProperties.port}]",
-                exception
-              )
-              exception
-            }
-            .forever
+             .fromFuture(_ => eventualBinding)
+             .mapError { exception =>
+               actorSystem.log.error(
+                 s"Server could not start with parameters [host:port]=[${productsConfigurationProperties.interface},${productsConfigurationProperties.port}]",
+                 exception
+               )
+               exception
+             }
+             .forever
       //_ <- UIO.effectTotal(actorSystem.log.info(s"Server online at http://${server.localAddress.getHostString}:${server.localAddress.getPort}/"))
 
     } yield ()

@@ -9,11 +9,11 @@ object GraphCycles extends App {
   implicit val actorSystem: ActorSystem        = ActorSystem("BidirectionalFlows")
   implicit val actorMaterializer: Materializer = Materializer(actorSystem)
 
-  val accelerator = GraphDSL.create() { implicit builder =>
+  val accelerator        = GraphDSL.create() { implicit builder =>
     import GraphDSL.Implicits._
 
-    val sourceShape = builder.add(Source(1 to 100))
-    val mergeShape  = builder.add(Merge[Int](2))
+    val sourceShape      = builder.add(Source(1 to 100))
+    val mergeShape       = builder.add(Merge[Int](2))
     val incrementerShape = builder.add(Flow[Int].map { x =>
       println(s"Accelerating $x")
       x + 1
@@ -30,11 +30,11 @@ object GraphCycles extends App {
   /**
    *  Solution 1: MergePreferred
    */
-  val actualAccelerator = GraphDSL.create() { implicit builder =>
+  val actualAccelerator  = GraphDSL.create() { implicit builder =>
     import GraphDSL.Implicits._
 
-    val sourceShape = builder.add(Source(1 to 100))
-    val mergeShape  = builder.add(MergePreferred[Int](1))
+    val sourceShape      = builder.add(Source(1 to 100))
+    val mergeShape       = builder.add(MergePreferred[Int](1))
     val incrementerShape = builder.add(Flow[Int].map { x =>
       println(s"Accelerating $x")
       x + 1
@@ -50,11 +50,11 @@ object GraphCycles extends App {
   /**
    *  Solution 2: Buffer
    */
-  val bufferedRepeater = GraphDSL.create() { implicit builder =>
+  val bufferedRepeater   = GraphDSL.create() { implicit builder =>
     import GraphDSL.Implicits._
 
-    val sourceShape = builder.add(Source(1 to 100))
-    val mergeShape  = builder.add(Merge[Int](2))
+    val sourceShape   = builder.add(Source(1 to 100))
+    val mergeShape    = builder.add(Merge[Int](2))
     val repeaterShape = builder.add(Flow[Int].buffer(10, OverflowStrategy.dropHead).map { x =>
       println(s"Accelerating $x")
       Thread.sleep(100)
