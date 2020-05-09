@@ -13,7 +13,7 @@ object ConsumerSpec extends DefaultRunnableSpec {
   override def spec: ZSpec[TestEnvironment, Any] =
     suite(getClass.getSimpleName)(
       consume
-    ) @@ TestAspect.timed
+    ) @@ TestAspect.timed @@ TestAspect.ignore
 
   lazy val consume =
     testM("consume") {
