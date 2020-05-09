@@ -8,7 +8,7 @@ Global / onLoad := {
              |$GREEN        ╚════██║ ██║      ██╔══██║ ██║      ██╔══██║
              |$GREEN        ███████║ ╚██████╗ ██║  ██║ ███████╗ ██║  ██║
              |$GREEN        ╚══════╝  ╚═════╝ ╚═╝  ╚═╝ ╚══════╝ ╚═╝  ╚═╝
-             |$RESET           v.${version.value}
+             |$RESET        v.${version.value}
              |""".stripMargin)
   (Global / onLoad).value
 }
