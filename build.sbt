@@ -42,6 +42,7 @@ lazy val scala = (project in file("."))
     basic,
     cats,
     json,
+    reflection,
     slick,
     sttp,
     tapir,
@@ -136,6 +137,12 @@ lazy val json = (project in file("modules/json"))
   .settings(commonSettings)
   .settings(scalacOptions += "-Ymacro-annotations")
   .settings(libraryDependencies ++= Dependencies.json)
+
+lazy val reflection = (project in file("modules/reflection"))
+  .dependsOn(algorithms)
+  // S E T T I N G S
+  .settings(commonSettings)
+  .settings(libraryDependencies ++= Dependencies.reflection)
 
 lazy val slick = (project in file("modules/slick"))
 // S E T T I N G S

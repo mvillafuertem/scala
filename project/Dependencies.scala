@@ -151,6 +151,12 @@ object Dependencies {
     Artifact.scalaTest % Version.scalaTest
   ).map(_ % Test)
 
+  val reflection: Seq[ModuleID]          =
+    Seq(
+      // R E F L E C T I O N  T E S T
+      Artifact.scalaTest % Version.scalaTest
+    ).map(_ % Test)
+
   val slick: Seq[ModuleID]               =
     // S L I C K
     Seq(
