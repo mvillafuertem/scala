@@ -19,10 +19,10 @@ object IntegratingWithActors extends App {
       case s: String =>
         log.info(s"Just received a string: $s")
         sender() ! s"$s$s"
-      case n: Int =>
+      case n: Int    =>
         log.info(s"Just received a number: $n")
         sender() ! (2 * n)
-      case _ =>
+      case _         =>
     }
 
   }
@@ -45,14 +45,14 @@ object IntegratingWithActors extends App {
       CompletionStrategy.immediately
   }
   // Actor as a Source
-  val actorPoweredSource = Source.actorRef[Int](
+  val actorPoweredSource                                                  = Source.actorRef[Int](
     completionMatcher,
     // never fail the stream because of a message
     failureMatcher = PartialFunction.empty,
     bufferSize = 10,
     overflowStrategy = OverflowStrategy.dropHead
   )
-  val materializedActorRef = actorPoweredSource.to(Sink.foreach[Int](number => println(s"Actor powered flow got number: $number"))).run()
+  val materializedActorRef                                                = actorPoweredSource.to(Sink.foreach[Int](number => println(s"Actor powered flow got number: $number"))).run()
   materializedActorRef ! 10
 
   // Actor as a Destination/Sink
@@ -68,16 +68,16 @@ object IntegratingWithActors extends App {
 
   class DestinationActor extends Actor with ActorLogging {
     override def receive: Receive = {
-      case StreamInit =>
+      case StreamInit            =>
         log.info("Stream initialized")
         sender() ! StreamAck
-      case StreamComplete =>
+      case StreamComplete        =>
         log.info("Stream complete")
         context.stop(self)
       case StreamFail(exception) =>
         log.warning(s"Stream failed $exception")
         context.stop(self)
-      case message =>
+      case message               =>
         log.info(s"Message $message has come to its final resting point")
         sender() ! StreamAck
     }

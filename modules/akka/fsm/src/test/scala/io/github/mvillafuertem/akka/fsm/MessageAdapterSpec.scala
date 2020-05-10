@@ -38,7 +38,7 @@ object MessageAdapterSpec {
   object Infrastructure {
 
     val behavior: Behaviors.Receive[Command] = Behaviors.receiveMessage[Command] {
-      case Open(task, replyTo) =>
+      case Open(task, replyTo)  =>
         replyTo ! Opened(task)
         Behaviors.same
       case Close(task, replyTo) =>
@@ -103,12 +103,12 @@ object MessageAdapterSpec {
 
   object Application {
 
-    def apply(backend: ActorRef[Infrastructure.Command]): Behavior[Application.Command] = Behaviors.setup[Application.Command] {
-      context: ActorContext[Application.Command] =>
+    def apply(backend: ActorRef[Infrastructure.Command]): Behavior[Application.Command] =
+      Behaviors.setup[Application.Command] { context: ActorContext[Application.Command] =>
         val adapter: ActorRef[Infrastructure.State] = context.messageAdapter(InfrastructureStateAdapter)
         new Application(context, backend).behavior(Set.empty, adapter)
 
-    }
+      }
 
     sealed trait Command
 

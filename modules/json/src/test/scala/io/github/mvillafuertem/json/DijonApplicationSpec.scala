@@ -45,7 +45,7 @@ final class DijonApplicationSpec extends AnyFlatSpecLike with Matchers {
         |""".stripMargin
 
     // w h e n
-    val actual = json"""$jsonString"""
+    val actual             = json"""$jsonString"""
 
     println(actual.selectDynamic("values.bar") == true)
     println(actual -- ("values.baz"))

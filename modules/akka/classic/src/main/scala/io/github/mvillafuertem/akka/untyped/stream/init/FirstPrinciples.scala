@@ -19,7 +19,7 @@ object FirstPrinciples extends App {
   val sink = Sink.foreach[Int](println)
 
   // Graph
-  val graph = source.to(sink)
+  val graph          = source.to(sink)
   graph.run()
 
   // Transform Element
@@ -49,13 +49,13 @@ object FirstPrinciples extends App {
   val takeFlow = Flow[Int].take(5)
 
   // Pipes
-  val doubleFlowGraph = source.via(mapFlow).via(takeFlow).to(sink)
+  val doubleFlowGraph      = source.via(mapFlow).via(takeFlow).to(sink)
   doubleFlowGraph.run()
 
   // Syntactic Sugar
 
   // Source(1 to 10).via(Flow[Int].map(x => x * 2)).run()
-  val mapSource = Source(1 to 10).map(x => x * 2)
+  val mapSource            = Source(1 to 10).map(x => x * 2)
   // mapSource.to(Sink.foreach[Int](println)).run()
   mapSource.runForeach(println)
 

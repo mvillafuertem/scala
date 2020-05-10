@@ -13,9 +13,9 @@ object DynamicStreamHandling extends App {
   import actorSystem.dispatcher
 
   // 1. Kill Switch
-  val killSwitchFlow = KillSwitches.single[Int]
-  val counter        = Source(LazyList.from(1)).throttle(1, 1 second).log("counter")
-  val sink           = Sink.ignore
+  val killSwitchFlow                           = KillSwitches.single[Int]
+  val counter                                  = Source(LazyList.from(1)).throttle(1, 1 second).log("counter")
+  val sink                                     = Sink.ignore
 
   //  val killSwitch = counter
   //    .viaMat(killSwitchFlow)(Keep.right)
@@ -26,7 +26,7 @@ object DynamicStreamHandling extends App {
   //    killSwitch.shutdown()
   //  }
 
-  val anotherCounter =
+  val anotherCounter   =
     Source(LazyList.from(1)).throttle(2, 1 second).log("anotherCounter")
   val sharedKillSwitch = KillSwitches.shared("oneButtonToRuleThemAll")
 

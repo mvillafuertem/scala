@@ -1,6 +1,6 @@
 package io.github.mvillafuertem.zio.queues.producer
 
-import zio.{Has, Queue}
+import zio.{ Has, Queue }
 
 case class ProducerSettings[A](name: String, topic: Queue[ProducerRecord[A]])
 

@@ -30,7 +30,7 @@ final class ToDoApplicationConfiguration(context: ActorContext[Done]) extends To
   serverBinding.onComplete {
     case Success(bound) =>
       log.info(s"Server online at http://${bound.localAddress.getHostString}:${bound.localAddress.getPort}/")
-    case Failure(e) =>
+    case Failure(e)     =>
       log.error(s"Server could not start!")
       e.printStackTrace()
       context.self ! Done

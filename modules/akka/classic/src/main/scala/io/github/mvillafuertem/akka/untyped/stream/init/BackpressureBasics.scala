@@ -12,7 +12,7 @@ object BackpressureBasics extends App {
   implicit val actorMaterializer: Materializer = Materializer(actorSystem)
 
   val fastSource = Source(1 to 1000)
-  val slowSink = Sink.foreach[Int] { x =>
+  val slowSink   = Sink.foreach[Int] { x =>
     // Simulate a long processing
     Thread.sleep(1000)
     println(s"Sink $x")

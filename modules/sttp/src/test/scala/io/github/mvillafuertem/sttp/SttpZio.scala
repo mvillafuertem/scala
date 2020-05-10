@@ -14,7 +14,7 @@ import zio.test.environment.TestEnvironment
 object SttpZio extends DefaultRunnableSpec {
 
   // @see https://requestbin.com/r/enbom40wuq5zg/1bOSAYwoE7KoRARt3fMJQCHdOF7
-  implicit val customConfig: Configuration = Configuration.default.withSnakeCaseMemberNames
+  implicit val customConfig: Configuration                                 = Configuration.default.withSnakeCaseMemberNames
   @ConfiguredJsonCodec case class RequestSnakeCase(successSnakeCase: Boolean)
   implicit val backend: Task[SttpBackend[Task, Nothing, WebSocketHandler]] = AsyncHttpClientZioStreamsBackend()
 

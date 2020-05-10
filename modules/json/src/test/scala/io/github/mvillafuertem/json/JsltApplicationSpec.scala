@@ -16,26 +16,26 @@ final class JsltApplicationSpec extends AnyFlatSpec with Matchers {
     // G I V E N
     val jsonNodeInput = mapper.readTree(msg)
     val jslt          = Parser.compileString("""
-                                               |// JSLT transform which flattens nested objects into flat objects
-                                               |//   {"a" : {"b" : 1}} => {"a_b" : 1}
-                                               |
-                                               |def flatten-object(obj)
-                                               |  let flat = {for ($obj) .key : .value if (not(is-object(.value)))}
-                                               |
-                                               |  let nested = [for ($obj)
-                                               |     let outerkey = (.key)
-                                               |       [for (flatten-object(array(.value))) {
-                                               |         "key" : $outerkey + "." + .key,
-                                               |         "value" : if (is-object(.value)) flatten-object(.value) else .value
-                                               |       }]
-                                               |     if (is-object(.value))]
-                                               |
-                                               |  let flattened = (flatten($nested))
-                                               |
-                                               |  $flat + {for ($flattened) .key : .value}
-                                               |
-                                               |flatten-object(.)
-                                               |""".stripMargin)
+                                      |// JSLT transform which flattens nested objects into flat objects
+                                      |//   {"a" : {"b" : 1}} => {"a_b" : 1}
+                                      |
+                                      |def flatten-object(obj)
+                                      |  let flat = {for ($obj) .key : .value if (not(is-object(.value)))}
+                                      |
+                                      |  let nested = [for ($obj)
+                                      |     let outerkey = (.key)
+                                      |       [for (flatten-object(array(.value))) {
+                                      |         "key" : $outerkey + "." + .key,
+                                      |         "value" : if (is-object(.value)) flatten-object(.value) else .value
+                                      |       }]
+                                      |     if (is-object(.value))]
+                                      |
+                                      |  let flattened = (flatten($nested))
+                                      |
+                                      |  $flat + {for ($flattened) .key : .value}
+                                      |
+                                      |flatten-object(.)
+                                      |""".stripMargin)
 
     // W H E N
     val actual = jslt.apply(jsonNodeInput)
@@ -67,12 +67,12 @@ final class JsltApplicationSpec extends AnyFlatSpec with Matchers {
 
     // G I V E N
     val jsonNodeInput = mapper.readTree(msg)
-    val jslt = Parser.compileString(
+    val jslt          = Parser.compileString(
       """if (.features.location.speed) { "caracteristicas": { "localizacion" : { "velocidad" : .features.location.speed } } }""".stripMargin
     )
 
     // W H E N
-    val actual = jslt.apply(jsonNodeInput)
+    val actual        = jslt.apply(jsonNodeInput)
 
     // T H E N
     val expected = mapper.readTree("""{"caracteristicas":{"localizacion":{"velocidad":36}}}""")
@@ -84,12 +84,12 @@ final class JsltApplicationSpec extends AnyFlatSpec with Matchers {
 
     // G I V E N
     val jsonNodeInput = mapper.readTree(msg)
-    val jslt = Parser.compileString(
+    val jslt          = Parser.compileString(
       """if (.features.location.speed and .features.location.latitude and .features.location.longitude) { "caracteristicas": { "localizacion" : { "velocidad" : .features.location.speed } + { "latitud": .features.location.latitude} + { "longitud": .features.location.longitude} } }""".stripMargin
     )
 
     // W H E N
-    val actual = jslt.apply(jsonNodeInput)
+    val actual        = jslt.apply(jsonNodeInput)
 
     // T H E N
     val expected = mapper.readTree("""{"caracteristicas":{"localizacion":{"longitud":34.969875,"latitud":32.127758,"velocidad":36}}}""")

@@ -12,9 +12,10 @@ object LanguageBasicExtended {
     def apply[F[_]](implicit L: LanguageBasicExtended[F]): F[A]
   }
 
-  def multiply(a: Int, b: Int) = new ScalaToLanguageBasicExtendedBridge[Int] {
-    override def apply[F[_]](implicit L: LanguageBasicExtended[F]): F[Int] =
-      L.multiply(L.number(a), L.number(b))
-  }
+  def multiply(a: Int, b: Int) =
+    new ScalaToLanguageBasicExtendedBridge[Int] {
+      override def apply[F[_]](implicit L: LanguageBasicExtended[F]): F[Int] =
+        L.multiply(L.number(a), L.number(b))
+    }
 
 }

@@ -35,14 +35,13 @@ object AlertBehavior {
 
   val commandHandler: (State, Command) => Effect[Event, State] = { (state, command) =>
     command match {
-      case Open(alert) =>
+      case Open(alert)       =>
         if (state.history.exists(_.id == alert.id)) {
           throw new RuntimeException("Alert Duplicated")
           Effect.none
-        } else {
+        } else
           Effect.persist(Opened(alert))
-        }
-      case Close(id) => Effect.persist(Closed(id))
+      case Close(id)         => Effect.persist(Closed(id))
       case GetAlert(replyTo) =>
         replyTo ! state
         Effect.none

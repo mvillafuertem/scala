@@ -54,7 +54,7 @@ final class TestingStreamsSpec extends TestKit(ActorSystem("TestingStreams")) wi
 
     "integrate with test-actor-based sink" in {
 
-      val simpleSource = Source(1 to 5)
+      val simpleSource    = Source(1 to 5)
       // 0, 1, 3, 6, 10, 15
       val flow            = Flow[Int].scan[Int](0)(_ + _)
       val streamUnderTest = simpleSource.via(flow)
@@ -145,9 +145,8 @@ final class TestingStreamsSpec extends TestKit(ActorSystem("TestingStreams")) wi
           val partition = b.add(Partition[Int](workerCount, _ % workerCount))
           val merge     = b.add(Merge[Int](workerCount))
 
-          for (_ <- 1 to workerCount) {
+          for (_ <- 1 to workerCount)
             partition ~> Flow[Int].log("partition").map(spin).async ~> merge
-          }
 
           FlowShape(partition.in, merge.out)
         })
@@ -184,11 +183,16 @@ final class TestingStreamsSpec extends TestKit(ActorSystem("TestingStreams")) wi
         GraphDSL.create() { implicit builder =>
           import GraphDSL.Implicits._
 
-          val validationShape: FlowShape[Int, Option[Int]] = builder.add(Flow[Int].map(n => if (n > 0) Some(n) else None))
-          val partitionShape: UniformFanOutShape[Option[Int], Option[Int]] = builder.add(Partition[Option[Int]](2, {
-            case Some(_) => 0
-            case None    => 1
-          }))
+          val validationShape: FlowShape[Int, Option[Int]]                 = builder.add(Flow[Int].map(n => if (n > 0) Some(n) else None))
+          val partitionShape: UniformFanOutShape[Option[Int], Option[Int]] = builder.add(
+            Partition[Option[Int]](
+              2,
+              {
+                case Some(_) => 0
+                case None    => 1
+              }
+            )
+          )
           validationShape ~> partitionShape
 
           UniformFanOutShape(validationShape.in, partitionShape.out(0), partitionShape.out(1))
@@ -206,9 +210,8 @@ final class TestingStreamsSpec extends TestKit(ActorSystem("TestingStreams")) wi
 
           validation.out(0) ~> partition.in
 
-          for (_ <- 1 to workerCount) {
+          for (_ <- 1 to workerCount)
             partition ~> Flow[Option[Int]].log("partition").map(spin).async ~> merge
-          }
 
           validation.out(1) ~> Flow[Option[Int]].log("partition").map(_ => 0).async ~> merge
 
@@ -238,36 +241,38 @@ final class TestingStreamsSpec extends TestKit(ActorSystem("TestingStreams")) wi
     "monadic short-circuiting in streams" in {
 
       object PartitionTry {
-        def apply[T]() = GraphDSL.create[FanOutShape2[Try[T], Throwable, T]]() { implicit builder =>
-          import GraphDSL.Implicits._
+        def apply[T]() =
+          GraphDSL.create[FanOutShape2[Try[T], Throwable, T]]() { implicit builder =>
+            import GraphDSL.Implicits._
 
-          val success   = builder.add(Flow[Try[T]].collect { case Success(a) => a })
-          val failure   = builder.add(Flow[Try[T]].collect { case Failure(t) => t })
-          val partition = builder.add(Partition[Try[T]](2, _.fold(_ => 0, _ => 1)))
+            val success   = builder.add(Flow[Try[T]].collect { case Success(a) => a })
+            val failure   = builder.add(Flow[Try[T]].collect { case Failure(t) => t })
+            val partition = builder.add(Partition[Try[T]](2, _.fold(_ => 0, _ => 1)))
 
-          partition ~> failure
-          partition ~> success
+            partition ~> failure
+            partition ~> success
 
-          new FanOutShape2[Try[T], Throwable, T](partition.in, failure.out, success.out)
-        }
+            new FanOutShape2[Try[T], Throwable, T](partition.in, failure.out, success.out)
+          }
       }
 
       object ErrorHandlingFlow {
-        def apply[T, MatErr](errorSink: Sink[Throwable, MatErr]): Flow[Try[T], T, MatErr] = Flow.fromGraph(
-          GraphDSL.create(errorSink) { implicit builder => sink =>
-            import GraphDSL.Implicits._
+        def apply[T, MatErr](errorSink: Sink[Throwable, MatErr]): Flow[Try[T], T, MatErr] =
+          Flow.fromGraph(
+            GraphDSL.create(errorSink) { implicit builder => sink =>
+              import GraphDSL.Implicits._
 
-            val partition = builder.add(PartitionTry[T]())
+              val partition = builder.add(PartitionTry[T]())
 
-            partition.out0 ~> sink
+              partition.out0 ~> sink
 
-            new FlowShape[Try[T], T](partition.in, partition.out1)
-          }
-        )
+              new FlowShape[Try[T], T](partition.in, partition.out1)
+            }
+          )
       }
 
-      val source: Source[String, NotUsed] = Source(List("1", "2", "hello"))
-      val convert: Flow[String, Try[Int], NotUsed] = Flow.fromFunction((s: String) =>
+      val source: Source[String, NotUsed]                 = Source(List("1", "2", "hello"))
+      val convert: Flow[String, Try[Int], NotUsed]        = Flow.fromFunction((s: String) =>
         Try {
           s.toInt
         }

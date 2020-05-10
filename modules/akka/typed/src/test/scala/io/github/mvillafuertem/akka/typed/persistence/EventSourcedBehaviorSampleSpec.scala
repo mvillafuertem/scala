@@ -1,7 +1,7 @@
 package io.github.mvillafuertem.akka.typed.persistence
 
-import akka.actor.testkit.typed.scaladsl.{ScalaTestWithActorTestKit, TestProbe}
-import com.typesafe.config.{Config, ConfigFactory}
+import akka.actor.testkit.typed.scaladsl.{ ScalaTestWithActorTestKit, TestProbe }
+import com.typesafe.config.{ Config, ConfigFactory }
 import io.github.mvillafuertem.akka.typed.persistence.EventSourcedBehaviorSample._
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.flatspec.AnyFlatSpecLike

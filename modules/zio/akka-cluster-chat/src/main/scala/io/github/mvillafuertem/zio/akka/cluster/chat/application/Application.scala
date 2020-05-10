@@ -13,17 +13,17 @@ trait Application {
     for {
       entity <- ZIO.environment[Entity[List[String]]]
       toSend <- msg match {
-                 case Message(name, m) => IO.succeed(s"$name: $m")
-                 case Join(name) =>
-                   entity.state
-                     .update(state => Some(name :: state.getOrElse(Nil)))
-                     .map(state => s"$name joined the room. There are now ${state} participant(s).")
-                 case Leave(name) =>
-                   entity.state
-                     .update(state => Some(state.getOrElse(Nil).filterNot(_ equalsIgnoreCase name)))
-                     .map(state => s"$name left the room. There are now ${state} participant(s).")
-               }
-      _ <- pubSub.publish(entity.id, toSend).ignore
+                  case Message(name, m) => IO.succeed(s"$name: $m")
+                  case Join(name)       =>
+                    entity.state
+                      .update(state => Some(name :: state.getOrElse(Nil)))
+                      .map(state => s"$name joined the room. There are now ${state} participant(s).")
+                  case Leave(name)      =>
+                    entity.state
+                      .update(state => Some(state.getOrElse(Nil).filterNot(_ equalsIgnoreCase name)))
+                      .map(state => s"$name left the room. There are now ${state} participant(s).")
+                }
+      _      <- pubSub.publish(entity.id, toSend).ignore
     } yield ()
 
   def joinChat(

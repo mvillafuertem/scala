@@ -10,10 +10,9 @@ class Queue[A] {
 
   def enqueue(value: A): Unit = {
     val nuevo = Node(value, null)
-    if (cabeza != null) {
-
+    if (cabeza != null)
       fin.next = nuevo
-    } else {
+    else {
       cabeza = nuevo
       fin = nuevo
       numElem += 1
@@ -49,9 +48,7 @@ class Queue[A] {
     var aux: Node[A] = ???
     println("Contenido de la cola: ")
     aux = cabeza
-    while ({
-      aux != null
-    }) {
+    while (aux != null) {
       println(s"${aux.value}  ")
       aux = aux.next
     }

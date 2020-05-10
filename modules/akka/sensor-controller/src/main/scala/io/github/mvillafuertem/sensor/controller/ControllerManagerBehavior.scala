@@ -29,7 +29,7 @@ class ControllerManagerBehavior(context: ActorContext[ControllerManagerActorType
     msg match {
       case setting: TemperatureSetting => // change temperature settings
         getSensorActor(setting.record.sensorID) tell setting
-      case sensor: SensorDataRequest => // process sensor reading
+      case sensor: SensorDataRequest   => // process sensor reading
         getSensorActorMayBe(sensor.record.sensorID) match {
           case Some(actorRef) => actorRef tell sensor
           case _              => sensor.reply ! MayBeHeaterControl(None, 0)

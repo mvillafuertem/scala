@@ -48,7 +48,7 @@ object KafkaLocalServer {
 
   def apply(cleanOnStart: Boolean): KafkaLocalServer = this(DefaultPort, ZooKeeperLocalServer.DefaultPort, cleanOnStart)
 
-  def apply(kafkaPort: Int, zookeeperServerPort: Int, cleanOnStart: Boolean): KafkaLocalServer = {
+  def apply(kafkaPort: Int, zookeeperServerPort: Int, cleanOnStart: Boolean): KafkaLocalServer           = {
     val kafkaDataDir = dataDirectory(KafkaDataFolderName)
     Log.info(s"Kafka data directory is $kafkaDataDir.")
 

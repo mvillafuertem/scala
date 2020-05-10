@@ -8,7 +8,7 @@ object Dependencies {
       Artifact.akkaPersistence,
       Artifact.akkaSlf4f,
       Artifact.akkaStream
-    ).map(_ % Version.akka) ++ Seq(
+    ).map(_               % Version.akka) ++ Seq(
       //Artifact.akkaPersistenceCassandra % Version.akkaPersistenceCassandra,
       //Artifact.akkaPersistenceJdbc % Version.akkaPersistenceJdbc,
       Artifact.logback    % Version.logback,
@@ -70,14 +70,14 @@ object Dependencies {
     Artifact.scalaTest % Version.scalaTest % Test
   )
 
-  val `akka-fsm`: Seq[ModuleID] =
+  val `akka-fsm`: Seq[ModuleID]          =
     // A K K A  F S M
     Seq(
       Artifact.akkaPersistenceTyped % Version.akka,
       //"org.iq80.leveldb" % "leveldb" % "0.12",
-      Artifact.leveldbjniAll % Version.leveldbjniAll,
+      Artifact.leveldbjniAll        % Version.leveldbjniAll,
       //Artifact.akkaPersistenceInmemory % Version.akkaPersistenceInmemory,
-      Artifact.logback % Version.logback
+      Artifact.logback              % Version.logback
     ) ++ Seq(
       Artifact.tapirCore,
       Artifact.tapirAkkaHttpServer,
@@ -85,7 +85,7 @@ object Dependencies {
       Artifact.tapirOpenapiCirceYaml,
       Artifact.tapirOpenapiDocs,
       Artifact.tapirSwaggerUiAkkaHttp
-    ).map(_ % Version.tapir) ++ Seq(
+    ).map(_                         % Version.tapir) ++ Seq(
       // A K K A  F S M  T E S T
       Artifact.akkaActorTestkitTyped % Version.akka,
       Artifact.akkaStreamTestkit     % Version.akka,
@@ -93,7 +93,7 @@ object Dependencies {
       Artifact.scalaTest             % Version.scalaTest
     ).map(_ % Test)
 
-  val `akka-http`: Seq[ModuleID] =
+  val `akka-http`: Seq[ModuleID]         =
     // A K K A  H T T P
     Seq(
       Artifact.logback % Version.logback
@@ -104,7 +104,7 @@ object Dependencies {
       Artifact.tapirOpenapiCirceYaml,
       Artifact.tapirOpenapiDocs,
       Artifact.tapirSwaggerUiAkkaHttp
-    ).map(_ % Version.tapir) ++ Seq(
+    ).map(_            % Version.tapir) ++ Seq(
       // A K K A  H T T P  T E S T
       Artifact.akkaHttpTestkit % Version.akkaHttp,
       Artifact.scalaTest       % Version.scalaTest
@@ -116,18 +116,18 @@ object Dependencies {
       Artifact.akkaActorTyped  % Version.akka,
       Artifact.akkaStreamTyped % Version.akka,
       Artifact.akkaKafka       % Version.akkaKafka,
-      "com.iheart"             %% "ficus" % "1.4.7",
+      "com.iheart"            %% "ficus"        % "1.4.7",
       "org.apache.curator"     % "curator-test" % "4.3.0",
-      "org.apache.kafka"       %% "kafka" % "2.5.0",
+      "org.apache.kafka"      %% "kafka"        % "2.5.0",
       Artifact.logback         % Version.logback
     ) ++ Seq(
       // S E N S O R  C O N T R O L L E R  T E S T
       Artifact.akkaHttpTestkit % Version.akkaHttp,
       Artifact.scalaTest       % Version.scalaTest,
       Artifact.zioTest         % Version.zio
-    ).map(_ % Test)
+    ).map(_                    % Test)
 
-  val cats: Seq[ModuleID] = Seq(
+  val cats: Seq[ModuleID]                = Seq(
     // C A T S
     Artifact.catsCore,
     Artifact.catsFree
@@ -136,7 +136,7 @@ object Dependencies {
     Artifact.scalaTest % Version.scalaTest
   ).map(_ % Test)
 
-  val json: Seq[ModuleID] = Seq(
+  val json: Seq[ModuleID]                = Seq(
     // J S O N
     Artifact.circeParser,
     Artifact.circeGeneric,
@@ -151,7 +151,7 @@ object Dependencies {
     Artifact.scalaTest % Version.scalaTest
   ).map(_ % Test)
 
-  val slick: Seq[ModuleID] =
+  val slick: Seq[ModuleID]               =
     // S L I C K
     Seq(
       Artifact.alpakkaSlick % Version.alpakkaSlick,
@@ -159,9 +159,9 @@ object Dependencies {
     ) ++ Seq(
       // S L I C K  T E S T
       Artifact.scalaTest % Version.scalaTest
-    ).map(_ % Test)
+    ).map(_                 % Test)
 
-  val sttp: Seq[ModuleID] =
+  val sttp: Seq[ModuleID]                =
     // S T T P
     Seq(
       Artifact.sttpAsyncAkka,
@@ -171,7 +171,7 @@ object Dependencies {
     ).map(_ % Version.sttp) ++ Seq(
       Artifact.circeGeneric,
       Artifact.circeGenericExtras
-    ).map(_               % Version.circe) ++ Seq(
+    ).map(_ % Version.circe) ++ Seq(
       Artifact.akkaStream % Version.akka
     ) ++ Seq(
       // S T T P  T E S T
@@ -181,7 +181,7 @@ object Dependencies {
       Artifact.scalaTest % Version.scalaTest
     ).map(_ % Test)
 
-  val tapir: Seq[ModuleID] =
+  val tapir: Seq[ModuleID]               =
     // T A P I R
     Seq(
       //"org.iq80.leveldb" % "leveldb" % "0.12",
@@ -199,20 +199,21 @@ object Dependencies {
       Artifact.tapirOpenapiCirceYaml,
       Artifact.tapirOpenapiDocs,
       Artifact.tapirSwaggerUiAkkaHttp
-    ).map(_ % Version.tapir) ++ Seq(
+    ).map(_                              % Version.tapir) ++ Seq(
       // T A P I R  T E S T
       Artifact.akkaHttpTestkit % Version.akkaHttp,
       Artifact.scalaTest       % Version.scalaTest,
       Artifact.zioTest         % Version.zio
     ).map(_ % Test)
 
-  val zio: Seq[ModuleID] =
+  val zio: Seq[ModuleID]                 =
     // Z I O
     Seq(
       Artifact.zio,
       Artifact.zioStreams
     ).map(_                   % Version.zio) ++ Seq(
-      Artifact.zioAkkaCluster % Version.zioAkkaCluster
+      Artifact.zioAkkaCluster % Version.zioAkkaCluster,
+      Artifact.zioKafka       % Version.zioKafka
     ) ++ Seq(
       // Z I O  T E S T
       Artifact.zioTest,
@@ -247,20 +248,20 @@ object Dependencies {
     val circeGenericExtras        = "io.circe"                              %% "circe-generic-extras"
     val circeParser               = "io.circe"                              %% "circe-parser"
     val dijon                     = "com.github.pathikrit"                  %% "dijon"
-    val h2                        = "com.h2database"                        % "h2"
-    val jslt                      = "com.schibsted.spt.data"                % "jslt"
+    val h2                        = "com.h2database"                         % "h2"
+    val jslt                      = "com.schibsted.spt.data"                 % "jslt"
     val jsoniterCore              = "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-core"
     val jsoniterMacros            = "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-macros"
-    val leveldbjniAll             = "org.fusesource.leveldbjni"             % "leveldbjni-all"
-    val logback                   = "ch.qos.logback"                        % "logback-classic"
-    val postgresql                = "org.postgresql"                        % "postgresql"
+    val leveldbjniAll             = "org.fusesource.leveldbjni"              % "leveldbjni-all"
+    val logback                   = "ch.qos.logback"                         % "logback-classic"
+    val postgresql                = "org.postgresql"                         % "postgresql"
     val scalaTest                 = "org.scalatest"                         %% "scalatest"
     val slick                     = "com.typesafe.slick"                    %% "slick"
     val sttpAsyncAkka             = "com.softwaremill.sttp.client"          %% "akka-http-backend"
     val sttpAsyncZioStreams       = "com.softwaremill.sttp.client"          %% "async-http-client-backend-zio-streams"
-    val sttpCore                  = "com.softwaremill.sttp.client"          %% "core"
     val sttpCirce                 = "com.softwaremill.sttp.client"          %% "circe"
-    val swaggerUi                 = "org.webjars"                           % "swagger-ui"
+    val sttpCore                  = "com.softwaremill.sttp.client"          %% "core"
+    val swaggerUi                 = "org.webjars"                            % "swagger-ui"
     val tapirAkkaHttpServer       = "com.softwaremill.sttp.tapir"           %% "tapir-akka-http-server"
     val tapirCore                 = "com.softwaremill.sttp.tapir"           %% "tapir-core"
     val tapirJsonCirce            = "com.softwaremill.sttp.tapir"           %% "tapir-json-circe"
@@ -268,10 +269,11 @@ object Dependencies {
     val tapirOpenapiDocs          = "com.softwaremill.sttp.tapir"           %% "tapir-openapi-docs"
     val tapirSwaggerUiAkkaHttp    = "com.softwaremill.sttp.tapir"           %% "tapir-swagger-ui-akka-http"
     val testcontainers            = "com.dimafeng"                          %% "testcontainers-scala"
-    val testcontainersKafka       = "org.testcontainers"                    % "kafka"
+    val testcontainersKafka       = "org.testcontainers"                     % "kafka"
     val zio                       = "dev.zio"                               %% "zio"
     val zioAkkaCluster            = "dev.zio"                               %% "zio-akka-cluster"
     val zioInteropReactiveStreams = "dev.zio"                               %% "zio-interop-reactivestreams"
+    val zioKafka                  = "dev.zio"                               %% "zio-kafka"
     val zioStreams                = "dev.zio"                               %% "zio-streams"
     val zioTest                   = "dev.zio"                               %% "zio-test"
     val zioTestSbt                = "dev.zio"                               %% "zio-test-sbt"
@@ -290,19 +292,20 @@ object Dependencies {
     val dijon                     = "0.3.0"
     val h2                        = "1.4.200"
     val jslt                      = "0.1.9"
-    val jsoniter                  = "2.2.1"
+    val jsoniter                  = "2.2.3"
     val leveldbjniAll             = "1.8"
     val logback                   = "1.2.3"
     val postgres                  = "42.2.12"
-    val scalaTest                 = "3.1.1"
+    val scalaTest                 = "3.1.2"
     val slick                     = "3.3.2"
     val sttp                      = "2.1.1"
-    val tapir                     = "0.14.4"
+    val tapir                     = "0.14.5"
     val testcontainers            = "0.37.0"
     val testcontainersKafka       = "1.14.1"
     val zio                       = "1.0.0-RC18-2"
     val zioAkkaCluster            = "0.1.15"
-    val zioInteropReactiveStreams = "1.0.3.5-RC7"
+    val zioInteropReactiveStreams = "1.0.3.5-RC6"
+    val zioKafka                  = "0.8.0"
   }
 
 }

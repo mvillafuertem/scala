@@ -29,8 +29,8 @@ object EventSourcedBehaviorSample {
 
   val commandHandler: (State, Command) => Effect[Event, State] = { (state, command) =>
     command match {
-      case Add(data) => Effect.persist(Added(data))
-      case Clear     => Effect.persist(Cleared)
+      case Add(data)         => Effect.persist(Added(data))
+      case Clear             => Effect.persist(Cleared)
       case GetValue(replyTo) =>
         replyTo ! state
         Effect.none

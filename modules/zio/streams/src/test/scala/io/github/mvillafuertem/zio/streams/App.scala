@@ -1,10 +1,10 @@
 package io.github.mvillafuertem.zio.streams
 
-import zio.stream.{ Stream, ZStreamChunk }
+import zio.stream.{Stream, ZStreamChunk}
 import zio.test.Assertion.equalTo
 import zio.test.environment.TestEnvironment
 import zio.test._
-import zio.{ Chunk, Queue, Semaphore, ZIO }
+import zio.{Chunk, Exit, Queue, Semaphore, Task, ZIO}
 
 object App extends DefaultRunnableSpec {
 
@@ -48,6 +48,15 @@ object App extends DefaultRunnableSpec {
           } yield elements
           // t h e n
         )(equalTo((1 to 4096).toList))
+      },
+      testM("Array check fail") {
+        assertM(
+          for {
+            splited <- Task.effect("a:b:c:d".split(":"))
+            error <- Task.effect(splited(4)).catchAll(exception => ZIO.fail(exception.getMessage)).run
+          } yield error
+          // t h e n
+        )(Assertion.fails(equalTo("Index 4 out of bounds for length 4")))
       }
     ) @@ TestAspect.timed
 

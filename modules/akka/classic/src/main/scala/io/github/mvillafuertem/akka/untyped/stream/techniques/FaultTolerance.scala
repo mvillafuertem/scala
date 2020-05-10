@@ -16,7 +16,7 @@ object FaultTolerance extends App {
   implicit val actorMaterializer: Materializer = Materializer(actorSystem)
 
   // 1. Logging
-  val faultySource = Source(1 to 10).map(e => if (e == 6) throw new RuntimeException else e)
+  val faultySource  = Source(1 to 10).map(e => if (e == 6) throw new RuntimeException else e)
   faultySource
     .log("trackingElements")
     .to(Sink.ignore)
@@ -31,9 +31,12 @@ object FaultTolerance extends App {
 
   // 3. Recover with another stream
   faultySource
-    .recoverWithRetries(3, {
-      case _: RuntimeException => Source(90 to 99)
-    })
+    .recoverWithRetries(
+      3,
+      {
+        case _: RuntimeException => Source(90 to 99)
+      }
+    )
     .log("recoverWithRetries")
     .to(Sink.ignore)
   //.run()
@@ -103,7 +106,7 @@ object FaultTolerance extends App {
       case e: RuntimeException =>
         println(e.getMessage)
         Resume
-      case _ => Stop
+      case _                   => Stop
     })
     .run()
 

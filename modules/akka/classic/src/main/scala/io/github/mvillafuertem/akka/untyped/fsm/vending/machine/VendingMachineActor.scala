@@ -63,9 +63,10 @@ final class VendingMachineActor extends Actor with ActorLogging {
 
   }
 
-  def startReceiveMoneyTimeoutSchedule(): Cancellable = context.system.scheduler.scheduleOnce(1 second) {
-    self ! ReceiveMoneyTimeout
-  }
+  def startReceiveMoneyTimeoutSchedule(): Cancellable =
+    context.system.scheduler.scheduleOnce(1 second) {
+      self ! ReceiveMoneyTimeout
+    }
 
 }
 

@@ -80,7 +80,7 @@ with EventConfiguration
 
         producer
       })
-      .runWith(Producer.plainSink(producerSettings, kafkaProducer))
+      .runWith(Producer.plainSink(producerSettings))
 
   }
 

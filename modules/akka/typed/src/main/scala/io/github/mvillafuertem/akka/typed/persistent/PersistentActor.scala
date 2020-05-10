@@ -32,11 +32,12 @@ object PersistentActor {
 
   // s t a t e
   case class PersonState(person: Option[Person] = None) {
-    def update(e: Event): PersonState = e match {
-      case PersonAdded(person)              => PersonState(Some(Person(person.firstName, person.lastName)))
-      case LastNameModified(_, newLastName) => PersonState(this.person.map(p => p.copy(lastName = newLastName)))
-      case _                                => PersonState(None)
-    }
+    def update(e: Event): PersonState =
+      e match {
+        case PersonAdded(person)              => PersonState(Some(Person(person.firstName, person.lastName)))
+        case LastNameModified(_, newLastName) => PersonState(this.person.map(p => p.copy(lastName = newLastName)))
+        case _                                => PersonState(None)
+      }
   }
   // E N D  P R O T O C O L
 
@@ -45,14 +46,14 @@ object PersistentActor {
     val log = context.asScala.log
     (state, cmd) =>
       cmd match {
-        case AddPerson(p) =>
+        case AddPerson(p)                =>
           Effect.persist(PersonAdded(p))
         case ModifyLastName(newLastName) =>
           val prevLastName = state.person.getOrElse(Person("", "")).lastName
           Effect
             .persist(LastNameModified(prevLastName, newLastName))
             .thenRun(_ => log.info(s"Last name changed from $prevLastName to $newLastName"))
-        case GetPerson(replyTo) =>
+        case GetPerson(replyTo)          =>
           replyTo ! state.person.getOrElse(Person("", ""))
           Effect.none
       }
@@ -65,15 +66,16 @@ object PersistentActor {
   }
 
   // B E H A V I O R
-  def behavior(entityId: String): Behavior[Command] = Behaviors.setup[Command] { context =>
-    context.log.info(s"Stated entity $entityId")
-    EventSourcedBehavior[Command, Event, PersonState](
-      persistenceId = PersistenceId.ofUniqueId(entityId),
-      emptyState = PersonState(),
-      commandHandler = commandHandler(context, entityId),
-      eventHandler = eventHandler
-    )
-  }
+  def behavior(entityId: String): Behavior[Command] =
+    Behaviors.setup[Command] { context =>
+      context.log.info(s"Stated entity $entityId")
+      EventSourcedBehavior[Command, Event, PersonState](
+        persistenceId = PersistenceId.ofUniqueId(entityId),
+        emptyState = PersonState(),
+        commandHandler = commandHandler(context, entityId),
+        eventHandler = eventHandler
+      )
+    }
 
   // S U P E R V I S O R  S T R A T E G Y
   val supervisorStrategy = SupervisorStrategy.restartWithBackoff(

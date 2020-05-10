@@ -24,7 +24,7 @@ object Topic {
       val updatedMap = subscribers.get(consumerGroup) match {
         case Some(value) =>
           subscribers + (consumerGroup -> (value :+ consumer))
-        case None =>
+        case None        =>
           subscribers + (consumerGroup -> List(consumer))
       }
 
@@ -33,23 +33,22 @@ object Topic {
 
     def run: URIO[Any, Fiber.Runtime[Nothing, Nothing]] = {
       val loop = for {
-        elem <- consumer.take
+        elem  <- consumer.take
         mapped = subscribers.values
-          .flatMap(
-            randomElement(_)
-              .map(_.offer(elem))
-          )
-        _ <- ZIO.collectAll(mapped)
+                   .flatMap(
+                     randomElement(_)
+                       .map(_.offer(elem))
+                   )
+        _     <- ZIO.collectAll(mapped)
       } yield ()
       loop.forever.fork
     }
 
     def randomElement(list: List[Queue[ConsumerRecord[A]]]): Option[Queue[ConsumerRecord[A]]] =
-      if (list.nonEmpty) {
+      if (list.nonEmpty)
         Some(list(Random.nextInt(list.length)))
-      } else {
+      else
         None
-      }
 
   }
 

@@ -7,18 +7,18 @@ import sttp.tapir._
 import sttp.tapir.server.akkahttp._
 
 import scala.concurrent.duration.Duration
-import scala.concurrent.{Await, ExecutionContextExecutor, Future}
-import scala.util.{Failure, Success}
+import scala.concurrent.{ Await, ExecutionContextExecutor, Future }
+import scala.util.{ Failure, Success }
 
 object MinimalAkkaHTTP extends App {
 
   // A K K A
-  private implicit val actorSystem: ActorSystem        = ActorSystem("minimal-akka-http")
-  private implicit val actorMaterializer: Materializer = Materializer(actorSystem)
+  private implicit val actorSystem: ActorSystem             = ActorSystem("minimal-akka-http")
+  private implicit val actorMaterializer: Materializer      = Materializer(actorSystem)
   private implicit val dispatcher: ExecutionContextExecutor = actorSystem.dispatcher
 
   // R O U T E
-  val route = endpoint.get
+  val route                                     = endpoint.get
     .in("hello")
     .out(stringBody)
     .toRoute(_ => Future(Right("Hello World!")))

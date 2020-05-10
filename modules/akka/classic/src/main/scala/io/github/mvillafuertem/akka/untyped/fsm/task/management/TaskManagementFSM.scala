@@ -20,7 +20,7 @@ final class TaskManagementFSM extends FSM[TaskState, TaskData] {
         //context.become(opened(task))
         goto(Opened) using Open(task)
       }
-    case _ =>
+    case _                           =>
       sender() ! TaskManagementError("Task not exits")
       stay()
   }
@@ -31,7 +31,7 @@ final class TaskManagementFSM extends FSM[TaskState, TaskData] {
       sender() ! TaskManagementInfo("Task closed")
       //context.become(closed(task))
       goto(Closed) using Close(id)
-    case _ =>
+    case _                         =>
       sender() ! TaskManagementInfo("Task is already open")
       stay()
   }

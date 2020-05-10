@@ -43,7 +43,7 @@ object GraphMaterializedValue extends App {
 
   import actorSystem.dispatcher
 
-  val shortStringsCountFuture = wordSource.toMat(complexWordSink)(Keep.right).run()
+  val shortStringsCountFuture                                         = wordSource.toMat(complexWordSink)(Keep.right).run()
   shortStringsCountFuture.onComplete {
     case Success(count)     => println(s"The total number of short strings is $count")
     case Failure(exception) => println(s"The count of short strins failed $exception")

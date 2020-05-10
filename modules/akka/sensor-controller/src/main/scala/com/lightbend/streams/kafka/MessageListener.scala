@@ -45,12 +45,12 @@ class MessageListener[K, V](
   keyDeserealizer: String,
   valueDeserealizer: String,
   processor: RecordProcessorTrait[K, V]
-) extends Runnable {
+) extends Runnable   {
 
   import MessageListener._
   import scala.jdk.CollectionConverters._
 
-  val consumer = new KafkaConsumer[K, V](consumerProperties(brokers, group, keyDeserealizer, valueDeserealizer).asJava)
+  val consumer  = new KafkaConsumer[K, V](consumerProperties(brokers, group, keyDeserealizer, valueDeserealizer).asJava)
   consumer.subscribe(Seq(topic).asJava, new NoOpConsumerRebalanceListener())
   var completed = false
 
@@ -60,9 +60,8 @@ class MessageListener[K, V](
   override def run(): Unit = {
     while (!completed) {
       val records = consumer.poll(Duration.ofMillis(200)).asScala
-      for (record <- records) {
+      for (record <- records)
         processor.processRecord(record)
-      }
     }
     consumer.close()
     System.out.println("Listener completes")

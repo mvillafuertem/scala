@@ -32,7 +32,7 @@ object Heater {
     )
 
     // Create kafka broker
-    val kafka = KafkaLocalServer(true)
+    val kafka  = KafkaLocalServer(true)
     kafka.start()
     println(s"Kafka Cluster created")
 
@@ -40,7 +40,7 @@ object Heater {
     val sender = MessageSender[Array[Byte], Array[Byte]](kafkaConfig.brokers)
 
     // Start listener for control signal
-    val listener = MessageListener(brokers, kafkaConfig.heaterinputtopic, kafkaConfig.heatersourcegroup, new ControlProcessor())
+    val listener    = MessageListener(brokers, kafkaConfig.heaterinputtopic, kafkaConfig.heatersourcegroup, new ControlProcessor())
     listener.start()
 
     // Start control publishing
@@ -71,21 +71,22 @@ object Heater {
   def pause(timeInterval: Duration): Unit = Thread.sleep(timeInterval.toMillis)
 
   // Changing desired state
-  def controltemperature(sender: MessageSender[Array[Byte], Array[Byte]]): Future[Unit] = Future {
-    var desired         = 45.0
-    val controlInterval = 10.minute
-    val generator       = new Random
-    val bos             = new ByteArrayOutputStream
-    while (true) {
-      val temperatureControl = TemperatureControl(sensorID, desired, 1.0, 1.0)
-      bos.reset()
-      temperatureControl.writeTo(bos)
-      sender.writeValue(kafkaConfig.temperaturesettopic, bos.toByteArray)
-      println(s"Send new temperature control $temperatureControl")
-      desired = desired + (generator.nextInt(10) - 5)
-      pause(controlInterval)
+  def controltemperature(sender: MessageSender[Array[Byte], Array[Byte]]): Future[Unit] =
+    Future {
+      var desired         = 45.0
+      val controlInterval = 10.minute
+      val generator       = new Random
+      val bos             = new ByteArrayOutputStream
+      while (true) {
+        val temperatureControl = TemperatureControl(sensorID, desired, 1.0, 1.0)
+        bos.reset()
+        temperatureControl.writeTo(bos)
+        sender.writeValue(kafkaConfig.temperaturesettopic, bos.toByteArray)
+        println(s"Send new temperature control $temperatureControl")
+        desired = desired + (generator.nextInt(10) - 5)
+        pause(controlInterval)
+      }
     }
-  }
 }
 
 // Control message listener

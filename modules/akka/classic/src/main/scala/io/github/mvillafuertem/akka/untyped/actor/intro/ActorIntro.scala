@@ -18,7 +18,7 @@ object ActorIntro extends App {
       case message: String =>
         println(s"[word count] I have received $message")
         totalWords += message.split(" ").length
-      case msg => println(s"[word counter] I cannot understand ${msg.toString}")
+      case msg             => println(s"[word counter] I cannot understand ${msg.toString}")
     }
 
   }

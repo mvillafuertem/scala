@@ -13,7 +13,7 @@ import zio.test.environment.{ TestConsole, TestEnvironment }
 object ApplicationSpec extends DefaultRunnableSpec {
 
   // g i v e n
-  private val config: Config = ConfigFactory
+  private val config: Config                           = ConfigFactory
     .load("application-test")
     .getConfig("application")
   private val actorSystem: TaskLayer[Has[ActorSystem]] =

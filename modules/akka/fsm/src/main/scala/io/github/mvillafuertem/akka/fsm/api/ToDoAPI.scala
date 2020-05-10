@@ -185,14 +185,14 @@ object ToDoAPI {
   //.errorOut(statusCode)
 
   // 400
-  lazy val badRequestErrorInfo   = ErrorInfo(model.StatusCodes.BadRequest.reason, model.StatusCodes.BadRequest.defaultMessage)
-  lazy val unauthorizedErrorInfo = ErrorInfo(model.StatusCodes.Unauthorized.reason, model.StatusCodes.Unauthorized.defaultMessage)
-  lazy val forbiddenErrorInfo    = ErrorInfo(model.StatusCodes.Forbidden.reason, model.StatusCodes.Forbidden.defaultMessage)
-  lazy val notFoundErrorInfo     = ErrorInfo(model.StatusCodes.NotFound.reason, model.StatusCodes.NotFound.defaultMessage)
-  lazy val conflictErrorInfo     = ErrorInfo(model.StatusCodes.Conflict.reason, model.StatusCodes.Conflict.defaultMessage)
+  lazy val badRequestErrorInfo                                              = ErrorInfo(model.StatusCodes.BadRequest.reason, model.StatusCodes.BadRequest.defaultMessage)
+  lazy val unauthorizedErrorInfo                                            = ErrorInfo(model.StatusCodes.Unauthorized.reason, model.StatusCodes.Unauthorized.defaultMessage)
+  lazy val forbiddenErrorInfo                                               = ErrorInfo(model.StatusCodes.Forbidden.reason, model.StatusCodes.Forbidden.defaultMessage)
+  lazy val notFoundErrorInfo                                                = ErrorInfo(model.StatusCodes.NotFound.reason, model.StatusCodes.NotFound.defaultMessage)
+  lazy val conflictErrorInfo                                                = ErrorInfo(model.StatusCodes.Conflict.reason, model.StatusCodes.Conflict.defaultMessage)
   // 500
-  lazy val internalServerErrorErrorInfo = ErrorInfo(model.StatusCodes.InternalServerError.reason, model.StatusCodes.InternalServerError.defaultMessage)
-  lazy val serviceUnavailableErrorInfo  = ErrorInfo(model.StatusCodes.ServiceUnavailable.reason, model.StatusCodes.ServiceUnavailable.defaultMessage)
-  lazy val unknownErrorInfo             = ErrorInfo("unknown_error", "The reason for the error could not be determined")
+  lazy val internalServerErrorErrorInfo                                     = ErrorInfo(model.StatusCodes.InternalServerError.reason, model.StatusCodes.InternalServerError.defaultMessage)
+  lazy val serviceUnavailableErrorInfo                                      = ErrorInfo(model.StatusCodes.ServiceUnavailable.reason, model.StatusCodes.ServiceUnavailable.defaultMessage)
+  lazy val unknownErrorInfo                                                 = ErrorInfo("unknown_error", "The reason for the error could not be determined")
 
 }
