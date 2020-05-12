@@ -1,18 +1,32 @@
 package io.github.mvillafuertem.alpakka.kafka
 
-import com.typesafe.config.{Config, ConfigFactory}
-import io.github.mvillafuertem.alpakka.kafka.KafkaProducerConfigurationProperties._
+import com.typesafe.config.{ Config, ConfigFactory }
 
-final case class KafkaProducerConfigurationProperties
-(
-  config: Config = ConfigFactory.load().getConfig(KafkaProducerConfigurationProperties.path),
-  bootstrapServers: String = ConfigFactory.load().getString(s"$path.bootstrap-servers"),
-  transactionalId: String = ConfigFactory.load().getString(s"$path.transactional-id"),
-  producerTopic: String = ConfigFactory.load().getString(s"$path.producer-topic")
-)
+final case class KafkaProducerConfigurationProperties(
+  bootstrapServers: String,
+  transactionalId: String,
+  producerTopic: String
+) {
+
+  def withBootstrapServers(bootstrapServers: String): KafkaProducerConfigurationProperties =
+    copy(bootstrapServers = bootstrapServers)
+
+  def withTransactionalId(transactionalId: String): KafkaProducerConfigurationProperties =
+    copy(transactionalId = transactionalId)
+
+  def withProducerTopic(producerTopic: String): KafkaProducerConfigurationProperties =
+    copy(producerTopic = producerTopic)
+
+}
 
 object KafkaProducerConfigurationProperties {
 
-  private val path: String = "infrastructure.kafka.producer"
+  val default: Config = ConfigFactory.load().getConfig("infrastructure.kafka.producer")
 
+  def apply(config: Config = default): KafkaProducerConfigurationProperties =
+    new KafkaProducerConfigurationProperties(
+      bootstrapServers = config.getString("bootstrap-servers"),
+      transactionalId = config.getString("transactional-id"),
+      producerTopic = config.getString("producer-topic")
+    )
 }

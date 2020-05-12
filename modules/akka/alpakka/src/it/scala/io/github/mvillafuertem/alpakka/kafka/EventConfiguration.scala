@@ -14,11 +14,11 @@ import scala.concurrent.Future
 trait EventConfiguration {
 
   def createProducerSettings(producerConfigurationProperties: KafkaProducerConfigurationProperties): ProducerSettings[String, String] =
-    ProducerSettings(producerConfigurationProperties.config, new StringSerializer, new StringSerializer)
+    ProducerSettings(KafkaProducerConfigurationProperties.default, new StringSerializer, new StringSerializer)
       .withBootstrapServers(producerConfigurationProperties.bootstrapServers)
 
   def createConsumerSettings(consumerConfigurationProperties: KafkaConsumerConfigurationProperties): ConsumerSettings[String, String] =
-    ConsumerSettings(consumerConfigurationProperties.config, new StringDeserializer, new StringDeserializer)
+    ConsumerSettings(KafkaConsumerConfigurationProperties.default, new StringDeserializer, new StringDeserializer)
       .withBootstrapServers(consumerConfigurationProperties.bootstrapServers)
       .withGroupId(consumerConfigurationProperties.groupId)
       .withProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, consumerConfigurationProperties.autoOffsetReset)

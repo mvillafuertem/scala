@@ -1,22 +1,48 @@
 package io.github.mvillafuertem.alpakka.kafka
 
-import com.typesafe.config.{Config, ConfigFactory}
-import io.github.mvillafuertem.alpakka.kafka.KafkaConsumerConfigurationProperties._
+import com.typesafe.config.{ Config, ConfigFactory }
 
+final case class KafkaConsumerConfigurationProperties(
+  bootstrapServers: String,
+  groupId: String,
+  autoOffsetReset: String,
+  enableAutoCommit: String,
+  autoCommitIntervalMs: String,
+  consumerTopic: String
+) {
 
-final case class KafkaConsumerConfigurationProperties
-(
-  config: Config = ConfigFactory.load().getConfig(KafkaConsumerConfigurationProperties.path),
-  bootstrapServers: String = ConfigFactory.load().getString(s"$path.bootstrap-servers"),
-  groupId: String = ConfigFactory.load().getString(s"$path.group-id"),
-  autoOffsetReset: String = ConfigFactory.load().getString(s"$path.auto-offset-reset"),
-  enableAutoCommit: String = ConfigFactory.load().getString(s"$path.enable-auto-commit"),
-  autoCommitIntervalMs: String = ConfigFactory.load().getString(s"$path.auto-commit-interval-ms"),
-  consumerTopic: String = ConfigFactory.load().getString(s"$path.consumer-topic")
-)
+  def withBootstrapServers(bootstrapServers: String): KafkaConsumerConfigurationProperties =
+    copy(bootstrapServers = bootstrapServers)
+
+  def withGroupId(groupId: String): KafkaConsumerConfigurationProperties =
+    copy(groupId = groupId)
+
+  def withAutoOffsetReset(autoOffsetReset: String): KafkaConsumerConfigurationProperties =
+    copy(autoOffsetReset = autoOffsetReset)
+
+  def withEnableAutoCommit(enableAutoCommit: String): KafkaConsumerConfigurationProperties =
+    copy(enableAutoCommit = enableAutoCommit)
+
+  def withAutoCommitIntervalMs(autoCommitIntervalMs: String): KafkaConsumerConfigurationProperties =
+    copy(autoCommitIntervalMs = autoCommitIntervalMs)
+
+  def withConsumerTopic(consumerTopic: String): KafkaConsumerConfigurationProperties =
+    copy(consumerTopic = consumerTopic)
+
+}
 
 object KafkaConsumerConfigurationProperties {
 
-  private val path: String = "infrastructure.kafka.consumer"
+  val default: Config = ConfigFactory.load().getConfig("infrastructure.kafka.consumer")
+
+  def apply(config: Config = default): KafkaConsumerConfigurationProperties =
+    new KafkaConsumerConfigurationProperties(
+      bootstrapServers = config.getString("bootstrap-servers"),
+      groupId = config.getString("group-id"),
+      autoOffsetReset = config.getString("auto-offset-reset"),
+      enableAutoCommit = config.getString("enable-auto-commit"),
+      autoCommitIntervalMs = config.getString("auto-commit-interval-ms"),
+      consumerTopic = config.getString("consumer-topic")
+    )
 
 }
