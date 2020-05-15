@@ -48,7 +48,9 @@ lazy val scala = (project in file("."))
     tapir,
     `zio-akka-cluster-chat`,
     `zio-akka-cluster-sharding`,
-    `zio-queues`
+    `zio-kafka`,
+    `zio-queues`,
+    `zio-streams`,
   )
   // S E T T I N G S
   .settings(commonSettings)
