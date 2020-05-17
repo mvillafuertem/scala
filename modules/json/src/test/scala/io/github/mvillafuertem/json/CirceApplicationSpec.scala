@@ -65,7 +65,7 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
       )
 
     // W H E N
-    val actual: Json                         = new Thing("a", 1).asJson
+    val actual: Json = new Thing("a", 1).asJson
 
     // T H E N
     val expected = Json.obj(
@@ -89,7 +89,7 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
       } yield new Thing(foo, bar)
 
     // W H E N
-    val actual                               = decode[Thing]("""{"foo":"a","bar":1}""")
+    val actual = decode[Thing]("""{"foo":"a","bar":1}""")
 
     // T H E N
     val expected = new Thing("a", 1)
@@ -114,8 +114,8 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
     }
 
     // W H E N
-    val someThing                            = SomeThing("a").asJson
-    val otherThing                           = OtherThing(1).asJson
+    val someThing  = SomeThing("a").asJson
+    val otherThing = OtherThing(1).asJson
 
     // T H E N
     val expectedSomeThing  = Json.obj(
@@ -143,8 +143,8 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
         .or(Decoder[OtherThing].map[Thing](identity))
 
     // W H E N
-    val someThing                            = decode[SomeThing]("""{"someThing":"a"}""")
-    val otherThing                           = decode[OtherThing]("""{"otherThing":1}""")
+    val someThing  = decode[SomeThing]("""{"someThing":"a"}""")
+    val otherThing = decode[OtherThing]("""{"otherThing":1}""")
 
     // T H E N
     val expectedSomeThing  = SomeThing("a")
@@ -167,7 +167,7 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
       )
 
     // W H E N
-    val actual: Thing                        = SomeThing
+    val actual: Thing = SomeThing
 
     // T H E N
     val expected = Json.obj(
@@ -191,7 +191,7 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
       } yield new SomeThingResult("value", Seq[Thing](SomeThing).filter(_.toString.equalsIgnoreCase(foo)).head)
 
     // W H E N
-    val actual                                         = decode[SomeThingResult]("""{"value":"SomeThing"}""")
+    val actual = decode[SomeThingResult]("""{"value":"SomeThing"}""")
 
     // T H E N
     actual.map(result => result shouldBe ("value", SomeThing))
@@ -233,7 +233,7 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
       } yield Seq[Thing](SomeThing).filter(_.toString.equalsIgnoreCase(foo)).head
 
     // W H E N
-    val actual                               = decode[User]("""{"id": 0,"thing":"SomeThing"}""")
+    val actual = decode[User]("""{"id": 0,"thing":"SomeThing"}""")
 
     // T H E N
     val expected: User = User(0L, SomeThing)
@@ -280,7 +280,7 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
       } yield Seq[Thing](SomeThing).filter(_.toString.equalsIgnoreCase(foo)).head
 
     // W H E N
-    val actual                               = decode[User]("""{"id": 0,"things":["SomeThing", "OtherThing"]}""")
+    val actual = decode[User]("""{"id": 0,"things":["SomeThing", "OtherThing"]}""")
 
     // T H E N
     val expected: User = User(0L, Seq(SomeThing, OtherThing))
@@ -290,17 +290,64 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
   }
 
   it should "encode case class with snake case member name" in {
+
     // G I V E N
     implicit val config: Configuration = Configuration.default.withSnakeCaseMemberNames
     @ConfiguredJsonCodec case class Auth(accessToken: String, expiresIn: Long)
 
     // W H E N
-    val actual                         = decode[Auth]("""{"access_token": "L7Re1aQ64oi-Tk3WM1CSz0zAPrF_5_f2gTqOkWujN2jJn8C2gTqOkWujN22gTqOkWujG","expires_in": 4000}""")
+    val actual = decode[Auth]("""{"access_token": "L7Re1aQ64oi-Tk3WM1CSz0zAPrF_5_f2gTqOkWujN2jJn8C2gTqOkWujN22gTqOkWujG","expires_in": 4000}""")
 
     // T H E N
     val expected: Auth = Auth("L7Re1aQ64oi-Tk3WM1CSz0zAPrF_5_f2gTqOkWujN2jJn8C2gTqOkWujN22gTqOkWujG", 4000)
 
     actual.map(result => result shouldBe expected)
+
+  }
+
+  it should "semiauto encoder case object of role" in {
+
+    // G I V E N
+    import io.circe.Codec
+    import io.circe.generic.extras.Configuration
+    import io.circe.generic.extras.semiauto.deriveEnumerationCodec
+
+    case class Person(name: String, role: Role)
+    sealed trait Role
+    case object User extends Role
+
+    implicit val config: Configuration  = Configuration.default.copy(transformConstructorNames = _.toLowerCase)
+    implicit val roleCodec: Codec[Role] = deriveEnumerationCodec[Role]
+
+    // W H E N
+    val actual = Person("Pepe", User).asJson.noSpaces
+
+    // T H E N
+    actual shouldBe """{"name":"Pepe","role":"user"}"""
+
+  }
+
+  it should "manual encoder case object" in {
+
+    // G I V E N
+    case class Person(name: String, role: Role)
+    sealed trait Role
+    case object User extends Role
+
+    implicit val decodeMode: Decoder[Role] = Decoder[String].emap {
+      case "user" => Right(User)
+      case other  => Left(s"Invalid role: $other")
+    }
+
+    implicit val encodeMode: Encoder[Role] = Encoder[String].contramap {
+      case User => "user"
+    }
+
+    // W H E N
+    val actual = Person("Pepe", User).asJson.noSpaces
+
+    // T H E N
+    actual shouldBe """{"name":"Pepe","role":"user"}"""
 
   }
 
