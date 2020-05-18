@@ -1,14 +1,14 @@
 package io.github.mvillafuertem.zio.akka.cluster.chat.application
 
 import akka.actor.ActorSystem
-import com.typesafe.config.{ Config, ConfigFactory }
+import com.typesafe.config.{Config, ConfigFactory}
 import io.github.mvillafuertem.zio.akka.cluster.chat.domain._
 import zio._
 import zio.akka.cluster.pubsub.PubSub
-import zio.akka.cluster.sharding.Sharding
+import zio.akka.cluster.sharding.{Entity, Sharding}
 import zio.test.Assertion._
 import zio.test._
-import zio.test.environment.{ TestConsole, TestEnvironment }
+import zio.test.environment.{TestConsole, TestEnvironment}
 
 object ApplicationSpec extends DefaultRunnableSpec {
 
@@ -43,7 +43,7 @@ object ApplicationSpec extends DefaultRunnableSpec {
         for {
           pubSub   <- PubSub.createPubSub[String]
           queue    <- pubSub.listen(topic)
-          sharding <- Sharding.start[ChatMessage, List[String]]("Chat", chatroomBehavior(pubSub))
+          sharding <- Sharding.start("Chat", chatroomBehavior(pubSub))
           _        <- sharding.send(topic, message)
           item     <- queue.take
         } yield item
@@ -58,7 +58,7 @@ object ApplicationSpec extends DefaultRunnableSpec {
         for {
           pubSub   <- PubSub.createPubSub[String]
           queue    <- pubSub.listen(topic)
-          sharding <- Sharding.start[ChatMessage, List[String]]("Chat", chatroomBehavior(pubSub))
+          sharding <- Sharding.start("Chat", chatroomBehavior(pubSub))
           _        <- sharding.send(topic, join)
           item     <- queue.take
         } yield item
@@ -73,7 +73,7 @@ object ApplicationSpec extends DefaultRunnableSpec {
         for {
           pubSub   <- PubSub.createPubSub[String]
           queue    <- pubSub.listen(topic)
-          sharding <- Sharding.start[ChatMessage, List[String]]("Chat", chatroomBehavior(pubSub))
+          sharding <- Sharding.start("Chat", chatroomBehavior(pubSub))
           _        <- sharding.send(topic, leave)
           item     <- queue.take
         } yield item
@@ -89,7 +89,7 @@ object ApplicationSpec extends DefaultRunnableSpec {
           _        <- TestConsole.feedLines(msg)
           pubSub   <- PubSub.createPubSub[String]
           queue    <- pubSub.listen(topic)
-          sharding <- Sharding.start[ChatMessage, List[String]]("Chat", chatroomBehavior(pubSub))
+          sharding <- Sharding.start("Chat", chatroomBehavior(pubSub))
           chat     <- chat(user, topic, sharding).fork
           item     <- queue.take
           _        <- chat.interrupt
@@ -106,7 +106,7 @@ object ApplicationSpec extends DefaultRunnableSpec {
           _        <- TestConsole.feedLines(msg)
           pubSub   <- PubSub.createPubSub[String]
           queue    <- pubSub.listen(topic)
-          sharding <- Sharding.start[ChatMessage, List[String]]("Chat", chatroomBehavior(pubSub))
+          sharding <- Sharding.start("Chat", chatroomBehavior(pubSub))
           joinChat <- joinChat(user, topic, sharding).fork
           item     <- queue.take
           _        <- joinChat.interrupt
@@ -124,7 +124,7 @@ object ApplicationSpec extends DefaultRunnableSpec {
           _           <- TestConsole.feedLines("exit")
           pubSub      <- PubSub.createPubSub[String]
           queue       <- pubSub.listen(topic)
-          sharding    <- Sharding.start[ChatMessage, List[String]]("Chat", chatroomBehavior(pubSub))
+          sharding    <- Sharding.start("Chat", chatroomBehavior(pubSub))
           chat        <- chat(user, topic, sharding).onInterrupt(interrupted.set(true)).fork
           _           <- chat.await
           item        <- queue.take

@@ -5,7 +5,7 @@ import zio._
 import zio.clock.Clock
 import zio.console.{ putStrLn, Console }
 import zio.random.Random
-import zio.stream.{ Stream, ZStream, ZStreamChunk }
+import zio.stream.{ Stream, ZStream }
 
 trait Producer[T] {
 
@@ -30,9 +30,8 @@ object Producer {
       } yield result
 
     def produceChunk(it: Iterable[ProducerRecord[A]]): ZStream[Clock with Console with Random, Nothing, Boolean] =
-      ZStreamChunk
+      ZStream
         .fromChunks(Chunk.fromIterable(it))
-        .flattenChunks
         .mapM(produce)
 
     def produceMPar: Stream[Throwable, ProducerRecord[A]] => ZStream[Console, Throwable, Boolean] =
@@ -43,10 +42,10 @@ object Producer {
   def make[T](producerSettings: ProducerSettings[T]): UIO[Producer[T]] =
     UIO.succeed(Live(producerSettings))
 
-  def live[A: Tagged]: ZLayer[ZProducerSettings[A], Nothing, ZProducer[A]] =
+  def live[A: Tag]: ZLayer[ZProducerSettings[A], Nothing, ZProducer[A]] =
     ZLayer.fromService[ProducerSettings[A], Producer[A]](Live.apply[A])
 
-  def makeM[A: Tagged](producerSettings: ProducerSettings[A]): ZLayer[Any, Nothing, ZProducer[A]] =
+  def makeM[A: Tag](producerSettings: ProducerSettings[A]): ZLayer[Any, Nothing, ZProducer[A]] =
     ZLayer.succeed(producerSettings) >>> live[A]
 
 }

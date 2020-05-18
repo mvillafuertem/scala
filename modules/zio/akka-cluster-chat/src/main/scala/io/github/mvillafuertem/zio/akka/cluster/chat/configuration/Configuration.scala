@@ -15,7 +15,7 @@ trait Configuration {
   val startChatServer: ZIO[Has[ActorSystem], Throwable, Sharding[ChatMessage]] =
     for {
       pubSub   <- PubSub.createPublisher[String]
-      sharding <- Sharding.start[ChatMessage, List[String]]("Chat", chatroomBehavior(pubSub))
+      sharding <- Sharding.start("Chat", chatroomBehavior(pubSub))
     } yield sharding
 
 }

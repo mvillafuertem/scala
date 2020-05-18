@@ -11,7 +11,7 @@ trait Application {
 
   def chatroomBehavior(pubSub: Publisher[String])(msg: ChatMessage): ZIO[Entity[List[String]], Nothing, Unit] =
     for {
-      entity <- ZIO.environment[Entity[List[String]]]
+      entity <- ZIO.access[Entity[List[String]]](_.get)
       toSend <- msg match {
                   case Message(name, m) => IO.succeed(s"$name: $m")
                   case Join(name)       =>

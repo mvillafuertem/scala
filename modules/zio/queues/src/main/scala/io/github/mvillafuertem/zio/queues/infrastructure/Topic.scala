@@ -52,10 +52,10 @@ object Topic {
 
   }
 
-  def live[A: Tagged]: ZLayer[Has[Queue[ConsumerRecord[A]]], Nothing, ZTopic[A]] =
+  def live[A: Tag]: ZLayer[Has[Queue[ConsumerRecord[A]]], Nothing, ZTopic[A]] =
     ZLayer.fromService[Queue[ConsumerRecord[A]], Topic[A]](queue => Live.apply[A](queue, Map.empty))
 
-  def makeM[A: Tagged](queue: Queue[ConsumerRecord[A]]): ZLayer[Any, Nothing, ZTopic[A]] =
+  def makeM[A: Tag](queue: Queue[ConsumerRecord[A]]): ZLayer[Any, Nothing, ZTopic[A]] =
     ZLayer.succeed(queue) >>> live[A]
 
 }

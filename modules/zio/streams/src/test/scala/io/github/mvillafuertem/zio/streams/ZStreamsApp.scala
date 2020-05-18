@@ -1,10 +1,10 @@
 package io.github.mvillafuertem.zio.streams
 
-import zio.stream.{ ZStream, ZStreamChunk }
+import zio._
+import zio.stream.ZStream
 import zio.test.Assertion.equalTo
 import zio.test._
 import zio.test.environment.TestEnvironment
-import zio._
 
 object ZStreamsApp extends DefaultRunnableSpec {
 
@@ -39,9 +39,8 @@ object ZStreamsApp extends DefaultRunnableSpec {
         assertM(
           for {
             topic: Queue[Int] <- Queue.bounded[Int](4096)
-            _                 <- ZStreamChunk
+            _                 <- ZStream
                    .fromChunks(Chunk.fromIterable(1 to 4096))
-                   .flattenChunks
                    .mapM(program(topic))
                    .runCollect
             elements          <- ZStream.fromQueue(topic).take(4096).runCollect

@@ -1,11 +1,14 @@
 package io.github.mvillafuertem.zio.queues.producer
 
-import io.github.mvillafuertem.zio.queues.RestaurantOrderExchangeApp.{ Bacon, Coffee, Order, Sandwich }
-import zio.Queue
+import io.github.mvillafuertem.zio.queues.RestaurantOrderExchangeApp.{Bacon, Coffee, Order, Sandwich}
+import zio.clock.Clock
+import zio.console.Console
+import zio.random.Random
 import zio.stream._
 import zio.test.Assertion.equalTo
 import zio.test._
 import zio.test.environment.TestEnvironment
+import zio.{ExecutionStrategy, ZQueue}
 object ProducerSpec extends DefaultRunnableSpec {
 
   override def spec: ZSpec[TestEnvironment, Any] =
@@ -15,11 +18,11 @@ object ProducerSpec extends DefaultRunnableSpec {
       produceMPar
     ) @@ TestAspect.timed
 
-  lazy val produce =
+  lazy val produce: ZSpec[Console, Nothing] =
     testM("produce") {
       assertM(
         for {
-          topic    <- Queue.bounded[ProducerRecord[Order]](3)
+          topic    <- ZQueue.bounded[ProducerRecord[Order]](3)
           producer <- Producer.make[Order](ProducerSettings("Test", topic))
           _        <- producer.produce(ProducerRecord(1, Coffee))
           _        <- producer.produce(ProducerRecord(2, Sandwich))
@@ -32,11 +35,11 @@ object ProducerSpec extends DefaultRunnableSpec {
       )(equalTo(List(ProducerRecord[Order](1, Coffee), ProducerRecord[Order](2, Sandwich), ProducerRecord[Order](3, Bacon))))
     }
 
-  lazy val produceChunk =
+  lazy val produceChunk: ZSpec[Clock with Console with Random, Nothing] =
     testM("produce chunk") {
       assertM(
         for {
-          topic    <- Queue.bounded[ProducerRecord[Order]](3)
+          topic    <- ZQueue.bounded[ProducerRecord[Order]](3)
           iterable  = (1 to 3).map(n => ProducerRecord[Order](n, Coffee))
           producer <- Producer.make[Order](ProducerSettings("Test", topic))
           result   <- producer.produceChunk(iterable).runCollect
@@ -48,11 +51,11 @@ object ProducerSpec extends DefaultRunnableSpec {
       )(equalTo((List.fill(3)(true), (1 to 3).map(n => ProducerRecord[Order](n, Coffee)).toList)))
     }
 
-  lazy val produceMPar =
+  lazy val produceMPar: ZSpec[Annotations with Console, Throwable] =
     testM("produceMPar") {
       assertM(
         for {
-          topic    <- Queue.bounded[ProducerRecord[Order]](3)
+          topic    <- ZQueue.bounded[ProducerRecord[Order]](3)
           iterable  = (1 to 3).map(n => ProducerRecord[Order](n, Bacon))
           producer <- Producer.make[Order](ProducerSettings("Test", topic))
           result   <- Stream.fromIterable(iterable).via(producer.produceMPar).runCollect

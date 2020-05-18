@@ -34,17 +34,17 @@ object Consumer {
       for {
         nOrder   <- queue.take
         _        <- putStrLn(s"${consumerSettings.color}[${consumerSettings.name}] worker: Starting preparing order $nOrder${scala.Console.RESET}")
-        duration <- nextInt(4).map(_.seconds)
+        duration <- nextIntBetween(2, 4).map(_.seconds)
         _        <- sleep(duration)
         _        <- putStrLn(s"${consumerSettings.color}[${consumerSettings.name}] worker: Finished order $nOrder${scala.Console.RESET}")
       } yield ()
 
   }
 
-  def live[A: Tagged]: ZLayer[ZConsumerSettings, Nothing, ZConsumer[A]] =
+  def live[A: Tag]: ZLayer[ZConsumerSettings, Nothing, ZConsumer[A]] =
     ZLayer.fromService[ConsumerSettings, Consumer[A]](Live.apply[A])
 
-  def makeM[A: Tagged](consumerSettings: ConsumerSettings): ZLayer[Any, Nothing, ZConsumer[A]] =
+  def makeM[A: Tag](consumerSettings: ConsumerSettings): ZLayer[Any, Nothing, ZConsumer[A]] =
     ZLayer.succeed(consumerSettings) >>> live[A]
 
 }
