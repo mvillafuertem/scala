@@ -28,7 +28,7 @@ trait SwaggerApi {
           )
         } ~ path(yamlName) {
           complete(openApi)
-        } ~ getFromResourceDirectory("META-INF/resources/webjars/swagger-ui/3.25.0/")
+        } ~ getFromResourceDirectory("META-INF/resources/webjars/swagger-ui/3.25.3/")
       }
     }
   }
