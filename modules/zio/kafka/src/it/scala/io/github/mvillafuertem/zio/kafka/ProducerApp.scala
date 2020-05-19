@@ -10,7 +10,7 @@ object ProducerApp extends App {
 
   val producerSettings: ProducerSettings = ProducerSettings(List("localhost:9092"))
 
-  val producerLayer = Producer.make(producerSettings, Serde.int, Serde.string)
+  val producerLayer = Producer.make(producerSettings, Serde.int, Serde.string).toLayer
 
   val chunks = Chunk
     .fromIterable(1 to 100000)

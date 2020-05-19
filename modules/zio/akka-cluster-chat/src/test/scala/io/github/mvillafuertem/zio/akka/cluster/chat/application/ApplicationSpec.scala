@@ -1,14 +1,14 @@
 package io.github.mvillafuertem.zio.akka.cluster.chat.application
 
 import akka.actor.ActorSystem
-import com.typesafe.config.{Config, ConfigFactory}
+import com.typesafe.config.{ Config, ConfigFactory }
 import io.github.mvillafuertem.zio.akka.cluster.chat.domain._
 import zio._
 import zio.akka.cluster.pubsub.PubSub
-import zio.akka.cluster.sharding.{Entity, Sharding}
+import zio.akka.cluster.sharding.Sharding
 import zio.test.Assertion._
 import zio.test._
-import zio.test.environment.{TestConsole, TestEnvironment}
+import zio.test.environment.{ TestConsole, TestEnvironment }
 
 object ApplicationSpec extends DefaultRunnableSpec {
 
@@ -131,7 +131,7 @@ object ApplicationSpec extends DefaultRunnableSpec {
           i           <- interrupted.get
         } yield (i, item)
         // t h e n
-      )(equalTo(true, s"$user left the room. There are now () participant(s)."))
+      )(equalTo((true, s"$user left the room. There are now () participant(s).")))
         .provideSomeLayer[TestEnvironment](actorSystem)
     }
 

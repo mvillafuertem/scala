@@ -29,3 +29,12 @@ addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.6.1")
 addSbtPlugin("org.scalameta" % "sbt-mdoc" % "2.2.0")
 
 addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.4.0")
+
+// S C A L A J S
+addSbtPlugin("org.scala-js" % "sbt-scalajs" % "1.1.0")
+
+// S C A L A J S  B U N D L E R
+addSbtPlugin("ch.epfl.scala" % "sbt-scalajs-bundler" % "0.18.0")
+
+resolvers += Resolver.bintrayRepo("oyvindberg", "converter")
+addSbtPlugin("org.scalablytyped.converter" % "sbt-converter" % "1.0.0-beta12")

@@ -151,6 +151,57 @@ lazy val slick = (project in file("modules/slick"))
   .settings(commonSettings)
   .settings(libraryDependencies ++= Dependencies.slick)
 
+lazy val slinky = (project in file("modules/slinky"))
+// S E T T I N G S
+  .settings(commonSettings)
+  .settings(scalacOptions += "-Ymacro-annotations")
+  .settings(
+    Compile / npmDependencies ++= Seq(
+      "react"            -> "16.13.1",
+      "react-dom"        -> "16.13.1",
+      "@types/react"     -> "16.9.34",
+      "@types/react-dom" -> "16.9.6"
+    )
+  )
+  .settings(Compile / npmDevDependencies += "copy-webpack-plugin" -> "5.1.1")
+  .settings(Compile / npmDevDependencies += "css-loader" -> "3.4.2")
+  .settings(Compile / npmDevDependencies += "file-loader" -> "5.1.0")
+  .settings(Compile / npmDevDependencies += "html-webpack-plugin" -> "3.2.0")
+  .settings(Compile / npmDevDependencies += "style-loader" -> "1.1.3")
+  .settings(Compile / npmDevDependencies += "webpack-merge" -> "4.2.2")
+  .settings(Compile / npmDevDependencies += "relaxedjs" -> "0.2.4")
+  .enablePlugins(ScalablyTypedConverterPlugin)
+  .settings(
+    useYarn := true,
+    webpackDevServerPort := 8080,
+    stFlavour := Flavour.Slinky,
+    stEnableScalaJsDefined := Selection.AllExcept("@material-ui/core"),
+    stIgnore ++= List("@material-ui/icons"),
+    Compile / npmDependencies ++= Seq(
+      "@material-ui/core" -> "3.9.3" // note: version 4 is not supported yet
+    )
+  )
+  .settings(scalaJSUseMainModuleInitializer := true)
+  .settings(fastOptJS / webpackBundlingMode := BundlingMode.LibraryOnly())
+  .settings(fastOptJS / webpackConfigFile := Some(baseDirectory.value / "webpack" / "webpack-fastopt.config.js"))
+  .settings(fastOptJS / webpackDevServerExtraArgs := Seq("--inline", "--hot"))
+  .settings(fullOptJS / webpackConfigFile := Some(baseDirectory.value / "webpack" / "webpack-opt.config.js"))
+  .settings(startWebpackDevServer / version := "3.10.3")
+  .settings(Test / requireJsDomEnv := true)
+  .settings(Test / webpackConfigFile := Some(baseDirectory.value / "webpack" / "webpack-core.config.js"))
+  .settings(webpack / version := "4.41.6")
+  .settings(webpackResources := baseDirectory.value / "webpack" * "*")
+  .settings(
+    Compile / fastOptJS / webpackExtraArgs += "--mode=development",
+    Compile / fullOptJS / webpackExtraArgs += "--mode=production",
+    Compile / fastOptJS / webpackDevServerExtraArgs += "--mode=development",
+    Compile / fullOptJS / webpackDevServerExtraArgs += "--mode=production"
+  )
+  .settings(Dependencies.slinky)
+  .settings(testFrameworks := Seq(new TestFramework("zio.test.sbt.ZTestFramework")))
+  // P L U G I N S
+  .enablePlugins(ScalaJSBundlerPlugin)
+
 lazy val sttp = (project in file("modules/sttp"))
 // S E T T I N G S
   .settings(commonSettings)

@@ -1,4 +1,6 @@
-import sbt._
+import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
+import sbt.Keys.libraryDependencies
+import sbt.{ Def, _ }
 
 object Dependencies {
 
@@ -167,7 +169,15 @@ object Dependencies {
       Artifact.scalaTest % Version.scalaTest
     ).map(_                 % Test)
 
-  val sttp: Seq[ModuleID]                =
+  val slinky: Def.Setting[Seq[ModuleID]] = libraryDependencies ++= Seq(
+    // P R O D U C T I O N
+    "me.shadaj"                    %%% "slinky-hot"      % "0.6.5",
+    "me.shadaj"                    %%% "slinky-web"      % "0.6.5",
+    "dev.zio"                      %%% "zio"             % Version.zio,
+    "io.github.cquiroz"            %%% "scala-java-time" % "2.0.0"
+  )
+
+  val sttp: Seq[ModuleID]  =
     // S T T P
     Seq(
       Artifact.sttpAsyncAkka,
@@ -187,7 +197,7 @@ object Dependencies {
       Artifact.scalaTest % Version.scalaTest
     ).map(_ % Test)
 
-  val tapir: Seq[ModuleID]               =
+  val tapir: Seq[ModuleID] =
     // T A P I R
     Seq(
       //"org.iq80.leveldb" % "leveldb" % "0.12",
@@ -212,7 +222,7 @@ object Dependencies {
       Artifact.zioTest         % Version.zio
     ).map(_ % Test)
 
-  val zio: Seq[ModuleID]                 =
+  val zio: Seq[ModuleID]   =
     // Z I O
     Seq(
       Artifact.zio,
