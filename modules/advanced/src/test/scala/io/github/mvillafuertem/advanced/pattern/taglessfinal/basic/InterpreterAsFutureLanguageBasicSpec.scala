@@ -19,7 +19,7 @@ class InterpreterAsFutureLanguageBasicSpec extends AsyncFlatSpecLike with Matche
     val actual: Future[Int] = basicExpression(InterpreterAsFutureLanguageBasic.interpreterAsFuture)
 
     // t h e n
-    actual.map(a => a shouldBe 2)
+    actual.map(_ shouldBe 2)
 
   }
 
@@ -32,7 +32,7 @@ class InterpreterAsFutureLanguageBasicSpec extends AsyncFlatSpecLike with Matche
     val actual: Future[String] = fullExpression(InterpreterAsFutureLanguageBasic.interpreterAsFuture)
 
     // t h e n
-    actual.map(a => a shouldBe "Result is 12")
+    actual.map(_ shouldBe "Result is 12")
 
   }
 

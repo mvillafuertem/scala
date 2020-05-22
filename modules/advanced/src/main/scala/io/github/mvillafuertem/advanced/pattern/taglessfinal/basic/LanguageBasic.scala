@@ -10,27 +10,29 @@ trait LanguageBasic[F[_]] {
   def toString(v: F[Int]): F[String]
 }
 
-object LanguageBasic      {
+object LanguageBasic {
 
   trait ScalaToLanguageBasicBridge[A] {
     def apply[F[_]](implicit L: LanguageBasic[F]): F[A]
   }
 
-  def buildNumber(number: Int)                                              =
+  def buildNumber(number: Int): ScalaToLanguageBasicBridge[Int] =
     new ScalaToLanguageBasicBridge[Int] {
       override def apply[F[_]](implicit L: LanguageBasic[F]): F[Int] = L.number(number)
     }
-  def buildIncrementNumber(number: Int)                                     =
+
+  def buildIncrementNumber(number: Int): ScalaToLanguageBasicBridge[Int] =
     new ScalaToLanguageBasicBridge[Int] {
       override def apply[F[_]](implicit L: LanguageBasic[F]): F[Int] = L.increment(L.number(number))
     }
-  def buildIncrementExpression(expression: ScalaToLanguageBasicBridge[Int]) =
+
+  def buildIncrementExpression(expression: ScalaToLanguageBasicBridge[Int]): ScalaToLanguageBasicBridge[Int] =
     new ScalaToLanguageBasicBridge[Int] {
       override def apply[F[_]](implicit L: LanguageBasic[F]): F[Int] = L.increment(expression.apply)
     }
 
   // builds an expression like: println(s"$text ${a + (b + 1)}")
-  def buildComplexExpression(text: String, a: Int, b: Int)                  =
+  def buildComplexExpression(text: String, a: Int, b: Int): ScalaToLanguageBasicBridge[String] =
     new ScalaToLanguageBasicBridge[String] {
       override def apply[F[_]](implicit L: LanguageBasic[F]): F[String] = {
         val addition = L.add(L.number(a), L.increment(L.number(b)))
