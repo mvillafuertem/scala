@@ -185,7 +185,6 @@ lazy val slinky = (project in file("modules/slinky"))
   // S E T T I N G S
   .settings(commonSettingsJs)
   .settings(webpackDevServerPort := 8008)
-  .settings(fastOptJS / webpackBundlingMode := BundlingMode.LibraryOnly())
   .settings(startWebpackDevServer / version := "3.10.3")
   .settings(Test / requireJsDomEnv := true)
   .settings(stFlavour := Flavour.Slinky)
