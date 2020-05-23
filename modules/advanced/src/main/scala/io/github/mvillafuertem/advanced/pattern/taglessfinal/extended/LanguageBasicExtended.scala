@@ -8,6 +8,8 @@ trait LanguageBasicExtended[F[_]] extends LanguageBasic[F] {
 
 object LanguageBasicExtended {
 
+  def apply[F[_]: LanguageBasicExtended]: LanguageBasicExtended[F] = implicitly
+
   trait ScalaToLanguageBasicExtendedBridge[A] {
     def apply[F[_]](implicit L: LanguageBasicExtended[F]): F[A]
   }
