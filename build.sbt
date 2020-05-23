@@ -1,3 +1,6 @@
+import java.nio.file.Files
+import java.nio.file.StandardCopyOption.REPLACE_EXISTING
+
 Global / onLoad := {
   val GREEN = "\u001b[32m"
   val RESET = "\u001b[0m"
@@ -13,21 +16,9 @@ Global / onLoad := {
   (Global / onLoad).value
 }
 
-lazy val commonSettings = Settings.value ++ Seq(
-  organization := "io.github.mvillafuertem",
-  version := "0.1",
-  scalaVersion := "2.13.2",
-  homepage := Some(url("https://github.com/mvillafuertem/scala")),
-  licenses := List("MIT" -> url("http://www.apache.org/licenses/LICENSE-2.0")),
-  developers := List(
-    Developer(
-      "mvillafuertem",
-      "Miguel Villafuerte",
-      "mvillafuertem@email.com",
-      url("https://github.com/mvillafuertem")
-    )
-  )
-)
+lazy val commonSettingsJs = Settings.valueJs ++ Information.value
+
+lazy val commonSettings = Settings.value ++ Settings.testReport ++ Information.value
 
 lazy val scala = (project in file("."))
   .aggregate(
@@ -50,7 +41,7 @@ lazy val scala = (project in file("."))
     `zio-akka-cluster-sharding`,
     `zio-kafka`,
     `zio-queues`,
-    `zio-streams`,
+    `zio-streams`
   )
   // S E T T I N G S
   .settings(commonSettings)
@@ -151,46 +142,65 @@ lazy val slick = (project in file("modules/slick"))
   .settings(commonSettings)
   .settings(libraryDependencies ++= Dependencies.slick)
 
+/**
+ * Implement the `start` and `dist` tasks defined above.
+ * Most of this is really just to copy the index.html file around.
+ */
+lazy val browserProject: Project => Project =
+  _.settings(
+    dist := {
+      val artifacts      = (Compile / fullOptJS / webpack).value
+      val artifactFolder = (Compile / fullOptJS / crossTarget).value
+      val distFolder     = (ThisBuild / baseDirectory).value / "docs" / moduleName.value
+
+      distFolder.mkdirs()
+      artifacts.foreach { artifact =>
+        val target = artifact.data.relativeTo(artifactFolder) match {
+          case None          => distFolder / artifact.data.name
+          case Some(relFile) => distFolder / relFile.toString
+        }
+
+        Files.copy(artifact.data.toPath, target.toPath, REPLACE_EXISTING)
+      }
+
+      val indexFrom = baseDirectory.value / "src/main/js/index.html"
+      val indexTo   = distFolder / "index.html"
+
+      val indexPatchedContent = {
+        import collection.JavaConverters._
+        Files
+          .readAllLines(indexFrom.toPath, IO.utf8)
+          .asScala
+          .map(_.replaceAllLiterally("-fastopt-", "-opt-"))
+          .mkString("\n")
+      }
+
+      Files.write(indexTo.toPath, indexPatchedContent.getBytes(IO.utf8))
+      distFolder
+    }
+  )
+
 lazy val slinky = (project in file("modules/slinky"))
-// S E T T I N G S
-  .settings(commonSettings)
-  .settings(scalacOptions += "-Ymacro-annotations")
-  .settings(
-    Compile / npmDependencies ++= Seq(
-      "react"            -> "16.13.1",
-      "react-dom"        -> "16.13.1",
-      "@types/react"     -> "16.9.34",
-      "@types/react-dom" -> "16.9.6"
-    )
-  )
-  .settings(Compile / npmDevDependencies += "copy-webpack-plugin" -> "5.1.1")
-  .settings(Compile / npmDevDependencies += "css-loader" -> "3.4.2")
-  .settings(Compile / npmDevDependencies += "file-loader" -> "5.1.0")
-  .settings(Compile / npmDevDependencies += "html-webpack-plugin" -> "3.2.0")
-  .settings(Compile / npmDevDependencies += "style-loader" -> "1.1.3")
-  .settings(Compile / npmDevDependencies += "webpack-merge" -> "4.2.2")
-  .settings(Compile / npmDevDependencies += "relaxedjs" -> "0.2.4")
-  .enablePlugins(ScalablyTypedConverterPlugin)
-  .settings(
-    useYarn := true,
-    webpackDevServerPort := 8080,
-    stFlavour := Flavour.Slinky,
-    stEnableScalaJsDefined := Selection.AllExcept("@material-ui/core"),
-    stIgnore ++= List("@material-ui/icons"),
-    Compile / npmDependencies ++= Seq(
-      "@material-ui/core" -> "3.9.3" // note: version 4 is not supported yet
-    )
-  )
-  .settings(scalaJSUseMainModuleInitializer := true)
+  .configure(browserProject)
+  // S E T T I N G S
+  .settings(commonSettingsJs)
+  .settings(webpackDevServerPort := 8008)
   .settings(fastOptJS / webpackBundlingMode := BundlingMode.LibraryOnly())
-  .settings(fastOptJS / webpackConfigFile := Some(baseDirectory.value / "webpack" / "webpack-fastopt.config.js"))
-  .settings(fastOptJS / webpackDevServerExtraArgs := Seq("--inline", "--hot"))
-  .settings(fullOptJS / webpackConfigFile := Some(baseDirectory.value / "webpack" / "webpack-opt.config.js"))
   .settings(startWebpackDevServer / version := "3.10.3")
   .settings(Test / requireJsDomEnv := true)
-  .settings(Test / webpackConfigFile := Some(baseDirectory.value / "webpack" / "webpack-core.config.js"))
-  .settings(webpack / version := "4.41.6")
-  .settings(webpackResources := baseDirectory.value / "webpack" * "*")
+  .settings(stFlavour := Flavour.Slinky)
+  .settings(stExperimentalEnableImplicitOps := true)
+  .settings(stIgnore ++= List("@material-ui/icons"))
+  .settings(
+    Compile / npmDependencies ++= Seq(
+      "react"               -> "16.13.1",
+      "react-dom"           -> "16.13.1",
+      "@types/react"        -> "16.9.34",
+      "@types/react-dom"    -> "16.9.6",
+      "@material-ui/core"   -> "3.9.3", // note: version 4 is not supported yet
+      "@material-ui/styles" -> "3.0.0-alpha.10" // note: version 4 is not supported yet
+    )
+  )
   .settings(
     Compile / fastOptJS / webpackExtraArgs += "--mode=development",
     Compile / fullOptJS / webpackExtraArgs += "--mode=production",
@@ -200,7 +210,8 @@ lazy val slinky = (project in file("modules/slinky"))
   .settings(Dependencies.slinky)
   .settings(testFrameworks := Seq(new TestFramework("zio.test.sbt.ZTestFramework")))
   // P L U G I N S
-  .enablePlugins(ScalaJSBundlerPlugin)
+  .enablePlugins(ScalablyTypedConverterPlugin)
+  .enablePlugins(ScalaJSPlugin)
 
 lazy val sttp = (project in file("modules/sttp"))
 // S E T T I N G S

@@ -1,9 +1,21 @@
+import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport.{ scalaJSLinkerConfig, scalaJSUseMainModuleInitializer, ModuleKind }
 import sbt.Keys.{ exportJars, _ }
 import sbt.{ Def, Tests, _ }
+import scalajsbundler.sbtplugin.ScalaJSBundlerPlugin.autoImport.useYarn
 
 object Settings {
 
-  val value: Seq[Def.Setting[_]] = Seq(
+  lazy val valueJs: Seq[Def.Setting[_]] = value ++ Seq(
+    scalaJSUseMainModuleInitializer := true,
+    scalaJSLinkerConfig ~= (/* disabled because it somehow triggers many warnings */
+    _.withSourceMap(false)
+      .withModuleKind(ModuleKind.CommonJSModule)),
+    scalacOptions += "-Ymacro-annotations",
+    useYarn := true
+  )
+
+  lazy val value: Seq[Def.Setting[_]] = Seq(
+    scalaVersion := "2.13.2",
     scalacOptions := {
       val default = Seq(
         "-deprecation",
@@ -26,16 +38,19 @@ object Settings {
     javaOptions += "-Duser.timezone=UTC",
     Test / fork := false,
     Test / parallelExecution := false,
-    Test / testOptions ++= Seq(
-      Tests.Argument(TestFrameworks.ScalaTest, "-u", "target/test-reports"),
-      Tests.Argument("-oDF")
-    ),
     Global / cancelable := true,
     // OneJar
     exportJars := true
   )
 
-  val noPublish: Seq[Def.Setting[_]] = Seq(
+  lazy val testReport: Seq[Def.Setting[_]] = Seq(
+    Test / testOptions ++= Seq(
+      Tests.Argument(TestFrameworks.ScalaTest, "-u", "target/test-reports"),
+      Tests.Argument("-oDF")
+    )
+  )
+
+  lazy val noPublish: Seq[Def.Setting[_]] = Seq(
     publish / skip := true
   )
 

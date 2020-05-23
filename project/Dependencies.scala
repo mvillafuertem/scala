@@ -172,7 +172,6 @@ object Dependencies {
   val slinky: Def.Setting[Seq[ModuleID]] = libraryDependencies ++= Seq(
     // P R O D U C T I O N
     "me.shadaj"                    %%% "slinky-hot"      % "0.6.5",
-    "me.shadaj"                    %%% "slinky-web"      % "0.6.5",
     "dev.zio"                      %%% "zio"             % Version.zio,
     "io.github.cquiroz"            %%% "scala-java-time" % "2.0.0"
   )
