@@ -1,7 +1,7 @@
 package io.github.mvillafuertem.tapir
 
 import io.github.mvillafuertem.tapir.configuration.ProductsServiceConfiguration
-import zio.{ Managed, UIO, ZIO }
+import zio.{ExitCode, Managed, UIO, ZIO}
 
 import scala.concurrent.ExecutionContext
 
@@ -9,7 +9,7 @@ object ProductsServiceApplication extends ProductsServiceConfiguration with zio.
 
   override implicit val executionContext: ExecutionContext = platform.executor.asEC
 
-  override def run(args: List[String]): ZIO[zio.ZEnv, Nothing, Int] =
+  override def run(args: List[String]): ZIO[zio.ZEnv, Nothing, ExitCode] =
     Managed
       .make(actorSystem)(sys => UIO.succeed(sys.terminate()).ignore)
       .use(actorSystem =>
@@ -17,6 +17,6 @@ object ProductsServiceApplication extends ProductsServiceConfiguration with zio.
           _ <- httpServer(actorSystem)
         } yield 0
       )
-      .fold(_ => 1, _ => 0)
+    .exitCode
 
 }

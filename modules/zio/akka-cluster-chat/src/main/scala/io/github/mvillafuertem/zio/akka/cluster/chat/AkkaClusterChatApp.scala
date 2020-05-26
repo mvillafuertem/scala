@@ -4,19 +4,19 @@ import akka.actor.ActorSystem
 import io.github.mvillafuertem.zio.akka.cluster.chat.application._
 import io.github.mvillafuertem.zio.akka.cluster.chat.configuration._
 import zio.console.Console
-import zio.{ console, App, Has, ZIO }
+import zio.{App, ExitCode, Has, ZIO, console}
 
 // TODO
 //  sbt zio/run -J-Dconfig.resource=application1.conf
 //  sbt zio/run -J-Dconfig.resource=application2.conf
 object AkkaClusterChatApp extends App {
 
-  override def run(args: List[String]): ZIO[zio.ZEnv, Nothing, Int] =
+  override def run(args: List[String]): ZIO[zio.ZEnv, Nothing, ExitCode] =
     program
       .provideLayer(Console.live ++ actorSystem)
-      .catchAll(e => console.putStrLn(e.toString).as(1))
+      .catchAll(e => console.putStrLn(e.toString).as(ExitCode.failure))
 
-  val program: ZIO[Console with Has[ActorSystem], Throwable, Int] =
+  val program: ZIO[Console with Has[ActorSystem], Throwable, ExitCode] =
     (for {
       sharding <- startChatServer
       _        <- console.putStrLn("Hi! What's your name? (Type [exit] to stop)")
@@ -26,6 +26,6 @@ object AkkaClusterChatApp extends App {
       room     <- console.getStrLn
       _        <- ZIO.when(room.toLowerCase == "exit" || room.trim.isEmpty)(ZIO.interrupt)
       _        <- joinChat(name, room, sharding)
-    } yield 0)
+    } yield ExitCode.success)
 
 }

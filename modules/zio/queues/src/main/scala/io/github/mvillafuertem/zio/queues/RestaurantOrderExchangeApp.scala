@@ -1,16 +1,19 @@
 package io.github.mvillafuertem.zio.queues
 
-import io.github.mvillafuertem.zio.queues.consumer.{ Consumer, ConsumerRecord, ConsumerSettings }
+import io.github.mvillafuertem.zio.queues.consumer.{Consumer, ConsumerRecord, ConsumerSettings}
 import io.github.mvillafuertem.zio.queues.infrastructure.Topic
-import io.github.mvillafuertem.zio.queues.producer.{ Producer, ProducerRecord, ProducerSettings }
+import io.github.mvillafuertem.zio.queues.producer.{Producer, ProducerRecord, ProducerSettings}
 import zio._
+import zio.clock.Clock
+import zio.console.Console
+import zio.random.Random
 
 object RestaurantOrderExchangeApp extends zio.App {
 
-  override def run(args: List[String]): ZIO[ZEnv, Nothing, Int] =
-    program.map(_ => 0)
+  override def run(args: List[String]): ZIO[ZEnv, Nothing, ExitCode] =
+    program.exitCode
 
-  val program = for {
+  val program: ZIO[Console with Clock with Random, Nothing, Unit] = for {
 
     exchange                                  <- Exchange.createM
     ctxExchange                               <- exchange.run
