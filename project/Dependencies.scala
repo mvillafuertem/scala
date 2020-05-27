@@ -314,12 +314,12 @@ object Dependencies {
     val scalaTest                 = "3.1.2"
     val slick                     = "3.3.2"
     val sttp                      = "2.1.4"
-    val tapir                     = "0.15.2"
+    val tapir                     = "0.15.3"
     val testcontainers            = "0.37.0"
     val testcontainersKafka       = "1.14.2"
     val zio                       = "1.0.0-RC20"
     val zioAkkaCluster            = "0.1.17"
-    val zioInteropReactiveStreams = "1.0.3.5-RC9"
+    val zioInteropReactiveStreams = "1.0.3.5-RC10"
     val zioKafka                  = "0.9.0"
   }
 
