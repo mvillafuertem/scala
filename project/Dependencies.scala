@@ -119,7 +119,7 @@ object Dependencies {
       Artifact.akkaStreamTyped % Version.akka,
       Artifact.akkaKafka       % Version.akkaKafka,
       "com.iheart"            %% "ficus"        % "1.4.7",
-      "org.apache.curator"     % "curator-test" % "4.3.0",
+      "org.apache.curator"     % "curator-test" % "5.0.0",
       "org.apache.kafka"      %% "kafka"        % "2.5.0",
       Artifact.logback         % Version.logback
     ) ++ Seq(
