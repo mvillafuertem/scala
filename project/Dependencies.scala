@@ -307,7 +307,7 @@ object Dependencies {
     val dijon                     = "0.3.0"
     val h2                        = "1.4.200"
     val jslt                      = "0.1.9"
-    val jsoniter                  = "2.2.5"
+    val jsoniter                  = "2.2.6"
     val leveldbjniAll             = "1.8"
     val logback                   = "1.2.3"
     val postgres                  = "42.2.12"
