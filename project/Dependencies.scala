@@ -314,7 +314,7 @@ object Dependencies {
     val scalaTest                 = "3.1.2"
     val slick                     = "3.3.2"
     val sttp                      = "2.1.5"
-    val tapir                     = "0.15.3"
+    val tapir                     = "0.15.4"
     val testcontainers            = "0.37.0"
     val testcontainersKafka       = "1.14.3"
     val zio                       = "1.0.0-RC20"
