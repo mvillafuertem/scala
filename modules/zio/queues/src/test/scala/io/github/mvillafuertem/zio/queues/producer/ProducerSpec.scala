@@ -8,7 +8,8 @@ import zio.stream._
 import zio.test.Assertion.equalTo
 import zio.test._
 import zio.test.environment.TestEnvironment
-import zio.{ExecutionStrategy, ZQueue}
+import zio.{Chunk, ExecutionStrategy, ZQueue}
+
 object ProducerSpec extends DefaultRunnableSpec {
 
   override def spec: ZSpec[TestEnvironment, Any] =
@@ -48,7 +49,7 @@ object ProducerSpec extends DefaultRunnableSpec {
           c        <- topic.take
         } yield (result, List(a, b, c))
         // t h e n
-      )(equalTo((List.fill(3)(true), (1 to 3).map(n => ProducerRecord[Order](n, Coffee)).toList)))
+      )(equalTo((Chunk.fill(3)(true), (1 to 3).map(n => ProducerRecord[Order](n, Coffee)).toList)))
     }
 
   lazy val produceMPar: ZSpec[Annotations with Console, Throwable] =
@@ -62,7 +63,7 @@ object ProducerSpec extends DefaultRunnableSpec {
           records  <- Stream.fromQueue(topic).take(3).runCollect
         } yield (result, records)
         // t h e n
-      )(equalTo((List.fill(3)(true), (1 to 3).map(n => ProducerRecord[Order](n, Bacon)).toList)))
+      )(equalTo((Chunk.fill(3)(true), Chunk.fromIterable(1 to 3).map(n => ProducerRecord[Order](n, Bacon)))))
     } @@ TestAspect.ignore
 
   override def aspects: List[TestAspect[Nothing, TestEnvironment, Nothing, Any]] =

@@ -21,7 +21,7 @@ object ZStreamsApp extends DefaultRunnableSpec {
             elements <- ZStream.fromQueue(topic).take(4096).runCollect
           } yield elements
           // t h e n
-        )(equalTo((1 to 4096).toList))
+        )(equalTo(Chunk.fromIterable(1 to 4096)))
       } @@ TestAspect.ignore,
       testM("equal to StreamMapMPar 10 but with semaphore") {
         assertM(
@@ -33,7 +33,7 @@ object ZStreamsApp extends DefaultRunnableSpec {
             elements <- ZStream.fromQueue(topic).take(4096).runCollect
           } yield elements
           // t h e n
-        )(equalTo(List.fill(4096)(1)))
+        )(equalTo(Chunk.fill(4096)(1)))
       },
       testM("StreamChunk") {
         assertM(
@@ -46,7 +46,7 @@ object ZStreamsApp extends DefaultRunnableSpec {
             elements          <- ZStream.fromQueue(topic).take(4096).runCollect
           } yield elements
           // t h e n
-        )(equalTo((1 to 4096).toList))
+        )(equalTo(Chunk.fromIterable(1 to 4096)))
       },
       testM("Array check fail") {
         assertM(

@@ -24,7 +24,7 @@ final class AlertBehaviorSpec
 
     // G I V E N
     val value = spawn(AlertBehavior.behavior("id"))
-    val probe = TestProbe[State]
+    val probe = TestProbe[State]()
     val alert = Alert(1234567890L, "ALERT", "Alert with id 1234567890", new Date().toInstant.toEpochMilli, true)
 
     // W H E N
@@ -40,7 +40,7 @@ final class AlertBehaviorSpec
 
     // G I V E N
     val value = spawn(AlertBehavior.behavior("id"))
-    val probe = TestProbe[State]
+    val probe = TestProbe[State]()
     val alert = Alert(1234567890L, "ALERT", "Alert with id 1234567890", new Date().toInstant.toEpochMilli, true)
 
     // W H E N

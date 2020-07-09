@@ -3,7 +3,7 @@ package io.github.mvillafuertem.sttp
 import io.circe.generic.extras.auto._
 import io.circe.generic.extras.{ Configuration, ConfiguredJsonCodec }
 import sttp.client.asynchttpclient.WebSocketHandler
-import sttp.client.asynchttpclient.ziostreams.AsyncHttpClientZioStreamsBackend
+import sttp.client.asynchttpclient.zio.AsyncHttpClientZioBackend
 import sttp.client.circe.{ asJson, _ }
 import sttp.client.{ SttpBackend, _ }
 import zio.Task
@@ -14,9 +14,9 @@ import zio.test.environment.TestEnvironment
 object SttpZio extends DefaultRunnableSpec {
 
   // @see https://requestbin.com/r/enbom40wuq5zg/1bOSAYwoE7KoRARt3fMJQCHdOF7
-  implicit val customConfig: Configuration                                 = Configuration.default.withSnakeCaseMemberNames
+  implicit val customConfig: Configuration                        = Configuration.default.withSnakeCaseMemberNames
   @ConfiguredJsonCodec case class RequestSnakeCase(successSnakeCase: Boolean)
-  implicit val backend: Task[SttpBackend[Task, Nothing, WebSocketHandler]] = AsyncHttpClientZioStreamsBackend()
+  val backend: Task[SttpBackend[Task, Nothing, WebSocketHandler]] = AsyncHttpClientZioBackend()
 
   case class Response(success: Boolean)
   case class Request(success: Boolean)

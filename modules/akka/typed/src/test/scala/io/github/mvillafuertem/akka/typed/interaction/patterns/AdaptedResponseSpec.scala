@@ -15,7 +15,7 @@ final class AdaptedResponseSpec extends ScalaTestWithActorTestKit with AnyFlatSp
     // g i v e n
     import AdaptedResponse._
     val actorRequester     = spawn(ActorRequester.behavior)
-    val probeResponseActor = TestProbe[WrappedResponse]
+    val probeResponseActor = TestProbe[WrappedResponse]()
 
     // w h e n
     actorRequester ! Request("Hello!", probeResponseActor.ref)

@@ -23,7 +23,7 @@ class EventSourcedBehaviorSampleSpec
 
     // G I V E N
     val value = spawn(EventSourcedBehaviorSample.behavior("id"))
-    val probe = TestProbe[State]
+    val probe = TestProbe[State]()
 
     // W H E N
     value ! Add("1")
@@ -39,7 +39,7 @@ class EventSourcedBehaviorSampleSpec
 
     // G I V E N
     val value = spawn(EventSourcedBehaviorSample.behavior("id"))
-    val probe = TestProbe[State]
+    val probe = TestProbe[State]()
 
     // W H E N
     value ! Add("1")

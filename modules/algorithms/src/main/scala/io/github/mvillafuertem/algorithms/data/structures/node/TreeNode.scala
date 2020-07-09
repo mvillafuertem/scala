@@ -6,14 +6,14 @@ class TreeNode { // Constructor vacío
   private var de: TreeNode = _
 
   // Constructor con clave
-  def this(clave: Int) {
+  def this(clave: Int) = {
     this()
     this.clave = clave
     iz = null
     de = null
   }
 
-  def this(clave: Int, iz: TreeNode, de: TreeNode) {
+  def this(clave: Int, iz: TreeNode, de: TreeNode) = {
     this()
     this.clave = clave
     this.iz = iz

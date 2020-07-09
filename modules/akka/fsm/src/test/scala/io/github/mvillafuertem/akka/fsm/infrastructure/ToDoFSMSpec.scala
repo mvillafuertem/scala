@@ -17,7 +17,7 @@ final class ToDoFSMSpec extends ScalaTestWithActorTestKit with AnyFlatSpecLike {
 
     val toDo    = ToDo("Hola", "que tal", 0L)
     val buncher = spawn(ToDoFSM())
-    val probe   = TestProbe[State]
+    val probe   = TestProbe[State]()
 
     buncher ! GetToDo(probe.ref)
     probe.expectMessage(Uninitialized)

@@ -119,7 +119,7 @@ object Dependencies {
       Artifact.akkaStreamTyped % Version.akka,
       Artifact.akkaKafka       % Version.akkaKafka,
       "com.iheart"            %% "ficus"        % "1.4.7",
-      "org.apache.curator"     % "curator-test" % "5.0.0",
+      "org.apache.curator"     % "curator-test" % "5.1.0",
       "org.apache.kafka"      %% "kafka"        % "2.5.0",
       Artifact.logback         % Version.logback
     ) ++ Seq(
@@ -171,9 +171,9 @@ object Dependencies {
 
   val slinky: Def.Setting[Seq[ModuleID]] = libraryDependencies ++= Seq(
     // P R O D U C T I O N
-    "me.shadaj"                    %%% "slinky-hot"      % "0.6.5",
-    "dev.zio"                      %%% "zio"             % Version.zio,
-    "io.github.cquiroz"            %%% "scala-java-time" % "2.0.0"
+    "me.shadaj"         %%% "slinky-hot"      % "0.6.5",
+    "dev.zio"           %%% "zio"             % Version.zio,
+    "io.github.cquiroz" %%% "scala-java-time" % "2.0.0"
   )
 
   val sttp: Seq[ModuleID]  =
@@ -273,7 +273,7 @@ object Dependencies {
     val scalaTest                 = "org.scalatest"                         %% "scalatest"
     val slick                     = "com.typesafe.slick"                    %% "slick"
     val sttpAsyncAkka             = "com.softwaremill.sttp.client"          %% "akka-http-backend"
-    val sttpAsyncZioStreams       = "com.softwaremill.sttp.client"          %% "async-http-client-backend-zio-streams"
+    val sttpAsyncZioStreams       = "com.softwaremill.sttp.client"          %% "async-http-client-backend-zio"
     val sttpCirce                 = "com.softwaremill.sttp.client"          %% "circe"
     val sttpCore                  = "com.softwaremill.sttp.client"          %% "core"
     val swaggerUi                 = "org.webjars"                            % "swagger-ui"
@@ -295,32 +295,32 @@ object Dependencies {
   }
 
   private object Version {
-    val akka                      = "2.6.5"
+    val akka                      = "2.6.6"
     val akkaHttp                  = "10.1.12"
     val akkaKafka                 = "2.0.3"
     val akkaPersistenceCassandra  = "0.100"
     val akkaPersistenceInmemory   = "2.5.15.2"
     val akkaPersistenceJdbc       = "3.5.2"
-    val alpakkaSlick              = "2.0.0"
+    val alpakkaSlick              = "2.0.1"
     val cats                      = "2.1.1"
     val circe                     = "0.13.0"
     val dijon                     = "0.3.0"
     val h2                        = "1.4.200"
-    val jslt                      = "0.1.9"
-    val jsoniter                  = "2.2.5"
+    val jslt                      = "0.1.10"
+    val jsoniter                  = "2.4.4"
     val leveldbjniAll             = "1.8"
     val logback                   = "1.2.3"
-    val postgres                  = "42.2.12"
-    val scalaTest                 = "3.1.2"
+    val postgres                  = "42.2.14"
+    val scalaTest                 = "3.2.0"
     val slick                     = "3.3.2"
-    val sttp                      = "2.1.5"
-    val tapir                     = "0.15.3"
-    val testcontainers            = "0.37.0"
+    val sttp                      = "2.2.1"
+    val tapir                     = "0.16.1"
+    val testcontainers            = "0.38.0"
     val testcontainersKafka       = "1.14.3"
-    val zio                       = "1.0.0-RC20"
-    val zioAkkaCluster            = "0.1.17"
-    val zioInteropReactiveStreams = "1.0.3.5-RC10"
-    val zioKafka                  = "0.9.0"
+    val zio                       = "1.0.0-RC21-2"
+    val zioAkkaCluster            = "0.1.18"
+    val zioInteropReactiveStreams = "1.0.3.5-RC12"
+    val zioKafka                  = "0.11.0"
   }
 
 }

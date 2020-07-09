@@ -40,7 +40,7 @@ final class ToDoBehaviorSpec
     val toDo   = ToDo("ToDo", "ToDo with id 1234567890", new Date().toInstant.toEpochMilli)
     val value  = spawn(ToDoBehavior(s"ToDo-123"))
     val value1 = spawn(ToDoBehavior(s"ToDo-123"))
-    val probe  = TestProbe[State]
+    val probe  = TestProbe[State]()
 
     // W H E N
     value ! Open(toDo)
@@ -56,7 +56,7 @@ final class ToDoBehaviorSpec
     // G I V E N
     val toDo  = ToDo("ToDo1", "ToDo with id 1", new Date().toInstant.toEpochMilli)
     val value = spawn(ToDoBehavior(s"ToDo-${toDo.id}"))
-    val probe = TestProbe[State]
+    val probe = TestProbe[State]()
 
     // W H E N
     value ! Open(toDo)

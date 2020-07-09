@@ -17,7 +17,7 @@ addSbtPlugin("net.virtual-void" % "sbt-dependency-graph" % "0.9.2")
 addSbtPlugin("com.typesafe.sbt" % "sbt-git" % "1.0.0")
 
 // N A T I V E  P A C K A G E R
-addSbtPlugin("com.typesafe.sbt" % "sbt-native-packager" % "1.7.2")
+addSbtPlugin("com.typesafe.sbt" % "sbt-native-packager" % "1.7.4")
 
 // R E V O L V E R
 addSbtPlugin("io.spray" % "sbt-revolver" % "0.9.1")
@@ -26,16 +26,16 @@ addSbtPlugin("io.spray" % "sbt-revolver" % "0.9.1")
 addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.6.1")
 
 // M D O C
-addSbtPlugin("org.scalameta" % "sbt-mdoc" % "2.2.0")
+addSbtPlugin("org.scalameta" % "sbt-mdoc" % "2.2.3")
 
 addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.4.0")
 
 // S C A L A J S
-addSbtPlugin("org.scala-js" % "sbt-scalajs" % "1.1.0")
+addSbtPlugin("org.scala-js" % "sbt-scalajs" % "1.1.1")
 
 // S C A L A J S  B U N D L E R
 addSbtPlugin("ch.epfl.scala" % "sbt-scalajs-bundler" % "0.18.0")
 
 // S C A L A B L Y  T Y P E D  C O N V E R T E R
 resolvers += Resolver.bintrayRepo("oyvindberg", "converter")
-addSbtPlugin("org.scalablytyped.converter" % "sbt-converter" % "1.0.0-beta13")
+addSbtPlugin("org.scalablytyped.converter" % "sbt-converter" % "1.0.0-beta18")

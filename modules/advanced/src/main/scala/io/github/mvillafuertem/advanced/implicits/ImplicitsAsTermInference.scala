@@ -1,6 +1,6 @@
 package io.github.mvillafuertem.advanced.implicits
 
-import scala.concurrent.{ExecutionContext, ExecutionContextExecutor, Future}
+import scala.concurrent.{ExecutionContext, Future}
 
 /**
  * Se pueden entiende inferencia de terminos,

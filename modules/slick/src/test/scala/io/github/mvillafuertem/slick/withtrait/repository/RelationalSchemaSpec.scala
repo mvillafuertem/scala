@@ -1,7 +1,8 @@
 package io.github.mvillafuertem.slick.withtrait.repository
 
 import io.github.mvillafuertem.slick.withtrait.configuration.InfrastructureConfigurationSpec
-import org.scalatest.{ AsyncFlatSpecLike, Matchers }
+import org.scalatest.flatspec.AsyncFlatSpecLike
+import org.scalatest.matchers.should.Matchers
 
 /**
  * @author Miguel Villafuerte

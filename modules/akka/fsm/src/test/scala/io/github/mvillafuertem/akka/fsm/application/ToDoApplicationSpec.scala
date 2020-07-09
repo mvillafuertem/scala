@@ -18,7 +18,7 @@ class ToDoApplicationSpec extends ScalaTestWithActorTestKit with AnyFlatSpecLike
     val toDo  = ToDo("Hola", "", 0L)
     val fsm   = spawn(ToDoFSM())
     val app   = ToDoApplication(fsm)
-    val probe = TestProbe[State]
+    val probe = TestProbe[State]()
 
     app.apply(toDo)
     fsm ! GetToDo(probe.ref)

@@ -2,7 +2,9 @@ package io.github.mvillafuertem.slick.withdi.repository
 
 import io.github.mvillafuertem.slick.withdi.configuration.UserConfigurationSpec
 import io.github.mvillafuertem.slick.withdi.domain.User
-import org.scalatest.{ AsyncFlatSpecLike, BeforeAndAfterAll, BeforeAndAfterEach, Ignore, Matchers, OneInstancePerTest, OptionValues }
+import org.scalatest.flatspec.AsyncFlatSpecLike
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.{ BeforeAndAfterEach, Ignore, OneInstancePerTest, OptionValues }
 
 import scala.concurrent.duration._
 import scala.concurrent.{ Await, Future }
