@@ -124,6 +124,13 @@ lazy val cats = (project in file("modules/cats"))
   .settings(commonSettings)
   .settings(libraryDependencies ++= Dependencies.cats)
 
+lazy val docs = (project in file("modules/docs"))
+  // S E T T I N G S
+  .settings(scalaSource in Compile := baseDirectory.value / "src/main/mdoc")
+  .settings(MdocSettings.value)
+  // P L U G I N S
+  .enablePlugins(MdocPlugin)
+
 lazy val json = (project in file("modules/json"))
   .dependsOn(algorithms)
   // S E T T I N G S
@@ -188,7 +195,6 @@ lazy val slinky = (project in file("modules/slinky"))
   .settings(startWebpackDevServer / version := "3.10.3")
   .settings(Test / requireJsDomEnv := true)
   .settings(stFlavour := Flavour.Slinky)
-  .settings(stExperimentalEnableImplicitOps := true)
   .settings(stIgnore ++= List("@material-ui/icons"))
   .settings(
     Compile / npmDependencies ++= Seq(
