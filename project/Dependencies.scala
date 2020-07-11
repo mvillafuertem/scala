@@ -138,6 +138,14 @@ object Dependencies {
     Artifact.scalaTest % Version.scalaTest
   ).map(_ % Test)
 
+  val docs: Def.Setting[Seq[ModuleID]]   = libraryDependencies ++= Seq(
+    // P R O D U C T I O N
+    "me.shadaj"         %%% "slinky-hot"          % "0.6.5",
+    "me.shadaj"         %%% "slinky-react-router" % "0.6.5",
+    "dev.zio"           %%% "zio"                 % Version.zio,
+    "io.github.cquiroz" %%% "scala-java-time"     % "2.0.0"
+  )
+
   val json: Seq[ModuleID]                = Seq(
     // J S O N
     Artifact.circeParser,

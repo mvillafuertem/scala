@@ -125,10 +125,36 @@ lazy val cats = (project in file("modules/cats"))
   .settings(libraryDependencies ++= Dependencies.cats)
 
 lazy val docs = (project in file("modules/docs"))
+  .configure(browserProject)
   // S E T T I N G S
-  .settings(scalaSource in Compile := baseDirectory.value / "src/main/mdoc")
+  .settings(commonSettingsJs)
+  .settings(webpackDevServerPort := 8008)
+  .settings(Test / requireJsDomEnv := true)
+  .settings(
+    Compile / npmDependencies ++= Seq(
+      "react"                    -> "16.13.1",
+      "react-dom"                -> "16.13.1",
+      "react-router-dom"                -> "5.2.0",
+      "react-proxy"              -> "1.1.8",
+      "remark"                   -> "8.0.0",
+      "remark-react"             -> "4.0.1",
+      "react-helmet"             -> "5.2.0",
+      "react-syntax-highlighter" -> "6.0.4"
+    )
+  )
+  .settings(
+    Compile / fastOptJS / webpackExtraArgs += "--mode=development",
+    Compile / fullOptJS / webpackExtraArgs += "--mode=production",
+    Compile / fastOptJS / webpackDevServerExtraArgs += "--mode=development",
+    Compile / fullOptJS / webpackDevServerExtraArgs += "--mode=production"
+  )
+  .settings(Dependencies.docs)
+  .settings(testFrameworks := Seq(new TestFramework("zio.test.sbt.ZTestFramework")))
   .settings(MdocSettings.value)
   // P L U G I N S
+  .enablePlugins(ScalaJSBundlerPlugin)
+  //.enablePlugins(ScalablyTypedConverterPlugin)
+  .enablePlugins(ScalaJSPlugin)
   .enablePlugins(MdocPlugin)
 
 lazy val json = (project in file("modules/json"))
@@ -158,7 +184,7 @@ lazy val browserProject: Project => Project =
     dist := {
       val artifacts      = (Compile / fullOptJS / webpack).value
       val artifactFolder = (Compile / fullOptJS / crossTarget).value
-      val distFolder     = (ThisBuild / baseDirectory).value / "docs" / moduleName.value
+      val distFolder     = (ThisBuild / baseDirectory).value / "docs"
 
       distFolder.mkdirs()
       artifacts.foreach { artifact =>
@@ -188,7 +214,6 @@ lazy val browserProject: Project => Project =
   )
 
 lazy val slinky = (project in file("modules/slinky"))
-  .configure(browserProject)
   // S E T T I N G S
   .settings(commonSettingsJs)
   .settings(webpackDevServerPort := 8008)

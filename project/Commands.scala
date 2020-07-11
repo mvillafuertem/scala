@@ -5,6 +5,8 @@ import scala.sys.process.Process
 
 object Commands {
 
+  val DocsDevCommand = Command.command("docs")(state => "project docs" :: "fastOptJS::startWebpackDevServer" :: "~fastOptJS" :: state)
+
   val FrontendDevCommand = Command.command("dev")(state => "project slinky" :: "fastOptJS::startWebpackDevServer" :: "~fastOptJS" :: state)
 
   val FrontendBuildCommand = Command.command("build")(state => "project slinky" :: "fullOptJS::webpack" :: state)
@@ -29,6 +31,7 @@ object Commands {
   commands += h2Command
 
   val value = Seq(
+    DocsDevCommand,
     FrontendDevCommand,
     FrontendBuildCommand,
     FmtSbtCommand,
