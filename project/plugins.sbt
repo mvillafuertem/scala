@@ -28,7 +28,7 @@ addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.6.1")
 // M D O C
 addSbtPlugin("org.scalameta" % "sbt-mdoc" % "2.2.3")
 
-addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.4.0")
+addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.4.2")
 
 // S C A L A J S
 addSbtPlugin("org.scala-js" % "sbt-scalajs" % "1.1.1")
