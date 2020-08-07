@@ -319,7 +319,7 @@ object Dependencies {
     val leveldbjniAll             = "1.8"
     val logback                   = "1.2.3"
     val postgres                  = "42.2.14"
-    val scalaTest                 = "3.2.0"
+    val scalaTest                 = "3.2.1"
     val slick                     = "3.3.2"
     val sttp                      = "2.2.1"
     val tapir                     = "0.16.1"
