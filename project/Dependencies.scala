@@ -120,7 +120,7 @@ object Dependencies {
       Artifact.akkaKafka       % Version.akkaKafka,
       "com.iheart"            %% "ficus"        % "1.4.7",
       "org.apache.curator"     % "curator-test" % "5.1.0",
-      "org.apache.kafka"      %% "kafka"        % "2.5.0",
+      "org.apache.kafka"      %% "kafka"        % "2.6.0",
       Artifact.logback         % Version.logback
     ) ++ Seq(
       // S E N S O R  C O N T R O L L E R  T E S T
@@ -303,9 +303,9 @@ object Dependencies {
   }
 
   private object Version {
-    val akka                      = "2.6.6"
-    val akkaHttp                  = "10.1.12"
-    val akkaKafka                 = "2.0.3"
+    val akka                      = "2.6.8"
+    val akkaHttp                  = "10.2.0"
+    val akkaKafka                 = "2.0.4"
     val akkaPersistenceCassandra  = "0.100"
     val akkaPersistenceInmemory   = "2.5.15.2"
     val akkaPersistenceJdbc       = "3.5.2"
@@ -315,20 +315,20 @@ object Dependencies {
     val dijon                     = "0.3.0"
     val h2                        = "1.4.200"
     val jslt                      = "0.1.10"
-    val jsoniter                  = "2.4.4"
+    val jsoniter                  = "2.6.0"
     val leveldbjniAll             = "1.8"
     val logback                   = "1.2.3"
     val postgres                  = "42.2.14"
-    val scalaTest                 = "3.2.0"
+    val scalaTest                 = "3.2.1"
     val slick                     = "3.3.2"
-    val sttp                      = "2.2.1"
-    val tapir                     = "0.16.1"
-    val testcontainers            = "0.38.0"
+    val sttp                      = "2.2.4"
+    val tapir                     = "0.16.11"
+    val testcontainers            = "0.38.1"
     val testcontainersKafka       = "1.14.3"
-    val zio                       = "1.0.0-RC21-2"
-    val zioAkkaCluster            = "0.1.18"
-    val zioInteropReactiveStreams = "1.0.3.5-RC12"
-    val zioKafka                  = "0.11.0"
+    val zio                       = "1.0.0"
+    val zioAkkaCluster            = "0.2.0"
+    val zioInteropReactiveStreams = "1.0.3.5"
+    val zioKafka                  = "0.12.0"
   }
 
 }
