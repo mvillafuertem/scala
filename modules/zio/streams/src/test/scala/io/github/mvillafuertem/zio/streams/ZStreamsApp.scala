@@ -1,7 +1,7 @@
 package io.github.mvillafuertem.zio.streams
 
 import zio._
-import zio.stream.ZStream
+import zio.stream.{ZStream, ZTransducer}
 import zio.test.Assertion.equalTo
 import zio.test._
 import zio.test.environment.TestEnvironment
@@ -56,7 +56,17 @@ object ZStreamsApp extends DefaultRunnableSpec {
           } yield error
           // t h e n
         )(Assertion.fails(equalTo("Index 4 out of bounds for length 4")))
-      }
+      },
+      testM("ZTransducer filter")(
+        assertM(
+          for {
+            a <- ZStream
+              .range(1, 10)
+              .transduce(ZTransducer.identity.filter(_ % 2 == 0))
+              .runCollect
+          } yield a
+        )(equalTo(Chunk(2,4,6,8)))
+      )
 //      testM("Intersperse") {
 //        assertM(
 //          ZStream
