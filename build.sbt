@@ -139,7 +139,7 @@ lazy val docs = (project in file("modules/docs"))
     Compile / npmDependencies ++= Seq(
       "react"                    -> "16.13.1",
       "react-dom"                -> "16.13.1",
-      "react-router-dom"                -> "5.2.0",
+      "react-router-dom"         -> "5.2.0",
       "react-proxy"              -> "1.1.8",
       "remark"                   -> "8.0.0",
       "remark-react"             -> "4.0.1",
@@ -247,6 +247,12 @@ lazy val slinky = (project in file("modules/slinky"))
   // P L U G I N S
   .enablePlugins(ScalablyTypedConverterPlugin)
   .enablePlugins(ScalaJSPlugin)
+
+lazy val spark = (project in file("modules/spark"))
+// S E T T I N G S
+  .settings(scalaVersion := "2.12.12")
+  .settings(Settings.testReport ++ Information.value)
+  .settings(libraryDependencies ++= Dependencies.spark)
 
 lazy val sttp = (project in file("modules/sttp"))
 // S E T T I N G S

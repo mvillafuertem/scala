@@ -1,6 +1,6 @@
 import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
 import sbt.Keys.libraryDependencies
-import sbt.{Def, _}
+import sbt.{ Def, _ }
 
 object Dependencies {
 
@@ -192,6 +192,15 @@ object Dependencies {
     "io.github.cquiroz" %%% "scala-java-time" % Version.scalaJavaTime
   )
 
+  val spark: Seq[ModuleID] =
+    // S P A R K
+    Seq(
+      Artifact.spark % Version.spark
+    ) ++ Seq(
+      // S P A R K  T E S T
+      Artifact.scalaTest % Version.scalaTest
+    ).map(_          % Test)
+
   val sttp: Seq[ModuleID]  =
     // S T T P
     Seq(
@@ -293,6 +302,7 @@ object Dependencies {
     val postgresql                = "org.postgresql"                         % "postgresql"
     val scalaTest                 = "org.scalatest"                         %% "scalatest"
     val slick                     = "com.typesafe.slick"                    %% "slick"
+    val spark                     = "org.apache.spark"                      %% "spark-core"
     val sttpAsyncAkka             = "com.softwaremill.sttp.client"          %% "akka-http-backend"
     val sttpAsyncZioStreams       = "com.softwaremill.sttp.client"          %% "async-http-client-backend-zio"
     val sttpCirce                 = "com.softwaremill.sttp.client"          %% "circe"
@@ -341,6 +351,7 @@ object Dependencies {
     val scalaTest                 = "3.2.1"
     val slick                     = "3.3.2"
     val slinky                    = "0.6.5"
+    val spark                     = "2.4.0"
     val sttp                      = "2.2.4"
     val tapir                     = "0.16.12"
     val testcontainers            = "0.38.1"
