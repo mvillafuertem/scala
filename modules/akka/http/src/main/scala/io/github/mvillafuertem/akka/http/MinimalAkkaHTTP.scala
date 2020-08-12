@@ -18,20 +18,20 @@ object MinimalAkkaHTTP extends App {
   private implicit val dispatcher: ExecutionContextExecutor = actorSystem.dispatcher
 
   // R O U T E
-  val route                                     = endpoint.get
+  val route = endpoint.get
     .in("hello")
     .out(stringBody)
     .toRoute(_ => Future(Right("Hello World!")))
 
   // R U N A P P L I C A T I O N
   val serverBinding: Future[Http.ServerBinding] =
-    Http().bindAndHandle(route, "localhost", 8080)
+    Http().newServerAt("localhost", 8080).bind(route)
 
   serverBinding.onComplete {
     case Success(bound) =>
       actorSystem.log.info(s"Server online at http://${bound.localAddress.getHostString}:${bound.localAddress.getPort}/")
 
-    case Failure(e) =>
+    case Failure(e)     =>
       actorSystem.log.error("Server error", e)
       actorSystem.terminate()
   }

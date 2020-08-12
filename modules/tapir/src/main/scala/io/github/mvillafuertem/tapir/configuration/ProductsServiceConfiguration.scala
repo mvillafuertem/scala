@@ -4,6 +4,7 @@ import akka.actor.typed.ActorSystem
 import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.scaladsl.adapter._
 import akka.http.scaladsl.Http
+import akka.http.scaladsl.server.Directives._
 import akka.stream.Materializer
 import akka.{ actor, Done }
 import io.github.mvillafuertem.tapir.BuildInfo
@@ -12,7 +13,6 @@ import io.github.mvillafuertem.tapir.infrastructure.SlickProductsRepository
 import slick.basic.BasicBackend
 import slick.jdbc.H2Profile.backend._
 import zio.{ Task, UIO, ZIO }
-import akka.http.scaladsl.server.Directives._
 
 import scala.concurrent.ExecutionContext
 
@@ -24,13 +24,16 @@ trait ProductsServiceConfiguration extends InfrastructureConfiguration {
 
     implicit lazy val untypedSystem: actor.ActorSystem = actorSystem.toClassic
     implicit lazy val materializer: Materializer       = Materializer(actorSystem)
-    val eventualBinding                                = Http()(untypedSystem).bindAndHandle(
-      SwaggerApi.route ~ new ProductsApi(new SlickProductsRepository() {
-        override def db: UIO[BasicBackend#DatabaseDef] = ZIO.effectTotal(Database.forConfig("infrastructure.h2"))
-      }).route,
-      productsConfigurationProperties.interface,
-      productsConfigurationProperties.port
-    )
+    val eventualBinding                                = Http()(untypedSystem)
+      .newServerAt(
+        productsConfigurationProperties.interface,
+        productsConfigurationProperties.port
+      )
+      .bind(
+        SwaggerApi.route ~ new ProductsApi(new SlickProductsRepository() {
+          override def db: UIO[BasicBackend#DatabaseDef] = ZIO.effectTotal(Database.forConfig("infrastructure.h2"))
+        }).route
+      )
     for {
       //actorSystem <- ZIO.environment[ActorSystem[_]]
       _ <- Task
