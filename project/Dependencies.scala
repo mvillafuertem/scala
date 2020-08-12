@@ -351,7 +351,7 @@ object Dependencies {
     val scalaTest                 = "3.2.1"
     val slick                     = "3.3.2"
     val slinky                    = "0.6.5"
-    val spark                     = "2.4.0"
+    val spark                     = "2.4.6"
     val sttp                      = "2.2.4"
     val tapir                     = "0.16.12"
     val testcontainers            = "0.38.1"
