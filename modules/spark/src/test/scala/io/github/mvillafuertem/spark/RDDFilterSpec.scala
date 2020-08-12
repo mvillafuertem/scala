@@ -1,6 +1,5 @@
 package io.github.mvillafuertem.spark
 
-import io.github.mvillafuertem.spark.Filter.getClass
 import org.apache.spark.{SparkConf, SparkContext}
 import org.scalatest.flatspec.AnyFlatSpecLike
 
