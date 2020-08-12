@@ -1,6 +1,6 @@
 import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
 import sbt.Keys.libraryDependencies
-import sbt.{ Def, _ }
+import sbt.{Def, _}
 
 object Dependencies {
 
@@ -67,6 +67,14 @@ object Dependencies {
     Artifact.scalaTest % Version.scalaTest % Test
   )
 
+  val aws: Seq[ModuleID] = Seq(
+    // A W S  T E S T
+    Artifact.awssdkS3       % Version.awssdkS3,
+    Artifact.java8Compat    % Version.java8Compat,
+    Artifact.testcontainers % Version.testcontainers % "it,test",
+    Artifact.scalaTest      % Version.scalaTest      % Test
+  )
+
   val basic: Seq[ModuleID] = Seq(
     // B A S I C  T E S T
     Artifact.scalaTest % Version.scalaTest % Test
@@ -118,9 +126,9 @@ object Dependencies {
       Artifact.akkaActorTyped  % Version.akka,
       Artifact.akkaStreamTyped % Version.akka,
       Artifact.akkaKafka       % Version.akkaKafka,
-      "com.iheart"            %% "ficus"        % "1.4.7",
-      "org.apache.curator"     % "curator-test" % "5.1.0",
-      "org.apache.kafka"      %% "kafka"        % "2.6.0",
+      Artifact.ficus           % Version.ficus,
+      Artifact.curator         % Version.curator,
+      Artifact.kafka           % Version.kafka,
       Artifact.logback         % Version.logback
     ) ++ Seq(
       // S E N S O R  C O N T R O L L E R  T E S T
@@ -140,10 +148,10 @@ object Dependencies {
 
   val docs: Def.Setting[Seq[ModuleID]]   = libraryDependencies ++= Seq(
     // P R O D U C T I O N
-    "me.shadaj"         %%% "slinky-hot"          % "0.6.5",
-    "me.shadaj"         %%% "slinky-react-router" % "0.6.5",
+    "me.shadaj"         %%% "slinky-hot"          % Version.slinky,
+    "me.shadaj"         %%% "slinky-react-router" % Version.slinky,
     "dev.zio"           %%% "zio"                 % Version.zio,
-    "io.github.cquiroz" %%% "scala-java-time"     % "2.0.0"
+    "io.github.cquiroz" %%% "scala-java-time"     % Version.scalaJavaTime
   )
 
   val json: Seq[ModuleID]                = Seq(
@@ -179,9 +187,9 @@ object Dependencies {
 
   val slinky: Def.Setting[Seq[ModuleID]] = libraryDependencies ++= Seq(
     // P R O D U C T I O N
-    "me.shadaj"         %%% "slinky-hot"      % "0.6.5",
+    "me.shadaj"         %%% "slinky-hot"      % Version.slinky,
     "dev.zio"           %%% "zio"             % Version.zio,
-    "io.github.cquiroz" %%% "scala-java-time" % "2.0.0"
+    "io.github.cquiroz" %%% "scala-java-time" % Version.scalaJavaTime
   )
 
   val sttp: Seq[ModuleID]  =
@@ -265,16 +273,21 @@ object Dependencies {
     val akkaStreamTyped           = "com.typesafe.akka"                     %% "akka-stream-typed"
     val akkaTestKit               = "com.typesafe.akka"                     %% "akka-testkit"
     val alpakkaSlick              = "com.lightbend.akka"                    %% "akka-stream-alpakka-slick"
+    val awssdkS3                  = "software.amazon.awssdk"                 % "s3"
     val catsCore                  = "org.typelevel"                         %% "cats-core"
     val catsFree                  = "org.typelevel"                         %% "cats-free"
     val circeGeneric              = "io.circe"                              %% "circe-generic"
     val circeGenericExtras        = "io.circe"                              %% "circe-generic-extras"
     val circeParser               = "io.circe"                              %% "circe-parser"
+    val curator                   = "org.apache.curator"                     % "curator-test"
     val dijon                     = "com.github.pathikrit"                  %% "dijon"
+    val ficus                     = "com.iheart"                            %% "ficus"
     val h2                        = "com.h2database"                         % "h2"
+    val java8Compat               = "org.scala-lang.modules"                %% "scala-java8-compat"
     val jslt                      = "com.schibsted.spt.data"                 % "jslt"
     val jsoniterCore              = "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-core"
     val jsoniterMacros            = "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-macros"
+    val kafka                     = "org.apache.kafka"                      %% "kafka"
     val leveldbjniAll             = "org.fusesource.leveldbjni"              % "leveldbjni-all"
     val logback                   = "ch.qos.logback"                         % "logback-classic"
     val postgresql                = "org.postgresql"                         % "postgresql"
@@ -310,17 +323,24 @@ object Dependencies {
     val akkaPersistenceInmemory   = "2.5.15.2"
     val akkaPersistenceJdbc       = "3.5.2"
     val alpakkaSlick              = "2.0.1"
+    val awssdkS3                  = "2.13.65"
     val cats                      = "2.1.1"
     val circe                     = "0.13.0"
+    val curator                   = "5.1.0"
     val dijon                     = "0.3.0"
+    val ficus                     = "1.4.7"
     val h2                        = "1.4.200"
+    val java8Compat               = "0.9.1"
     val jslt                      = "0.1.10"
     val jsoniter                  = "2.6.0"
+    val kafka                     = "2.6.0"
     val leveldbjniAll             = "1.8"
     val logback                   = "1.2.3"
     val postgres                  = "42.2.14"
+    val scalaJavaTime             = "2.0.0"
     val scalaTest                 = "3.2.1"
     val slick                     = "3.3.2"
+    val slinky                    = "0.6.5"
     val sttp                      = "2.2.4"
     val tapir                     = "0.16.12"
     val testcontainers            = "0.38.1"

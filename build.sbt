@@ -76,6 +76,11 @@ lazy val alpakka = (project in file("modules/akka/alpakka"))
   .settings(commonSettings)
   .settings(libraryDependencies ++= Dependencies.alpakka)
 
+lazy val aws = (project in file("modules/aws"))
+// S E T T I N G S
+  .settings(commonSettings)
+  .settings(libraryDependencies ++= Dependencies.aws)
+
 lazy val basic = (project in file("modules/basic"))
 // S E T T I N G S
   .settings(commonSettings)

@@ -38,4 +38,4 @@ addSbtPlugin("ch.epfl.scala" % "sbt-scalajs-bundler" % "0.18.0")
 
 // S C A L A B L Y  T Y P E D  C O N V E R T E R
 resolvers += Resolver.bintrayRepo("oyvindberg", "converter")
-addSbtPlugin("org.scalablytyped.converter" % "sbt-converter" % "1.0.0-beta23")
+addSbtPlugin("org.scalablytyped.converter" % "sbt-converter" % "1.0.0-beta24")
