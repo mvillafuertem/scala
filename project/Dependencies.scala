@@ -71,7 +71,7 @@ object Dependencies {
     // A W S  T E S T
     Artifact.awssdkS3       % Version.awssdkS3,
     Artifact.java8Compat    % Version.java8Compat,
-    Artifact.testcontainers % Version.testcontainers % "it,test",
+    Artifact.testcontainers % Version.testcontainers % Test,
     Artifact.scalaTest      % Version.scalaTest      % Test
   )
 
