@@ -20,7 +20,7 @@ jobs:
     needs: base
     steps:
       - name: Run Tests
-      run: ./.cicd/test.sh
+        run: ./.cicd/test.sh
 
   integration-test:
     name: Integration Test
