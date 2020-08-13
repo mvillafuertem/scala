@@ -6,13 +6,20 @@ scala:
 jdk:
   - openjdk11
 
+services:
+  - docker
+
+cache:
+  directories:
+    - docker-cache
+
 jobs:
   include:
     - stage: test
       script: ./.cicd/test.sh
       after_success: bash <(curl -s https://codecov.io/bash)
-#    - stage: integration test
-#      script: ./.cicd/integration-test.sh
+    - stage: integration test
+      script: ./.cicd/integration-test.sh
 #    - stage: build
 #      script: ./.cicd/build.sh
 #    - stage: doc
