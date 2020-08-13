@@ -107,7 +107,7 @@ final class RelationalVertexRepositorySpec
 
 object RelationalVertexRepositorySpec {
 
-  val timeout: FiniteDuration = 5.second
+  val timeout: FiniteDuration = 10.second
 
   val tenantIdOne = 1111L
   val assetIdOne  = 5555L
