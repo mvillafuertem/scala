@@ -69,7 +69,8 @@ object Dependencies {
 
   val aws: Seq[ModuleID] = Seq(
     // A W S  I N T E G R A T I O N  T E S T
-    Artifact.awssdkS3       % Version.awssdkS3       % IntegrationTest,
+    Artifact.awsSdkLambda   % Version.aws            % IntegrationTest,
+    Artifact.awsSdkS3       % Version.aws            % IntegrationTest,
     Artifact.java8Compat    % Version.java8Compat    % IntegrationTest,
     Artifact.logback        % Version.logback        % IntegrationTest,
     Artifact.scalaTest      % Version.scalaTest      % IntegrationTest,
@@ -283,7 +284,8 @@ object Dependencies {
     val akkaStreamTyped           = "com.typesafe.akka"                     %% "akka-stream-typed"
     val akkaTestKit               = "com.typesafe.akka"                     %% "akka-testkit"
     val alpakkaSlick              = "com.lightbend.akka"                    %% "akka-stream-alpakka-slick"
-    val awssdkS3                  = "software.amazon.awssdk"                 % "s3"
+    val awsSdkLambda              = "software.amazon.awssdk"                 % "lambda"
+    val awsSdkS3                  = "software.amazon.awssdk"                 % "s3"
     val catsCore                  = "org.typelevel"                         %% "cats-core"
     val catsFree                  = "org.typelevel"                         %% "cats-free"
     val circeGeneric              = "io.circe"                              %% "circe-generic"
@@ -334,7 +336,7 @@ object Dependencies {
     val akkaPersistenceInmemory   = "2.5.15.2"
     val akkaPersistenceJdbc       = "3.5.2"
     val alpakkaSlick              = "2.0.1"
-    val awssdkS3                  = "2.13.75"
+    val aws                       = "2.13.75"
     val cats                      = "2.1.1"
     val circe                     = "0.13.0"
     val curator                   = "5.1.0"

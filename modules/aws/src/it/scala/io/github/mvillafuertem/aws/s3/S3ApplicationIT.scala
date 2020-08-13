@@ -6,6 +6,7 @@ import java.nio.file.Path
 import java.util.concurrent.CompletionException
 
 import com.dimafeng.testcontainers.{ DockerComposeContainer, ExposedService }
+import io.github.mvillafuertem.aws.RichS3AsyncClientBuilder
 import io.github.mvillafuertem.aws.s3.S3ApplicationIT.S3ApplicationConfigurationIT
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.flatspec.AsyncFlatSpecLike
@@ -15,8 +16,8 @@ import org.testcontainers.containers.wait.strategy.Wait
 import software.amazon.awssdk.auth.credentials.{ AwsBasicCredentials, AwsCredentialsProvider, StaticCredentialsProvider }
 import software.amazon.awssdk.http.HttpStatusCode
 import software.amazon.awssdk.regions.Region
+import software.amazon.awssdk.services.s3.S3AsyncClient
 import software.amazon.awssdk.services.s3.model._
-import software.amazon.awssdk.services.s3.{ S3AsyncClient, S3AsyncClientBuilder }
 
 import scala.compat.java8.FutureConverters.CompletionStageOps
 import scala.concurrent.{ ExecutionContext, Future }
@@ -179,19 +180,14 @@ object S3ApplicationIT {
       region: Option[Region] = None,
       endpoint: Option[URI] = None,
       credentialsProvider: Option[AwsCredentialsProvider] = None
-    ): S3AsyncClient = {
-      implicit class RichBuilder(s3ClientBuilder: S3AsyncClientBuilder) {
-        def add[T](value: Option[T], builder: S3AsyncClientBuilder => T => S3AsyncClientBuilder): S3AsyncClientBuilder =
-          value.fold(s3ClientBuilder)(builder(s3ClientBuilder))
-      }
-
+    ): S3AsyncClient =
       S3AsyncClient
         .builder()
         .add(region, _.region)
         .add(endpoint, _.endpointOverride)
         .add(credentialsProvider, _.credentialsProvider)
         .build()
-    }
 
   }
+
 }
