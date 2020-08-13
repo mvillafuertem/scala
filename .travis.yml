@@ -45,3 +45,5 @@ jobs:
 #    - stage: publish
 #      script: ./.cicd/publish.sh
 
+notifications:
+  email: false
