@@ -92,7 +92,7 @@ object S3ApplicationSpec {
   trait S3ApplicationConfigurationIT {
 
     private val S3_PORT: Int    = 4566
-    private val S3_HOST: String = "http://0.0.0.0"
+    private val S3_HOST: String = "http://localhost"
     val S3_ENDPOINT: String     = s"$S3_HOST:$S3_PORT"
     val BUCKET_NAME: String     = "bucket-test"
     val KEY                     = "logback-test.xml"
