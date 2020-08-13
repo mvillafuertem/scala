@@ -10,7 +10,7 @@ services:
     environment:
       - SERVICES=s3
       - DEFAULT_REGION=us-east-1
-      #- DEBUG=1
+      - DEBUG=1
       #- DATA_DIR=${DATA_DIR- }
       #- LAMBDA_EXECUTOR=docker
       #- DOCKER_HOST=unix:///var/run/docker.sock

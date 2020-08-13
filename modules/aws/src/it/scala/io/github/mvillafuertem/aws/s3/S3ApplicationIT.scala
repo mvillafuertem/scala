@@ -81,6 +81,33 @@ final class S3ApplicationIT extends AsyncFlatSpecLike with Matchers with BeforeA
 
   }
 
+  it should "Get Object Request" in {
+
+    // g i v e n
+    val getObjectRequest = GetObjectRequest
+      .builder()
+      .bucket(BUCKET_NAME)
+      .key(KEY)
+      .build()
+
+    // w h e n
+    val getObjectResponse: Future[GetObjectResponse] = for {
+      headObjectResponse <- s3AsyncClientDefault
+                              .getObject(getObjectRequest, Path.of("/tmp/integration-test.xml"))
+                              .toScala
+                              .recover {
+                                case e: CompletionException if e.getCause.isInstanceOf[NoSuchKeyException] => throw e
+                                case e                                                                     => throw e
+                              }
+    } yield headObjectResponse
+
+    // t h e n
+    getObjectResponse.map { actual =>
+      actual.sdkHttpResponse().statusCode() shouldBe HttpStatusCode.OK
+    }
+
+  }
+
   override protected def beforeAll(): Unit = dockerInfrastructure.start()
 
   override protected def afterAll(): Unit = dockerInfrastructure.stop()
@@ -117,7 +144,7 @@ object S3ApplicationIT {
       )
     )
 
-    def createBucketData()(implicit executionContext: ExecutionContext): Future[CreateBucketResponse] = { // create bucket
+    def createBucketData()(implicit executionContext: ExecutionContext): Future[CreateBucketResponse] = {
       val createBucketRequest = CreateBucketRequest
         .builder()
         .bucket(BUCKET_NAME)
@@ -132,7 +159,7 @@ object S3ApplicationIT {
         }
     }
 
-    def putObjectData()(implicit executionContext: ExecutionContext): Future[PutObjectResponse] = { // put object
+    def putObjectData()(implicit executionContext: ExecutionContext): Future[PutObjectResponse] = {
       val putObjectRequest = PutObjectRequest
         .builder()
         .bucket(BUCKET_NAME)
