@@ -36,8 +36,7 @@ jobs:
       after_success: bash <(curl -s https://codecov.io/bash)
     - stage: integration test
       script:
-        - echo "ignored"
-        #- ./.cicd/integration-test.sh
+        - ./.cicd/integration-test.sh
 #    - stage: build
 #      script: ./.cicd/build.sh
 #    - stage: doc
