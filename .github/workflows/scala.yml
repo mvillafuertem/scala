@@ -31,7 +31,7 @@ jobs:
           architecture: x64 # (x64 or x86) - defaults to x64
       - name: Run Integration Tests
         run: |
-        docker --version
-        docker-compose --version
-        ./.cicd/integration-test.sh
-        docker ps -a
+          docker --version
+          docker-compose --version
+          ./.cicd/integration-test.sh
+          docker ps -a
