@@ -24,7 +24,7 @@ object ActorCapabilities extends App {
   }
 
   val actorSystem: ActorSystem = ActorSystem("ActorCapabilities")
-  val simpleActor: ActorRef    = actorSystem.actorOf(Props[SimpleActor], "simpleActor")
+  val simpleActor: ActorRef    = actorSystem.actorOf(Props[SimpleActor](), "simpleActor")
 
   case class SpecialMessage(contents: String)
 
@@ -40,8 +40,8 @@ object ActorCapabilities extends App {
   simpleActor ! SendMessageToYourself("I am an actor a I am proud of it")
 
   // Actors can be reply to messages
-  val pepe   = actorSystem.actorOf(Props[SimpleActor], "pepe")
-  val alicia = actorSystem.actorOf(Props[SimpleActor], "alicia")
+  val pepe   = actorSystem.actorOf(Props[SimpleActor](), "pepe")
+  val alicia = actorSystem.actorOf(Props[SimpleActor](), "alicia")
 
   case class SayHiTo(actorRef: ActorRef)
   pepe ! SayHiTo(alicia)

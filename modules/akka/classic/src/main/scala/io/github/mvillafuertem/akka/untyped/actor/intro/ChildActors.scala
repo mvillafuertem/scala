@@ -19,7 +19,7 @@ object ChildActors extends App {
     override def receive: Receive = {
       case CreateChild(name) =>
         println(s"${self.path} creating child")
-        val childRef = context.actorOf(Props[Child], name)
+        val childRef = context.actorOf(Props[Child](), name)
         context.become(withChild(childRef))
     }
 
@@ -37,7 +37,7 @@ object ChildActors extends App {
   import Parent._
 
   val system = ActorSystem("ChildActors")
-  val parent = system.actorOf(Props[Parent], "parent")
+  val parent = system.actorOf(Props[Parent](), "parent")
 
   parent ! CreateChild("child")
   parent ! TellChild("hey kid!")
@@ -75,7 +75,7 @@ object ChildActors extends App {
 
     override def receive: Receive = {
       case InitializeAccount =>
-        val creditCardRef = context.actorOf(Props[CreditCard], "card")
+        val creditCardRef = context.actorOf(Props[CreditCard](), "card")
         creditCardRef ! AttachToAccount(this) // ¡DANGER!
       case Deposit(funds)    => deposit(funds)
       case Withdraw(funds)   => withdraw(funds)
@@ -112,7 +112,7 @@ object ChildActors extends App {
   import CreditCard._
   import NaiveBankAccount._
 
-  val bankAccountRef = system.actorOf(Props[NaiveBankAccount], "account")
+  val bankAccountRef = system.actorOf(Props[NaiveBankAccount](), "account")
   bankAccountRef ! InitializeAccount
   bankAccountRef ! Deposit(100)
 

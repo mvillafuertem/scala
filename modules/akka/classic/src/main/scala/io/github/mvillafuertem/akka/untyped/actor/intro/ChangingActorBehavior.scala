@@ -66,9 +66,9 @@ object ChangingActorBehavior extends App {
   }
 
   val system                      = ActorSystem("ChangingActorBehavior")
-  val fussyKid: ActorRef          = system.actorOf(Props[FussyKid])
-  val statelessFussyKid: ActorRef = system.actorOf(Props[StatelessFussyKid])
-  val mom: ActorRef               = system.actorOf(Props[Mom])
+  val fussyKid: ActorRef          = system.actorOf(Props[FussyKid]())
+  val statelessFussyKid: ActorRef = system.actorOf(Props[StatelessFussyKid]())
+  val mom: ActorRef               = system.actorOf(Props[Mom]())
 
   mom ! MomStart(statelessFussyKid)
 

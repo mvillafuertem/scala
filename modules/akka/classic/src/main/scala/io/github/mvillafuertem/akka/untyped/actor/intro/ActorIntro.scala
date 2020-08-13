@@ -24,8 +24,8 @@ object ActorIntro extends App {
   }
 
   // Instantiate Actor
-  val wordCounterActor        = actorSystem.actorOf(Props[WordCountActor], "wordCounter")
-  val anotherWordCounterActor = actorSystem.actorOf(Props[WordCountActor], "anotherWordCounter")
+  val wordCounterActor        = actorSystem.actorOf(Props[WordCountActor](), "wordCounter")
+  val anotherWordCounterActor = actorSystem.actorOf(Props[WordCountActor](), "anotherWordCounter")
 
   // Communicate Asynchronous
   wordCounterActor ! "I am a message"

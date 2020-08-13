@@ -21,13 +21,13 @@ object ActorIntroConfiguration extends App {
 
   val config = ConfigFactory.parseString(configString)
   val system = ActorSystem("ActorIntroConfiguration", config)
-  val actor  = system.actorOf(Props[SimpleLoggingActor])
+  val actor  = system.actorOf(Props[SimpleLoggingActor]())
 
   actor ! "A message to remember"
 
   // Configuration Filesystem
   val defaultConfigFileSystem     = ActorSystem("DefaultConfigFileSystem")
-  val defaultConfigActor          = defaultConfigFileSystem.actorOf(Props[SimpleLoggingActor])
+  val defaultConfigActor          = defaultConfigFileSystem.actorOf(Props[SimpleLoggingActor]())
   defaultConfigActor ! "Remember me"
 
   // Separate config in the same file

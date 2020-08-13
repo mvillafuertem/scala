@@ -68,11 +68,12 @@ object Dependencies {
   )
 
   val aws: Seq[ModuleID] = Seq(
-    // A W S  T E S T
-    Artifact.awssdkS3       % Version.awssdkS3,
-    Artifact.java8Compat    % Version.java8Compat,
-    Artifact.testcontainers % Version.testcontainers % Test,
-    Artifact.scalaTest      % Version.scalaTest      % Test
+    // A W S  I N T E G R A T I O N  T E S T
+    Artifact.awssdkS3       % Version.awssdkS3       % IntegrationTest,
+    Artifact.java8Compat    % Version.java8Compat    % IntegrationTest,
+    Artifact.logback        % Version.logback        % IntegrationTest,
+    Artifact.scalaTest      % Version.scalaTest      % IntegrationTest,
+    Artifact.testcontainers % Version.testcontainers % IntegrationTest
   )
 
   val basic: Seq[ModuleID] = Seq(
@@ -333,7 +334,7 @@ object Dependencies {
     val akkaPersistenceInmemory   = "2.5.15.2"
     val akkaPersistenceJdbc       = "3.5.2"
     val alpakkaSlick              = "2.0.1"
-    val awssdkS3                  = "2.13.65"
+    val awssdkS3                  = "2.13.74"
     val cats                      = "2.1.1"
     val circe                     = "0.13.0"
     val curator                   = "5.1.0"
@@ -351,7 +352,7 @@ object Dependencies {
     val scalaTest                 = "3.2.1"
     val slick                     = "3.3.2"
     val slinky                    = "0.6.5"
-    val spark                     = "2.4.0"
+    val spark                     = "2.4.6"
     val sttp                      = "2.2.4"
     val tapir                     = "0.16.12"
     val testcontainers            = "0.38.1"

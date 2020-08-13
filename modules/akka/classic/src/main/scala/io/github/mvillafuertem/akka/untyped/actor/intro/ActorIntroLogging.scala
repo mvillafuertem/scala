@@ -14,7 +14,7 @@ object ActorIntroLogging extends App {
   }
 
   val system                        = ActorSystem("ActorLogging")
-  val simpleActorWithExplicitLogger = system.actorOf(Props[SimpleActorWithExplicitLogger])
+  val simpleActorWithExplicitLogger = system.actorOf(Props[SimpleActorWithExplicitLogger]())
   simpleActorWithExplicitLogger ! "Logging a simple message"
 
   class ActorWithLogging extends Actor with ActorLogging {
@@ -24,7 +24,7 @@ object ActorIntroLogging extends App {
     }
   }
 
-  val actorWithLogging = system.actorOf(Props[ActorWithLogging])
+  val actorWithLogging = system.actorOf(Props[ActorWithLogging]())
   actorWithLogging ! "Logging a simple message by extending a trait"
 
   actorWithLogging ! ((42, 65))

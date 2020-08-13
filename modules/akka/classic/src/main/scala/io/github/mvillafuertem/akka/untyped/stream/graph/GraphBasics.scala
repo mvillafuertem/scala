@@ -24,7 +24,7 @@ object GraphBasics extends App {
 
       // Step 2 - Add the necessary components of this graph
       val broadcast = builder.add(Broadcast[Int](2)) // Fan-Out operator
-      val zip       = builder.add(Zip[Int, Int])     // Fan-In operator
+      val zip       = builder.add(Zip[Int, Int]())     // Fan-In operator
 
       // Step 3 - Tying up the components
       input ~> broadcast

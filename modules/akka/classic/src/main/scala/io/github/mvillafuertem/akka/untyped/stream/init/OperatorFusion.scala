@@ -19,7 +19,7 @@ object OperatorFusion extends App {
 
   //.run()
   // Operator/Component FUSION
-  val simpleActor  = actorSystem.actorOf(Props[SimpleActor])
+  val simpleActor  = actorSystem.actorOf(Props[SimpleActor]())
   // Complex flows
   val complexFlow  = Flow[Int].map { x =>
     Thread.sleep(1000)

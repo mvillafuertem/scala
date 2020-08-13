@@ -27,7 +27,7 @@ object IntegratingWithActors extends App {
 
   }
 
-  val simpleActor = actorSystem.actorOf(Props[SimpleActor], "simpleActor")
+  val simpleActor = actorSystem.actorOf(Props[SimpleActor](), "simpleActor")
 
   val numberSource = Source(1 to 10)
 
@@ -83,7 +83,7 @@ object IntegratingWithActors extends App {
     }
   }
 
-  val destinationActor = actorSystem.actorOf(Props[DestinationActor], "destinationActor")
+  val destinationActor = actorSystem.actorOf(Props[DestinationActor](), "destinationActor")
   val actorPoweredSink = Sink.actorRefWithBackpressure[Int](
     destinationActor,
     onInitMessage = StreamInit,

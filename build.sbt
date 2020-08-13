@@ -79,7 +79,9 @@ lazy val alpakka = (project in file("modules/akka/alpakka"))
   .settings(libraryDependencies ++= Dependencies.alpakka)
 
 lazy val aws = (project in file("modules/aws"))
-// S E T T I N G S
+  .configs(IntegrationTest)
+  // S E T T I N G S
+  .settings(Defaults.itSettings)
   .settings(commonSettings)
   .settings(libraryDependencies ++= Dependencies.aws)
 

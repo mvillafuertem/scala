@@ -98,7 +98,7 @@ object IntegratingWithExternalServices extends App {
 
   import scala.concurrent.duration._
   implicit val timeout               = Timeout(2 seconds)
-  val pagerActor                     = actorSystem.actorOf(Props[PagerActor], "pagerActor")
+  val pagerActor                     = actorSystem.actorOf(Props[PagerActor](), "pagerActor")
   val alternativePagedEngineerEmails =
     infraEvents.mapAsync(parallelism = 4)(event => (pagerActor ? event).mapTo[String])
 

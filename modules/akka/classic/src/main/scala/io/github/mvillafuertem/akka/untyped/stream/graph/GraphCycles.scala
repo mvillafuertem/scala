@@ -85,7 +85,7 @@ object GraphCycles extends App {
   val fibonacciGenerator = GraphDSL.create() { implicit builder =>
     import GraphDSL.Implicits._
 
-    val zip            = builder.add(Zip[BigInt, BigInt])
+    val zip            = builder.add(Zip[BigInt, BigInt]())
     val mergePreferred = builder.add(MergePreferred[(BigInt, BigInt)](1))
     val fibonacciLogic = builder.add(Flow[(BigInt, BigInt)].map { pair =>
       val last     = pair._1
