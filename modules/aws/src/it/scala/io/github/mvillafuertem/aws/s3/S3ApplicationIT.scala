@@ -6,7 +6,7 @@ import java.nio.file.Path
 import java.util.concurrent.CompletionException
 
 import com.dimafeng.testcontainers.{ DockerComposeContainer, ExposedService }
-import io.github.mvillafuertem.aws.s3.S3ApplicationSpec.S3ApplicationConfigurationIT
+import io.github.mvillafuertem.aws.s3.S3ApplicationIT.S3ApplicationConfigurationIT
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.flatspec.AsyncFlatSpecLike
 import org.scalatest.matchers.should.Matchers
@@ -21,7 +21,7 @@ import software.amazon.awssdk.services.s3.{ S3AsyncClient, S3AsyncClientBuilder 
 import scala.compat.java8.FutureConverters.CompletionStageOps
 import scala.concurrent.{ ExecutionContext, Future }
 
-final class S3ApplicationSpec extends AsyncFlatSpecLike with Matchers with BeforeAndAfterAll with S3ApplicationConfigurationIT {
+final class S3ApplicationIT extends AsyncFlatSpecLike with Matchers with BeforeAndAfterAll with S3ApplicationConfigurationIT {
 
   behavior of s"${this.getClass.getSimpleName}"
 
@@ -41,8 +41,8 @@ final class S3ApplicationSpec extends AsyncFlatSpecLike with Matchers with Befor
                               .createBucket(headObjectRequest)
                               .toScala
                               .recover {
-                                case e: CompletionException if e.getCause.isInstanceOf[NoSuchKeyException] =>
-                                  throw e
+                                case e: CompletionException if e.getCause.isInstanceOf[NoSuchKeyException] => throw e
+                                case e                                                                     => throw e
                               }
     } yield headObjectResponse
 
@@ -69,8 +69,8 @@ final class S3ApplicationSpec extends AsyncFlatSpecLike with Matchers with Befor
                               .headObject(headObjectRequest)
                               .toScala
                               .recover {
-                                case e: CompletionException if e.getCause.isInstanceOf[NoSuchKeyException] =>
-                                  throw e
+                                case e: CompletionException if e.getCause.isInstanceOf[NoSuchKeyException] => throw e
+                                case e                                                                     => throw e
                               }
     } yield headObjectResponse
 
@@ -87,7 +87,7 @@ final class S3ApplicationSpec extends AsyncFlatSpecLike with Matchers with Befor
 
 }
 
-object S3ApplicationSpec {
+object S3ApplicationIT {
 
   trait S3ApplicationConfigurationIT {
 
@@ -126,7 +126,10 @@ object S3ApplicationSpec {
       s3AsyncClientDefault
         .createBucket(createBucketRequest)
         .toScala
-        .recover { case e: CompletionException if e.getCause.isInstanceOf[NoSuchKeyException] => throw e }
+        .recover {
+          case e: CompletionException if e.getCause.isInstanceOf[NoSuchKeyException] => throw e
+          case e                                                                     => throw e
+        }
     }
 
     def putObjectData()(implicit executionContext: ExecutionContext): Future[PutObjectResponse] = { // put object
@@ -139,7 +142,10 @@ object S3ApplicationSpec {
       s3AsyncClientDefault
         .putObject(putObjectRequest, Path.of(s"${System.getProperty("user.dir")}/modules/aws/src/it/resources/$KEY"))
         .toScala
-        .recover { case e: CompletionException if e.getCause.isInstanceOf[NoSuchKeyException] => throw e }
+        .recover {
+          case e: CompletionException if e.getCause.isInstanceOf[NoSuchKeyException] => throw e
+          case e                                                                     => throw e
+        }
     }
 
     def s3AsyncClient(
