@@ -3,3 +3,5 @@
 -Xmx3G
 -Xss1M
 -XX:NewRatio=8
+-Dio.netty.tryReflectionSetAccessible=true
+--add-opens java.base/jdk.internal.misc=ALL-UNNAMED

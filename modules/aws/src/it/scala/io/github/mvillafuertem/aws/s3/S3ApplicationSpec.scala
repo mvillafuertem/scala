@@ -12,7 +12,7 @@ import org.scalatest.flatspec.AsyncFlatSpecLike
 import org.scalatest.matchers.should.Matchers
 import org.testcontainers.containers
 import org.testcontainers.containers.wait.strategy.Wait
-import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider
+import software.amazon.awssdk.auth.credentials.{ AwsBasicCredentials, AwsCredentialsProvider, StaticCredentialsProvider }
 import software.amazon.awssdk.http.HttpStatusCode
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.s3.model._
@@ -37,7 +37,7 @@ final class S3ApplicationSpec extends AsyncFlatSpecLike with Matchers with Befor
     // w h e n
     val createBucketResponse: Future[CreateBucketResponse] = for {
       _                  <- createBucketData()
-      headObjectResponse <- s3AsyncClient(endpoint = Option(URI.create(S3_ENDPOINT)))
+      headObjectResponse <- s3AsyncClientDefault
                               .createBucket(headObjectRequest)
                               .toScala
                               .recover {
@@ -65,7 +65,7 @@ final class S3ApplicationSpec extends AsyncFlatSpecLike with Matchers with Befor
     // w h e n
     val headObjectResponse: Future[HeadObjectResponse] = for {
       _                  <- putObjectData()
-      headObjectResponse <- s3AsyncClient(endpoint = Option(URI.create(S3_ENDPOINT)))
+      headObjectResponse <- s3AsyncClientDefault
                               .headObject(headObjectRequest)
                               .toScala
                               .recover {
@@ -104,13 +104,26 @@ object S3ApplicationSpec {
         identifier = "docker_infrastructure"
       ).container
 
+    val s3AsyncClientDefault: S3AsyncClient = s3AsyncClient(
+      region = Some(Region.US_EAST_1),
+      endpoint = Some(URI.create(S3_ENDPOINT)),
+      credentialsProvider = Some(
+        StaticCredentialsProvider.create(
+          AwsBasicCredentials.create(
+            "accessKey",
+            "secretKey"
+          )
+        )
+      )
+    )
+
     def createBucketData()(implicit executionContext: ExecutionContext): Future[CreateBucketResponse] = { // create bucket
       val createBucketRequest = CreateBucketRequest
         .builder()
         .bucket(BUCKET_NAME)
         .build()
 
-      s3AsyncClient(endpoint = Option(URI.create(S3_ENDPOINT)))
+      s3AsyncClientDefault
         .createBucket(createBucketRequest)
         .toScala
         .recover { case e: CompletionException if e.getCause.isInstanceOf[NoSuchKeyException] => throw e }
@@ -123,7 +136,7 @@ object S3ApplicationSpec {
         .key(KEY)
         .acl("public-read")
         .build()
-      s3AsyncClient(endpoint = Option(URI.create(S3_ENDPOINT)))
+      s3AsyncClientDefault
         .putObject(putObjectRequest, Path.of(this.getClass.getResource(s"/$KEY").toURI))
         .toScala
         .recover { case e: CompletionException if e.getCause.isInstanceOf[NoSuchKeyException] => throw e }

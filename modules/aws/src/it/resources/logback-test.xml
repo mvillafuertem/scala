@@ -4,9 +4,6 @@
             <pattern>%d{HH:mm:ss.SSS} %-5level [%-20.20thread] %-36.36logger{36}  %msg%n%rEx</pattern>
         </encoder>
     </appender>
-    <appender name="ASYNC" class="ch.qos.logback.classic.AsyncAppender">
-        <appender-ref ref="STDOUT"/>
-    </appender>
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
         <file>target/tests-it.log</file>
         <append>false</append>
@@ -14,21 +11,12 @@
             <pattern>%d{ISO8601} %-5level [%-20.20thread] [%-36.36logger{36}]  %msg%n%rEx</pattern>
         </encoder>
     </appender>
-
-
-    <logger name="akka" level="WARN"/>
-    <logger name="akka.kafka" level="DEBUG"/>
-
-    <logger name="org.apache.zookeeper" level="WARN"/>
-    <logger name="org.I0Itec.zkclient" level="WARN"/>
-
-    <logger name="kafka" level="WARN"/>
-    <logger name="org.apache.kafka" level="WARN"/>
-    <logger name="org.apache.kafka.common.utils.AppInfoParser" level="ERROR"/>
-    <logger name="org.apache.kafka.clients.NetworkClient" level="ERROR"/>
+    <appender name="ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE" />
+    </appender>
 
     <root level="DEBUG">
-        <appender-ref ref="FILE" />
         <appender-ref ref="ASYNC"/>
     </root>
 </configuration>
