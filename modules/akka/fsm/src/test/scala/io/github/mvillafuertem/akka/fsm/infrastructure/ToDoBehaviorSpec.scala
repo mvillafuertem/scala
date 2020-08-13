@@ -7,9 +7,8 @@ import akka.actor.testkit.typed.scaladsl.{ ScalaTestWithActorTestKit, TestProbe 
 import akka.stream.Materializer
 import akka.util.Timeout
 import com.typesafe.config.{ Config, ConfigFactory }
-import io.github.mvillafuertem.akka.fsm.infrastructure.ToDoBehavior.{ Close, State }
-import ToDoBehavior.{ Close, GetToDo, Open, State }
 import io.github.mvillafuertem.akka.fsm.domain.ToDo
+import io.github.mvillafuertem.akka.fsm.infrastructure.ToDoBehavior.{ Close, GetToDo, Open, State }
 import org.scalatest.flatspec.AnyFlatSpecLike
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.{ BeforeAndAfterAll, OneInstancePerTest }

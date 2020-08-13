@@ -22,7 +22,7 @@ final class PersistentActorSpec extends ScalaTestWithActorTestKit(PersistentActo
     // g i v e n
     val person = Person("Pepe", "Pipo")
     val value  = spawn(PersistentActor.supervisedBehavior("id"))
-    val probe  = TestProbe[Person]
+    val probe  = TestProbe[Person]()
 
     // w h e n
     value ! AddPerson(person)
@@ -37,7 +37,7 @@ final class PersistentActorSpec extends ScalaTestWithActorTestKit(PersistentActo
     // g i v e n
     val person = Person("Pepe", "Pipo")
     val value  = spawn(PersistentActor.supervisedBehavior("id"))
-    val probe  = TestProbe[Person]
+    val probe  = TestProbe[Person]()
 
     // w h e n
     value ! AddPerson(person)
@@ -52,7 +52,7 @@ final class PersistentActorSpec extends ScalaTestWithActorTestKit(PersistentActo
     // g i v e n
     val person = Person("Pepe", "Pipo")
     val value  = spawn(PersistentActor.supervisedBehavior("id"))
-    val probe  = TestProbe[Person]
+    val probe  = TestProbe[Person]()
 
     val actorSink = ActorSink.actorRef[PersistentActor.Command](value.ref, GetPerson(probe.ref), _ => AddPerson(person))
 

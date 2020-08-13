@@ -22,7 +22,7 @@ class TaskManagementActorSpec
   it should "error when not initialized" in {
 
     // G I V E N
-    val taskManagement = system.actorOf(Props[TaskManagementActor])
+    val taskManagement = system.actorOf(Props[TaskManagementActor]())
 
     // W H E N
     taskManagement ! Close(987654321L)
@@ -35,7 +35,7 @@ class TaskManagementActorSpec
   it should "open task" in {
 
     // G I V E N
-    val taskManagement = system.actorOf(Props[TaskManagementActor])
+    val taskManagement = system.actorOf(Props[TaskManagementActor]())
     val task: Task     = Task(123456789L, "Title", "Content", new Date().toInstant.toEpochMilli)
 
     // W H E N
@@ -49,7 +49,7 @@ class TaskManagementActorSpec
   it should "detect task duplicated" in {
 
     // G I V E N
-    val taskManagement = system.actorOf(Props[TaskManagementActor])
+    val taskManagement = system.actorOf(Props[TaskManagementActor]())
     val task: Task     = Task(987654321L, "Title", "Content", new Date().toInstant.toEpochMilli)
     taskManagement ! Open(task)
     expectMsg(TaskManagementInfo("Task opened"))
@@ -65,7 +65,7 @@ class TaskManagementActorSpec
   it should "close task" in {
 
     // G I V E N
-    val taskManagement = system.actorOf(Props[TaskManagementActor])
+    val taskManagement = system.actorOf(Props[TaskManagementActor]())
     val task: Task     = Task(876543219L, "Title", "Content", new Date().toInstant.toEpochMilli)
     taskManagement ! Open(task)
     expectMsg(TaskManagementInfo("Task opened"))
@@ -81,7 +81,7 @@ class TaskManagementActorSpec
   it should "error close task" in {
 
     // G I V E N
-    val taskManagement = system.actorOf(Props[TaskManagementActor])
+    val taskManagement = system.actorOf(Props[TaskManagementActor]())
 
     // W H E N
     taskManagement ! Close(234567891L)
