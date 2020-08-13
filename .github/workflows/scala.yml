@@ -3,17 +3,25 @@ name: scalaci
 on: [push]
 
 jobs:
-  build:
+  base:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
-    - name: Set up JDK 11.0.7
-      uses: actions/setup-java@v1
-      with:
-        java-version: '11.0.7' # The JDK version to make available on the path.
-        java-package: jdk # (jre, jdk, or jdk+fx) - defaults to jdk
-        architecture: x64 # (x64 or x86) - defaults to x64
-    - name: Run Tests
+      - uses: actions/checkout@v1
+      - name: Set up JDK 11.0.7
+        uses: actions/setup-java@v1
+        with:
+          java-version: '11.0.7' # The JDK version to make available on the path.
+          java-package: jdk # (jre, jdk, or jdk+fx) - defaults to jdk
+          architecture: x64 # (x64 or x86) - defaults to x64
+
+  test:
+    needs: base
+    steps:
+      - name: Run Tests
       run: ./.cicd/test.sh
-    - name: Run Integration Tests
-      run: ./.cicd/integration-test.sh
+
+  integration-test:
+    needs: base
+    steps:
+      - name: Run Integration Tests
+        run: ./.cicd/integration-test.sh
