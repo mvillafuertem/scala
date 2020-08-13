@@ -137,7 +137,7 @@ object S3ApplicationSpec {
         .acl("public-read")
         .build()
       s3AsyncClientDefault
-        .putObject(putObjectRequest, Path.of(this.getClass.getResource(s"/$KEY").toURI))
+        .putObject(putObjectRequest, Path.of(s"${System.getProperty("user.dir")}/modules/aws/src/it/resources/$KEY"))
         .toScala
         .recover { case e: CompletionException if e.getCause.isInstanceOf[NoSuchKeyException] => throw e }
     }
