@@ -15,12 +15,16 @@ jobs:
           architecture: x64 # (x64 or x86) - defaults to x64
 
   test:
+    name: Test
+    runs-on: ubuntu-latest
     needs: base
     steps:
       - name: Run Tests
       run: ./.cicd/test.sh
 
   integration-test:
+    name: Integration Test
+    runs-on: ubuntu-latest
     needs: base
     steps:
       - name: Run Integration Tests
