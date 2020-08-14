@@ -38,6 +38,8 @@ object Settings {
     javaOptions += "-Duser.timezone=UTC",
     Test / fork := false,
     Test / parallelExecution := false,
+    IntegrationTest / fork := false,
+    IntegrationTest / parallelExecution := false,
     Global / cancelable := true,
     // OneJar
     exportJars := true
@@ -55,9 +57,5 @@ object Settings {
   )
 
   ThisBuild / useCoursier := false
-
-//  val noAssemblyTest: Seq[Def.Setting[_]] = Seq(
-//    assembly / test := {}
-//  )
 
 }

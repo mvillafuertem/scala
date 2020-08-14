@@ -1,6 +1,9 @@
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption.REPLACE_EXISTING
 
+import sbtassembly.AssemblyKeys.assembly
+import sbtassembly.MergeStrategy
+
 Global / onLoad := {
   val GREEN = "\u001b[32m"
   val RESET = "\u001b[0m"
@@ -82,6 +85,7 @@ lazy val aws = (project in file("modules/aws"))
   .configs(IntegrationTest)
   // S E T T I N G S
   .settings(Defaults.itSettings)
+  .settings(AssemblySettings.value)
   .settings(commonSettings)
   .settings(libraryDependencies ++= Dependencies.aws)
 

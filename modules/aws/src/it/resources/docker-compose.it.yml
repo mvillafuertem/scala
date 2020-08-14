@@ -17,4 +17,4 @@ services:
       #- HOST_TMP_FOLDER=/tmp/localstack
     volumes:
       - "/tmp/localstack:/tmp/localstack"
-      #- "/var/run/docker.sock:/var/run/docker.sock"
+      - "/var/run/docker.sock:/var/run/docker.sock"

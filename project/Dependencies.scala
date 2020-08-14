@@ -67,15 +67,22 @@ object Dependencies {
     Artifact.scalaTest % Version.scalaTest % Test
   )
 
-  val aws: Seq[ModuleID] = Seq(
+  val aws: Seq[ModuleID]   = Seq(
+    // A W S
+    Artifact.awsLambda % Version.awsLambda
+  ) ++ (Seq(
     // A W S  I N T E G R A T I O N  T E S T
-    Artifact.awsSdkLambda   % Version.aws            % IntegrationTest,
-    Artifact.awsSdkS3       % Version.aws            % IntegrationTest,
-    Artifact.java8Compat    % Version.java8Compat    % IntegrationTest,
-    Artifact.logback        % Version.logback        % IntegrationTest,
-    Artifact.scalaTest      % Version.scalaTest      % IntegrationTest,
-    Artifact.testcontainers % Version.testcontainers % IntegrationTest
-  )
+    Artifact.awsSdkLambda,
+    Artifact.awsSdkS3
+  ).map(_                   % Version.aws) ++ Seq(
+    Artifact.java8Compat    % Version.java8Compat,
+    Artifact.logback        % Version.logback,
+    Artifact.scalaTest      % Version.scalaTest,
+    Artifact.testcontainers % Version.testcontainers
+  ) ++ Seq(
+    Artifact.circeGeneric,
+    Artifact.circeGenericExtras
+  ).map(_ % Version.circe)).map(_ % IntegrationTest)
 
   val basic: Seq[ModuleID] = Seq(
     // B A S I C  T E S T
@@ -286,6 +293,7 @@ object Dependencies {
     val alpakkaSlick              = "com.lightbend.akka"                    %% "akka-stream-alpakka-slick"
     val awsSdkLambda              = "software.amazon.awssdk"                 % "lambda"
     val awsSdkS3                  = "software.amazon.awssdk"                 % "s3"
+    val awsLambda                 = "com.amazonaws"                          % "aws-lambda-java-core"
     val catsCore                  = "org.typelevel"                         %% "cats-core"
     val catsFree                  = "org.typelevel"                         %% "cats-free"
     val circeGeneric              = "io.circe"                              %% "circe-generic"
@@ -337,6 +345,7 @@ object Dependencies {
     val akkaPersistenceJdbc       = "3.5.2"
     val alpakkaSlick              = "2.0.1"
     val aws                       = "2.13.75"
+    val awsLambda                 = "1.2.1"
     val cats                      = "2.1.1"
     val circe                     = "0.13.0"
     val curator                   = "5.1.0"

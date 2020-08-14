@@ -16,7 +16,7 @@
         <appender-ref ref="FILE" />
     </appender>
 
-    <root level="DEBUG">
+    <root level="INFO">
         <appender-ref ref="ASYNC"/>
     </root>
 </configuration>
