@@ -81,7 +81,8 @@ object Dependencies {
     Artifact.testcontainers % Version.testcontainers
   ) ++ Seq(
     Artifact.circeGeneric,
-    Artifact.circeGenericExtras
+    Artifact.circeGenericExtras,
+    Artifact.circeParser
   ).map(_ % Version.circe)).map(_ % IntegrationTest)
 
   val basic: Seq[ModuleID] = Seq(

@@ -1,11 +1,12 @@
 package io.github.mvillafuertem.aws.lambda
 
-import java.io.{ File, FileInputStream }
+import java.io.{File, FileInputStream}
 import java.net.URI
 import java.util
 
-import com.dimafeng.testcontainers.{ DockerComposeContainer, ExposedService }
+import com.dimafeng.testcontainers.{DockerComposeContainer, ExposedService}
 import io.circe.generic.auto._
+import io.circe.parser.decode
 import io.circe.syntax._
 import io.github.mvillafuertem.aws.RichLambdaAsyncClientBuilder
 import io.github.mvillafuertem.aws.lambda.LambdaApplicationIT.LambdaApplicationConfigurationIT
@@ -15,16 +16,17 @@ import org.scalatest.flatspec.AsyncFlatSpecLike
 import org.scalatest.matchers.should.Matchers
 import org.testcontainers.containers
 import org.testcontainers.containers.wait.strategy.Wait
-import software.amazon.awssdk.auth.credentials.{ AwsBasicCredentials, AwsCredentialsProvider, StaticCredentialsProvider }
+import software.amazon.awssdk.auth.credentials.{AwsBasicCredentials, AwsCredentialsProvider, StaticCredentialsProvider}
 import software.amazon.awssdk.core.SdkBytes
 import software.amazon.awssdk.http.HttpStatusCode
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.lambda.LambdaAsyncClient
-import software.amazon.awssdk.services.lambda.model.{ InvokeResponse, _ }
+import software.amazon.awssdk.services.lambda.model.{InvokeResponse, _}
 
 import scala.compat.java8.FutureConverters.CompletionStageOps
 import scala.concurrent.Future
 import scala.jdk.CollectionConverters.MapHasAsJava
+import scala.sys.process._
 
 final class LambdaApplicationIT extends AsyncFlatSpecLike with Matchers with BeforeAndAfterAll with LambdaApplicationConfigurationIT {
 
@@ -34,7 +36,8 @@ final class LambdaApplicationIT extends AsyncFlatSpecLike with Matchers with Bef
 
     // g i v e n
     val HANDLER               = s"${this.getClass.getPackageName}.SampleLambda"
-    val sdkBytes              = SdkBytes.fromInputStream(new FileInputStream("/Users/mvillafuerte/Projects/scala/modules/aws/target/scala-2.13/aws_2.13-0.1.0-it.jar"))
+    val _                     = "sbt aws/assembly".!
+    val sdkBytes              = SdkBytes.fromInputStream(new FileInputStream(s"${System.getProperty("user.dir")}/modules/aws/target/scala-2.13/aws-0.1.0.jar"))
     val functionCode          = FunctionCode.builder().zipFile(sdkBytes).build()
     val createFunctionRequest = CreateFunctionRequest
       .builder()
@@ -81,13 +84,13 @@ final class LambdaApplicationIT extends AsyncFlatSpecLike with Matchers with Bef
 
     // t h e n
     listFunctionsResponse.map { actual =>
-      println(actual)
+      actual.functions() should have size 1
       actual.sdkHttpResponse().statusCode() shouldBe HttpStatusCode.OK
     }
 
   }
 
-  ignore should "Invoke Request" in {
+  it should "Invoke Request" in {
 
     // g i v e n
     val weatherData   = WeatherData(8, 8, 8.0, 9)
@@ -107,8 +110,7 @@ final class LambdaApplicationIT extends AsyncFlatSpecLike with Matchers with Bef
     // t h e n
     invokeResponse.map { actual =>
       actual.sdkHttpResponse().statusCode() shouldBe HttpStatusCode.OK
-      actual.functionError() shouldBe "Unhandled"
-      actual.payload().asUtf8String() shouldBe weatherData.asJson.noSpaces
+      decode[WeatherData](actual.payload().asUtf8String()) shouldBe Right(weatherData)
     }
 
   }
