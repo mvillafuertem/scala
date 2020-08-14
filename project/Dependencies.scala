@@ -72,6 +72,7 @@ object Dependencies {
     Artifact.awsLambda % Version.awsLambda
   ) ++ (Seq(
     // A W S  I N T E G R A T I O N  T E S T
+    Artifact.awsSdkCloudWatch,
     Artifact.awsSdkLambda,
     Artifact.awsSdkS3
   ).map(_                   % Version.aws) ++ Seq(
@@ -292,6 +293,7 @@ object Dependencies {
     val akkaStreamTyped           = "com.typesafe.akka"                     %% "akka-stream-typed"
     val akkaTestKit               = "com.typesafe.akka"                     %% "akka-testkit"
     val alpakkaSlick              = "com.lightbend.akka"                    %% "akka-stream-alpakka-slick"
+    val awsSdkCloudWatch          = "software.amazon.awssdk"                 % "cloudwatch"
     val awsSdkLambda              = "software.amazon.awssdk"                 % "lambda"
     val awsSdkS3                  = "software.amazon.awssdk"                 % "s3"
     val awsLambda                 = "com.amazonaws"                          % "aws-lambda-java-core"
