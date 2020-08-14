@@ -1,34 +1,30 @@
 package io.github.mvillafuertem.aws.lambda
 
-import java.io.{File, FileInputStream}
+import java.io.FileInputStream
 import java.net.URI
 import java.util
 
-import com.dimafeng.testcontainers.{DockerComposeContainer, ExposedService}
 import io.circe.generic.auto._
 import io.circe.parser.decode
 import io.circe.syntax._
-import io.github.mvillafuertem.aws.RichLambdaAsyncClientBuilder
 import io.github.mvillafuertem.aws.lambda.LambdaApplicationIT.LambdaApplicationConfigurationIT
 import io.github.mvillafuertem.aws.lambda.SampleLambda.WeatherData
-import org.scalatest.BeforeAndAfterAll
-import org.scalatest.flatspec.AsyncFlatSpecLike
-import org.scalatest.matchers.should.Matchers
+import io.github.mvillafuertem.aws.{ LocalStackConfigurationIT, RichLambdaAsyncClientBuilder }
 import org.testcontainers.containers
 import org.testcontainers.containers.wait.strategy.Wait
-import software.amazon.awssdk.auth.credentials.{AwsBasicCredentials, AwsCredentialsProvider, StaticCredentialsProvider}
+import software.amazon.awssdk.auth.credentials.{ AwsBasicCredentials, AwsCredentialsProvider, StaticCredentialsProvider }
 import software.amazon.awssdk.core.SdkBytes
 import software.amazon.awssdk.http.HttpStatusCode
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.lambda.LambdaAsyncClient
-import software.amazon.awssdk.services.lambda.model.{InvokeResponse, _}
+import software.amazon.awssdk.services.lambda.model.{ InvokeResponse, _ }
 
 import scala.compat.java8.FutureConverters.CompletionStageOps
 import scala.concurrent.Future
 import scala.jdk.CollectionConverters.MapHasAsJava
 import scala.sys.process._
 
-final class LambdaApplicationIT extends AsyncFlatSpecLike with Matchers with BeforeAndAfterAll with LambdaApplicationConfigurationIT {
+final class LambdaApplicationIT extends LambdaApplicationConfigurationIT {
 
   behavior of s"${this.getClass.getSimpleName}"
 
@@ -115,36 +111,31 @@ final class LambdaApplicationIT extends AsyncFlatSpecLike with Matchers with Bef
 
   }
 
-  override protected def beforeAll(): Unit = dockerInfrastructure.start()
+  override var container: containers.DockerComposeContainer[_] = _
 
-  override protected def afterAll(): Unit = dockerInfrastructure.stop()
+  override protected def beforeAll(): Unit = {
+    container = dockerInfrastructure(Wait.forLogMessage(".*Starting mock Lambda service.*\\n", 1))
+    container.start()
+  }
+
+  override protected def afterAll(): Unit = container.stop()
 
 }
 
 object LambdaApplicationIT {
 
-  trait LambdaApplicationConfigurationIT {
+  trait LambdaApplicationConfigurationIT extends LocalStackConfigurationIT {
 
-    private val LAMBDA_HOST: String    = "http://localhost"
-    private val LAMBDA_PORT: Int       = 4566
     val DESCRIPTION: String            = "A Scala function"
     val FUNCTION_NAME: String          = "function-test"
     val FUNCTION_ARN: String           = s"arn:aws:lambda:us-east-1:000000000000:function:$FUNCTION_NAME"
     val KEY: String                    = "logback-test.xml"
-    val LAMBDA_ENDPOINT: String        = s"$LAMBDA_HOST:$LAMBDA_PORT"
     val ROLE_ARN: String               = "arn:aws:iam::000000000000:role/integration-test"
     val TAGS: util.Map[String, String] = Map("environment" -> "it").asJava
 
-    val dockerInfrastructure: containers.DockerComposeContainer[_] =
-      DockerComposeContainer(
-        new File(s"${System.getProperty("user.dir")}/modules/aws/src/it/resources/docker-compose.it.yml"),
-        exposedServices = Seq(ExposedService("localstack", LAMBDA_PORT, 1, Wait.forLogMessage(".*Starting mock Lambda service.*\\n", 1))),
-        identifier = "docker_infrastructure"
-      ).container
-
     val lambdaAsyncClientDefault: LambdaAsyncClient = lambdaAsyncClient(
       region = Some(Region.US_EAST_1),
-      endpoint = Some(URI.create(LAMBDA_ENDPOINT)),
+      endpoint = Some(URI.create(AWS_LOCALSTACK_ENDPOINT)),
       credentialsProvider = Some(
         StaticCredentialsProvider.create(
           AwsBasicCredentials.create(

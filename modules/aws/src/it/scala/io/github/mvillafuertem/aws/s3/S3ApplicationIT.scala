@@ -1,16 +1,11 @@
 package io.github.mvillafuertem.aws.s3
 
-import java.io.File
 import java.net.URI
 import java.nio.file.Path
 import java.util.concurrent.CompletionException
 
-import com.dimafeng.testcontainers.{ DockerComposeContainer, ExposedService }
-import io.github.mvillafuertem.aws.RichS3AsyncClientBuilder
 import io.github.mvillafuertem.aws.s3.S3ApplicationIT.S3ApplicationConfigurationIT
-import org.scalatest.BeforeAndAfterAll
-import org.scalatest.flatspec.AsyncFlatSpecLike
-import org.scalatest.matchers.should.Matchers
+import io.github.mvillafuertem.aws.{ LocalStackConfigurationIT, RichS3AsyncClientBuilder }
 import org.testcontainers.containers
 import org.testcontainers.containers.wait.strategy.Wait
 import software.amazon.awssdk.auth.credentials.{ AwsBasicCredentials, AwsCredentialsProvider, StaticCredentialsProvider }
@@ -22,7 +17,7 @@ import software.amazon.awssdk.services.s3.model._
 import scala.compat.java8.FutureConverters.CompletionStageOps
 import scala.concurrent.{ ExecutionContext, Future }
 
-final class S3ApplicationIT extends AsyncFlatSpecLike with Matchers with BeforeAndAfterAll with S3ApplicationConfigurationIT {
+final class S3ApplicationIT extends S3ApplicationConfigurationIT {
 
   behavior of s"${this.getClass.getSimpleName}"
 
@@ -109,32 +104,27 @@ final class S3ApplicationIT extends AsyncFlatSpecLike with Matchers with BeforeA
 
   }
 
-  override protected def beforeAll(): Unit = dockerInfrastructure.start()
+  override var container: containers.DockerComposeContainer[_] = _
 
-  override protected def afterAll(): Unit = dockerInfrastructure.stop()
+  override protected def beforeAll(): Unit = {
+    container = dockerInfrastructure(Wait.forLogMessage(".*Starting mock S3 service.*\\n", 1))
+    container.start()
+  }
+
+  override protected def afterAll(): Unit = container.stop()
 
 }
 
 object S3ApplicationIT {
 
-  trait S3ApplicationConfigurationIT {
+  trait S3ApplicationConfigurationIT extends LocalStackConfigurationIT {
 
-    private val S3_PORT: Int    = 4566
-    private val S3_HOST: String = "http://localhost"
-    val S3_ENDPOINT: String     = s"$S3_HOST:$S3_PORT"
-    val BUCKET_NAME: String     = "bucket-test"
-    val KEY                     = "logback-test.xml"
-
-    val dockerInfrastructure: containers.DockerComposeContainer[_] =
-      DockerComposeContainer(
-        new File(s"${System.getProperty("user.dir")}/modules/aws/src/it/resources/docker-compose.it.yml"),
-        exposedServices = Seq(ExposedService("localstack", S3_PORT, 1, Wait.forLogMessage(".*Starting mock S3 service.*\\n", 1))),
-        identifier = "docker_infrastructure"
-      ).container
+    val BUCKET_NAME: String = "bucket-test"
+    val KEY                 = "logback-test.xml"
 
     val s3AsyncClientDefault: S3AsyncClient = s3AsyncClient(
       region = Some(Region.US_EAST_1),
-      endpoint = Some(URI.create(S3_ENDPOINT)),
+      endpoint = Some(URI.create(AWS_LOCALSTACK_ENDPOINT)),
       credentialsProvider = Some(
         StaticCredentialsProvider.create(
           AwsBasicCredentials.create(
