@@ -2,6 +2,7 @@ package io.github.mvillafuertem.aws.lambda
 
 import java.io.FileInputStream
 import java.net.URI
+import java.time.{ Duration, Instant }
 import java.util
 
 import io.circe.generic.auto._
@@ -9,22 +10,28 @@ import io.circe.parser.decode
 import io.circe.syntax._
 import io.github.mvillafuertem.aws.lambda.LambdaApplicationIT.LambdaApplicationConfigurationIT
 import io.github.mvillafuertem.aws.lambda.SampleLambda.WeatherData
-import io.github.mvillafuertem.aws.{ LocalStackConfigurationIT, RichLambdaAsyncClientBuilder }
+import io.github.mvillafuertem.aws.{ LocalStackConfigurationIT, RichCloudWatchAsyncClientBuilder, RichLambdaAsyncClientBuilder }
 import org.testcontainers.containers
 import org.testcontainers.containers.wait.strategy.Wait
 import software.amazon.awssdk.auth.credentials.{ AwsBasicCredentials, AwsCredentialsProvider, StaticCredentialsProvider }
 import software.amazon.awssdk.core.SdkBytes
 import software.amazon.awssdk.http.HttpStatusCode
 import software.amazon.awssdk.regions.Region
+import software.amazon.awssdk.services.cloudwatch.CloudWatchAsyncClient
+import software.amazon.awssdk.services.cloudwatch.model.{ Dimension, GetMetricStatisticsRequest, ListMetricsRequest, Statistic }
 import software.amazon.awssdk.services.lambda.LambdaAsyncClient
 import software.amazon.awssdk.services.lambda.model.{ InvokeResponse, _ }
 
 import scala.compat.java8.FutureConverters.CompletionStageOps
 import scala.concurrent.Future
-import scala.jdk.CollectionConverters.MapHasAsJava
+import scala.jdk.CollectionConverters._
 import scala.sys.process._
 
 final class LambdaApplicationIT extends LambdaApplicationConfigurationIT {
+
+  //Run exactly sequential async test with scalatest
+  //Important : using default scala context for scalatest to queue test execution in the suite
+  implicit override def executionContext = scala.concurrent.ExecutionContext.Implicits.global
 
   behavior of s"${this.getClass.getSimpleName}"
 
@@ -111,6 +118,74 @@ final class LambdaApplicationIT extends LambdaApplicationConfigurationIT {
 
   }
 
+  it should "Get Metric Statistics Request" in {
+
+    // g i v e n
+    val weatherData   = WeatherData(8, 8, 8.0, 9)
+    val sdkBytes      = SdkBytes.fromUtf8String(weatherData.asJson.noSpaces)
+    val invokeRequest = InvokeRequest
+      .builder()
+      .functionName(FUNCTION_NAME)
+      .payload(sdkBytes)
+      .invocationType(InvocationType.REQUEST_RESPONSE)
+      .build()
+
+    val dimension = Dimension
+      .builder()
+      .name("FunctionName")
+      .value(FUNCTION_NAME)
+      .build()
+
+    val getMetricStatisticsRequest =
+      GetMetricStatisticsRequest
+        .builder()
+        .dimensions(dimension)
+        .endTime(Instant.now())
+        .metricName("Invocations")
+        .namespace("AWS/Lambda")
+        .period(300)
+        .startTime(Instant.now().minus(Duration.ofSeconds(300)))
+        .statistics(Statistic.SUM)
+        .build()
+
+    // w h e n
+    val response = for {
+      invokeResponse              <- Future
+                                       .sequence(
+                                         Seq.fill(4)(
+                                           lambdaAsyncClientDefault
+                                             .invoke(invokeRequest)
+                                             .toScala
+                                         )
+                                       )
+                                       .map(_.head)
+      dimensions                  <- cloudWatchAsyncClientDefault
+                                       .listMetrics()
+                                       .toScala
+                                       .map { a =>
+                                         println(a)
+                                         a
+                                       }
+
+      getMetricStatisticsResponse <- cloudWatchAsyncClientDefault
+                                       .getMetricStatistics(getMetricStatisticsRequest)
+                                       .toScala if dimensions.hasMetrics
+
+    } yield (invokeResponse, getMetricStatisticsResponse)
+
+    response.map(_._2).map { actual =>
+      println(actual)
+      actual.sdkHttpResponse().statusCode() shouldBe HttpStatusCode.OK
+    }
+
+    // t h e n
+    response.map(_._1).map { actual =>
+      actual.sdkHttpResponse().statusCode() shouldBe HttpStatusCode.OK
+      decode[WeatherData](actual.payload().asUtf8String()) shouldBe Right(weatherData)
+    }
+
+  }
+
   override var container: containers.DockerComposeContainer[_] = _
 
   override protected def beforeAll(): Unit = {
@@ -152,6 +227,31 @@ object LambdaApplicationIT {
       credentialsProvider: Option[AwsCredentialsProvider] = None
     ): LambdaAsyncClient =
       LambdaAsyncClient
+        .builder()
+        .add(region, _.region)
+        .add(endpoint, _.endpointOverride)
+        .add(credentialsProvider, _.credentialsProvider)
+        .build()
+
+    val cloudWatchAsyncClientDefault: CloudWatchAsyncClient = cloudWatchAsyncClient(
+      region = Some(Region.US_EAST_1),
+      endpoint = Some(URI.create(AWS_LOCALSTACK_ENDPOINT)),
+      credentialsProvider = Some(
+        StaticCredentialsProvider.create(
+          AwsBasicCredentials.create(
+            "accessKey",
+            "secretKey"
+          )
+        )
+      )
+    )
+
+    def cloudWatchAsyncClient(
+      region: Option[Region] = None,
+      endpoint: Option[URI] = None,
+      credentialsProvider: Option[AwsCredentialsProvider] = None
+    ): CloudWatchAsyncClient =
+      CloudWatchAsyncClient
         .builder()
         .add(region, _.region)
         .add(endpoint, _.endpointOverride)
