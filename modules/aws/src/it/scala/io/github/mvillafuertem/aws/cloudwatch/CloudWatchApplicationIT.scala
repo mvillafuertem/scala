@@ -37,8 +37,10 @@ final class CloudWatchApplicationIT extends CloudWatchApplicationConfigurationIT
 
     val listMetricsResponse: Future[ListMetricsResponse] = cloudWatchAsyncClientDefault.listMetrics().toScala
 
-    listMetricsResponse.map(_.sdkHttpResponse().statusCode() shouldBe HttpStatusCode.OK)
-
+    listMetricsResponse.map { actual =>
+      println(actual)
+      actual.sdkHttpResponse().statusCode() shouldBe HttpStatusCode.OK
+    }
   }
 
   override var container: containers.DockerComposeContainer[_] = _
