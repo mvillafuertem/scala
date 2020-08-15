@@ -1,9 +1,6 @@
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption.REPLACE_EXISTING
 
-import sbtassembly.AssemblyKeys.assembly
-import sbtassembly.MergeStrategy
-
 Global / onLoad := {
   val GREEN = "\u001b[32m"
   val RESET = "\u001b[0m"
