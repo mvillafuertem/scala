@@ -75,11 +75,11 @@ object Dependencies {
     Artifact.awsSdkCloudWatch,
     Artifact.awsSdkLambda,
     Artifact.awsSdkS3
-  ).map(_                   % Version.aws) ++ Seq(
-    Artifact.java8Compat    % Version.java8Compat,
-    Artifact.logback        % Version.logback,
-    Artifact.scalaTest      % Version.scalaTest,
-    Artifact.testcontainers % Version.testcontainers
+  ).map(_                       % Version.aws) ++ Seq(
+    Artifact.java8Compat        % Version.java8Compat,
+    Artifact.logback            % Version.logback,
+    Artifact.scalaTest          % Version.scalaTest,
+    Artifact.testcontainersCore % Version.testcontainers
   ) ++ Seq(
     Artifact.circeGeneric,
     Artifact.circeGenericExtras,
@@ -328,7 +328,7 @@ object Dependencies {
     val tapirOpenapiCirceYaml     = "com.softwaremill.sttp.tapir"           %% "tapir-openapi-circe-yaml"
     val tapirOpenapiDocs          = "com.softwaremill.sttp.tapir"           %% "tapir-openapi-docs"
     val tapirSwaggerUiAkkaHttp    = "com.softwaremill.sttp.tapir"           %% "tapir-swagger-ui-akka-http"
-    val testcontainers            = "com.dimafeng"                          %% "testcontainers-scala"
+    val testcontainersCore        = "com.dimafeng"                          %% "testcontainers-scala-core"
     val testcontainersKafka       = "org.testcontainers"                     % "kafka"
     val zio                       = "dev.zio"                               %% "zio"
     val zioAkkaCluster            = "dev.zio"                               %% "zio-akka-cluster"
