@@ -28,7 +28,7 @@ lazy val scala = (project in file("."))
     `akka-fsm`,
     `akka-http`,
     `sensor-controller`,
-    //alpakka,
+    alpakka,
     algorithms,
     aws,
     basic,

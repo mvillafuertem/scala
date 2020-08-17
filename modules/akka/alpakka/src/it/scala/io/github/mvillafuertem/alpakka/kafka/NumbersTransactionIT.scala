@@ -4,49 +4,38 @@ import java.io.File
 import java.nio.charset.StandardCharsets
 
 import akka.actor.ActorSystem
-import akka.event.{ Logging, LoggingAdapter }
+import akka.event.{Logging, LoggingAdapter}
 import akka.kafka.ConsumerMessage.PartitionOffset
-import akka.kafka.scaladsl.{ Consumer, Producer, Transactional }
-import akka.kafka.{ ConsumerMessage, ProducerMessage, Subscriptions }
-import akka.stream.Supervision.{ Restart, Stop }
-import akka.stream.scaladsl.{ Broadcast, Flow, GraphDSL, Keep, Source, Zip }
+import akka.kafka.scaladsl.{Consumer, Producer, Transactional}
+import akka.kafka.testkit.internal.TestcontainersKafka.Singleton.remainingOrDefault
+import akka.kafka.{ConsumerMessage, ProducerMessage, Subscriptions}
+import akka.stream.Supervision.{Restart, Stop}
+import akka.stream.scaladsl.{Broadcast, Flow, GraphDSL, Keep, Sink, Source, Zip}
 import akka.stream.testkit.scaladsl.StreamTestKit.assertAllStagesStopped
 import akka.stream.testkit.scaladsl.TestSink
-import akka.stream.{ ActorAttributes, ActorMaterializer, FlowShape }
-import akka.{ Done, NotUsed }
-import com.dimafeng.testcontainers.{ DockerComposeContainer, ExposedService }
+import akka.stream.{ActorAttributes, ActorMaterializer, FlowShape}
+import akka.{Done, NotUsed}
+import com.dimafeng.testcontainers.{DockerComposeContainer, ExposedService}
 import io.github.mvillafuertem.alpakka.kafka.NumbersTransactionIT.NumbersTransactionConfigurationIT
+import io.github.mvillafuertem.alpakka.kafka.properties.KafkaProducerConfigurationProperties
 import org.apache.kafka.clients.producer.ProducerRecord
-import org.scalatest.{ BeforeAndAfterAll, Ignore }
+import org.scalatest.{BeforeAndAfterAll, Ignore}
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.flatspec.AnyFlatSpecLike
+import org.scalatest.flatspec.{AnyFlatSpecLike, AsyncFlatSpecLike}
 import org.scalatest.matchers.should.Matchers
 import org.testcontainers.containers
 import org.testcontainers.containers.wait.strategy.Wait
 
 import scala.collection.immutable
-import scala.concurrent.{ ExecutionContextExecutor, Future }
+import scala.concurrent.duration._
+import scala.concurrent.{Await, Future}
 
-final class NumbersTransactionIT
-    extends NumbersTransactionConfigurationIT
-    with EventConfiguration
-    with AnyFlatSpecLike
-    with Matchers
-    with ScalaFutures
-    with BeforeAndAfterAll {
-
-  implicit val system: ActorSystem          = ActorSystem("KafkaConnectionCheckerSpec")
-  implicit val ec: ExecutionContextExecutor = system.dispatcher
-  implicit val log: LoggingAdapter          = Logging(system, this.getClass)
-  implicit val mat: ActorMaterializer       = ActorMaterializer()
+final class NumbersTransactionIT extends NumbersTransactionConfigurationIT {
 
   val sinkTopic   = "sink-topic"
   val sourceTopic = "source-topic"
 
-  val producerSettings = createProducerSettings(KafkaProducerConfigurationProperties())
-  val consumerSettings = createConsumerSettings(KafkaConsumerConfigurationProperties())
-
-  ignore should "numbers" in assertAllStagesStopped {
+  it should "numbers" in assertAllStagesStopped {
 
     // G I V E N
     val numbersFlow = Flow[ConsumerMessage.TransactionalMessage[String, String]]
@@ -116,12 +105,21 @@ final class NumbersTransactionIT
             Stop
         })
 
-    Transactional
+/*    Transactional
       .source(consumerSettings, Subscriptions.topics(Set(sourceTopic)))
       .log("Numbers Input")
       .via(graph)
       .log("Numbers Output")
       .toMat(Transactional.sink(producerSettings, KafkaProducerConfigurationProperties().transactionalId))(Keep.both)
+      .run()*/
+
+    val control = Transactional
+      .source(consumerSettings, Subscriptions.topics(sourceTopic))
+      .map { msg =>
+        ProducerMessage.single(new ProducerRecord(sinkTopic, msg.record.key, msg.record.value), msg.partitionOffset)
+      }
+      .via(Transactional.flow(producerSettings, KafkaProducerConfigurationProperties().transactionalId))
+      .toMat(Sink.ignore)(Keep.left)
       .run()
 
     // W H E N
@@ -134,57 +132,43 @@ final class NumbersTransactionIT
       .runWith(TestSink.probe)
 
     probeConsumer
-      .request(9)
-      .expectNextN(immutable.Seq("1", "2", "3", "4", "5", "6", "7", "9", "10"))
+      .request(10)
+      .expectNextN(Seq("1", "2", "3", "4", "5", "6", "7", "8", "9", "10"))
 
     probeConsumer.cancel()
 
-  }
-
-  def produce(): Unit = {
-
-    val kafkaProducer = producerSettings.createKafkaProducer()
-
-    val eventualDone = Source(LazyList.from(1 to 10)).map { s =>
-      Thread.sleep(1)
-      log.info("{}", s)
-      s
-    }.map { value =>
-      val str = String.valueOf(value)
-      log.info("{}", str)
-
-      val producer = new ProducerRecord[String, String](sourceTopic, str)
-
-      producer.headers().add("id", "1234567890".getBytes(StandardCharsets.UTF_8))
-
-      producer
-    }
-      .runWith(Producer.plainSink(producerSettings))
-
-    Thread.sleep(6000)
-    eventualDone.futureValue shouldBe Done
+    control.shutdown().map(_ shouldBe Done)
 
   }
+
+  override var container: containers.DockerComposeContainer[_] = _
 
   override protected def beforeAll(): Unit = {
-
-    dockerInfrastructure.start()
-    produce()
+   // container = dockerInfrastructure
+    //container.start()
+    Await.result(produce(), 60 seconds) shouldBe Done
   }
 
-  override protected def afterAll(): Unit = dockerInfrastructure.stop()
+  override protected def afterAll(): Unit = ()//container.stop()
 
 }
 
 object NumbersTransactionIT {
 
-  trait NumbersTransactionConfigurationIT {
+  trait NumbersTransactionConfigurationIT extends KafkaConfigurationIT with AsyncFlatSpecLike with Matchers with BeforeAndAfterAll {
 
-    val dockerInfrastructure: containers.DockerComposeContainer[_] = DockerComposeContainer(
-      new File(s"modules/akka/alpakka/src/it/resources/docker-compose.it.yml"),
-      exposedServices = Seq(ExposedService("kafka", 9092, 1, Wait.forLogMessage(".*started .*\\n", 1))),
-      identifier = "docker_infrastructure"
-    ).container
-
+    def produce(): Future[Done] =
+      //val _: clients.producer.Producer[String, String] = producerSettings.createKafkaProducer()
+      Source(LazyList.from(1 to 10))
+        .throttle(1, 1 milliseconds)
+        .log("producer")
+        .map(_.toString)
+        .map { n =>
+          val producer = new ProducerRecord[String, String](consumerConfigurationProperties.consumerTopic, n)
+          producer.headers().add("id", n.getBytes(StandardCharsets.UTF_8))
+          producer
+        }
+        .runWith(Producer.plainSink(producerSettings))
   }
+
 }

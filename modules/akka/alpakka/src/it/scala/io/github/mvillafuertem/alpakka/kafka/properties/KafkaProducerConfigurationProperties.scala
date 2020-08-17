@@ -1,6 +1,6 @@
-package io.github.mvillafuertem.alpakka.kafka
+package io.github.mvillafuertem.alpakka.kafka.properties
 
-import com.typesafe.config.{ Config, ConfigFactory }
+import com.typesafe.config.{Config, ConfigFactory}
 
 final case class KafkaProducerConfigurationProperties(
   bootstrapServers: String,

@@ -1,3 +1,4 @@
+/*
 package io.github.mvillafuertem.alpakka.kafka
 
 import akka.NotUsed
@@ -9,7 +10,7 @@ import akka.stream.Supervision.{ Restart, Stop }
 import akka.stream.scaladsl.{ Broadcast, Flow, GraphDSL, Keep, Zip }
 import akka.stream.testkit.scaladsl.StreamTestKit.assertAllStagesStopped
 import akka.stream.testkit.scaladsl.TestSink
-import akka.stream.{ ActorAttributes, FlowShape, KillSwitches }
+import akka.stream.{ ActorAttributes, FlowShape, KillSwitches, UniqueKillSwitch }
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.scalatest.Ignore
@@ -106,14 +107,14 @@ final class NumbersKafkaIT extends SpecBase with TestcontainersKafkaLike with Ma
           case _                   => Stop
         })
 
-    val source = Transactional
+    val source: (Consumer.Control, _) = Transactional
       .source(consumerSettings, Subscriptions.topics(Set(sourceTopic)))
       .log("Numbers Input")
       .via(graph)
       .log("Numbers Output")
       //.via(Transactional.flow(producerSettings, group))
       .viaMat(KillSwitches.single)(Keep.both)
-      .toMat(Transactional.sink(producerSettings, group))(Keep.both)
+      .toMat(Transactional.sink(producerSettings, group))(Keep.left)
       .run()
 
     // W H E N
@@ -134,8 +135,9 @@ final class NumbersKafkaIT extends SpecBase with TestcontainersKafkaLike with Ma
       .expectNextN(immutable.Seq("1", "2", "3", "4", "5", "6", "7", "9", "10"))
 
     probeConsumer.cancel()
-    Await.result(source._1._1.shutdown(), remainingOrDefault)
+    Await.result(source._1.shutdown(), remainingOrDefault)
 
   }
 
 }
+*/

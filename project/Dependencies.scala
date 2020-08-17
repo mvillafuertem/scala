@@ -46,15 +46,13 @@ object Dependencies {
   val alpakka: Seq[ModuleID] =
     // A L P A K K A
     Seq(
-      Artifact.akkaSlf4f
-    ).map(_            % Version.akka) ++ Seq(
-      Artifact.logback % Version.logback
-    ) ++ Seq(
-      // A L P A K K A  T E S T
-      Artifact.akkaStreamKafkaTestkit % Version.akkaKafka           % "it,test",
-      Artifact.testcontainers         % Version.testcontainers      % "it,test",
-      Artifact.testcontainersKafka    % Version.testcontainersKafka % "it,test",
-      Artifact.scalaTest              % Version.scalaTest           % "it,test"
+      // A L P A K K A  I N T E G R A T I O N  T E S T
+      Artifact.akkaSlf4f              % "2.5.30"                    % IntegrationTest,
+      Artifact.akkaStreamKafkaTestkit % Version.akkaKafka           % IntegrationTest,
+      Artifact.logback                % Version.logback             % IntegrationTest,
+      Artifact.scalaTest              % Version.scalaTest           % IntegrationTest,
+      Artifact.testcontainersCore     % Version.testcontainers      % IntegrationTest,
+      Artifact.testcontainersKafka    % Version.testcontainersKafka % IntegrationTest
     )
 
   val advanced: Seq[ModuleID] = Seq(

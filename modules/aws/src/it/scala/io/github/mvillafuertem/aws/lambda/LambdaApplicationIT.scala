@@ -18,7 +18,7 @@ import software.amazon.awssdk.core.SdkBytes
 import software.amazon.awssdk.http.HttpStatusCode
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.cloudwatch.CloudWatchAsyncClient
-import software.amazon.awssdk.services.cloudwatch.model.{ Dimension, GetMetricStatisticsRequest, ListMetricsRequest, Statistic }
+import software.amazon.awssdk.services.cloudwatch.model.{ Dimension, GetMetricStatisticsRequest, Statistic }
 import software.amazon.awssdk.services.lambda.LambdaAsyncClient
 import software.amazon.awssdk.services.lambda.model.{ InvokeResponse, _ }
 
