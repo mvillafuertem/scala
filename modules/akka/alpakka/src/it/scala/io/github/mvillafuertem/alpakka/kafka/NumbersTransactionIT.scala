@@ -4,31 +4,31 @@ import java.io.File
 import java.nio.charset.StandardCharsets
 
 import akka.actor.ActorSystem
-import akka.event.{Logging, LoggingAdapter}
+import akka.event.{ Logging, LoggingAdapter }
 import akka.kafka.ConsumerMessage.PartitionOffset
-import akka.kafka.scaladsl.{Consumer, Producer, Transactional}
+import akka.kafka.scaladsl.{ Consumer, Producer, Transactional }
 import akka.kafka.testkit.internal.TestcontainersKafka.Singleton.remainingOrDefault
-import akka.kafka.{ConsumerMessage, ProducerMessage, Subscriptions}
-import akka.stream.Supervision.{Restart, Stop}
-import akka.stream.scaladsl.{Broadcast, Flow, GraphDSL, Keep, Sink, Source, Zip}
+import akka.kafka.{ ConsumerMessage, ProducerMessage, Subscriptions }
+import akka.stream.Supervision.{ Restart, Stop }
+import akka.stream.scaladsl.{ Broadcast, Flow, GraphDSL, Keep, Sink, Source, Zip }
 import akka.stream.testkit.scaladsl.StreamTestKit.assertAllStagesStopped
 import akka.stream.testkit.scaladsl.TestSink
-import akka.stream.{ActorAttributes, ActorMaterializer, FlowShape}
-import akka.{Done, NotUsed}
-import com.dimafeng.testcontainers.{DockerComposeContainer, ExposedService}
+import akka.stream.{ ActorAttributes, ActorMaterializer, FlowShape }
+import akka.{ Done, NotUsed }
+import com.dimafeng.testcontainers.{ DockerComposeContainer, ExposedService }
 import io.github.mvillafuertem.alpakka.kafka.NumbersTransactionIT.NumbersTransactionConfigurationIT
 import io.github.mvillafuertem.alpakka.kafka.properties.KafkaProducerConfigurationProperties
 import org.apache.kafka.clients.producer.ProducerRecord
-import org.scalatest.{BeforeAndAfterAll, Ignore}
+import org.scalatest.{ BeforeAndAfterAll, Ignore }
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.flatspec.{AnyFlatSpecLike, AsyncFlatSpecLike}
+import org.scalatest.flatspec.{ AnyFlatSpecLike, AsyncFlatSpecLike }
 import org.scalatest.matchers.should.Matchers
 import org.testcontainers.containers
 import org.testcontainers.containers.wait.strategy.Wait
 
 import scala.collection.immutable
 import scala.concurrent.duration._
-import scala.concurrent.{Await, Future}
+import scala.concurrent.{ Await, Future }
 
 final class NumbersTransactionIT extends NumbersTransactionConfigurationIT {
 
@@ -105,7 +105,7 @@ final class NumbersTransactionIT extends NumbersTransactionConfigurationIT {
             Stop
         })
 
-/*    Transactional
+    /*    Transactional
       .source(consumerSettings, Subscriptions.topics(Set(sourceTopic)))
       .log("Numbers Input")
       .via(graph)
@@ -144,12 +144,12 @@ final class NumbersTransactionIT extends NumbersTransactionConfigurationIT {
   override var container: containers.DockerComposeContainer[_] = _
 
   override protected def beforeAll(): Unit = {
-   // container = dockerInfrastructure
-    //container.start()
+    container = dockerInfrastructure
+    container.start()
     Await.result(produce(), 60 seconds) shouldBe Done
   }
 
-  override protected def afterAll(): Unit = ()//container.stop()
+  override protected def afterAll(): Unit = container.stop()
 
 }
 
