@@ -351,7 +351,7 @@ object Dependencies {
     val circe                     = "0.13.0"
     val curator                   = "5.1.0"
     val dijon                     = "0.3.0"
-    val ficus                     = "1.4.7"
+    val ficus                     = "1.5.0"
     val h2                        = "1.4.200"
     val java8Compat               = "0.9.1"
     val jslt                      = "0.1.10"
