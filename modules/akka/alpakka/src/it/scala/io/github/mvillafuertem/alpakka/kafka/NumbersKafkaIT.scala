@@ -1,4 +1,3 @@
-/*
 package io.github.mvillafuertem.alpakka.kafka
 
 import akka.NotUsed
@@ -9,29 +8,21 @@ import akka.kafka.{ ConsumerMessage, ProducerMessage, Subscriptions }
 import akka.stream.Supervision.{ Restart, Stop }
 import akka.stream.scaladsl.{ Broadcast, Flow, GraphDSL, Keep, Zip }
 import akka.stream.testkit.scaladsl.StreamTestKit.assertAllStagesStopped
-import akka.stream.testkit.scaladsl.TestSink
-import akka.stream.{ ActorAttributes, FlowShape, KillSwitches, UniqueKillSwitch }
-import org.apache.kafka.clients.consumer.ConsumerConfig
+import akka.stream.{ ActorAttributes, FlowShape, KillSwitches }
+import io.github.mvillafuertem.alpakka.kafka.NumbersKafkaIT.SpecBase
 import org.apache.kafka.clients.producer.ProducerRecord
-import org.scalatest.Ignore
 import org.scalatest.concurrent.{ Eventually, ScalaFutures }
 import org.scalatest.flatspec.AnyFlatSpecLike
 import org.scalatest.matchers.should.Matchers
 
-import scala.collection.immutable
 import scala.concurrent.duration._
 import scala.concurrent.{ Await, Future }
 
-abstract class SpecBase(kafkaPort: Int) extends ScalatestKafkaSpec(kafkaPort) with AnyFlatSpecLike with Matchers with ScalaFutures with Eventually {
-
-  protected def this() = this(kafkaPort = -1)
-}
-
-final class NumbersKafkaIT extends SpecBase with TestcontainersKafkaLike with Matchers with ScalaFutures with Eventually {
+final class NumbersKafkaIT extends SpecBase with TestcontainersKafkaLike {
 
   implicit val patience = PatienceConfig(15.seconds, 1.second)
 
-  ignore should "numbers" in assertAllStagesStopped {
+  it should "numbers" in assertAllStagesStopped {
 
     // G I V E N
     val sourceTopic = createTopic(1)
@@ -120,24 +111,28 @@ final class NumbersKafkaIT extends SpecBase with TestcontainersKafkaLike with Ma
     // W H E N
 
     // T H E N
-    val probeConsumerGroup    = createGroupId(2)
-    val probeConsumerSettings = consumerDefaults()
-      .withGroupId(probeConsumerGroup)
-      .withProperties(ConsumerConfig.ISOLATION_LEVEL_CONFIG -> "read_committed")
-    val probeConsumer         = Consumer
-      .plainSource(probeConsumerSettings, Subscriptions.topics(Set(sinkTopic)))
-      .map(r => (r.offset(), r.value()))
-      .map(_._2)
-      .runWith(TestSink.probe)
+    val probeConsumerGroup = createGroupId(2)
+
+    val (controlConsumer, probeConsumer) = createProbe(consumerSettings, sinkTopic)
 
     probeConsumer
-      .request(9)
-      .expectNextN(immutable.Seq("1", "2", "3", "4", "5", "6", "7", "9", "10"))
+      .request(10)
+      .expectNextN((1 to 10).filterNot(_ == 8).map(_.toString))
 
     probeConsumer.cancel()
+    Await.result(controlConsumer.shutdown(), remainingOrDefault)
     Await.result(source._1.shutdown(), remainingOrDefault)
 
   }
 
 }
-*/
+
+object NumbersKafkaIT {
+
+  abstract class SpecBase(kafkaPort: Int) extends ScalatestKafkaSpec(kafkaPort) with AnyFlatSpecLike with Matchers with ScalaFutures with Eventually {
+
+    protected def this() = this(kafkaPort = -1)
+
+  }
+
+}
