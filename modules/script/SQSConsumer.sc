@@ -7,8 +7,8 @@ import java.io.{BufferedOutputStream, File, FileOutputStream}
 import $ivy.`ch.qos.logback:logback-classic:1.2.3`
 import $ivy.`com.jsoniter:jsoniter:0.9.23`
 import $ivy.`dev.zio::zio-sqs:0.2.2`
-import $ivy.`dev.zio::zio-streams:1.0.0-RC18-2`
-import $ivy.`dev.zio::zio:1.0.0-RC18-2`
+import $ivy.`dev.zio::zio-streams:1.0.1-RC18-2`
+import $ivy.`dev.zio::zio:1.0.1-RC18-2`
 import $ivy.`org.slf4j:slf4j-api:1.7.30`
 import $ivy.`software.amazon.awssdk:annotations:2.13.0`
 import $ivy.`software.amazon.awssdk:apache-client:2.13.0`

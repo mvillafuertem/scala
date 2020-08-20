@@ -1,8 +1,8 @@
 #!/usr/bin/env amm
 
 import $file.SQSConsumer
-import $ivy.`dev.zio::zio-test-sbt:1.0.0-RC18-2`
-import $ivy.`dev.zio::zio-test:1.0.0-RC18-2`
+import $ivy.`dev.zio::zio-test-sbt:1.0.1-RC18-2`
+import $ivy.`dev.zio::zio-test:1.0.1-RC18-2`
 import zio._
 import zio.console._
 import zio.test.Assertion._

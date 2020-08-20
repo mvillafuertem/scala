@@ -4,7 +4,7 @@ import java.io.{File, FileInputStream, PrintWriter}
 import java.nio.charset.StandardCharsets
 
 import $ivy.`ch.qos.logback:logback-classic:1.2.3`
-import $ivy.`dev.zio::zio:1.0.0-RC18-2`
+import $ivy.`dev.zio::zio:1.0.1-RC18-2`
 import $ivy.`org.slf4j:slf4j-api:1.7.30`
 import org.slf4j.{Logger, LoggerFactory}
 import zio.console._
