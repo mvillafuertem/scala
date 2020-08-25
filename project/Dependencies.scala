@@ -47,7 +47,7 @@ object Dependencies {
     // A L P A K K A
     Seq(
       // A L P A K K A  I N T E G R A T I O N  T E S T
-      Artifact.akkaSlf4f              % "2.5.30"                    % IntegrationTest,
+      Artifact.akkaSlf4f              % "2.5.31"                    % IntegrationTest,
       Artifact.akkaStreamKafkaTestkit % Version.akkaKafka           % IntegrationTest,
       Artifact.logback                % Version.logback             % IntegrationTest,
       Artifact.scalaTest              % Version.scalaTest           % IntegrationTest,
@@ -345,7 +345,7 @@ object Dependencies {
     val akkaPersistenceInmemory   = "2.5.15.2"
     val akkaPersistenceJdbc       = "3.5.2"
     val alpakkaSlick              = "2.0.1"
-    val aws                       = "2.14.1"
+    val aws                       = "2.14.4"
     val awsLambda                 = "1.2.1"
     val cats                      = "2.1.1"
     val circe                     = "0.13.0"
@@ -359,13 +359,13 @@ object Dependencies {
     val kafka                     = "2.6.0"
     val leveldbjniAll             = "1.8"
     val logback                   = "1.2.3"
-    val postgres                  = "42.2.15"
+    val postgres                  = "42.2.16"
     val scalaJavaTime             = "2.0.0"
-    val scalaTest                 = "3.2.1"
+    val scalaTest                 = "3.2.2"
     val slick                     = "3.3.2"
     val slinky                    = "0.6.5"
     val spark                     = "3.0.0"
-    val sttp                      = "2.2.4"
+    val sttp                      = "2.2.5"
     val tapir                     = "0.16.15"
     val testcontainers            = "0.38.1"
     val testcontainersKafka       = "1.14.3"
