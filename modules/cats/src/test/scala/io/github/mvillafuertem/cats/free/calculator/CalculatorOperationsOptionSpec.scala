@@ -1,6 +1,4 @@
 package io.github.mvillafuertem.cats.free.calculator
-
-import cats.instances.option.catsStdInstancesForOption
 import io.github.mvillafuertem.cats.free.calculator.CalculatorOperationsOption._
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers

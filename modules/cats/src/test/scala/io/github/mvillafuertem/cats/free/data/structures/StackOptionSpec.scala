@@ -1,6 +1,4 @@
 package io.github.mvillafuertem.cats.free.data.structures
-
-import cats.instances.option.catsStdInstancesForOption
 import io.github.mvillafuertem.algorithms.data.structures.stack.Stack
 import io.github.mvillafuertem.cats.free.data.structures.StackOption.{ compilerOption, programOption }
 import org.scalatest.flatspec.AnyFlatSpec

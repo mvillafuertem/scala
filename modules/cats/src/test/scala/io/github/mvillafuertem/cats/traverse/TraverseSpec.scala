@@ -1,7 +1,6 @@
 package io.github.mvillafuertem.cats.traverse
 
 import cats.data._
-import cats.implicits._
 import org.scalatest.flatspec.AsyncFlatSpec
 import org.scalatest.matchers.should.Matchers
 
