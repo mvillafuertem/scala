@@ -2,11 +2,13 @@ package io.github.mvillafuertem.json
 
 import io.circe.generic.auto._
 import io.circe.generic.extras._
+import io.circe.optics.JsonTraversalPath
 import io.circe.parser._
 import io.circe.syntax._
-import io.circe.{ Decoder, Encoder, HCursor, Json }
+import io.circe.{Decoder, Encoder, HCursor, Json, ParsingFailure}
 import org.scalatest.flatspec.AnyFlatSpecLike
 import org.scalatest.matchers.should.Matchers
+import io.circe.optics.JsonPath._
 
 /**
  * @author Miguel Villafuerte
@@ -339,8 +341,8 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
       case other  => Left(s"Invalid role: $other")
     }
 
-    implicit val encodeMode: Encoder[Role] = Encoder[String].contramap {
-      case User => "user"
+    implicit val encodeMode: Encoder[Role] = Encoder[String].contramap { case User =>
+      "user"
     }
 
     // W H E N
@@ -348,6 +350,44 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
 
     // T H E N
     actual shouldBe """{"name":"Pepe","role":"user"}"""
+
+  }
+
+  it should "use of optics" in {
+
+    // G I V E N
+    val jsonString =
+      """{"data":[{"type":"gif","id":"OkJat1YNdoD3W","url":"https://giphy.com/gifs/welcome-OkJat1YNdoD3W","username":"","source":"https://dribbble.com/shots/2432051-Welcome-Cel-Animation","title":"welcome GIF","rating":"g","content_url":"","tags":[],"featured_tags":[],"user_tags":[],"source_tld":"dribbble.com","source_post_url":"https://dribbble.com/shots/2432051-Welcome-Cel-Animation","is_sticker":0,"import_datetime":"2016-09-15 01:34:56","trending_datetime":"0000-00-00 00:00:00","images":{"downsized_medium":{"height":"360","width":"480","size":"870428","url":"https://media1.giphy.com/media/OkJat1YNdoD3W/giphy.gif?cid=641ed420f21ue9qvz3ypteu88nwiopwna6ir3xqe41y1ywrm&rid=giphy.gif"}}},{"type":"gif","id":"l46Cpz0A0dB1jMxG0","url":"https://giphy.com/gifs/welcome-the-nanny-fran-drescher-l46Cpz0A0dB1jMxG0","username":"","source":"","title":"The Nanny Jewish GIF","rating":"g","content_url":"","tags":[],"featured_tags":[],"user_tags":[],"source_tld":"","source_post_url":"","is_sticker":0,"import_datetime":"2016-07-26 19:25:04","trending_datetime":"2019-11-15 19:15:09","images":{"downsized_medium":{"height":"318","width":"480","size":"977304","url":"https://media0.giphy.com/media/l46Cpz0A0dB1jMxG0/giphy.gif?cid=641ed420f21ue9qvz3ypteu88nwiopwna6ir3xqe41y1ywrm&rid=giphy.gif"}}}],"pagination":{"total_count":7610,"count":2,"offset":0},"meta":{"status":200,"msg":"OK","response_id":"f21ue9qvz3ypteu88nwiopwna6ir3xqe41y1ywrm"}}"""
+    case class Gif(id: String, title: String, url: String)
+
+    // W H E N
+    val actual: Either[ParsingFailure, List[Gif]] = parse(jsonString)
+      .map(root.data.each.json.getAll)
+      .map(
+        _.map(json =>
+          Gif(
+            root.id.string.getOption(json).getOrElse(""),
+            root.title.string.getOption(json).getOrElse(""),
+            root.images.downsized_medium.url.string.getOption(json).getOrElse("")
+          )
+        )
+      )
+
+    // T H E N
+    val expected = List(
+      Gif(
+        "OkJat1YNdoD3W",
+        "welcome GIF",
+        "https://media1.giphy.com/media/OkJat1YNdoD3W/giphy.gif?cid=641ed420f21ue9qvz3ypteu88nwiopwna6ir3xqe41y1ywrm&rid=giphy.gif"
+      ),
+      Gif(
+        "l46Cpz0A0dB1jMxG0",
+        "The Nanny Jewish GIF",
+        "https://media0.giphy.com/media/l46Cpz0A0dB1jMxG0/giphy.gif?cid=641ed420f21ue9qvz3ypteu88nwiopwna6ir3xqe41y1ywrm&rid=giphy.gif"
+      )
+    )
+
+    actual.map(_ shouldBe expected)
 
   }
 

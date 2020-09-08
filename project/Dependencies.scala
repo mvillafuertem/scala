@@ -1,6 +1,6 @@
 import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
 import sbt.Keys.libraryDependencies
-import sbt.{ Def, _ }
+import sbt.{Def, _}
 
 object Dependencies {
 
@@ -165,9 +165,10 @@ object Dependencies {
 
   val json: Seq[ModuleID]                = Seq(
     // J S O N
-    Artifact.circeParser,
     Artifact.circeGeneric,
-    Artifact.circeGenericExtras
+    Artifact.circeGenericExtras,
+    Artifact.circeOptics,
+    Artifact.circeParser
   ).map(_                   % Version.circe) ++ Seq(
     Artifact.jsoniterCore   % Version.jsoniter,
     Artifact.jsoniterMacros % Version.jsoniter,
@@ -299,6 +300,7 @@ object Dependencies {
     val catsFree                  = "org.typelevel"                         %% "cats-free"
     val circeGeneric              = "io.circe"                              %% "circe-generic"
     val circeGenericExtras        = "io.circe"                              %% "circe-generic-extras"
+    val circeOptics               = "io.circe"                              %% "circe-optics"
     val circeParser               = "io.circe"                              %% "circe-parser"
     val curator                   = "org.apache.curator"                     % "curator-test"
     val dijon                     = "com.github.pathikrit"                  %% "dijon"
