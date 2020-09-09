@@ -364,7 +364,7 @@ object Dependencies {
     val postgres                  = "42.2.16"
     val scalaJavaTime             = "2.0.0"
     val scalaTest                 = "3.2.2"
-    val slick                     = "3.3.2"
+    val slick                     = "3.3.3"
     val slinky                    = "0.6.5"
     val spark                     = "3.0.1"
     val sttp                      = "2.2.8"
