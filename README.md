@@ -14,7 +14,7 @@ WITH THE COMMAND `sbt docs/mdoc`
 [![Codecov](https://codecov.io/gh/mvillafuertem/scala/branch/master/graph/badge.svg?style=svg)](https://codecov.io/gh/mvillafuertem/scala)
 [![Scala CI](https://github.com/mvillafuertem/scala/workflows/scalaci/badge.svg)](https://github.com/mvillafuertem/scala/actions?query=workflow%3A%22scalaci%22)
 [![CircleCI](https://circleci.com/gh/mvillafuertem/scala.svg?style=shield)](https://circleci.com/gh/mvillafuertem/scala)
-[![Build Status](https://travis-ci.com/mvillafuertem/scala.svg?branch=master)](https://travis-ci.com/mvillafuertem/scala)
+[![Build Status](https://img.shields.io/travis/mvillafuertem/scala/master.svg?logo=travis&style=shield)](https://travis-ci.com/mvillafuertem/scala)
 
 ****
 
