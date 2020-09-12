@@ -13,8 +13,8 @@ WITH THE COMMAND `sbt docs/mdoc`
 [![Sbt](https://img.shields.io/badge/sbt-1.3.13-blue.svg?logo=sbt)](https://github.com/sbt/sbt/releases)
 [![Codecov](https://codecov.io/gh/mvillafuertem/scala/branch/master/graph/badge.svg?style=svg)](https://codecov.io/gh/mvillafuertem/scala)
 [![Scala CI](https://github.com/mvillafuertem/scala/workflows/scalaci/badge.svg)](https://github.com/mvillafuertem/scala/actions?query=workflow%3A%22scalaci%22)
-[![CircleCI](https://circleci.com/gh/mvillafuertem/scala.svg?style=shield)](https://circleci.com/gh/mvillafuertem/scala)
-[![Build Status](https://img.shields.io/travis/mvillafuertem/scala/master.svg?logo=travis&style=shield)](https://travis-ci.com/mvillafuertem/scala)
+[![CircleCI](https://img.shields.io/circleci/build/github/mvillafuertem/scala?logo=circleci&style=flat)](https://circleci.com/gh/mvillafuertem/scala)
+[![Build Status](https://img.shields.io/travis/mvillafuertem/scala/master.svg?logo=travis&style=flat)](https://travis-ci.com/mvillafuertem/scala)
 
 ****
 
