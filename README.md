@@ -4,7 +4,7 @@ WITH THE COMMAND `sbt docs/mdoc`
 
 ---
 
-<p align="center"><img width="400" src="https://raw.githubusercontent.com/mvillafuertem/scala/master/scala-lang-icon.svg"/></p>
+<p align="center"><img width="200" src="https://raw.githubusercontent.com/mvillafuertem/scala/master/scala-lang-icon.svg"/></p>
 <h1 align="center">Scala</h1>
 <p align="center">
   <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=HE7K7HLJJBVWN&currency_code=EUR&source=url">
