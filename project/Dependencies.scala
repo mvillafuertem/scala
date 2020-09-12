@@ -340,7 +340,7 @@ object Dependencies {
   }
 
   private object Version {
-    val akka                      = "2.6.8"
+    val akka                      = "2.6.9"
     val akkaHttp                  = "10.2.0"
     val akkaKafka                 = "2.0.4"
     val akkaPersistenceCassandra  = "0.100"
@@ -364,12 +364,12 @@ object Dependencies {
     val postgres                  = "42.2.16"
     val scalaJavaTime             = "2.0.0"
     val scalaTest                 = "3.2.2"
-    val slick                     = "3.3.2"
+    val slick                     = "3.3.3"
     val slinky                    = "0.6.5"
     val spark                     = "3.0.1"
     val sttp                      = "2.2.8"
     val tapir                     = "0.16.16"
-    val testcontainers            = "0.38.1"
+    val testcontainers            = "0.38.3"
     val testcontainersKafka       = "1.14.3"
     val zio                       = "1.0.1"
     val zioAkkaCluster            = "0.2.0"
