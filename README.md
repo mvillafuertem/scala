@@ -4,17 +4,34 @@ WITH THE COMMAND `sbt docs/mdoc`
 
 ---
 
-
-# Scala
-
-[![Donate](https://img.shields.io/badge/donate-PayPal-green.svg?logo=paypal)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=HE7K7HLJJBVWN&currency_code=EUR&source=url)
-[![Scala](https://img.shields.io/badge/scala-2.13.3-red.svg?logo=scala&logoColor=red)](https://github.com/scala/scala/releases)
-[![Java](https://img.shields.io/badge/jdk-11.0.7-orange.svg?logo=java&logoColor=white)](https://www.oracle.com/technetwork/java/javase/11all-relnotes-5013287.html)
-[![Sbt](https://img.shields.io/badge/sbt-1.3.13-blue.svg?logo=sbt)](https://github.com/sbt/sbt/releases)
-[![Codecov](https://codecov.io/gh/mvillafuertem/scala/branch/master/graph/badge.svg?style=svg)](https://codecov.io/gh/mvillafuertem/scala)
-[![Scala CI](https://github.com/mvillafuertem/scala/workflows/scalaci/badge.svg)](https://github.com/mvillafuertem/scala/actions?query=workflow%3A%22scalaci%22)
-[![CircleCI](https://img.shields.io/circleci/build/github/mvillafuertem/scala?logo=circleci&style=flat)](https://circleci.com/gh/mvillafuertem/scala)
-[![Build Status](https://img.shields.io/travis/mvillafuertem/scala/master.svg?logo=travis&style=flat)](https://travis-ci.com/mvillafuertem/scala)
+<p align="center"><img width="400" src="https://raw.githubusercontent.com/mvillafuertem/scala/master/scala-lang-icon.svg"/></p>
+<h1 align="center">Scala</h1>
+<p align="center">
+  <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=HE7K7HLJJBVWN&currency_code=EUR&source=url">
+    <img src="https://img.shields.io/badge/donate-PayPal-green.svg?logo=paypal"/>
+  </a>
+  <a href="https://github.com/scala/scala/releases">
+    <img src="https://img.shields.io/badge/scala-2.13.3-red.svg?logo=scala&logoColor=red"/>
+  </a>  
+  <a href="https://www.oracle.com/technetwork/java/javase/11all-relnotes-5013287.html">
+    <img src="https://img.shields.io/badge/jdk-11.0.7-orange.svg?logo=java&logoColor=white"/>
+  </a>  
+  <a href="https://github.com/sbt/sbt/releases">
+    <img src="https://img.shields.io/badge/sbt-1.3.13-blue.svg?logo=sbt"/>
+  </a>
+  <a href="https://codecov.io/gh/mvillafuertem/scala">
+    <img src="https://codecov.io/gh/mvillafuertem/scala/branch/master/graph/badge.svg?style=svg"/>
+  </a>    
+  <a href="https://github.com/mvillafuertem/scala/actions?query=workflow%3A%22scalaci%22">
+    <img src="https://github.com/mvillafuertem/scala/workflows/scalaci/badge.svg"/>
+  </a>  
+  <a href="https://circleci.com/gh/mvillafuertem/scala">
+    <img src="https://img.shields.io/circleci/build/github/mvillafuertem/scala?logo=circleci&style=flat"/>
+  </a>  
+  <a href="https://travis-ci.com/mvillafuertem/scala">
+    <img src="https://img.shields.io/travis/mvillafuertem/scala/master.svg?logo=travis&style=flat"/>
+  </a>
+</p> 
 
 ****
 
