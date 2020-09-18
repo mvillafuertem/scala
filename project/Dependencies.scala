@@ -57,7 +57,9 @@ object Dependencies {
 
   val advanced: Seq[ModuleID] = Seq(
     // A D V A N C E D  T E S T
-    Artifact.scalaTest % Version.scalaTest % Test
+    Artifact.scalaTest % Version.scalaTest % Test,
+    "org.scala-lang.modules" %% "scala-parser-combinators" % "1.1.2"
+
   )
 
   val algorithms: Seq[ModuleID] = Seq(
