@@ -346,7 +346,7 @@ object Dependencies {
     val akkaPersistenceCassandra  = "0.100"
     val akkaPersistenceInmemory   = "2.5.15.2"
     val akkaPersistenceJdbc       = "3.5.2"
-    val alpakkaSlick              = "2.0.1"
+    val alpakkaSlick              = "2.0.2"
     val aws                       = "2.14.16"
     val awsLambda                 = "1.2.1"
     val cats                      = "2.2.0"
