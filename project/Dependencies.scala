@@ -363,7 +363,7 @@ object Dependencies {
     val kafka                     = "2.6.0"
     val leveldbjniAll             = "1.8"
     val logback                   = "1.2.3"
-    val postgres                  = "42.2.16"
+    val postgres                  = "42.2.17"
     val scalaJavaTime             = "2.0.0"
     val scalaTest                 = "3.2.2"
     val slick                     = "3.3.3"
