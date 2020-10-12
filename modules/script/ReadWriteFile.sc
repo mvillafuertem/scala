@@ -1,14 +1,13 @@
 #!/usr/bin/env amm
 
-import java.io.{File, FileInputStream, PrintWriter}
-import java.nio.charset.StandardCharsets
-
 import $ivy.`ch.qos.logback:logback-classic:1.2.3`
-import $ivy.`dev.zio::zio:1.0.0-RC18-2`
+import $ivy.`dev.zio::zio:1.0.2`
 import $ivy.`org.slf4j:slf4j-api:1.7.30`
-import org.slf4j.{Logger, LoggerFactory}
+import java.io.{ File, FileInputStream, PrintWriter }
+import java.nio.charset.StandardCharsets
+import org.slf4j.{ Logger, LoggerFactory }
 import zio.console._
-import zio.{Task, UIO, URIO}
+import zio.{ Task, UIO, URIO }
 
 val rootLogger = LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME).asInstanceOf[ch.qos.logback.classic.Logger]
 rootLogger.setLevel(ch.qos.logback.classic.Level.INFO)
