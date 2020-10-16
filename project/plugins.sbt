@@ -34,7 +34,7 @@ addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.4.2")
 addSbtPlugin("org.scala-js" % "sbt-scalajs" % "1.1.1")
 
 // S C A L A J S  B U N D L E R
-addSbtPlugin("ch.epfl.scala" % "sbt-scalajs-bundler" % "0.18.0")
+addSbtPlugin("ch.epfl.scala" % "sbt-scalajs-bundler" % "0.19.0")
 
 // S C A L A B L Y  T Y P E D  C O N V E R T E R
 resolvers += Resolver.bintrayRepo("oyvindberg", "converter")
