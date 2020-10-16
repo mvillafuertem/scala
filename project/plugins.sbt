@@ -17,7 +17,7 @@ addSbtPlugin("net.virtual-void" % "sbt-dependency-graph" % "0.9.2")
 addSbtPlugin("com.typesafe.sbt" % "sbt-git" % "1.0.0")
 
 // N A T I V E  P A C K A G E R
-addSbtPlugin("com.typesafe.sbt" % "sbt-native-packager" % "1.7.5")
+addSbtPlugin("com.typesafe.sbt" % "sbt-native-packager" % "1.7.6")
 
 // R E V O L V E R
 addSbtPlugin("io.spray" % "sbt-revolver" % "0.9.1")
