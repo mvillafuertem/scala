@@ -6,7 +6,7 @@ import $ivy.`dev.zio::zio-sqs:0.2.2`
 import $ivy.`dev.zio::zio-streams:1.0.2`
 import $ivy.`dev.zio::zio:1.0.2`
 import $ivy.`org.slf4j:slf4j-api:1.7.30`
-import $ivy.`software.amazon.awssdk:aws-sdk-java:2.15.7`
+import $ivy.`software.amazon.awssdk:aws-sdk-java:2.15.8`
 import org.slf4j.{ Logger, LoggerFactory }
 import software.amazon.awssdk.auth.credentials.{ AwsBasicCredentials, StaticCredentialsProvider }
 import software.amazon.awssdk.regions.Region
