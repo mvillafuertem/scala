@@ -127,7 +127,7 @@ object Dependencies {
       Artifact.tapirSwaggerUiAkkaHttp
     ).map(_            % Version.tapir) ++ Seq(
       // A K K A  H T T P  T E S T
-      Artifact.akkaHttpTestkit % Version.akkaHttp,
+      Artifact.akkaHttpTestkit % "10.1.12",
       Artifact.scalaTest       % Version.scalaTest
     ).map(_ % Test)
 
@@ -343,7 +343,7 @@ object Dependencies {
 
   private object Version {
     val akka                      = "2.6.10"
-    val akkaHttp                  = "10.2.1"
+    val akkaHttp                  = "10.1.12" // waiting tapir 1.17.0
     val akkaKafka                 = "2.0.5"
     val akkaPersistenceCassandra  = "0.100"
     val akkaPersistenceInmemory   = "2.5.15.2"

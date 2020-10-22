@@ -25,8 +25,7 @@ final class ToDoApplicationConfiguration(context: ActorContext[Done]) extends To
 
   val serverBinding: Future[Http.ServerBinding] =
     Http()(untypedSystem)
-      .newServerAt(toDoConfigurationProperties.interface, toDoConfigurationProperties.port)
-      .bind(toDoAPI.routes)
+      .bindAndHandle(toDoAPI.routes, toDoConfigurationProperties.interface, toDoConfigurationProperties.port)
 
   serverBinding.onComplete {
     case Success(bound) =>
