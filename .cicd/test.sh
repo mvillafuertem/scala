@@ -8,8 +8,8 @@ set -o xtrace
 BASE="$(cd "$(dirname "${0}")" && pwd)"
 source ${BASE}/../.env
 
-sudo sh -c '(echo "#!/usr/bin/env sh" && curl -L https://github.com/lihaoyi/Ammonite/releases/download/2.2.0/2.13-2.2.0) > /usr/local/bin/amm && chmod +x /usr/local/bin/amm' \
-&& amm `pwd`/modules/script/SQSConsumerSpec.sc
 
+# shellcheck disable=SC2010
+ls -d modules/script/* | grep Spec.sc | xargs -I {} sbt 'project script;amm {}'
 sbt clean coverage test coverageReport
 #sbt clean test dependencyUpdates coverageAggregate

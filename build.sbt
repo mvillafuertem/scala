@@ -35,6 +35,7 @@ lazy val scala = (project in file("."))
     cats,
     json,
     reflection,
+    script,
     slick,
     spark,
     sttp,
@@ -180,10 +181,17 @@ lazy val reflection = (project in file("modules/reflection"))
   .settings(commonSettings)
   .settings(libraryDependencies ++= Dependencies.reflection)
 
+lazy val script = (project in file("modules/script"))
+// S E T T I N G S
+  .settings(scalaVersion := "2.13.3")
+  .settings(libraryDependencies ++= Seq("com.lihaoyi" % "ammonite" % "2.2.0" % Test cross CrossVersion.full))
+  .settings(commands += Commands.ammoniteCommand )
+
 lazy val slick = (project in file("modules/slick"))
 // S E T T I N G S
   .settings(commonSettings)
   .settings(libraryDependencies ++= Dependencies.slick)
+  .settings(commands += Commands.h2Command)
 
 /**
  * Implement the `start` and `dist` tasks defined above.
@@ -271,6 +279,7 @@ lazy val tapir = (project in file("modules/tapir"))
   .settings(commonSettings)
   .settings(BuildInfoSettings.value)
   .settings(libraryDependencies ++= Dependencies.tapir)
+  .settings(commands += Commands.h2Command)
   // P L U G I N S
   .enablePlugins(BuildInfoPlugin)
   .enablePlugins(GitVersioning)

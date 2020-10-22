@@ -1,5 +1,5 @@
-import sbt.Keys.{ commands, dependencyClasspathAsJars }
-import sbt.{ Command, Compile, Project }
+import sbt.Keys.{ dependencyClasspathAsJars }
+import sbt.{ Command, Compile, Project, Test }
 
 import scala.sys.process.Process
 
@@ -23,20 +23,34 @@ object Commands {
       .toEither
       .fold(
         exception => exception.printStackTrace(),
-        value => value.map(_.data).filter(_.getPath.contains("h2database")).map(file => Process(s"java -jar ${file} org.h2.tools.Server").!).head
+        value => value.map(_.data).filter(_.getPath.contains("h2database")).map(file => Process(s"java -jar ${file} -browser").!).head
       )
     state
   }
 
-  commands += h2Command
+  val ammoniteCommand = Command.args("amm", "<scriptClass>") { (state, args) =>
+    val cp = Project
+      .runTask(Test / dependencyClasspathAsJars, state)
+      .get
+      ._2
+      .toEither
+      .fold(
+        exception => throw exception,
+        value => value.map(_.data.getPath)
+      )
+      .mkString(":")
+
+    Process(s"java -classpath ${cp} ammonite.Main ${args.mkString(" ")}").!
+
+    state
+  }
 
   val value = Seq(
     DocsDevCommand,
     FrontendDevCommand,
     FrontendBuildCommand,
     FmtSbtCommand,
-    FmtSbtCheckCommand,
-    h2Command
+    FmtSbtCheckCommand
   )
 
 }
