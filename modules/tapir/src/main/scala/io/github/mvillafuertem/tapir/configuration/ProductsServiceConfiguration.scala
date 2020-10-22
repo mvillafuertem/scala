@@ -25,15 +25,14 @@ trait ProductsServiceConfiguration extends InfrastructureConfiguration {
     implicit lazy val untypedSystem: actor.ActorSystem = actorSystem.toClassic
     implicit lazy val materializer: Materializer       = Materializer(actorSystem)
     val eventualBinding                                = Http()(untypedSystem)
-      .newServerAt(
+      .bindAndHandle(
+        SwaggerApi.route ~ new ProductsApi(new SlickProductsRepository() {
+          override def db: UIO[BasicBackend#DatabaseDef] = ZIO.effectTotal(Database.forConfig("infrastructure.h2"))
+        }).route,
         productsConfigurationProperties.interface,
         productsConfigurationProperties.port
       )
-      .bind(
-        SwaggerApi.route ~ new ProductsApi(new SlickProductsRepository() {
-          override def db: UIO[BasicBackend#DatabaseDef] = ZIO.effectTotal(Database.forConfig("infrastructure.h2"))
-        }).route
-      )
+
     for {
       //actorSystem <- ZIO.environment[ActorSystem[_]]
       _ <- Task
