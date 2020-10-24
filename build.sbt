@@ -30,7 +30,8 @@ lazy val scala = (project in file("."))
     `sensor-controller`,
     alpakka,
     algorithms,
-    aws,
+    `aws-cdk`,
+    `aws-sdk`,
     basic,
     benchmarks,
     cats,
@@ -80,13 +81,21 @@ lazy val alpakka = (project in file("modules/akka/alpakka"))
   .settings(commonSettings)
   .settings(libraryDependencies ++= Dependencies.alpakka)
 
-lazy val aws = (project in file("modules/aws"))
+lazy val `aws-cdk` = (project in file("modules/aws/cdk"))
   .configs(IntegrationTest)
   // S E T T I N G S
   .settings(Defaults.itSettings)
   .settings(AssemblySettings.value)
   .settings(commonSettings)
-  .settings(libraryDependencies ++= Dependencies.aws)
+  .settings(libraryDependencies ++= Dependencies.`aws-cdk`)
+
+lazy val `aws-sdk` = (project in file("modules/aws/sdk"))
+  .configs(IntegrationTest)
+  // S E T T I N G S
+  .settings(Defaults.itSettings)
+  .settings(AssemblySettings.value)
+  .settings(commonSettings)
+  .settings(libraryDependencies ++= Dependencies.`aws-sdk`)
 
 lazy val basic = (project in file("modules/basic"))
 // S E T T I N G S
@@ -97,6 +106,17 @@ lazy val benchmarks = (project in file("modules/benchmarks"))
 // S E T T I N G S
   .settings(commonSettings)
   .enablePlugins(JmhPlugin)
+
+lazy val cask = (project in file("modules/cask"))
+// S E T T I N G S
+  .settings(commonSettings)
+  .settings(libraryDependencies ++= Dependencies.cask)
+  .settings(
+    dockerBaseImage := "adoptopenjdk:11-hotspot",
+    dockerExposedPorts := Seq(8080)
+  )
+  .enablePlugins(JavaAppPackaging)
+  .enablePlugins(DockerPlugin)
 
 lazy val `akka-fsm` = (project in file("modules/akka/fsm"))
 // S E T T I N G S

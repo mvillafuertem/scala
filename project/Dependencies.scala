@@ -66,7 +66,12 @@ object Dependencies {
     Artifact.scalaTest % Version.scalaTest % Test
   )
 
-  val aws: Seq[ModuleID]   = Seq(
+  val `aws-cdk`: Seq[ModuleID] = Seq(
+    // A W S
+    Artifact.awsCdkEcsPatterns
+  ).map(_ % Version.awsCdk)
+
+  val `aws-sdk`: Seq[ModuleID] = Seq(
     // A W S
     Artifact.awsLambda % Version.awsLambda
   ) ++ (Seq(
@@ -74,7 +79,7 @@ object Dependencies {
     Artifact.awsSdkCloudWatch,
     Artifact.awsSdkLambda,
     Artifact.awsSdkS3
-  ).map(_                       % Version.aws) ++ Seq(
+  ).map(_                       % Version.awsSdk) ++ Seq(
     Artifact.java8Compat        % Version.java8Compat,
     Artifact.logback            % Version.logback,
     Artifact.scalaTest          % Version.scalaTest,
@@ -85,8 +90,16 @@ object Dependencies {
     Artifact.circeParser
   ).map(_ % Version.circe)).map(_ % IntegrationTest)
 
-  val basic: Seq[ModuleID] = Seq(
+  val basic: Seq[ModuleID]     = Seq(
     // B A S I C  T E S T
+    Artifact.scalaTest % Version.scalaTest % Test
+  )
+
+  val cask: Seq[ModuleID] = Seq(
+    // C A S K
+    Artifact.cask      % Version.cask
+  ) ++ Seq(
+    // C A S K  T E S T
     Artifact.scalaTest % Version.scalaTest % Test
   )
 
@@ -299,10 +312,12 @@ object Dependencies {
     val akkaStreamTyped           = "com.typesafe.akka"                     %% "akka-stream-typed"
     val akkaTestKit               = "com.typesafe.akka"                     %% "akka-testkit"
     val alpakkaSlick              = "com.lightbend.akka"                    %% "akka-stream-alpakka-slick"
+    val awsCdkEcsPatterns         = "software.amazon.awscdk"                 % "ecs-patterns"
     val awsSdkCloudWatch          = "software.amazon.awssdk"                 % "cloudwatch"
     val awsSdkLambda              = "software.amazon.awssdk"                 % "lambda"
     val awsSdkS3                  = "software.amazon.awssdk"                 % "s3"
     val awsLambda                 = "com.amazonaws"                          % "aws-lambda-java-core"
+    val cask                      = "com.lihaoyi"                           %% "cask"
     val catsCore                  = "org.typelevel"                         %% "cats-core"
     val catsFree                  = "org.typelevel"                         %% "cats-free"
     val circeGeneric              = "io.circe"                              %% "circe-generic"
@@ -354,8 +369,10 @@ object Dependencies {
     val akkaPersistenceInmemory   = "2.5.15.2"
     val akkaPersistenceJdbc       = "3.5.2"
     val alpakkaSlick              = "2.0.2"
-    val aws                       = "2.15.9"
+    val awsCdk                    = "1.70.0"
+    val awsSdk                    = "2.15.9"
     val awsLambda                 = "1.2.1"
+    val cask                      = "0.6.7"
     val cats                      = "2.2.0"
     val circe                     = "0.13.0"
     val curator                   = "5.1.0"
