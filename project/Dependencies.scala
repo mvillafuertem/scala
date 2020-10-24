@@ -1,6 +1,6 @@
 import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
 import sbt.Keys.libraryDependencies
-import sbt.{Def, _}
+import sbt.{ Def, _ }
 
 object Dependencies {
 
@@ -57,9 +57,8 @@ object Dependencies {
 
   val advanced: Seq[ModuleID] = Seq(
     // A D V A N C E D  T E S T
-    Artifact.scalaTest % Version.scalaTest % Test,
+    Artifact.scalaTest        % Version.scalaTest          % Test,
     "org.scala-lang.modules" %% "scala-parser-combinators" % "1.1.2"
-
   )
 
   val algorithms: Seq[ModuleID] = Seq(
@@ -127,7 +126,7 @@ object Dependencies {
       Artifact.tapirSwaggerUiAkkaHttp
     ).map(_            % Version.tapir) ++ Seq(
       // A K K A  H T T P  T E S T
-      Artifact.akkaHttpTestkit % "10.1.12",
+      Artifact.akkaHttpTestkit % Version.akkaHttp,
       Artifact.scalaTest       % Version.scalaTest
     ).map(_ % Test)
 
@@ -184,6 +183,12 @@ object Dependencies {
   val reflection: Seq[ModuleID]          =
     Seq(
       // R E F L E C T I O N  T E S T
+      Artifact.scalaTest % Version.scalaTest
+    ).map(_ % Test)
+
+  val script: Seq[ModuleID]              =
+    Seq(
+      // S C R I P T  T E S T
       Artifact.scalaTest % Version.scalaTest
     ).map(_ % Test)
 
