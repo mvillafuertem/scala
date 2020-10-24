@@ -15,6 +15,9 @@ jobs:
       - run:
           name: Test
           command: ./.cicd/test.sh
+      - run:
+          name: Benchmarks
+          command: ./.cicd/benchmarks.sh
 #      - setup_remote_docker:
 #          docker_layer_caching: true
 #      - run:

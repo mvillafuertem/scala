@@ -32,6 +32,7 @@ lazy val scala = (project in file("."))
     algorithms,
     aws,
     basic,
+    benchmarks,
     cats,
     json,
     reflection,
@@ -91,6 +92,11 @@ lazy val basic = (project in file("modules/basic"))
 // S E T T I N G S
   .settings(commonSettings)
   .settings(libraryDependencies ++= Dependencies.basic)
+
+lazy val benchmarks = (project in file("modules/benchmarks"))
+// S E T T I N G S
+  .settings(commonSettings)
+  .enablePlugins(JmhPlugin)
 
 lazy val `akka-fsm` = (project in file("modules/akka/fsm"))
 // S E T T I N G S

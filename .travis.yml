@@ -37,6 +37,9 @@ jobs:
     - stage: integration test
       script:
         - ./.cicd/integration-test.sh
+    - stage: benchmarks
+      script:
+        - ./.cicd/benchmarks.sh
 #    - stage: build
 #      script: ./.cicd/build.sh
 #    - stage: doc
