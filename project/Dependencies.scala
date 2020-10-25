@@ -67,6 +67,9 @@ object Dependencies {
   )
 
   val `aws-cdk`: Seq[ModuleID] = Seq(
+    //"com.hashicorp" % "cdktf" % "0.0.17",
+    //"software.constructs" % "constructs" % "3.0.0"
+  ) ++ Seq(
     // A W S
     Artifact.awsCdkEcsPatterns
   ).map(_ % Version.awsCdk)

@@ -87,6 +87,8 @@ lazy val `aws-cdk` = (project in file("modules/aws/cdk"))
   .settings(Defaults.itSettings)
   .settings(AssemblySettings.value)
   .settings(commonSettings)
+  //.settings(resolvers += "GitHub Package Registry" at "https://maven.pkg.github.com/hashicorp/terraform-cdk")
+  //.settings(credentials += Credentials("GitHub Package Registry", "maven.pkg.github.com", "mvillafuertem", ""))
   .settings(libraryDependencies ++= Dependencies.`aws-cdk`)
 
 lazy val `aws-sdk` = (project in file("modules/aws/sdk"))
