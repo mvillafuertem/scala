@@ -61,5 +61,9 @@ object EventSourcedBehaviorSampleSpec {
     akka.persistence.journal.plugin = "akka.persistence.journal.inmem"
     akka.persistence.journal.inmem.test-serialization = on
     akka.actor.allow-java-serialization = on
+
+    # duration to wait in expectMsg and friends outside of within() block
+    # by default, will be dilated by the timefactor.
+    akka.test.single-expect-default = 10s
     """)
 }
