@@ -158,7 +158,7 @@ object S3ApplicationIT {
         .acl("public-read")
         .build()
       s3AsyncClientDefault
-        .putObject(putObjectRequest, Path.of(s"modules/aws/src/it/resources/$KEY"))
+        .putObject(putObjectRequest, Path.of(s"modules/aws/sdk/src/it/resources/$KEY"))
         .toScala
         .recover {
           case e: CompletionException if e.getCause.isInstanceOf[NoSuchKeyException] => throw e
