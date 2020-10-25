@@ -20,7 +20,7 @@ trait LocalStackConfigurationIT extends AsyncFlatSpecLike with Matchers with Bef
 
   def dockerInfrastructure(logMessageWaitStrategy: LogMessageWaitStrategy): containers.DockerComposeContainer[_] =
     DockerComposeContainer(
-      new File(s"modules/aws/src/it/resources/docker-compose.it.yml"),
+      new File(s"modules/aws/sdk/src/it/resources/docker-compose.it.yml"),
       exposedServices = Seq(ExposedService("localstack", AWS_LOCALSTACK_PORT, 1, logMessageWaitStrategy)),
       identifier = "docker_infrastructure"
     ).container
