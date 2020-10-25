@@ -23,15 +23,15 @@ import software.amazon.awssdk.services.lambda.LambdaAsyncClient
 import software.amazon.awssdk.services.lambda.model.{ InvokeResponse, _ }
 
 import scala.compat.java8.FutureConverters.CompletionStageOps
-import scala.concurrent.Future
+import scala.concurrent.{ ExecutionContext, Future }
 import scala.jdk.CollectionConverters._
 import scala.sys.process._
 
 final class LambdaApplicationIT extends LambdaApplicationConfigurationIT {
 
-  //Run exactly sequential async test with scalatest
-  //Important : using default scala context for scalatest to queue test execution in the suite
-  implicit override def executionContext = scala.concurrent.ExecutionContext.Implicits.global
+  // Run exactly sequential async test with scalatest
+  // Important : using default scala context for scalatest to queue test execution in the suite
+  implicit override def executionContext: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
 
   behavior of s"${this.getClass.getSimpleName}"
 
@@ -150,22 +150,22 @@ final class LambdaApplicationIT extends LambdaApplicationConfigurationIT {
 
     // w h e n
     val response = for {
-      invokeResponse              <- Future
-                                       .sequence(
-                                         Seq.fill(4)(
-                                           lambdaAsyncClientDefault
-                                             .invoke(invokeRequest)
-                                             .toScala
-                                         )
-                                       )
-                                       .map(_.head)
-      dimensions                  <- cloudWatchAsyncClientDefault
-                                       .listMetrics()
-                                       .toScala
-                                       .map { a =>
-                                         println(a)
-                                         a
-                                       }
+      invokeResponse <- Future
+                          .sequence(
+                            Seq.fill(4)(
+                              lambdaAsyncClientDefault
+                                .invoke(invokeRequest)
+                                .toScala
+                            )
+                          )
+                          .map(_.head)
+      dimensions     <- cloudWatchAsyncClientDefault
+                          .listMetrics()
+                          .toScala
+                          .map { a =>
+                            println(a)
+                            a
+                          }
 
       getMetricStatisticsResponse <- cloudWatchAsyncClientDefault
                                        .getMetricStatistics(getMetricStatisticsRequest)
