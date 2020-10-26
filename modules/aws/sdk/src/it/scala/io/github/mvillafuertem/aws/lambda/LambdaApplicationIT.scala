@@ -39,7 +39,7 @@ final class LambdaApplicationIT extends LambdaApplicationConfigurationIT {
 
     // g i v e n
     val HANDLER               = s"${this.getClass.getPackageName}.SampleLambda"
-    val _                     = "sbt aws/assembly".!
+    val _                     = "sbt aws-sdk/assembly".!
     val sdkBytes              = SdkBytes.fromInputStream(new FileInputStream(s"modules/aws/sdk/target/scala-2.13/aws-sdk-0.1.0.jar"))
     val functionCode          = FunctionCode.builder().zipFile(sdkBytes).build()
     val createFunctionRequest = CreateFunctionRequest
