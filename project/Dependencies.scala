@@ -77,7 +77,11 @@ object Dependencies {
   val `aws-sdk`: Seq[ModuleID] = Seq(
     // A W S
     Artifact.awsLambda % Version.awsLambda
-  ) ++ (Seq(
+  ) ++ Seq(
+    Artifact.circeGeneric,
+    Artifact.circeGenericExtras,
+    Artifact.circeParser
+  ).map(_              % Version.circe) ++ (Seq(
     // A W S  I N T E G R A T I O N  T E S T
     Artifact.awsSdkCloudWatch,
     Artifact.awsSdkLambda,
@@ -87,11 +91,7 @@ object Dependencies {
     Artifact.logback            % Version.logback,
     Artifact.scalaTest          % Version.scalaTest,
     Artifact.testcontainersCore % Version.testcontainers
-  ) ++ Seq(
-    Artifact.circeGeneric,
-    Artifact.circeGenericExtras,
-    Artifact.circeParser
-  ).map(_ % Version.circe)).map(_ % IntegrationTest)
+  )).map(_ % IntegrationTest)
 
   val basic: Seq[ModuleID]     = Seq(
     // B A S I C  T E S T

@@ -18,7 +18,7 @@ import software.amazon.awssdk.core.SdkBytes
 import software.amazon.awssdk.http.HttpStatusCode
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.cloudwatch.CloudWatchAsyncClient
-import software.amazon.awssdk.services.cloudwatch.model.{ Dimension, GetMetricStatisticsRequest, Statistic }
+import software.amazon.awssdk.services.cloudwatch.model.{ Dimension, GetMetricStatisticsRequest, GetMetricStatisticsResponse, Statistic }
 import software.amazon.awssdk.services.lambda.LambdaAsyncClient
 import software.amazon.awssdk.services.lambda.model.{ InvokeResponse, _ }
 
@@ -112,6 +112,7 @@ final class LambdaApplicationIT extends LambdaApplicationConfigurationIT {
 
     // t h e n
     invokeResponse.map { actual =>
+      println(actual.payload())
       actual.sdkHttpResponse().statusCode() shouldBe HttpStatusCode.OK
       decode[WeatherData](actual.payload().asUtf8String()) shouldBe Right(weatherData)
     }
@@ -173,13 +174,13 @@ final class LambdaApplicationIT extends LambdaApplicationConfigurationIT {
 
     } yield (invokeResponse, getMetricStatisticsResponse)
 
-    response.map(_._2).map { actual =>
+    response.map { case (_, actual: GetMetricStatisticsResponse) =>
       println(actual)
       actual.sdkHttpResponse().statusCode() shouldBe HttpStatusCode.OK
     }
 
     // t h e n
-    response.map(_._1).map { actual =>
+    response.map { case (actual: InvokeResponse, _) =>
       actual.sdkHttpResponse().statusCode() shouldBe HttpStatusCode.OK
       decode[WeatherData](actual.payload().asUtf8String()) shouldBe Right(weatherData)
     }
