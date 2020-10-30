@@ -46,8 +46,8 @@ jobs:
       - name: Run Integration Tests
         run: echo "./.cicd/integration-test.sh" # https://github.com/testcontainers/testcontainers-java/issues/3122
 
-  test:
-    name: Test
+  benchmarks:
+    name: Benchmarks
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
