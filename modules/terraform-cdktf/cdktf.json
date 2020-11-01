@@ -1,0 +1,7 @@
+{
+  "language": "typescript",
+  "app": "sbt terraform-cdktf/run",
+  "terraformProviders": [
+    "aws@~> 2.0"
+  ]
+}

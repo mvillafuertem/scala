@@ -1,7 +1,7 @@
-import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport.{ scalaJSLinkerConfig, scalaJSUseMainModuleInitializer, ModuleKind }
+import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
 import sbt.Keys.{ exportJars, _ }
 import sbt.{ Def, Tests, _ }
-import scalajsbundler.sbtplugin.ScalaJSBundlerPlugin.autoImport.useYarn
+import scalajsbundler.sbtplugin.ScalaJSBundlerPlugin.autoImport.{ useYarn, webpackDevServerExtraArgs, webpackExtraArgs }
 
 object Settings {
 
@@ -11,11 +11,27 @@ object Settings {
     _.withSourceMap(false)
       .withModuleKind(ModuleKind.CommonJSModule)),
     scalacOptions += "-Ymacro-annotations",
-    useYarn := true
+    // S C A L A J S  B U N D L E R
+    useYarn := true,
+    // W E B P A C K
+    Compile / fastOptJS / webpackExtraArgs += "--mode=development",
+    Compile / fullOptJS / webpackExtraArgs += "--mode=production",
+    Compile / fastOptJS / webpackDevServerExtraArgs += "--mode=development",
+    Compile / fullOptJS / webpackDevServerExtraArgs += "--mode=production"
+    // Execute the tests in browser-like environment
+    // Test / requireJsDomEnv   := true,
+    // webpackResources := baseDirectory.value / "webpack" * "*"
+    // Test / jsEnv := new org.scalajs.jsenv.jsdomnodejs.JSDOMNodeJSEnv()
+    // Test / jsSourceDirectories += baseDirectory.value / "resources"
+    // Test / unmanagedResourceDirectories += baseDirectory.value / "node_modules"
   )
 
+  lazy val scala213 = "2.13.3"
+  lazy val scala212 = "2.12.12"
+
   lazy val value: Seq[Def.Setting[_]] = Seq(
-    scalaVersion := "2.13.3",
+    autoScalaLibrary := false,
+    scalaVersion := scala213,
     scalacOptions := {
       val default = Seq(
         "-deprecation",

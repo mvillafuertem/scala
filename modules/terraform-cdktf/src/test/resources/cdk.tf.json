@@ -1,0 +1,63 @@
+{
+  "//": {
+    "metadata": {
+      "version": "0.0.17",
+      "stackName": "hello-terraform"
+    }
+  },
+  "terraform": {
+    "required_providers": {
+      "aws": {
+        "version": "~> 2.0",
+        "source": "aws"
+      }
+    }
+  },
+  "provider": {
+    "aws": [
+      {
+        "region": "us-east-1"
+      }
+    ]
+  },
+  "resource": {
+    "aws_instance": {
+      "helloterraform_Hello_19940A68": {
+        "ami": "ami-2757f631",
+        "instance_type": "t2.micro",
+        "//": {
+          "metadata": {
+            "path": "hello-terraform/Hello",
+            "uniqueId": "helloterraform_Hello_19940A68",
+            "stackTrace": [
+              "new TerraformElement (/Users/mvillafuerte/Projects/scala/modules/terraform-cdktf/target/scala-2.13/scalajs-bundler/main/node_modules/cdktf/lib/terraform-element.js:11:28)",
+              "new TerraformResource (/Users/mvillafuerte/Projects/scala/modules/terraform-cdktf/target/scala-2.13/scalajs-bundler/main/node_modules/cdktf/lib/terraform-resource.js:9:9)",
+              "new Instance (/Users/mvillafuerte/Projects/scala/modules/terraform-cdktf/target/scala-2.13/scalajs-bundler/main/node_modules/@cdktf/provider-aws/lib/instance.js:19:9)",
+              "new $b_Lio_github_mvillafuertem_terraform_cdktf_MyStack (/Users/mvillafuerte/Projects/scala/modules/terraform-cdktf/target/scala-2.13/scalajs-bundler/main/terraform-cdktf-fastopt.js:2167:9)",
+              "$c_Lio_github_mvillafuertem_terraform_cdktf_CdktfApp$.main__AT__V (/Users/mvillafuerte/Projects/scala/modules/terraform-cdktf/target/scala-2.13/scalajs-bundler/main/terraform-cdktf-fastopt.js:608:5)",
+              "$s_Lio_github_mvillafuertem_terraform_cdktf_CdktfApp__main__AT__V (/Users/mvillafuerte/Projects/scala/modules/terraform-cdktf/target/scala-2.13/scalajs-bundler/main/terraform-cdktf-fastopt.js:603:59)",
+              "Object.<anonymous> (/Users/mvillafuerte/Projects/scala/modules/terraform-cdktf/target/scala-2.13/scalajs-bundler/main/terraform-cdktf-fastopt.js:2556:1)",
+              "Module._compile (node:internal/modules/cjs/loader:1083:30)",
+              "Object.Module._extensions..js (node:internal/modules/cjs/loader:1112:10)",
+              "Module.load (node:internal/modules/cjs/loader:948:32)",
+              "Function.Module._load (node:internal/modules/cjs/loader:789:14)",
+              "Module.require (node:internal/modules/cjs/loader:972:19)",
+              "require (node:internal/modules/cjs/helpers:88:18)",
+              "[stdin]:7:1",
+              "Script.runInThisContext (node:vm:132:18)",
+              "Object.runInThisContext (node:vm:309:38)",
+              "node:internal/process/execution:77:19",
+              "[stdin]-wrapper:6:22",
+              "evalScript (node:internal/process/execution:76:60)",
+              "node:internal/main/eval_stdin:29:5",
+              "Socket.<anonymous> (node:internal/process/execution:205:5)",
+              "Socket.emit (node:events:339:22)",
+              "endReadableNT (node:internal/streams/readable:1289:12)",
+              "processTicksAndRejections (node:internal/process/task_queues:80:21)"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

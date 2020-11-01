@@ -45,6 +45,24 @@ object Commands {
     state
   }
 
+
+  val stcCommand = Command.args("stc", "<args>") { (state, args) =>
+    val cp = Project
+      .runTask(Test / dependencyClasspathAsJars, state)
+      .get
+      ._2
+      .toEither
+      .fold(
+        exception => throw exception,
+        value => value.map(_.data.getPath)
+      )
+      .mkString(":")
+
+    Process(s"java -classpath ${cp} org.scalablytyped.converter.cli.Main ${args.mkString(" ")}").!
+
+    state
+  }
+
   val value = Seq(
     DocsDevCommand,
     FrontendDevCommand,

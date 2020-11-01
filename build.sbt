@@ -1,6 +1,8 @@
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption.REPLACE_EXISTING
 
+import scalajsbundler.util.JSON._
+
 Global / onLoad := {
   val GREEN = "\u001b[32m"
   val RESET = "\u001b[0m"
@@ -39,9 +41,11 @@ lazy val scala = (project in file("."))
     reflection,
     script,
     slick,
+    // slinky, scalajs Error downloading org.scoverage
     spark,
     sttp,
     tapir,
+    // `terraform-cdktf`, scalajs Error downloading org.scoverage
     `zio-akka-cluster-chat`,
     `zio-akka-cluster-sharding`,
     `zio-kafka`,
@@ -167,6 +171,7 @@ lazy val docs = (project in file("modules/docs"))
   .configure(browserProject)
   // S E T T I N G S
   .settings(commonSettingsJs)
+  .settings(addCommandAlias("docs", "project docs;fastOptJS::startWebpackDevServer;~fastOptJS"))
   .settings(webpackDevServerPort := 8008)
   .settings(Test / requireJsDomEnv := true)
   .settings(
@@ -181,19 +186,11 @@ lazy val docs = (project in file("modules/docs"))
       "react-syntax-highlighter" -> "6.0.4"
     )
   )
-  .settings(
-    Compile / fastOptJS / webpackExtraArgs += "--mode=development",
-    Compile / fullOptJS / webpackExtraArgs += "--mode=production",
-    Compile / fastOptJS / webpackDevServerExtraArgs += "--mode=development",
-    Compile / fullOptJS / webpackDevServerExtraArgs += "--mode=production"
-  )
   .settings(Dependencies.docs)
   .settings(testFrameworks := Seq(new TestFramework("zio.test.sbt.ZTestFramework")))
   .settings(MdocSettings.value)
   // P L U G I N S
   .enablePlugins(ScalaJSBundlerPlugin)
-  //.enablePlugins(ScalablyTypedConverterPlugin)
-  .enablePlugins(ScalaJSPlugin)
   .enablePlugins(MdocPlugin)
 
 lazy val json = (project in file("modules/json"))
@@ -211,10 +208,10 @@ lazy val reflection = (project in file("modules/reflection"))
 
 lazy val script = (project in file("modules/script"))
 // S E T T I N G S
-  .settings(scalaVersion := "2.13.3")
+  .settings(scalaVersion := Settings.scala213)
   .settings(libraryDependencies ++= Dependencies.script)
   .settings(libraryDependencies ++= Seq("com.lihaoyi" % "ammonite" % "2.2.0" % Test cross CrossVersion.full))
-  .settings(commands += Commands.ammoniteCommand )
+  .settings(commands += Commands.ammoniteCommand)
 
 lazy val slick = (project in file("modules/slick"))
 // S E T T I N G S
@@ -223,7 +220,7 @@ lazy val slick = (project in file("modules/slick"))
   .settings(commands += Commands.h2Command)
 
 /**
- * Implement the `start` and `dist` tasks defined above.
+ * Implement the `dist` task defined above.
  * Most of this is really just to copy the index.html file around.
  */
 lazy val browserProject: Project => Project =
@@ -263,6 +260,7 @@ lazy val browserProject: Project => Project =
 lazy val slinky = (project in file("modules/slinky"))
   // S E T T I N G S
   .settings(commonSettingsJs)
+  .settings(addCommandAlias("slinky", "project slinky;fastOptJS::startWebpackDevServer;~fastOptJS"))
   .settings(webpackDevServerPort := 8008)
   .settings(startWebpackDevServer / version := "3.10.3")
   .settings(Test / requireJsDomEnv := true)
@@ -278,14 +276,7 @@ lazy val slinky = (project in file("modules/slinky"))
       "@material-ui/styles" -> "3.0.0-alpha.10" // note: version 4 is not supported yet
     )
   )
-  .settings(
-    Compile / fastOptJS / webpackExtraArgs += "--mode=development",
-    Compile / fullOptJS / webpackExtraArgs += "--mode=production",
-    Compile / fastOptJS / webpackDevServerExtraArgs += "--mode=development",
-    Compile / fullOptJS / webpackDevServerExtraArgs += "--mode=production"
-  )
   .settings(Dependencies.slinky)
-  .settings(testFrameworks := Seq(new TestFramework("zio.test.sbt.ZTestFramework")))
   // P L U G I N S
   .enablePlugins(ScalablyTypedConverterPlugin)
   .enablePlugins(ScalaJSPlugin)
@@ -312,6 +303,56 @@ lazy val tapir = (project in file("modules/tapir"))
   // P L U G I N S
   .enablePlugins(BuildInfoPlugin)
   .enablePlugins(GitVersioning)
+
+lazy val `terraform-cdktf` = (project in file("modules/terraform-cdktf"))
+// S E T T I N G S
+  .settings(commonSettingsJs)
+  .settings(
+    stIgnore ++= List("cdktf-cli"),
+    Compile / npmDependencies ++= Seq(
+      "@cdktf/provider-aws" -> "0.0.62",
+      "cdktf"               -> "0.0.17",
+      "cdktf-cli"           -> "0.0.17",
+      "constructs"          -> "3.2.2",
+      "node"                -> "15.0.1",
+      "@types/node"         -> "14.14.6"
+    ),
+    additionalNpmConfig in Compile := Map(
+      "name"    -> str("scalajs-cdktf"),
+      "version" -> str(version.value),
+      "license" -> str("MIT")
+    ),
+    scalaJSUseMainModuleInitializer := true,
+    libraryDependencies ++= Seq(
+      "org.scalatest" %%% "scalatest"     % "3.2.2" % Test,
+      "io.circe"      %%% "circe-optics"  % "0.13.0",
+      "io.circe"      %%% "circe-generic" % "0.13.0",
+      "io.circe"      %%% "circe-parser"  % "0.13.0"
+    ),
+    Compile / npmDevDependencies ++= Seq(
+      "file-loader"           -> "6.0.0",
+      "style-loader"          -> "1.2.1",
+      "css-loader"            -> "3.5.3",
+      "html-webpack-plugin"   -> "4.3.0",
+      "copy-webpack-plugin"   -> "5.1.1",
+      "webpack-merge"         -> "4.2.2",
+      "terser-webpack-plugin" -> "5.0.3"
+    ),
+    Test / webpackConfigFile := Some(baseDirectory.value / "webpack" / "webpack-core.config.js"),
+    // Execute the tests in browser-like environment
+    // Test / requireJsDomEnv   := true,
+    fastOptJS / webpackBundlingMode := BundlingMode.LibraryOnly(),
+    fastOptJS / webpackConfigFile := Some(baseDirectory.value / "webpack" / "webpack-fastopt.config.js"),
+    fastOptJS / webpackDevServerExtraArgs := Seq("--inline", "--hot"),
+    fullOptJS / webpackConfigFile := Some(baseDirectory.value / "webpack" / "webpack-opt.config.js"),
+    webpackResources := baseDirectory.value / "webpack" * "*"
+    // Test / jsEnv := new org.scalajs.jsenv.jsdomnodejs.JSDOMNodeJSEnv()
+    // Test / jsSourceDirectories += baseDirectory.value / "resources"
+    // Test / unmanagedResourceDirectories += baseDirectory.value / "node_modules"
+  )
+  // P L U G I N S
+  .enablePlugins(ScalablyTypedConverterPlugin)
+  .enablePlugins(ScalaJSPlugin)
 
 lazy val zio: Project => Project =
   // S E T T I N G S
