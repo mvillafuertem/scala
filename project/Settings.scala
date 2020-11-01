@@ -30,7 +30,7 @@ object Settings {
   lazy val scala212 = "2.12.12"
 
   lazy val value: Seq[Def.Setting[_]] = Seq(
-    autoScalaLibrary := false,
+    // autoScalaLibrary := false,
     scalaVersion := scala213,
     scalacOptions := {
       val default = Seq(
