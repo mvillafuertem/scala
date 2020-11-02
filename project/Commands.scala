@@ -1,6 +1,5 @@
 import sbt.Keys.dependencyClasspathAsJars
-import sbt.{Command, Compile, Exec, Project, Test, taskKey}
-import scalajsbundler.sbtplugin.ScalaJSBundlerPlugin.autoImport.npmInstallDependencies
+import sbt.{ Command, Project, Test }
 
 import scala.sys.process.Process
 
@@ -8,7 +7,8 @@ object Commands {
 
   val DocsDevCommand = Command.command("docs")(state => "project docs" :: "fastOptJS::startWebpackDevServer" :: "~fastOptJS" :: state)
 
-  def frontendDevCommand(nameOfProject: String): Command = Command.command(s"$nameOfProject")(state => s"project $nameOfProject" :: "fastOptJS::startWebpackDevServer" :: "~fastOptJS" :: state)
+  def frontendDevCommand(nameOfProject: String): Command =
+    Command.command(s"$nameOfProject")(state => s"project $nameOfProject" :: "fastOptJS::startWebpackDevServer" :: "~fastOptJS" :: state)
 
   val FrontendBuildCommand = Command.command("build")(state => "project slinky" :: "fullOptJS::webpack" :: state)
 
@@ -26,14 +26,6 @@ object Commands {
     Process(s"java -classpath ${cp} ammonite.Main ${args.mkString(" ")}").!
     state
   }
-  private def `cdktf-cli` =
-    """modules/terraform-cdktf/target/scala-2.13/scalajs-bundler/main/node_modules/cdktf-cli/bin/cdktf synth -a "sbt terraform-cdktf/run" \
-      |--log-level=DEBUG
-      |--output modules/terraform-cdktf/src/main/resources \
-      |--json""".stripMargin
-
-  //Process(`cdktf-cli`).!
-  val cdktfCommand = Command.command("cdktf") ( state => ("project terraform-cdktf") :: "npmInstallDependencies" :: state)
 
   val stcCommand = Command.args("cdktf", "<args>") { (state, args) =>
     val cp = getClasspathAsJars(state).mkString(":")

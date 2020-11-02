@@ -350,20 +350,7 @@ lazy val `terraform-cdktf` = (project in file("modules/terraform-cdktf"))
     // Test / jsSourceDirectories += baseDirectory.value / "resources"
     // Test / unmanagedResourceDirectories += baseDirectory.value / "node_modules"
   )
-  .settings(
-    cdktf := {
-      val log         = sLog.value
-      val result      = (Compile / npmInstallDependencies).value
-      log.success("---------------------------------------------")
-      log.success("R U N  T H I S  C O M M A N D  T O  S Y N T H")
-      val `cdktf-cli` =
-        s"""${result.getPath}/node_modules/cdktf-cli/bin/cdktf synth -a "sbt terraform-cdktf/run" \\
-           |--log-level=DEBUG \\
-           |--output modules/terraform-cdktf/src/main/resources \\
-           |--json""".stripMargin
-      println(`cdktf-cli`)
-    }
-  )
+  .settings(Tasks.cdktfTask)
   // P L U G I N S
   .enablePlugins(ScalablyTypedConverterPlugin)
   .enablePlugins(ScalaJSPlugin)
