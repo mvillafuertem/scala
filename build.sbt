@@ -56,6 +56,9 @@ lazy val scala = (project in file("."))
   .settings(commonSettings)
   .settings(Settings.noPublish)
   .settings(commands ++= Commands.value)
+  .settings(commands += Commands.frontendDevCommand("slinky"))
+  .settings(commands += Commands.frontendDevCommand("docs"))
+  .settings(commands += Commands.cdktfCommand)
 
 lazy val advanced = (project in file("modules/advanced"))
 // S E T T I N G S
@@ -171,7 +174,6 @@ lazy val docs = (project in file("modules/docs"))
   .configure(browserProject)
   // S E T T I N G S
   .settings(commonSettingsJs)
-  .settings(addCommandAlias("docs", "project docs;fastOptJS::startWebpackDevServer;~fastOptJS"))
   .settings(webpackDevServerPort := 8008)
   .settings(Test / requireJsDomEnv := true)
   .settings(
@@ -260,7 +262,6 @@ lazy val browserProject: Project => Project =
 lazy val slinky = (project in file("modules/slinky"))
   // S E T T I N G S
   .settings(commonSettingsJs)
-  .settings(addCommandAlias("slinky", "project slinky;fastOptJS::startWebpackDevServer;~fastOptJS"))
   .settings(webpackDevServerPort := 8008)
   .settings(startWebpackDevServer / version := "3.10.3")
   .settings(Test / requireJsDomEnv := true)

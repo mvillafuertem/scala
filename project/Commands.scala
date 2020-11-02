@@ -1,5 +1,5 @@
-import sbt.Keys.{ dependencyClasspathAsJars }
-import sbt.{ Command, Compile, Project, Test }
+import sbt.Keys.dependencyClasspathAsJars
+import sbt.{Command, Exec, Project, Test}
 
 import scala.sys.process.Process
 
@@ -7,7 +7,7 @@ object Commands {
 
   val DocsDevCommand = Command.command("docs")(state => "project docs" :: "fastOptJS::startWebpackDevServer" :: "~fastOptJS" :: state)
 
-  val FrontendDevCommand = Command.command("dev")(state => "project slinky" :: "fastOptJS::startWebpackDevServer" :: "~fastOptJS" :: state)
+  def frontendDevCommand(nameOfProject: String): Command = Command.command(s"$nameOfProject")(state => s"project $nameOfProject" :: "fastOptJS::startWebpackDevServer" :: "~fastOptJS" :: state)
 
   val FrontendBuildCommand = Command.command("build")(state => "project slinky" :: "fullOptJS::webpack" :: state)
 
@@ -16,56 +16,42 @@ object Commands {
   val FmtSbtCheckCommand = Command.command("check")(state => "scalafmtSbtCheck" :: "scalafmtCheck" :: "test:scalafmtCheck" :: state)
 
   val h2Command = Command.command("h2Console") { state =>
-    Project
-      .runTask(Compile / dependencyClasspathAsJars, state)
-      .get
-      ._2
-      .toEither
-      .fold(
-        exception => exception.printStackTrace(),
-        value => value.map(_.data).filter(_.getPath.contains("h2database")).map(file => Process(s"java -jar ${file} -browser").!).head
-      )
+    getClasspathAsJars(state).filter(_.contains("h2database")).map(file => Process(s"java -jar ${file} -browser").!).head
     state
   }
 
   val ammoniteCommand = Command.args("amm", "<scriptClass>") { (state, args) =>
-    val cp = Project
-      .runTask(Test / dependencyClasspathAsJars, state)
-      .get
-      ._2
-      .toEither
-      .fold(
-        exception => throw exception,
-        value => value.map(_.data.getPath)
-      )
-      .mkString(":")
-
+    val cp = getClasspathAsJars(state).mkString(":")
     Process(s"java -classpath ${cp} ammonite.Main ${args.mkString(" ")}").!
-
     state
   }
+  private def `cdktf-cli` =
+    """modules/terraform-cdktf/target/scala-2.13/scalajs-bundler/main/node_modules/cdktf-cli/bin/cdktf synth -a "sbt terraform-cdktf/run" \
+      |--log-level=DEBUG
+      |--output modules/terraform-cdktf/src/main/resources \
+      |--json""".stripMargin
 
+  //Process(`cdktf-cli`).!
+  val cdktfCommand = Command.command("cdktf") ( state => ("project terraform-cdktf") :: "npmInstallDependencies" :: state)
 
-  val stcCommand = Command.args("stc", "<args>") { (state, args) =>
-    val cp = Project
-      .runTask(Test / dependencyClasspathAsJars, state)
-      .get
-      ._2
-      .toEither
-      .fold(
-        exception => throw exception,
-        value => value.map(_.data.getPath)
-      )
-      .mkString(":")
-
+  val stcCommand = Command.args("cdktf", "<args>") { (state, args) =>
+    val cp = getClasspathAsJars(state).mkString(":")
     Process(s"java -classpath ${cp} org.scalablytyped.converter.cli.Main ${args.mkString(" ")}").!
-
     state
   }
+
+  def getClasspathAsJars(state: sbt.State) = Project
+    .runTask(Test / dependencyClasspathAsJars, state)
+    .get
+    ._2
+    .toEither
+    .fold(
+      exception => throw exception,
+      value => value.map(_.data.getPath)
+    )
 
   val value = Seq(
     DocsDevCommand,
-    FrontendDevCommand,
     FrontendBuildCommand,
     FmtSbtCommand,
     FmtSbtCheckCommand
