@@ -8,6 +8,8 @@ import typings.cdktf.mod.App
 // 6. cp -R `pwd`/modules/terraform/cdktf/.gen/ `pwd`/modules/terraform/cdktf/target/scala-2.13/scalajs-bundler/scalajs-cdktf/node_modules/scalajs-cdktf
 // 7. sbt "project stc;stc -d modules/terraform/cdktf/target/scala-2.13/scalajs-bundler/scalajs-cdktf --includeProject=true"
 // 8. cdktf synth -a "sbt terraform-cdktf/run" --log-level=DEBUG --json --output modules/terraform-cdktf/src/test/resources
+
+// sbt terraform-cdktf/cdktf
 object CdktfApp {
 
   def main(args: Array[String]): Unit = {

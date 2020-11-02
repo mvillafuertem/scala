@@ -1,5 +1,6 @@
 import sbt.Keys.dependencyClasspathAsJars
-import sbt.{Command, Exec, Project, Test}
+import sbt.{Command, Compile, Exec, Project, Test, taskKey}
+import scalajsbundler.sbtplugin.ScalaJSBundlerPlugin.autoImport.npmInstallDependencies
 
 import scala.sys.process.Process
 
