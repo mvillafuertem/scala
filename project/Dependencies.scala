@@ -373,7 +373,7 @@ object Dependencies {
     val akkaPersistenceJdbc       = "3.5.2"
     val alpakkaSlick              = "2.0.2"
     val awsCdk                    = "1.72.0"
-    val awsSdk                    = "2.15.20"
+    val awsSdk                    = "2.15.22"
     val awsLambda                 = "1.2.1"
     val cask                      = "0.6.7"
     val cats                      = "2.2.0"
@@ -396,11 +396,11 @@ object Dependencies {
     val spark                     = "3.0.1"
     val sttp                      = "2.2.9"
     val tapir                     = "0.16.16"
-    val testcontainers            = "0.38.4"
+    val testcontainers            = "0.38.5"
     val testcontainersKafka       = "1.14.3"
     val zio                       = "1.0.3"
     val zioAkkaCluster            = "0.2.0"
-    val zioInteropReactiveStreams = "1.0.3.5"
+    val zioInteropReactiveStreams = "1.3.0.7-2"
     val zioKafka                  = "0.13.0"
   }
 
