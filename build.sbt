@@ -324,7 +324,7 @@ lazy val `terraform-cdktf` = (project in file("modules/terraform-cdktf"))
     ),
     scalaJSUseMainModuleInitializer := true,
     libraryDependencies ++= Seq(
-      "org.scalatest" %%% "scalatest"     % "3.2.2" % Test,
+      "org.scalatest" %%% "scalatest"     % "3.2.3" % Test,
       "io.circe"      %%% "circe-optics"  % "0.13.0",
       "io.circe"      %%% "circe-generic" % "0.13.0",
       "io.circe"      %%% "circe-parser"  % "0.13.0"
