@@ -265,6 +265,7 @@ lazy val slinky = (project in file("modules/slinky"))
   .settings(startWebpackDevServer / version := "3.10.3")
   .settings(Test / requireJsDomEnv := true)
   .settings(stFlavour := Flavour.Slinky)
+  .settings(stMinimize := Selection.All)
   .settings(stIgnore ++= List("@material-ui/icons"))
   .settings(
     Compile / npmDependencies ++= Seq(
@@ -309,6 +310,7 @@ lazy val `terraform-cdktf` = (project in file("modules/terraform-cdktf"))
   .settings(commonSettingsJs)
   .settings(
     stIgnore ++= List("cdktf-cli"),
+    stMinimize := Selection.All,
     Compile / npmDependencies ++= Seq(
       "@cdktf/provider-aws" -> "0.0.62",
       "cdktf"               -> "0.0.17",
