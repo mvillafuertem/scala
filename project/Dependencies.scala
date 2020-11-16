@@ -225,7 +225,7 @@ object Dependencies {
     "io.github.cquiroz" %%% "scala-java-time" % Version.scalaJavaTime
   )
 
-  val spark: Seq[ModuleID] =
+  val spark: Seq[ModuleID]             =
     // S P A R K
     Seq(
       Artifact.spark % Version.spark
@@ -234,7 +234,7 @@ object Dependencies {
       Artifact.scalaTest % Version.scalaTest
     ).map(_          % Test)
 
-  val sttp: Seq[ModuleID]  =
+  val sttp: Seq[ModuleID]              =
     // S T T P
     Seq(
       Artifact.sttpAsyncAkka,
@@ -254,7 +254,7 @@ object Dependencies {
       Artifact.scalaTest % Version.scalaTest
     ).map(_ % Test)
 
-  val tapir: Seq[ModuleID] =
+  val tapir: Seq[ModuleID]             =
     // T A P I R
     Seq(
       //"org.iq80.leveldb" % "leveldb" % "0.12",
@@ -279,7 +279,18 @@ object Dependencies {
       Artifact.zioTest         % Version.zio
     ).map(_ % Test)
 
-  val zio: Seq[ModuleID]   =
+//  val `terraform-cdktf`: Seq[ModuleID] =
+//    // T E R R A F O R M  C D K T F
+//    Seq(
+//      ArtifactJS.circeOptics,
+//      ArtifactJS.circeGeneric,
+//      ArtifactJS.circeParser
+//    ).map(_                % Version.circe) ++ Seq(
+//      // T E R R A F O R M  C D K T F  T E S T
+//      ArtifactJS.scalaTest % Version.scalaTest % Test
+//    )
+
+  val zio: Seq[ModuleID] =
     // Z I O
     Seq(
       Artifact.zio,
@@ -294,6 +305,13 @@ object Dependencies {
     ).map(_ % Version.zio % Test) ++ Seq(
       Artifact.scalaTest % Version.scalaTest
     ).map(_ % Test)
+
+//  private object ArtifactJS {
+//    val scalaTest    = "org.scalatest" %%% "scalatest"
+//    val circeOptics  = "io.circe"      %%% "circe-optics"
+//    val circeGeneric = "io.circe"      %%% "circe-generic"
+//    val circeParser  = "io.circe"      %%% "circe-parser"
+//  }
 
   private object Artifact {
     //"org.iq80.leveldb" % "leveldb" % "0.12",
@@ -346,7 +364,6 @@ object Dependencies {
     val sttpAsyncZioStreams       = "com.softwaremill.sttp.client"          %% "async-http-client-backend-zio"
     val sttpCirce                 = "com.softwaremill.sttp.client"          %% "circe"
     val sttpCore                  = "com.softwaremill.sttp.client"          %% "core"
-    val swaggerUi                 = "org.webjars"                            % "swagger-ui"
     val tapirAkkaHttpServer       = "com.softwaremill.sttp.tapir"           %% "tapir-akka-http-server"
     val tapirCore                 = "com.softwaremill.sttp.tapir"           %% "tapir-core"
     val tapirJsonCirce            = "com.softwaremill.sttp.tapir"           %% "tapir-json-circe"

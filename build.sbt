@@ -175,18 +175,7 @@ lazy val docs = (project in file("modules/docs"))
   .settings(commonSettingsJs)
   .settings(webpackDevServerPort := 8008)
   .settings(Test / requireJsDomEnv := true)
-  .settings(
-    Compile / npmDependencies ++= Seq(
-      "react"                    -> "16.13.1",
-      "react-dom"                -> "16.13.1",
-      "react-router-dom"         -> "5.2.0",
-      "react-proxy"              -> "1.1.8",
-      "remark"                   -> "8.0.0",
-      "remark-react"             -> "4.0.1",
-      "react-helmet"             -> "5.2.0",
-      "react-syntax-highlighter" -> "6.0.4"
-    )
-  )
+  .settings(Compile / npmDependencies ++= NpmDependencies.docs)
   .settings(Dependencies.docs)
   .settings(testFrameworks := Seq(new TestFramework("zio.test.sbt.ZTestFramework")))
   .settings(MdocSettings.value)
@@ -267,16 +256,7 @@ lazy val slinky = (project in file("modules/slinky"))
   .settings(stFlavour := Flavour.Slinky)
   .settings(stMinimize := Selection.All)
   .settings(stIgnore ++= List("@material-ui/icons"))
-  .settings(
-    Compile / npmDependencies ++= Seq(
-      "react"               -> "16.13.1",
-      "react-dom"           -> "16.13.1",
-      "@types/react"        -> "16.9.34",
-      "@types/react-dom"    -> "16.9.6",
-      "@material-ui/core"   -> "3.9.3", // note: version 4 is not supported yet
-      "@material-ui/styles" -> "3.0.0-alpha.10" // note: version 4 is not supported yet
-    )
-  )
+  .settings(Compile / npmDependencies ++= NpmDependencies.slinky)
   .settings(Dependencies.slinky)
   // P L U G I N S
   .enablePlugins(ScalablyTypedConverterPlugin)
@@ -311,35 +291,19 @@ lazy val `terraform-cdktf` = (project in file("modules/terraform-cdktf"))
   .settings(
     stIgnore ++= List("cdktf-cli"),
     stMinimize := Selection.All,
-    Compile / npmDependencies ++= Seq(
-      "@cdktf/provider-aws" -> "0.0.62",
-      "cdktf"               -> "0.0.17",
-      "cdktf-cli"           -> "0.0.17",
-      "constructs"          -> "3.2.2",
-      "node"                -> "15.0.1",
-      "@types/node"         -> "14.14.6"
-    ),
+    Compile / npmDependencies ++= NpmDependencies.`terraform-cdktf`,
     additionalNpmConfig in Compile := Map(
       "name"    -> str("scalajs-cdktf"),
       "version" -> str(version.value),
       "license" -> str("MIT")
     ),
-    scalaJSUseMainModuleInitializer := true,
     libraryDependencies ++= Seq(
       "org.scalatest" %%% "scalatest"     % "3.2.3" % Test,
       "io.circe"      %%% "circe-optics"  % "0.13.0",
       "io.circe"      %%% "circe-generic" % "0.13.0",
       "io.circe"      %%% "circe-parser"  % "0.13.0"
     ),
-    Compile / npmDevDependencies ++= Seq(
-      "file-loader"           -> "6.0.0",
-      "style-loader"          -> "1.2.1",
-      "css-loader"            -> "3.5.3",
-      "html-webpack-plugin"   -> "4.3.0",
-      "copy-webpack-plugin"   -> "5.1.1",
-      "webpack-merge"         -> "4.2.2",
-      "terser-webpack-plugin" -> "5.0.3"
-    ),
+    Compile / npmDevDependencies ++= NpmDependencies.`dev-terraform-cdktf`,
     Test / webpackConfigFile := Some(baseDirectory.value / "webpack" / "webpack-core.config.js"),
     // Execute the tests in browser-like environment
     // Test / requireJsDomEnv   := true,
