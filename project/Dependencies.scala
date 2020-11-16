@@ -390,7 +390,7 @@ object Dependencies {
     val logback                   = "1.2.3"
     val postgres                  = "42.2.18"
     val scalaJavaTime             = "2.0.0"
-    val scalaTest                 = "3.2.2"
+    val scalaTest                 = "3.2.3"
     val slick                     = "3.3.3"
     val slinky                    = "0.6.5"
     val spark                     = "3.0.1"
