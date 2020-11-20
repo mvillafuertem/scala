@@ -225,7 +225,7 @@ object Dependencies {
     "io.github.cquiroz" %%% "scala-java-time" % Version.scalaJavaTime
   )
 
-  val spark: Seq[ModuleID]             =
+  val spark: Seq[ModuleID] =
     // S P A R K
     Seq(
       Artifact.spark % Version.spark
@@ -234,7 +234,7 @@ object Dependencies {
       Artifact.scalaTest % Version.scalaTest
     ).map(_          % Test)
 
-  val sttp: Seq[ModuleID]              =
+  val sttp: Seq[ModuleID]  =
     // S T T P
     Seq(
       Artifact.sttpAsyncAkka,
@@ -254,7 +254,7 @@ object Dependencies {
       Artifact.scalaTest % Version.scalaTest
     ).map(_ % Test)
 
-  val tapir: Seq[ModuleID]             =
+  val tapir: Seq[ModuleID] =
     // T A P I R
     Seq(
       //"org.iq80.leveldb" % "leveldb" % "0.12",

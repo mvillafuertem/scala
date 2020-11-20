@@ -68,7 +68,7 @@ object NpmDependencies {
   }
 
   private object Version {
-    val `@cdktf/provider-aws`      = "0.0.72"
+    val `@cdktf/provider-aws`      = "0.0.76"
     val `@material-ui/core`        = "3.9.3"          // note: version 4 is not supported yet
     val `@material-ui/styles`      = "3.0.0-alpha.10" // note: version 4 is not supported yet
     val `@types/node`              = "14.14.7"
@@ -76,7 +76,7 @@ object NpmDependencies {
     val `@types/react-dom`         = "16.9.6"
     val `cdktf`                    = "0.0.18"
     val `cdktf-cli`                = "0.0.18"
-    val `constructs`               = "3.2.30"
+    val `constructs`               = "3.2.37"
     val `copy-webpack-plugin`      = "5.1.1"
     val `css-loader`               = "3.5.3"
     val `file-loader`              = "6.0.0"

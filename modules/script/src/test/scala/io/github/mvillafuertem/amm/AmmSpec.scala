@@ -1,11 +1,11 @@
-package io.github.mvillafuertem.script
+package io.github.mvillafuertem.amm
 
 import ammonite.ops._
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.flatspec.AnyFlatSpecLike
 import org.scalatest.matchers.should.Matchers
 
-final class ScriptSpec extends AnyFlatSpecLike with Matchers with BeforeAndAfterAll {
+final class AmmSpec extends AnyFlatSpecLike with Matchers with BeforeAndAfterAll {
 
   override def suiteName: String = "Ammonite-Ops"
 

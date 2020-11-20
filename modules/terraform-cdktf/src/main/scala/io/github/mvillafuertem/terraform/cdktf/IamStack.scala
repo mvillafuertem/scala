@@ -1,8 +1,10 @@
 package io.github.mvillafuertem.terraform.cdktf
 
-import typings.cdktf.mod.{ S3Backend, TerraformStack }
+import org.scalablytyped.runtime.StringDictionary
+import typings.cdktf.mod.{ S3Backend, TerraformStack, TerraformVariable }
 import typings.cdktf.s3BackendMod.S3BackendProps
 import typings.cdktf.terraformResourceMod.TerraformResource
+import typings.cdktf.terraformVariableMod.TerraformVariableConfig
 import typings.cdktfProviderAws.awsProviderMod.AwsProviderConfig
 import typings.cdktfProviderAws.budgetsBudgetMod.{ BudgetsBudgetConfig, BudgetsBudgetCostTypes, BudgetsBudgetNotification }
 import typings.cdktfProviderAws.cloudwatchMetricAlarmMod.CloudwatchMetricAlarmConfig
@@ -12,12 +14,15 @@ import typings.cdktfProviderAws.iamUserMod.IamUserConfig
 import typings.cdktfProviderAws.instanceMod.{ InstanceConfig, InstanceEbsBlockDevice }
 import typings.cdktfProviderAws.mod.Instance
 import typings.cdktfProviderAws.mod._
+import typings.cdktfProviderAws.securityGroupMod.SecurityGroup
 import typings.cdktfProviderAws.mod.SnsTopicSubscription
 import typings.cdktfProviderAws.s3BucketMod.{ S3BucketConfig, S3BucketVersioning }
 import typings.cdktfProviderAws.securityGroupMod.{ SecurityGroupConfig, SecurityGroupEgress, SecurityGroupIngress }
+import typings.cdktfProviderAws.securityGroupRuleMod.SecurityGroupRuleConfig
 import typings.cdktfProviderAws.snsTopicMod.SnsTopicConfig
 import typings.cdktfProviderAws.snsTopicSubscriptionMod.SnsTopicSubscriptionConfig
 import typings.constructs.mod.Construct
+import typings.std.global.^.Array
 
 import scala.scalajs.js
 
@@ -100,12 +105,6 @@ final class IamStack(scope: Construct, name: String) extends TerraformStack(scop
       )
   )
 
-  new S3Backend(
-    self,
-    S3BackendProps("cdktf", "terraform.tfstate")
-      .setRegion(region)
-  )
-
   val group = new IamGroup(
     self,
     groupId,
@@ -126,39 +125,44 @@ final class IamStack(scope: Construct, name: String) extends TerraformStack(scop
     IamUserConfig(userName).setPath(path)
   )
 
-  private val securityGroupIngress: SecurityGroupIngress = SecurityGroupIngress()
-    .setProtocol("tcp")
-    .setFromPort(22)
-    .setToPort(22)
-    .setCidrBlocks(js.Array[String]("0.0.0.0/0"))
-
-  private val securityGroupEgress: SecurityGroupEgress = SecurityGroupEgress()
-    .setProtocol("-1")
-    .setFromPort(0)
-    .setToPort(0)
-    .setCidrBlocks(js.Array[String]("0.0.0.0/0"))
-
   private val securityGroup = new SecurityGroup(
     self,
-    "security-group",
+    "securityGroup",
     SecurityGroupConfig()
-      .setName("Security Group")
-      .setIngress(js.Array[SecurityGroupIngress](securityGroupIngress))
-      .setEgress(js.Array[SecurityGroupEgress](securityGroupEgress))
+      .setName("securityGroup")
+      .setDescription("securityGroup")
+      .setVpcId("")
+      .setTags(StringDictionary("Name" -> ""))
   )
 
-  private val ebsBlockDevice: InstanceEbsBlockDevice = InstanceEbsBlockDevice("ebs-block-device")
-    .setVolumeSize(3)
+  new SecurityGroupRule(
+    self,
+    "securityGroupRuleIngress",
+    SecurityGroupRuleConfig(0, "-1", securityGroup.id, 0, "ingress")
+      .setCidrBlocks(js.Array[String]("0.0.0.0/0"))
+  )
+
+  new SecurityGroupRule(
+    self,
+    "securityGroupRuleEgress",
+    SecurityGroupRuleConfig(0, "all", securityGroup.id, 0, "egress")
+      .setCidrBlocks(js.Array[String]("0.0.0.0/0"))
+  )
+
+  private val ebsBlockDevice: InstanceEbsBlockDevice = InstanceEbsBlockDevice("/dev/xvda")
+    .setVolumeSize(8)
     .setVolumeType("gp2")
     .setIops(100)
     .setEncrypted(false)
 
-  private val instance = new Instance(
+  new Instance(
     self,
     "instance",
     InstanceConfig("ami-0947d2ba12ee1ff75", "t2.micro")
-      .setSecurityGroups(js.Array[String](securityGroup.name.orNull))
+      .setTags(StringDictionary("Name" -> "instance"))
+      .setSecurityGroups(js.Array[String](securityGroup.name))
       .setEbsBlockDevice(js.Array[InstanceEbsBlockDevice](ebsBlockDevice))
+      .deleteRootBlockDevice
   )
 
 }
