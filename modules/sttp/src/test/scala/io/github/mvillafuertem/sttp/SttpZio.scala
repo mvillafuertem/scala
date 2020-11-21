@@ -83,6 +83,6 @@ object SttpZio extends DefaultRunnableSpec {
             )
         )(equalToResponseSuccess)
       )
-    )
+    ) @@ zio.test.TestAspect.flaky
 
 }
