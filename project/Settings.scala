@@ -26,7 +26,7 @@ object Settings {
     // Test / unmanagedResourceDirectories += baseDirectory.value / "node_modules"
   )
 
-  lazy val scala213 = "2.13.3"
+  lazy val scala213 = "2.13.4"
   lazy val scala212 = "2.12.12"
 
   lazy val value: Seq[Def.Setting[_]] = Seq(
