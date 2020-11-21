@@ -50,6 +50,7 @@ lazy val scala = (project in file("."))
     `zio-akka-cluster-sharding`,
     `zio-kafka`,
     `zio-queues`,
+    `zio-schedule`,
     `zio-streams`
   )
   // S E T T I N G S
@@ -341,6 +342,9 @@ lazy val `zio-kafka` = (project in file("modules/zio/kafka"))
   .settings(Defaults.itSettings)
 
 lazy val `zio-queues` = (project in file("modules/zio/queues"))
+  .configure(zio)
+
+lazy val `zio-schedule` = (project in file("modules/zio/schedule"))
   .configure(zio)
 
 lazy val `zio-streams` = (project in file("modules/zio/streams"))
