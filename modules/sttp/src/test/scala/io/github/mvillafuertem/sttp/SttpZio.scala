@@ -13,14 +13,14 @@ import zio.test.environment.TestEnvironment
 
 object SttpZio extends DefaultRunnableSpec {
 
-  // @see https://requestbin.com/r/enbom40wuq5zg/1bOSAYwoE7KoRARt3fMJQCHdOF7
+  // @see https://requestbin.com/r/enwf1kwvx6vnf
   implicit val customConfig: Configuration                        = Configuration.default.withSnakeCaseMemberNames
   @ConfiguredJsonCodec case class RequestSnakeCase(successSnakeCase: Boolean)
   val backend: Task[SttpBackend[Task, Nothing, WebSocketHandler]] = AsyncHttpClientZioBackend()
 
   case class Response(success: Boolean)
   case class Request(success: Boolean)
-  private val uri                    = "https://enbom40wuq5zg.x.pipedream.net/"
+  private val uri                    = "https://enwf1kwvx6vnf.x.pipedream.net/"
   private val requestGET             = basicRequest.get(uri"$uri").response(asJson[Response])
   private val requestPOST            = basicRequest.post(uri"$uri").response(asJson[Response]).body[RequestSnakeCase](RequestSnakeCase(true))
   private val requestPUT             = basicRequest.put(uri"$uri").response(asJson[Response]).body[Request](Request(true))
