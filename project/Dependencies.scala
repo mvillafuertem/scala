@@ -174,10 +174,11 @@ object Dependencies {
 
   val docs: Def.Setting[Seq[ModuleID]]   = libraryDependencies ++= Seq(
     // P R O D U C T I O N
-    "me.shadaj"         %%% "slinky-hot"          % Version.slinky,
-    "me.shadaj"         %%% "slinky-react-router" % Version.slinky,
-    "dev.zio"           %%% "zio"                 % Version.zio,
-    "io.github.cquiroz" %%% "scala-java-time"     % Version.scalaJavaTime
+    "me.shadaj" %%% "slinky-hot",
+    "me.shadaj" %%% "slinky-react-router"
+  ).map(_                 % Version.slinky) ++ Seq(
+    "dev.zio"           %%% "zio"             % Version.zio,
+    "io.github.cquiroz" %%% "scala-java-time" % Version.scalaJavaTime
   )
 
   val json: Seq[ModuleID]                = Seq(
@@ -220,12 +221,12 @@ object Dependencies {
 
   val slinky: Def.Setting[Seq[ModuleID]] = libraryDependencies ++= Seq(
     // P R O D U C T I O N
-    "me.shadaj"         %%% "slinky-hot"      % Version.slinky,
     "dev.zio"           %%% "zio"             % Version.zio,
+    "me.shadaj"         %%% "slinky-hot"      % Version.slinky,
     "io.github.cquiroz" %%% "scala-java-time" % Version.scalaJavaTime
   )
 
-  val spark: Seq[ModuleID] =
+  val spark: Seq[ModuleID]                          =
     // S P A R K
     Seq(
       Artifact.spark % Version.spark
@@ -234,7 +235,7 @@ object Dependencies {
       Artifact.scalaTest % Version.scalaTest
     ).map(_          % Test)
 
-  val sttp: Seq[ModuleID]  =
+  val sttp: Seq[ModuleID]                           =
     // S T T P
     Seq(
       Artifact.sttpAsyncAkka,
@@ -254,7 +255,7 @@ object Dependencies {
       Artifact.scalaTest % Version.scalaTest
     ).map(_ % Test)
 
-  val tapir: Seq[ModuleID] =
+  val tapir: Seq[ModuleID]                          =
     // T A P I R
     Seq(
       //"org.iq80.leveldb" % "leveldb" % "0.12",
@@ -279,16 +280,15 @@ object Dependencies {
       Artifact.zioTest         % Version.zio
     ).map(_ % Test)
 
-//  val `terraform-cdktf`: Seq[ModuleID] =
-//    // T E R R A F O R M  C D K T F
-//    Seq(
-//      ArtifactJS.circeOptics,
-//      ArtifactJS.circeGeneric,
-//      ArtifactJS.circeParser
-//    ).map(_                % Version.circe) ++ Seq(
-//      // T E R R A F O R M  C D K T F  T E S T
-//      ArtifactJS.scalaTest % Version.scalaTest % Test
-//    )
+  val `terraform-cdktf`: Def.Setting[Seq[ModuleID]] = libraryDependencies ++= Seq(
+    // T E R R A F O R M  C D K T F
+    "io.circe" %%% "circe-generic",
+    "io.circe" %%% "circe-optics",
+    "io.circe" %%% "circe-parser"
+  ).map(_             % Version.circe) ++ Seq(
+    // T E R R A F O R M  C D K T F  T E S T
+    "org.scalatest" %%% "scalatest" % Version.scalaTest % Test
+  )
 
   val zio: Seq[ModuleID] =
     // Z I O
@@ -305,13 +305,6 @@ object Dependencies {
     ).map(_ % Version.zio % Test) ++ Seq(
       Artifact.scalaTest % Version.scalaTest
     ).map(_ % Test)
-
-//  private object ArtifactJS {
-//    val scalaTest    = "org.scalatest" %%% "scalatest"
-//    val circeOptics  = "io.circe"      %%% "circe-optics"
-//    val circeGeneric = "io.circe"      %%% "circe-generic"
-//    val circeParser  = "io.circe"      %%% "circe-parser"
-//  }
 
   private object Artifact {
     //"org.iq80.leveldb" % "leveldb" % "0.12",
@@ -409,7 +402,7 @@ object Dependencies {
     val scalaJavaTime             = "2.0.0"
     val scalaTest                 = "3.2.3"
     val slick                     = "3.3.3"
-    val slinky                    = "0.6.5"
+    val slinky                    = "0.6.6"
     val spark                     = "3.0.1"
     val sttp                      = "2.2.9"
     val tapir                     = "0.16.16"

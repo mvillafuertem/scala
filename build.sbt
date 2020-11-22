@@ -1,6 +1,3 @@
-import java.nio.file.Files
-import java.nio.file.StandardCopyOption.REPLACE_EXISTING
-
 import scalajsbundler.util.JSON._
 
 Global / onLoad := {
@@ -171,7 +168,7 @@ lazy val cats = (project in file("modules/cats"))
   .settings(libraryDependencies ++= Dependencies.cats)
 
 lazy val docs = (project in file("modules/docs"))
-  .configure(browserProject)
+  .configure(WebpackSettings.browserProject)
   // S E T T I N G S
   .settings(commonSettingsJs)
   .settings(webpackDevServerPort := 8008)
@@ -210,55 +207,19 @@ lazy val slick = (project in file("modules/slick"))
   .settings(libraryDependencies ++= Dependencies.slick)
   .settings(commands += Commands.h2Command)
 
-/**
- * Implement the `dist` task defined above.
- * Most of this is really just to copy the index.html file around.
- */
-lazy val browserProject: Project => Project =
-  _.settings(
-    dist := {
-      val artifacts      = (Compile / fullOptJS / webpack).value
-      val artifactFolder = (Compile / fullOptJS / crossTarget).value
-      val distFolder     = (ThisBuild / baseDirectory).value / "docs"
-
-      distFolder.mkdirs()
-      artifacts.foreach { artifact =>
-        val target = artifact.data.relativeTo(artifactFolder) match {
-          case None          => distFolder / artifact.data.name
-          case Some(relFile) => distFolder / relFile.toString
-        }
-
-        Files.copy(artifact.data.toPath, target.toPath, REPLACE_EXISTING)
-      }
-
-      val indexFrom = baseDirectory.value / "src/main/js/index.html"
-      val indexTo   = distFolder / "index.html"
-
-      val indexPatchedContent = {
-        import collection.JavaConverters._
-        Files
-          .readAllLines(indexFrom.toPath, IO.utf8)
-          .asScala
-          .map(_.replaceAllLiterally("-fastopt-", "-opt-"))
-          .mkString("\n")
-      }
-
-      Files.write(indexTo.toPath, indexPatchedContent.getBytes(IO.utf8))
-      distFolder
-    }
-  )
-
 lazy val slinky = (project in file("modules/slinky"))
   // S E T T I N G S
   .settings(commonSettingsJs)
+  .settings(Dependencies.slinky)
+  // S C A L A  J S  B U N D L E R
   .settings(webpackDevServerPort := 8008)
   .settings(startWebpackDevServer / version := "3.10.3")
   .settings(Test / requireJsDomEnv := true)
+  .settings(Compile / npmDependencies ++= NpmDependencies.slinky)
+  // S C A L A B L Y T Y P E D
   .settings(stFlavour := Flavour.Slinky)
   .settings(stMinimize := Selection.All)
   .settings(stIgnore ++= List("@material-ui/icons"))
-  .settings(Compile / npmDependencies ++= NpmDependencies.slinky)
-  .settings(Dependencies.slinky)
   // P L U G I N S
   .enablePlugins(ScalablyTypedConverterPlugin)
   .enablePlugins(ScalaJSPlugin)
@@ -289,22 +250,18 @@ lazy val tapir = (project in file("modules/tapir"))
 lazy val `terraform-cdktf` = (project in file("modules/terraform-cdktf"))
 // S E T T I N G S
   .settings(commonSettingsJs)
+  .settings(Dependencies.`terraform-cdktf`)
+  // S C A L A  J S  B U N D L E R
+  .settings(Compile / npmDependencies ++= NpmDependencies.`terraform-cdktf`)
+  .settings(Compile / npmDevDependencies ++= NpmDependencies.`dev-terraform-cdktf`)
   .settings(
-    stIgnore ++= List("cdktf-cli"),
-    stMinimize := Selection.All,
-    Compile / npmDependencies ++= NpmDependencies.`terraform-cdktf`,
     additionalNpmConfig in Compile := Map(
       "name"    -> str("scalajs-cdktf"),
       "version" -> str(version.value),
       "license" -> str("MIT")
-    ),
-    libraryDependencies ++= Seq(
-      "org.scalatest" %%% "scalatest"     % "3.2.3" % Test,
-      "io.circe"      %%% "circe-optics"  % "0.13.0",
-      "io.circe"      %%% "circe-generic" % "0.13.0",
-      "io.circe"      %%% "circe-parser"  % "0.13.0"
-    ),
-    Compile / npmDevDependencies ++= NpmDependencies.`dev-terraform-cdktf`,
+    )
+  )
+  .settings(
     Test / webpackConfigFile := Some(baseDirectory.value / "webpack" / "webpack-core.config.js"),
     // Execute the tests in browser-like environment
     // Test / requireJsDomEnv   := true,
@@ -317,6 +274,9 @@ lazy val `terraform-cdktf` = (project in file("modules/terraform-cdktf"))
     // Test / jsSourceDirectories += baseDirectory.value / "resources"
     // Test / unmanagedResourceDirectories += baseDirectory.value / "node_modules"
   )
+  // S C A L A B L Y T Y P E D
+  .settings(stIgnore ++= List("cdktf-cli"))
+  .settings(stMinimize := Selection.All)
   .settings(Tasks.cdktfTask)
   // P L U G I N S
   .enablePlugins(ScalablyTypedConverterPlugin)
