@@ -181,6 +181,13 @@ lazy val docs = (project in file("modules/docs"))
   .enablePlugins(ScalaJSBundlerPlugin)
   .enablePlugins(MdocPlugin)
 
+lazy val dotty = (project in file("modules/dotty"))
+// S E T T I N G S
+  .settings(scalaVersion := "0.27.0-RC1")
+  .settings(libraryDependencies ++= Dependencies.dotty.map(_.withDottyCompat(scalaVersion.value)))
+  .enablePlugins(DottyPlugin)
+// P L U G I N S
+
 lazy val json = (project in file("modules/json"))
   .dependsOn(algorithms)
   // S E T T I N G S

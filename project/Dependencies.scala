@@ -181,6 +181,11 @@ object Dependencies {
     "io.github.cquiroz" %%% "scala-java-time" % Version.scalaJavaTime
   )
 
+  val dotty: Seq[ModuleID] = Seq(
+    // D O T T Y
+    Artifact.scalaTest % Version.scalaTest
+  )
+
   val json: Seq[ModuleID]                = Seq(
     // J S O N
     Artifact.circeGeneric,
