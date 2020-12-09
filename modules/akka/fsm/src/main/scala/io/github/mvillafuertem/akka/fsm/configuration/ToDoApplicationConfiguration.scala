@@ -24,8 +24,7 @@ final class ToDoApplicationConfiguration(context: ActorContext[Done]) extends To
   implicit lazy val contextExecutor: ExecutionContextExecutor = context.system.executionContext
 
   val serverBinding: Future[Http.ServerBinding] =
-    Http()(untypedSystem)
-      .bindAndHandle(toDoAPI.routes, toDoConfigurationProperties.interface, toDoConfigurationProperties.port)
+    Http()(untypedSystem).newServerAt(toDoConfigurationProperties.interface, toDoConfigurationProperties.port).bind(toDoAPI.routes)
 
   serverBinding.onComplete {
     case Success(bound) =>

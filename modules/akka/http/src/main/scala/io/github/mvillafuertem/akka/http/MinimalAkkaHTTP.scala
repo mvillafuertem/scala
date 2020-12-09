@@ -25,7 +25,7 @@ object MinimalAkkaHTTP extends App {
 
   // R U N A P P L I C A T I O N
   val serverBinding: Future[Http.ServerBinding] =
-    Http().bindAndHandle(route,"localhost", 8080)
+    Http().newServerAt("localhost", 8080).bindFlow(route)
 
   serverBinding.onComplete {
     case Success(bound) =>
