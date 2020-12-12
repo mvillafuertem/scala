@@ -59,7 +59,7 @@ object Dependencies {
     // A L P A K K A
     Seq(
       // A L P A K K A  I N T E G R A T I O N  T E S T
-      "org.mongodb.scala" %% "mongo-scala-bson" % "2.9.0" % IntegrationTest, 
+      "org.mongodb.scala" %% "mongo-scala-bson" % "4.1.1" % IntegrationTest, 
       Artifact.akkaStreamTestkit                 % Version.akka % IntegrationTest,
       "com.lightbend.akka"       %% "akka-stream-alpakka-mongodb" % "2.0.2"      % IntegrationTest,
       Artifact.akkaSlf4f          % Version.akka                  % IntegrationTest,
