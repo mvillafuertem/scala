@@ -35,7 +35,7 @@ trait KafkaConfigurationIT {
 
   def dockerInfrastructure: containers.DockerComposeContainer[_] =
     DockerComposeContainer(
-      new File(s"modules/akka/alpakka/src/it/resources/docker-compose.it.yml"),
+      new File(s"modules/alpakka/kafka/src/it/resources/docker-compose.it.yml"),
       exposedServices = Seq(ExposedService("kafka", 9092, 1, Wait.forLogMessage(".*started .*\\n", 1))),
       identifier = "docker_infrastructure"
     ).container

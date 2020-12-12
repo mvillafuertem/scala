@@ -27,8 +27,9 @@ lazy val scala = (project in file("."))
     `akka-fsm`,
     `akka-http`,
     `sensor-controller`,
-    alpakka,
     algorithms,
+    `alpakka-kafka`,
+    `alpakka-mongodb`,
     `aws-cdk`,
     `aws-sdk`,
     basic,
@@ -78,12 +79,19 @@ lazy val `akka-typed` = (project in file("modules/akka/typed"))
   .settings(NexusSettings.value)
   .settings(libraryDependencies ++= Dependencies.`akka-typed`)
 
-lazy val alpakka = (project in file("modules/akka/alpakka"))
+lazy val `alpakka-kafka` = (project in file("modules/alpakka/kafka"))
   .configs(IntegrationTest)
   .settings(Defaults.itSettings)
   // S E T T I N G S
   .settings(commonSettings)
-  .settings(libraryDependencies ++= Dependencies.alpakka)
+  .settings(libraryDependencies ++= Dependencies.`alpakka-kafka`)
+
+lazy val `alpakka-mongodb` = (project in file("modules/alpakka/mongodb"))
+  .configs(IntegrationTest)
+  .settings(Defaults.itSettings)
+  // S E T T I N G S
+  .settings(commonSettings)
+  .settings(libraryDependencies ++= Dependencies.`alpakka-mongodb`)
 
 lazy val `aws-cdk` = (project in file("modules/aws/cdk"))
   .configs(IntegrationTest)

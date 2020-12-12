@@ -43,7 +43,7 @@ object Dependencies {
       Artifact.scalaTest % Version.scalaTest % "it,test"
     )
 
-  val alpakka: Seq[ModuleID] =
+  val `alpakka-kafka`: Seq[ModuleID] =
     // A L P A K K A
     Seq(
       // A L P A K K A  I N T E G R A T I O N  T E S T
@@ -53,6 +53,19 @@ object Dependencies {
       Artifact.scalaTest              % Version.scalaTest           % IntegrationTest,
       Artifact.testcontainersCore     % Version.testcontainers      % IntegrationTest,
       Artifact.testcontainersKafka    % Version.testcontainersKafka % IntegrationTest
+    )
+
+  val `alpakka-mongodb`: Seq[ModuleID] =
+    // A L P A K K A
+    Seq(
+      // A L P A K K A  I N T E G R A T I O N  T E S T
+      "org.mongodb.scala" %% "mongo-scala-bson" % "2.7.0" % IntegrationTest, 
+      Artifact.akkaStreamTestkit                 % Version.akka % IntegrationTest,
+      "com.lightbend.akka"       %% "akka-stream-alpakka-mongodb" % "2.0.2"      % IntegrationTest,
+      Artifact.akkaSlf4f          % Version.akka                  % IntegrationTest,
+      Artifact.logback            % Version.logback               % IntegrationTest,
+      Artifact.scalaTest          % Version.scalaTest             % IntegrationTest,
+      Artifact.testcontainersCore % Version.testcontainers        % IntegrationTest
     )
 
   val advanced: Seq[ModuleID] = Seq(
