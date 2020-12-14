@@ -59,9 +59,9 @@ object Dependencies {
     // A L P A K K A
     Seq(
       // A L P A K K A  I N T E G R A T I O N  T E S T
-      "org.mongodb.scala" %% "mongo-scala-bson" % "2.9.0" % IntegrationTest, 
-      Artifact.akkaStreamTestkit                 % Version.akka % IntegrationTest,
-      "com.lightbend.akka"       %% "akka-stream-alpakka-mongodb" % "2.0.2"      % IntegrationTest,
+      "org.mongodb.scala"        %% "mongo-scala-bson"            % "2.9.0" % IntegrationTest,
+      Artifact.akkaStreamTestkit  % Version.akka                  % IntegrationTest,
+      "com.lightbend.akka"       %% "akka-stream-alpakka-mongodb" % "2.0.2" % IntegrationTest,
       Artifact.akkaSlf4f          % Version.akka                  % IntegrationTest,
       Artifact.logback            % Version.logback               % IntegrationTest,
       Artifact.scalaTest          % Version.scalaTest             % IntegrationTest,
@@ -197,6 +197,14 @@ object Dependencies {
   val dotty: Seq[ModuleID] = Seq(
     // D O T T Y
     Artifact.scalaTest % Version.scalaTest
+  )
+
+  val http4s: Seq[ModuleID] = Seq(
+    // H T T P 4 S
+    "org.http4s"           %% "http4s-blaze-server" % "1.0.0-M9",
+    "org.http4s"           %% "http4s-dsl"          % "1.0.0-M9",
+    Artifact.zio            % Version.zio,
+    Artifact.zioInteropCats % Version.zioInteropCats
   )
 
   val json: Seq[ModuleID]                = Seq(
@@ -385,6 +393,7 @@ object Dependencies {
     val testcontainersKafka       = "org.testcontainers"                     % "kafka"
     val zio                       = "dev.zio"                               %% "zio"
     val zioAkkaCluster            = "dev.zio"                               %% "zio-akka-cluster"
+    val zioInteropCats            = "dev.zio"                               %% "zio-interop-cats"
     val zioInteropReactiveStreams = "dev.zio"                               %% "zio-interop-reactivestreams"
     val zioKafka                  = "dev.zio"                               %% "zio-kafka"
     val zioStreams                = "dev.zio"                               %% "zio-streams"
@@ -428,6 +437,7 @@ object Dependencies {
     val testcontainersKafka       = "1.15.1"
     val zio                       = "1.0.3"
     val zioAkkaCluster            = "0.2.0"
+    val zioInteropCats            = "2.2.0.1"
     val zioInteropReactiveStreams = "1.3.0.7-2"
     val zioKafka                  = "0.13.0"
   }
