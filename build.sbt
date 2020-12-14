@@ -194,7 +194,11 @@ lazy val dotty = (project in file("modules/dotty"))
   .settings(scalaVersion := "0.27.0-RC1")
   .settings(libraryDependencies ++= Dependencies.dotty.map(_.withDottyCompat(scalaVersion.value)))
   .enablePlugins(DottyPlugin)
-// P L U G I N S
+
+lazy val http4s = (project in file("modules/http4s"))
+  // S E T T I N G S
+  .settings(commonSettings)
+  .settings(libraryDependencies ++= Dependencies.http4s)
 
 lazy val json = (project in file("modules/json"))
   .dependsOn(algorithms)
