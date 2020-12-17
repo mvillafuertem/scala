@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory
 import sttp.model.StatusCode
 import sttp.tapir.Codec.JsonCodec
 import sttp.tapir.docs.openapi._
+import sttp.tapir.generic.auto._
 import sttp.tapir.json.circe._
 import sttp.tapir.openapi.OpenAPI
 import sttp.tapir.openapi.circe.yaml._
@@ -148,34 +149,34 @@ object ToDoAPI {
         .description("unknown error")
     )
 
-  lazy val baseEndpoint: Endpoint[Unit, HttpError, Unit, Nothing] =
+  lazy val baseEndpoint: Endpoint[Unit, HttpError, Unit, Any] =
     endpoint
       .in("api" / "v1.0")
       .errorOut(
         oneOf(
-          statusMappingValueMatcher(StatusCode.BadRequest, badRequestErrorInfoValue) {
-            case (StatusCode.BadRequest, _) => true
+          statusMappingValueMatcher(StatusCode.BadRequest, badRequestErrorInfoValue) { case (StatusCode.BadRequest, _) =>
+            true
           },
-          statusMappingValueMatcher(StatusCode.Unauthorized, unauthorizedErrorInfoValue) {
-            case (StatusCode.Unauthorized, _) => true
+          statusMappingValueMatcher(StatusCode.Unauthorized, unauthorizedErrorInfoValue) { case (StatusCode.Unauthorized, _) =>
+            true
           },
-          statusMappingValueMatcher(StatusCode.Forbidden, forbiddenErrorInfoValue) {
-            case (StatusCode.Forbidden, _) => true
+          statusMappingValueMatcher(StatusCode.Forbidden, forbiddenErrorInfoValue) { case (StatusCode.Forbidden, _) =>
+            true
           },
-          statusMappingValueMatcher(StatusCode.NotFound, notFoundErrorInfoValue) {
-            case (StatusCode.NotFound, _) => true
+          statusMappingValueMatcher(StatusCode.NotFound, notFoundErrorInfoValue) { case (StatusCode.NotFound, _) =>
+            true
           },
-          statusMappingValueMatcher(StatusCode.InternalServerError, internalServerErrorErrorInfoValue) {
-            case (StatusCode.InternalServerError, _) => true
+          statusMappingValueMatcher(StatusCode.InternalServerError, internalServerErrorErrorInfoValue) { case (StatusCode.InternalServerError, _) =>
+            true
           },
-          statusMappingValueMatcher(StatusCode.ServiceUnavailable, serviceUnavailableErrorInfoValue) {
-            case (StatusCode.ServiceUnavailable, _) => true
+          statusMappingValueMatcher(StatusCode.ServiceUnavailable, serviceUnavailableErrorInfoValue) { case (StatusCode.ServiceUnavailable, _) =>
+            true
           },
           statusDefaultMapping(unknownErrorInfoValue)
         )
       )
 
-  lazy val actuatorEndpoint: Endpoint[Unit, HttpError, HealthInfo, Nothing] =
+  lazy val actuatorEndpoint: Endpoint[Unit, HttpError, HealthInfo, Any] =
     baseEndpoint
       .name("service-health")
       .description("ToDo Application Service Health Check Endpoint")
@@ -185,14 +186,14 @@ object ToDoAPI {
   //.errorOut(statusCode)
 
   // 400
-  lazy val badRequestErrorInfo                                              = ErrorInfo(model.StatusCodes.BadRequest.reason, model.StatusCodes.BadRequest.defaultMessage)
-  lazy val unauthorizedErrorInfo                                            = ErrorInfo(model.StatusCodes.Unauthorized.reason, model.StatusCodes.Unauthorized.defaultMessage)
-  lazy val forbiddenErrorInfo                                               = ErrorInfo(model.StatusCodes.Forbidden.reason, model.StatusCodes.Forbidden.defaultMessage)
-  lazy val notFoundErrorInfo                                                = ErrorInfo(model.StatusCodes.NotFound.reason, model.StatusCodes.NotFound.defaultMessage)
-  lazy val conflictErrorInfo                                                = ErrorInfo(model.StatusCodes.Conflict.reason, model.StatusCodes.Conflict.defaultMessage)
+  lazy val badRequestErrorInfo          = ErrorInfo(model.StatusCodes.BadRequest.reason, model.StatusCodes.BadRequest.defaultMessage)
+  lazy val unauthorizedErrorInfo        = ErrorInfo(model.StatusCodes.Unauthorized.reason, model.StatusCodes.Unauthorized.defaultMessage)
+  lazy val forbiddenErrorInfo           = ErrorInfo(model.StatusCodes.Forbidden.reason, model.StatusCodes.Forbidden.defaultMessage)
+  lazy val notFoundErrorInfo            = ErrorInfo(model.StatusCodes.NotFound.reason, model.StatusCodes.NotFound.defaultMessage)
+  lazy val conflictErrorInfo            = ErrorInfo(model.StatusCodes.Conflict.reason, model.StatusCodes.Conflict.defaultMessage)
   // 500
-  lazy val internalServerErrorErrorInfo                                     = ErrorInfo(model.StatusCodes.InternalServerError.reason, model.StatusCodes.InternalServerError.defaultMessage)
-  lazy val serviceUnavailableErrorInfo                                      = ErrorInfo(model.StatusCodes.ServiceUnavailable.reason, model.StatusCodes.ServiceUnavailable.defaultMessage)
-  lazy val unknownErrorInfo                                                 = ErrorInfo("unknown_error", "The reason for the error could not be determined")
+  lazy val internalServerErrorErrorInfo = ErrorInfo(model.StatusCodes.InternalServerError.reason, model.StatusCodes.InternalServerError.defaultMessage)
+  lazy val serviceUnavailableErrorInfo  = ErrorInfo(model.StatusCodes.ServiceUnavailable.reason, model.StatusCodes.ServiceUnavailable.defaultMessage)
+  lazy val unknownErrorInfo             = ErrorInfo("unknown_error", "The reason for the error could not be determined")
 
 }
