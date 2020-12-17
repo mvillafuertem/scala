@@ -403,7 +403,7 @@ object Dependencies {
 
   private object Version {
     val akka                      = "2.6.10"
-    val akkaHttp                  = "10.1.13" // waiting tapir 1.17.0
+    val akkaHttp                  = "10.2.1" // waiting tapir 1.17.0
     val akkaKafka                 = "2.0.5"
     val akkaPersistenceCassandra  = "0.100"
     val akkaPersistenceInmemory   = "2.5.15.2"
@@ -432,7 +432,7 @@ object Dependencies {
     val slinky                    = "0.6.6"
     val spark                     = "3.0.1"
     val sttp                      = "2.2.9"
-    val tapir                     = "0.16.16"
+    val tapir                     = "0.17.0"
     val testcontainers            = "0.38.7"
     val testcontainersKafka       = "1.15.1"
     val zio                       = "1.0.3"
