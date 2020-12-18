@@ -145,7 +145,9 @@ object Dependencies {
   val `akka-http`: Seq[ModuleID]         =
     // A K K A  H T T P
     Seq(
-      Artifact.logback % Version.logback
+      Artifact.logback       % Version.logback,
+      Artifact.jwtCirce      % Version.jwtCirce,
+      Artifact.akkaHttpCirce % Version.akkaHttpCirce
     ) ++ Seq(
       Artifact.tapirCore,
       Artifact.tapirAkkaHttpServer,
@@ -153,9 +155,10 @@ object Dependencies {
       Artifact.tapirOpenapiCirceYaml,
       Artifact.tapirOpenapiDocs,
       Artifact.tapirSwaggerUiAkkaHttp
-    ).map(_            % Version.tapir) ++ Seq(
+    ).map(_                  % Version.tapir) ++ Seq(
       // A K K A  H T T P  T E S T
       Artifact.akkaHttpTestkit % Version.akkaHttp,
+      Artifact.akkaTestKit     % Version.akka,
       Artifact.scalaTest       % Version.scalaTest
     ).map(_ % Test)
 
@@ -341,6 +344,7 @@ object Dependencies {
     val akkaActorTestkitTyped     = "com.typesafe.akka"                     %% "akka-actor-testkit-typed"
     val akkaActorTyped            = "com.typesafe.akka"                     %% "akka-actor-typed"
     val akkaHttp                  = "com.typesafe.akka"                     %% "akka-http"
+    val akkaHttpCirce             = "de.heikoseeberger"                     %% "akka-http-circe"
     val akkaHttpTestkit           = "com.typesafe.akka"                     %% "akka-http-testkit"
     val akkaKafka                 = "com.typesafe.akka"                     %% "akka-stream-kafka"
     val akkaPersistence           = "com.typesafe.akka"                     %% "akka-persistence"
@@ -353,10 +357,10 @@ object Dependencies {
     val akkaTestKit               = "com.typesafe.akka"                     %% "akka-testkit"
     val alpakkaSlick              = "com.lightbend.akka"                    %% "akka-stream-alpakka-slick"
     val awsCdkEcsPatterns         = "software.amazon.awscdk"                 % "ecs-patterns"
+    val awsLambda                 = "com.amazonaws"                          % "aws-lambda-java-core"
     val awsSdkCloudWatch          = "software.amazon.awssdk"                 % "cloudwatch"
     val awsSdkLambda              = "software.amazon.awssdk"                 % "lambda"
     val awsSdkS3                  = "software.amazon.awssdk"                 % "s3"
-    val awsLambda                 = "com.amazonaws"                          % "aws-lambda-java-core"
     val cask                      = "com.lihaoyi"                           %% "cask"
     val catsCore                  = "org.typelevel"                         %% "cats-core"
     val catsFree                  = "org.typelevel"                         %% "cats-free"
@@ -372,6 +376,7 @@ object Dependencies {
     val jslt                      = "com.schibsted.spt.data"                 % "jslt"
     val jsoniterCore              = "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-core"
     val jsoniterMacros            = "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-macros"
+    val jwtCirce                  = "com.pauldijou"                         %% "jwt-circe"
     val kafka                     = "org.apache.kafka"                      %% "kafka"
     val leveldbjniAll             = "org.fusesource.leveldbjni"              % "leveldbjni-all"
     val logback                   = "ch.qos.logback"                         % "logback-classic"
@@ -403,15 +408,16 @@ object Dependencies {
 
   private object Version {
     val akka                      = "2.6.10"
-    val akkaHttp                  = "10.2.1" // waiting tapir 1.17.0
+    val akkaHttp                  = "10.2.1"
+    val akkaHttpCirce             = "1.35.2"
     val akkaKafka                 = "2.0.5"
     val akkaPersistenceCassandra  = "0.100"
     val akkaPersistenceInmemory   = "2.5.15.2"
     val akkaPersistenceJdbc       = "3.5.2"
     val alpakkaSlick              = "2.0.2"
     val awsCdk                    = "1.79.0"
-    val awsSdk                    = "2.15.49"
     val awsLambda                 = "1.2.1"
+    val awsSdk                    = "2.15.49"
     val cask                      = "0.6.7"
     val cats                      = "2.3.0"
     val circe                     = "0.13.0"
@@ -422,6 +428,7 @@ object Dependencies {
     val java8Compat               = "0.9.1"
     val jslt                      = "0.1.11"
     val jsoniter                  = "2.6.2"
+    val jwtCirce                  = "4.3.0"
     val kafka                     = "2.6.0"
     val leveldbjniAll             = "1.8"
     val logback                   = "1.2.3"
