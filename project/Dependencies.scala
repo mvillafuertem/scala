@@ -48,7 +48,7 @@ object Dependencies {
     Seq(
       // A L P A K K A  I N T E G R A T I O N  T E S T
       Artifact.akkaSlf4f              % "2.5.32"                    % IntegrationTest,
-      Artifact.akkaStreamKafkaTestkit % Version.akkaKafka           % IntegrationTest,
+      Artifact.akkaStreamKafkaTestkit % Version.alpakkaKafka        % IntegrationTest,
       Artifact.logback                % Version.logback             % IntegrationTest,
       Artifact.scalaTest              % Version.scalaTest           % IntegrationTest,
       Artifact.testcontainersCore     % Version.testcontainers      % IntegrationTest,
@@ -59,13 +59,13 @@ object Dependencies {
     // A L P A K K A
     Seq(
       // A L P A K K A  I N T E G R A T I O N  T E S T
-      "org.mongodb.scala"        %% "mongo-scala-bson"            % "2.9.0" % IntegrationTest,
-      Artifact.akkaStreamTestkit  % Version.akka                  % IntegrationTest,
-      "com.lightbend.akka"       %% "akka-stream-alpakka-mongodb" % "2.0.2" % IntegrationTest,
-      Artifact.akkaSlf4f          % Version.akka                  % IntegrationTest,
-      Artifact.logback            % Version.logback               % IntegrationTest,
-      Artifact.scalaTest          % Version.scalaTest             % IntegrationTest,
-      Artifact.testcontainersCore % Version.testcontainers        % IntegrationTest
+      Artifact.mongoScalaBson     % Version.mongoScalaBson % IntegrationTest,
+      Artifact.akkaStreamTestkit  % Version.akka           % IntegrationTest,
+      Artifact.alpakkaMongodb     % Version.alpakkaMongodb % IntegrationTest,
+      Artifact.akkaSlf4f          % Version.akka           % IntegrationTest,
+      Artifact.logback            % Version.logback        % IntegrationTest,
+      Artifact.scalaTest          % Version.scalaTest      % IntegrationTest,
+      Artifact.testcontainersCore % Version.testcontainers % IntegrationTest
     )
 
   val advanced: Seq[ModuleID] = Seq(
@@ -167,7 +167,7 @@ object Dependencies {
     Seq(
       Artifact.akkaActorTyped  % Version.akka,
       Artifact.akkaStreamTyped % Version.akka,
-      Artifact.akkaKafka       % Version.akkaKafka,
+      Artifact.alpakkaKafka    % Version.alpakkaKafka,
       Artifact.ficus           % Version.ficus,
       Artifact.curator         % Version.curator,
       Artifact.kafka           % Version.kafka,
@@ -204,10 +204,10 @@ object Dependencies {
 
   val http4s: Seq[ModuleID] = Seq(
     // H T T P 4 S
-    "org.http4s"           %% "http4s-blaze-server" % "1.0.0-M9",
-    "org.http4s"           %% "http4s-dsl"          % "1.0.0-M9",
-    Artifact.zio            % Version.zio,
-    Artifact.zioInteropCats % Version.zioInteropCats
+    Artifact.http4sBlazeServer % Version.http4s,
+    Artifact.http4sDsl         % Version.http4s,
+    Artifact.zio               % Version.zio,
+    Artifact.zioInteropCats    % Version.zioInteropCats
   )
 
   val json: Seq[ModuleID]                = Seq(
@@ -346,7 +346,6 @@ object Dependencies {
     val akkaHttp                  = "com.typesafe.akka"                     %% "akka-http"
     val akkaHttpCirce             = "de.heikoseeberger"                     %% "akka-http-circe"
     val akkaHttpTestkit           = "com.typesafe.akka"                     %% "akka-http-testkit"
-    val akkaKafka                 = "com.typesafe.akka"                     %% "akka-stream-kafka"
     val akkaPersistence           = "com.typesafe.akka"                     %% "akka-persistence"
     val akkaPersistenceTyped      = "com.typesafe.akka"                     %% "akka-persistence-typed"
     val akkaSlf4f                 = "com.typesafe.akka"                     %% "akka-slf4j"
@@ -355,6 +354,8 @@ object Dependencies {
     val akkaStreamTestkit         = "com.typesafe.akka"                     %% "akka-stream-testkit"
     val akkaStreamTyped           = "com.typesafe.akka"                     %% "akka-stream-typed"
     val akkaTestKit               = "com.typesafe.akka"                     %% "akka-testkit"
+    val alpakkaKafka              = "com.typesafe.akka"                     %% "akka-stream-kafka"
+    val alpakkaMongodb            = "com.lightbend.akka"                    %% "akka-stream-alpakka-mongodb"
     val alpakkaSlick              = "com.lightbend.akka"                    %% "akka-stream-alpakka-slick"
     val awsCdkEcsPatterns         = "software.amazon.awscdk"                 % "ecs-patterns"
     val awsLambda                 = "com.amazonaws"                          % "aws-lambda-java-core"
@@ -372,6 +373,8 @@ object Dependencies {
     val dijon                     = "com.github.pathikrit"                  %% "dijon"
     val ficus                     = "com.iheart"                            %% "ficus"
     val h2                        = "com.h2database"                         % "h2"
+    val http4sBlazeServer         = "org.http4s"                            %% "http4s-blaze-server"
+    val http4sDsl                 = "org.http4s"                            %% "http4s-dsl"
     val java8Compat               = "org.scala-lang.modules"                %% "scala-java8-compat"
     val jslt                      = "com.schibsted.spt.data"                 % "jslt"
     val jsoniterCore              = "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-core"
@@ -380,6 +383,7 @@ object Dependencies {
     val kafka                     = "org.apache.kafka"                      %% "kafka"
     val leveldbjniAll             = "org.fusesource.leveldbjni"              % "leveldbjni-all"
     val logback                   = "ch.qos.logback"                         % "logback-classic"
+    val mongoScalaBson            = "org.mongodb.scala"                     %% "mongo-scala-bson"
     val postgresql                = "org.postgresql"                         % "postgresql"
     val scalaTest                 = "org.scalatest"                         %% "scalatest"
     val slick                     = "com.typesafe.slick"                    %% "slick"
@@ -410,10 +414,11 @@ object Dependencies {
     val akka                      = "2.6.10"
     val akkaHttp                  = "10.2.1"
     val akkaHttpCirce             = "1.35.2"
-    val akkaKafka                 = "2.0.5"
     val akkaPersistenceCassandra  = "0.100"
     val akkaPersistenceInmemory   = "2.5.15.2"
     val akkaPersistenceJdbc       = "3.5.2"
+    val alpakkaKafka              = "2.0.5"
+    val alpakkaMongodb            = "2.0.2"
     val alpakkaSlick              = "2.0.2"
     val awsCdk                    = "1.79.0"
     val awsLambda                 = "1.2.1"
@@ -421,6 +426,7 @@ object Dependencies {
     val cask                      = "0.6.7"
     val cats                      = "2.3.1"
     val circe                     = "0.13.0"
+    val http4s                    = "1.0.0-M9"
     val curator                   = "5.1.0"
     val dijon                     = "0.3.0"
     val ficus                     = "1.5.0"
@@ -429,9 +435,10 @@ object Dependencies {
     val jslt                      = "0.1.11"
     val jsoniter                  = "2.6.2"
     val jwtCirce                  = "4.3.0"
-    val kafka                     = "2.6.0"
+    val kafka                     = "2.7.0"
     val leveldbjniAll             = "1.8"
     val logback                   = "1.2.3"
+    val mongoScalaBson            = "2.9.0"
     val postgres                  = "42.2.18"
     val scalaJavaTime             = "2.0.0"
     val scalaTest                 = "3.2.3"
