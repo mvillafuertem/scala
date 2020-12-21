@@ -2,6 +2,7 @@ package io.github.mvillafuertem.alpakka.mongodb
 
 import akka.stream.alpakka.mongodb.scaladsl.MongoSink
 import akka.stream.alpakka.mongodb.{ DocumentReplace, DocumentUpdate }
+import com.mongodb.reactivestreams.client.MongoDatabase
 import io.github.mvillafuertem.alpakka.mongodb.MongoSinkIT.MongoSinkConfigurationIT
 import org.scalatest.flatspec.AnyFlatSpecLike
 import org.testcontainers.containers
@@ -38,7 +39,7 @@ final class MongoSinkIT extends MongoSinkConfigurationIT {
 
   it should "save with insertOne and codec support" in assertAllStagesStopped {
     // #insert-one
-    val testRangeObjects = testRange.map(Number(_))
+    val testRangeObjects = testRange.map(Number)
     val source           = Source(testRangeObjects)
     source.runWith(MongoSink.insertOne(numbersColl)).futureValue
     // #insert-one
@@ -60,7 +61,7 @@ final class MongoSinkIT extends MongoSinkConfigurationIT {
 
   it should "save with insertMany and codec support" in assertAllStagesStopped {
     // #insert-many
-    val objects    = testRange.map(Number(_))
+    val objects    = testRange.map(Number)
     val source     = Source(objects)
     val completion = source.grouped(2).runWith(MongoSink.insertMany[Number](numbersColl))
     // #insert-many
@@ -86,7 +87,7 @@ final class MongoSinkIT extends MongoSinkConfigurationIT {
   }
 
   it should "save with insertMany with options and codec support" in assertAllStagesStopped {
-    val testRangeObjects = testRange.map(Number(_))
+    val testRangeObjects = testRange.map(Number)
     val source           = Source(testRangeObjects)
 
     source
@@ -205,15 +206,15 @@ object MongoSinkIT {
       Source.fromPublisher(db.drop()).runWith(Sink.head).futureValue
     }
 
-    val db                                               = client.getDatabase("MongoSinkSpec").withCodecRegistry(codecRegistry)
-    val numbersColl: MongoCollection[Number]             =
+    val db: MongoDatabase                                    = client.getDatabase("MongoSinkSpec").withCodecRegistry(codecRegistry)
+    val numbersColl: MongoCollection[Number]                 =
       db.getCollection("numbersSink", classOf[Number]).withCodecRegistry(codecRegistry)
-    val numbersDocumentColl                              = db.getCollection("numbersSink")
-    val domainObjectsColl: MongoCollection[DomainObject] =
+    val numbersDocumentColl: MongoCollection[Document]       = db.getCollection("numbersSink")
+    val domainObjectsColl: MongoCollection[DomainObject]     =
       db.getCollection("domainObjectsSink", classOf[DomainObject]).withCodecRegistry(codecRegistry)
-    val domainObjectsDocumentColl                        = db.getCollection("domainObjectsSink")
+    val domainObjectsDocumentColl: MongoCollection[Document] = db.getCollection("domainObjectsSink")
 
-    implicit val defaultPatience =
+    implicit val defaultPatience: PatienceConfig =
       PatienceConfig(timeout = 20.seconds, interval = 200.millis)
 
     override def afterEach(): Unit = {
@@ -226,7 +227,7 @@ object MongoSinkIT {
       container.stop()
     }
 
-    val testRange = 0 until 10
+    val testRange: Seq[Int] = 0 until 10
 
     def insertTestRange(): Unit =
       Source
