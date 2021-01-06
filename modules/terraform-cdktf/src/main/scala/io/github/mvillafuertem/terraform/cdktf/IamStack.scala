@@ -3,6 +3,7 @@ package io.github.mvillafuertem.terraform.cdktf
 import org.scalablytyped.runtime.StringDictionary
 import typings.cdktf.mod.{ S3Backend, TerraformStack, TerraformVariable }
 import typings.cdktf.s3BackendMod.S3BackendProps
+import typings.cdktf.terraformDependableMod.ITerraformDependable
 import typings.cdktf.terraformResourceMod.TerraformResource
 import typings.cdktf.terraformVariableMod.TerraformVariableConfig
 import typings.cdktfProviderAws.awsProviderMod.AwsProviderConfig
@@ -116,7 +117,7 @@ final class IamStack(scope: Construct, name: String) extends TerraformStack(scop
     self,
     "groupPolicyAttachmentDevelopers",
     IamGroupPolicyAttachmentConfig(groupName, "arn:aws:iam::aws:policy/AdministratorAccess")
-      .setDependsOn(js.Array[TerraformResource](group))
+      .setDependsOn(js.Array[ITerraformDependable](group))
   )
 
   val user = new IamUser(
