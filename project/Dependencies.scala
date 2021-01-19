@@ -411,7 +411,7 @@ object Dependencies {
   }
 
   private object Version {
-    val akka                      = "2.6.10"
+    val akka                      = "2.6.11"
     val akkaHttp                  = "10.2.3"
     val akkaHttpCirce             = "1.35.3"
     val akkaPersistenceCassandra  = "0.100"
@@ -420,9 +420,9 @@ object Dependencies {
     val alpakkaKafka              = "2.0.6"
     val alpakkaMongodb            = "2.0.2"
     val alpakkaSlick              = "2.0.2"
-    val awsCdk                    = "1.84.0"
+    val awsCdk                    = "1.85.0"
     val awsLambda                 = "1.2.1"
-    val awsSdk                    = "2.15.64"
+    val awsSdk                    = "2.15.66"
     val cask                      = "0.6.7"
     val cats                      = "2.3.1"
     val circe                     = "0.13.0"
