@@ -66,34 +66,34 @@ object ZStreamsApp extends DefaultRunnableSpec {
                    .runCollect
           } yield a
         )(equalTo(Chunk(2, 4, 6, 8)))
-      ),
-      testM("fail with custom empty chunk") {
-        assertM(
-          ZStream.empty
-            .filter(a => List("asdf", "aretw").contains[String](a))
-            .tap(a => console.putStrLn(s"$a"))
-            .run(
-              ZSink {
-                for {
-                  builder    <- UIO(ChunkBuilder.make[String]()).toManaged_
-                  foldingSink = ZSink
-                                  .foldLeftChunks(builder)((b, chunk: Chunk[String]) => b ++= chunk)
-                                  .mapM { a =>
-                                    val value = a.result()
-                                    if (value.isEmpty) {
-                                      println(value)
-                                      IO.fail("Error")
-                                    } else {
-                                      println(value)
-                                      UIO(value)
-                                    }
-                                  }
-                  push       <- foldingSink.push
-                } yield push
-              }
-            )
-        )(equalTo(Chunk("")))
-      }
+      )
+//      testM("fail with custom empty chunk") {
+//        assertM(
+//          ZStream.empty
+//            .filter(a => List("asdf", "aretw").contains[String](a))
+//            .tap(a => console.putStrLn(s"$a"))
+//            .run(
+//              ZSink {
+//                for {
+//                  builder    <- UIO(ChunkBuilder.make[String]()).toManaged_
+//                  foldingSink = ZSink
+//                                  .foldLeftChunks(builder)((b, chunk: Chunk[String]) => b ++= chunk)
+//                                  .mapM { a =>
+//                                    val value = a.result()
+//                                    if (value.isEmpty) {
+//                                      println(value)
+//                                      IO.fail("Error")
+//                                    } else {
+//                                      println(value)
+//                                      UIO(value)
+//                                    }
+//                                  }
+//                  push       <- foldingSink.push
+//                } yield push
+//              }
+//            )
+//        )(equalTo(Chunk("")))
+//      }
 //      testM("Intersperse") {
 //        assertM(
 //          ZStream

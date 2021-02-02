@@ -411,7 +411,7 @@ object Dependencies {
   }
 
   private object Version {
-    val akka                      = "2.6.11"
+    val akka                      = "2.6.12"
     val akkaHttp                  = "10.2.3"
     val akkaHttpCirce             = "1.35.3"
     val akkaPersistenceCassandra  = "0.100"
@@ -420,7 +420,7 @@ object Dependencies {
     val alpakkaKafka              = "2.0.6"
     val alpakkaMongodb            = "2.0.2"
     val alpakkaSlick              = "2.0.2"
-    val awsCdk                    = "1.85.0"
+    val awsCdk                    = "1.87.1"
     val awsLambda                 = "1.2.1"
     val awsSdk                    = "2.15.73"
     val cask                      = "0.6.7"
@@ -433,7 +433,7 @@ object Dependencies {
     val h2                        = "1.4.200"
     val java8Compat               = "0.9.1"
     val jslt                      = "0.1.11"
-    val jsoniter                  = "2.6.2"
+    val jsoniter                  = "2.6.3"
     val jwtCirce                  = "4.3.0"
     val kafka                     = "2.7.0"
     val leveldbjniAll             = "1.8"
@@ -446,14 +446,14 @@ object Dependencies {
     val slinky                    = "0.6.6"
     val spark                     = "3.1.0"
     val sttp                      = "2.2.9"
-    val tapir                     = "0.17.6"
+    val tapir                     = "0.17.8"
     val testcontainers            = "0.38.8"
     val testcontainersKafka       = "1.15.1"
     val zio                       = "1.0.3"
     val zioAkkaCluster            = "0.2.0"
     val zioInteropCats            = "2.2.0.1"
     val zioInteropReactiveStreams = "1.3.0.7-2"
-    val zioKafka                  = "0.13.0"
+    val zioKafka                  = "0.14.0"
   }
 
 }
