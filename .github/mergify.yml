@@ -1,0 +1,12 @@
+pull_request_rules:
+  - name: Automatic merge on approval
+    conditions:
+      - author=scala-steward
+      - check-success=Test
+      - check-success=Integration Test
+      - check-success=Benchmarks
+      - check-success=Cdktf
+      - check-success=Dotty
+    actions:
+      merge:
+        method: squash
