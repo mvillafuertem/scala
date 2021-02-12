@@ -2,22 +2,22 @@ package io.github.mvillafuertem.alpakka.kafka
 
 import akka.NotUsed
 import akka.kafka.ConsumerMessage.PartitionOffset
-import akka.kafka.scaladsl.{Consumer, Transactional}
-import akka.kafka.testkit.scaladsl.{ScalatestKafkaSpec, TestcontainersKafkaLike}
-import akka.kafka.{ConsumerMessage, ProducerMessage, Subscriptions}
-import akka.stream.Supervision.{Restart, Stop}
-import akka.stream.scaladsl.{Broadcast, Flow, GraphDSL, Keep, Zip}
+import akka.kafka.scaladsl.{ Consumer, Transactional }
+import akka.kafka.testkit.scaladsl.{ ScalatestKafkaSpec, TestcontainersKafkaLike }
+import akka.kafka.{ ConsumerMessage, ProducerMessage, Subscriptions }
+import akka.stream.Supervision.{ Restart, Stop }
+import akka.stream.scaladsl.{ Broadcast, Flow, GraphDSL, Keep, Zip }
 import akka.stream.testkit.scaladsl.StreamTestKit.assertAllStagesStopped
-import akka.stream.{ActorAttributes, FlowShape, KillSwitches}
+import akka.stream.{ ActorAttributes, FlowShape, KillSwitches }
 import io.github.mvillafuertem.alpakka.kafka.NumbersKafkaIT.SpecBase
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.scalatest.Ignore
-import org.scalatest.concurrent.{Eventually, ScalaFutures}
+import org.scalatest.concurrent.{ Eventually, ScalaFutures }
 import org.scalatest.flatspec.AnyFlatSpecLike
 import org.scalatest.matchers.should.Matchers
 
 import scala.concurrent.duration._
-import scala.concurrent.{Await, Future}
+import scala.concurrent.{ Await, Future }
 
 @Ignore // sh: /testcontainers_start.sh: Permission denied
 final class NumbersKafkaIT extends SpecBase with TestcontainersKafkaLike {
@@ -33,7 +33,7 @@ final class NumbersKafkaIT extends SpecBase with TestcontainersKafkaLike {
 
     Await.result(produce(sourceTopic, 1 to 10), remainingOrDefault)
 
-    val consumerSettings = consumerDefaults().withGroupId(group)
+    val consumerSettings = consumerDefaults.withGroupId(group)
     val producerSettings = producerDefaults
       .withParallelism(20)
       .withCloseTimeout(Duration.Zero)
@@ -46,10 +46,9 @@ final class NumbersKafkaIT extends SpecBase with TestcontainersKafkaLike {
         (if (Integer.valueOf(n.record.value()) == 8)
            Future.failed(new RuntimeException("bad luck"))
          //Future.successful(None)
-         else Future.successful(Option(n.record.value()))).recover {
-          case error: RuntimeException =>
-            log.error("", error)
-            None
+         else Future.successful(Option(n.record.value()))).recover { case error: RuntimeException =>
+          log.error("", error)
+          None
         }
       }
 
@@ -65,7 +64,7 @@ final class NumbersKafkaIT extends SpecBase with TestcontainersKafkaLike {
               println("SOY   " + v)
               ProducerMessage.single(new ProducerRecord(sinkTopic, asset._1.record.key(), v), asset._1.partitionOffset)
 
-            case None    =>
+            case None =>
               println("PEPEPEPEPEPEPE")
               ProducerMessage.passThrough[String, String, PartitionOffset](asset._1.partitionOffset)
           }
