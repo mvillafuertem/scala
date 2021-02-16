@@ -446,7 +446,7 @@ object Dependencies {
     val slinky                    = "0.6.6"
     val spark                     = "3.1.0"
     val sttp                      = "2.2.9"
-    val tapir                     = "0.17.10"
+    val tapir                     = "0.17.11"
     val testcontainers            = "0.39.1"
     val testcontainersKafka       = "1.15.2"
     val zio                       = "1.0.4-2"
