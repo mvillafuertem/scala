@@ -439,7 +439,7 @@ object Dependencies {
     val leveldbjniAll             = "1.8"
     val logback                   = "1.2.3"
     val mongoScalaBson            = "2.9.0"
-    val postgres                  = "42.2.18"
+    val postgres                  = "42.2.19"
     val scalaJavaTime             = "2.0.0"
     val scalaTest                 = "3.2.4"
     val slick                     = "3.3.3"
