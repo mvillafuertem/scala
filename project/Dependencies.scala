@@ -441,7 +441,7 @@ object Dependencies {
     val mongoScalaBson            = "2.9.0"
     val postgres                  = "42.2.19"
     val scalaJavaTime             = "2.0.0"
-    val scalaTest                 = "3.2.4"
+    val scalaTest                 = "3.2.5"
     val slick                     = "3.3.3"
     val slinky                    = "0.6.6"
     val spark                     = "3.1.0"
