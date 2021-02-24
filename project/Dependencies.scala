@@ -412,7 +412,7 @@ object Dependencies {
 
   private object Version {
     val akka                      = "2.6.12"
-    val akkaHttp                  = "10.2.3"
+    val akkaHttp                  = "10.2.4"
     val akkaHttpCirce             = "1.35.3"
     val akkaPersistenceCassandra  = "0.100"
     val akkaPersistenceInmemory   = "2.5.15.2"
