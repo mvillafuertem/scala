@@ -1,5 +1,6 @@
 package io.github.mvillafuertem.terraform.cdktf
 
+import org.scalablytyped.runtime.StringDictionary
 import typings.cdktf.appMod.AppOptions
 import typings.cdktf.mod.{ App, NamedRemoteWorkspace, RemoteBackend, S3Backend }
 import typings.cdktf.remoteBackendMod.RemoteBackendProps
@@ -25,7 +26,12 @@ AWS account ID:
 object CdktfApp {
 
   def main(args: Array[String]): Unit = {
-    val app   = new App(AppOptions().setStackTraces(false).setOutdir("modules/terraform-cdktf/src/main/resources/"))
+    val app   = new App(
+      AppOptions()
+        .setStackTraces(false)
+        .setOutdir("modules/terraform-cdktf/src/main/resources/")
+        .setContext(StringDictionary(("excludeStackIdFromLogicalIds", true), ("excludeStackIdFromLogicalIds", true)))
+    )
     val stack = new IamStack(app, "cdktf")
     val _     = new S3Backend(
       stack,

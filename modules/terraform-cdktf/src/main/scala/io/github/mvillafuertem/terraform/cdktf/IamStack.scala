@@ -22,8 +22,8 @@ import typings.cdktfProviderAws.securityGroupMod.{ SecurityGroupConfig, Security
 import typings.cdktfProviderAws.securityGroupRuleMod.SecurityGroupRuleConfig
 import typings.cdktfProviderAws.snsTopicMod.SnsTopicConfig
 import typings.cdktfProviderAws.snsTopicSubscriptionMod.SnsTopicSubscriptionConfig
+import typings.cdktfProviderAws.dataAwsRegionMod.DataAwsRegion
 import typings.constructs.mod.Construct
-import typings.std.global.^.Array
 
 import scala.scalajs.js
 
@@ -38,6 +38,8 @@ final class IamStack(scope: Construct, name: String) extends TerraformStack(scop
 
   new AwsProvider(self, "aws", AwsProviderConfig(region))
 
+  new DataAwsRegion(self, region)
+
   val s3 = new S3Bucket(
     self,
     "s3",
@@ -49,7 +51,6 @@ final class IamStack(scope: Construct, name: String) extends TerraformStack(scop
             .setEnabled(true)
         )
       )
-      .setRegion(region)
   )
 
   //BudgetsBudgetConfig
@@ -163,7 +164,7 @@ final class IamStack(scope: Construct, name: String) extends TerraformStack(scop
       .setTags(StringDictionary("Name" -> "instance"))
       .setSecurityGroups(js.Array[String](securityGroup.name))
       .setEbsBlockDevice(js.Array[InstanceEbsBlockDevice](ebsBlockDevice))
-      .deleteRootBlockDevice
+    //.deleteRootBlockDevice
   )
 
 }

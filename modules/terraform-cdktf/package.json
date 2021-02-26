@@ -1,0 +1,25 @@
+{
+  "name": "terraform-cdktf",
+  "version": "0.1.0",
+  "description": "",
+  "license": "MIT",
+  "scripts": {
+    "get": "cdktf get",
+    "build": "yarn get && tsc",
+    "compile": "tsc --pretty",
+    "synth": "cdktf synth",
+    "plan": "cd ./cdktf.out && terraform init && terraform plan",
+    "apply": "terraform apply ./cdktf.out"
+  },
+  "dependencies": {
+    "@cdktf/provider-aws": "^1.0.17",
+    "cdktf": "^0.1.0",
+    "constructs": "^3.3.43",
+    "node": "^15.8.0"
+  },
+  "devDependencies": {
+    "cdktf-cli": "^0.1.0",
+    "@types/node": "^14.14.31"
+  },
+  "private": true
+}

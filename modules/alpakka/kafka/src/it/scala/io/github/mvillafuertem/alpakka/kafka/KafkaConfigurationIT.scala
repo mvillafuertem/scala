@@ -52,8 +52,8 @@ trait KafkaConfigurationIT {
       .withProperty(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, consumerConfigurationProperties.enableAutoCommit)
       .withProperty(ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG, consumerConfigurationProperties.autoCommitIntervalMs)
       // https://medium.com/@vishnuatrai/kafka-consumer-commitfailedexception-for-revoked-partition-9b673e91eee5
-      .withProperty(ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG, "75000")
-      .withProperty(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, "300")
+      .withProperty(ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG, "7500")
+      .withProperty(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, "30")
       .withProperty(ConsumerConfig.ISOLATION_LEVEL_CONFIG, "read_committed")
 
   def source(

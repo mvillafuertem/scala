@@ -1,4 +1,4 @@
-import scalajsbundler.util.JSON._
+import _root_.scala.sys.process.{ Process, _ }
 
 Global / onLoad := {
   val GREEN = "\u001b[32m"
@@ -268,37 +268,22 @@ lazy val tapir = (project in file("modules/tapir"))
 
 lazy val `terraform-cdktf` = (project in file("modules/terraform-cdktf"))
 // S E T T I N G S
-  .settings(commonSettingsJs)
+  .settings(Information.value)
   .settings(Dependencies.`terraform-cdktf`)
-  // S C A L A  J S  B U N D L E R
-  .settings(Compile / npmDependencies ++= NpmDependencies.`terraform-cdktf`)
-  .settings(Compile / npmDevDependencies ++= NpmDependencies.`dev-terraform-cdktf`)
-  .settings(
-    additionalNpmConfig in Compile := Map(
-      "name"    -> str("scalajs-cdktf"),
-      "version" -> str(version.value),
-      "license" -> str("MIT")
-    )
-  )
-  .settings(
-    Test / webpackConfigFile := Some(baseDirectory.value / "webpack" / "webpack-core.config.js"),
-    // Execute the tests in browser-like environment
-    // Test / requireJsDomEnv   := true,
-    fastOptJS / webpackBundlingMode := BundlingMode.LibraryOnly(),
-    fastOptJS / webpackConfigFile := Some(baseDirectory.value / "webpack" / "webpack-fastopt.config.js"),
-    fastOptJS / webpackDevServerExtraArgs := Seq("--inline", "--hot"),
-    fullOptJS / webpackConfigFile := Some(baseDirectory.value / "webpack" / "webpack-opt.config.js"),
-    webpackResources := baseDirectory.value / "webpack" * "*"
-    // Test / jsEnv := new org.scalajs.jsenv.jsdomnodejs.JSDOMNodeJSEnv()
-    // Test / jsSourceDirectories += baseDirectory.value / "resources"
-    // Test / unmanagedResourceDirectories += baseDirectory.value / "node_modules"
-  )
   // S C A L A B L Y T Y P E D
-  .settings(stIgnore ++= List("cdktf-cli"))
   .settings(stMinimize := Selection.All)
-  .settings(Tasks.cdktfTask)
+  .settings(
+    scalaVersion := Settings.scala213,
+    scalaJSLinkerConfig ~= (_.withModuleKind(ModuleKind.CommonJSModule)),
+    scalaJSUseMainModuleInitializer := true,
+    /* ScalablyTypedConverterExternalNpmPlugin requires that we define how to install node dependencies and where they are */
+    externalNpm := {
+      Process("yarn", baseDirectory.value).!
+      baseDirectory.value
+    }
+  )
   // P L U G I N S
-  .enablePlugins(ScalablyTypedConverterPlugin)
+  .enablePlugins(ScalablyTypedConverterExternalNpmPlugin)
   .enablePlugins(ScalaJSPlugin)
 
 lazy val cdktf = taskKey[Unit]("cdktf synth")
