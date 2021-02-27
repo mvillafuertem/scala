@@ -245,7 +245,7 @@ lazy val slinky = (project in file("modules/slinky"))
 
 lazy val spark = (project in file("modules/spark"))
 // S E T T I N G S
-  .settings(scalaVersion := "2.12.12")
+  .settings(scalaVersion := "2.12.13")
   .settings(Settings.testReport ++ Information.value)
   .settings(libraryDependencies ++= Dependencies.spark)
 

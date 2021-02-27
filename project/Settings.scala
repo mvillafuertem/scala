@@ -27,7 +27,7 @@ object Settings {
   )
 
   lazy val scala213 = "2.13.4"
-  lazy val scala212 = "2.12.12"
+  lazy val scala212 = "2.12.13"
 
   lazy val value: Seq[Def.Setting[_]] = Seq(
     // autoScalaLibrary := false,
