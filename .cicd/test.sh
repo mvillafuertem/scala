@@ -10,6 +10,6 @@ source ${BASE}/../.env
 
 
 # shellcheck disable=SC2010
-ls -d modules/script/* | grep Spec.sc | xargs -I {} sbt 'project script;amm {}'
+ls -d modules/script/* | grep Spec.sc | xargs -I {} sbt 'project script;amm {}' && \
 sbt clean coverage test coverageReport
 #sbt clean test dependencyUpdates coverageAggregate

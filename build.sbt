@@ -215,7 +215,7 @@ lazy val reflection = (project in file("modules/reflection"))
 
 lazy val script = (project in file("modules/script"))
 // S E T T I N G S
-  .settings(scalaVersion := Settings.scala213)
+  .settings(scalaVersion := "2.13.3")
   .settings(libraryDependencies ++= Dependencies.script)
   .settings(libraryDependencies ++= Seq("com.lihaoyi" % "ammonite" % "2.3.8" % Test cross CrossVersion.full))
   .settings(commands += Commands.ammoniteCommand)
