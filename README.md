@@ -11,10 +11,10 @@ WITH THE COMMAND `sbt docs/mdoc`
     <img src="https://img.shields.io/badge/donate-PayPal-green.svg?logo=paypal"/>
   </a>
   <a href="https://github.com/scala/scala/releases">
-    <img src="https://img.shields.io/badge/scala-2.13.4-red.svg?logo=scala&logoColor=red"/>
+    <img src="https://img.shields.io/badge/scala-2.13.5-red.svg?logo=scala&logoColor=red"/>
   </a>  
   <a href="https://www.oracle.com/technetwork/java/javase/11all-relnotes-5013287.html">
-    <img src="https://img.shields.io/badge/jdk-11.0.8-orange.svg?logo=java&logoColor=white"/>
+    <img src="https://img.shields.io/badge/jdk-15.0.1-orange.svg?logo=java&logoColor=white"/>
   </a>  
   <a href="https://github.com/sbt/sbt/releases">
     <img src="https://img.shields.io/badge/sbt-1.4.7-blue.svg?logo=sbt"/>
