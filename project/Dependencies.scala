@@ -258,11 +258,13 @@ object Dependencies {
   val spark: Seq[ModuleID]                          =
     // S P A R K
     Seq(
-      Artifact.spark % Version.spark
-    ) ++ Seq(
+      Artifact.sparkCore,
+      Artifact.sparkSql,
+      Artifact.sparkStreaming
+    ).map(_ % Version.spark) ++ Seq(
       // S P A R K  T E S T
       Artifact.scalaTest % Version.scalaTest
-    ).map(_          % Test)
+    ).map(_ % Test)
 
   val sttp: Seq[ModuleID]                           =
     // S T T P
@@ -387,7 +389,9 @@ object Dependencies {
     val postgresql                = "org.postgresql"                         % "postgresql"
     val scalaTest                 = "org.scalatest"                         %% "scalatest"
     val slick                     = "com.typesafe.slick"                    %% "slick"
-    val spark                     = "org.apache.spark"                      %% "spark-core"
+    val sparkCore                 = "org.apache.spark"                      %% "spark-core"
+    val sparkSql                  = "org.apache.spark"                      %% "spark-sql"
+    val sparkStreaming            = "org.apache.spark"                      %% "spark-streaming"
     val sttpAsyncAkka             = "com.softwaremill.sttp.client"          %% "akka-http-backend"
     val sttpAsyncZioStreams       = "com.softwaremill.sttp.client"          %% "async-http-client-backend-zio"
     val sttpCirce                 = "com.softwaremill.sttp.client"          %% "circe"
