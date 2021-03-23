@@ -17,7 +17,7 @@ object Show64 {
    * @see io.github.mvillafuertem.advanced.pattern.taglessfinal
    *      Simplemente con esto podemos instanciar la interface
    *      sin hacer uso de `new`, es muy util si lo juntamos con
-   *      implicitos, mirar los test
+   *      implicitos, mirad los test y mirad metodo encode
    */
   //def apply[A](implicit sh: Show64[A]): Show64[A] = sh
   //
@@ -33,6 +33,6 @@ object Show64 {
     (a: Device) => new String(Base64.getEncoder.encode(a.toString.getBytes))
 
   //def encode[A](a: A)(interprete: Show64[A]): String = interprete.encode(a)
-  def encode[A: Show64](a: A): String = implicitly[Show64[A]].encode(a)
+  def encode[A: Show64](a: A): String = Show64[A].encode(a)
 
 }
