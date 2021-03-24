@@ -1,16 +1,15 @@
 package io.github.mvillafuertem.dotty
-
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Try
 
 /**
-  * Context Queries:
-  * - http://dotty.epfl.ch/docs/reference/contextual/query-types.html,
-  * - https://www.scala-lang.org/blog/2016/12/07/implicit-function-types.html
+  * Context Functions:
+  *  - https://dotty.epfl.ch/docs/reference/contextual/context-functions.html
+  *  - https://www.scala-lang.org/blog/2016/12/07/implicit-function-types.html
   */
-object ContextQueries /* Formerly known as Implicit Function Types */ {
+object ContextFunctions:
 
-  object context {
+  object context:
     // type alias Contextual
     type Contextual[T] = ExecutionContext ?=> T
 
@@ -18,32 +17,25 @@ object ContextQueries /* Formerly known as Implicit Function Types */ {
     def asyncSum(x: Int, y: Int): Contextual[Future[Int]] = Future(x + y)
 
     def asyncMult(x: Int, y: Int)(using ctx: ExecutionContext) = Future(x * y)
-  }
 
-  object parse {
+  object parse:
 
-    type Parseable[T] = ImpliedInstances.StringParser[T] ?=> Try[T]
+    type Parseable[T] = GivenInstances.StringParser[T] ?=> Try[T]
 
-    def sumStrings(x: String, y: String): Parseable[Int] = {
-      val parser = implicitly[ImpliedInstances.StringParser[Int]]
+    def sumStrings(x: String, y: String): Parseable[Int] =
+      val parser = summon[GivenInstances.StringParser[Int]]
       val tryA = parser.parse(x)
       val tryB = parser.parse(y)
 
-      for {
+      for
         a <- tryA
         b <- tryB
-      } yield a + b
-    }
-  }
+      yield a + b
 
-  def test: Unit = {
-
+  def test(): Unit =
     import ExecutionContext.Implicits.global
     context.asyncSum(3, 4).foreach(println)
     context.asyncMult(3, 4).foreach(println)
 
     println(parse.sumStrings("3", "4"))
     println(parse.sumStrings("3", "a"))
-  }
-
-}

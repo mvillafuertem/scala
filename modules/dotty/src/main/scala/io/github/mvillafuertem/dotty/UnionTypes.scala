@@ -3,7 +3,7 @@ package io.github.mvillafuertem.dotty
 /**
   * Union Types: https://dotty.epfl.ch/docs/reference/new-types/union-types.html
   */
-object UnionTypes {
+object UnionTypes:
 
   sealed trait Division
   final case class DivisionByZero(msg: String) extends Division
@@ -13,20 +13,17 @@ object UnionTypes {
   type DivisionResult = DivisionByZero | Success
 
   sealed trait List[+A]
-  final case class Empty() extends List[Nothing]
+  case object Empty extends List[Nothing]
   final case class Cons[+A](h: A, t: List[A]) extends List[A]
 
-  private def safeDivide(a: Double, b: Double): DivisionResult = {
-    if (b == 0) DivisionByZero("DivisionByZeroException") else Success(a / b)
-  }
+  private def safeDivide(a: Double, b: Double): DivisionResult =
+    if b == 0 then DivisionByZero("DivisionByZeroException") else Success(a / b)
 
-  private def either(division: Division) = division match {
+  private def either(division: Division) = division match
     case DivisionByZero(m) => Left(m)
-    case Success(d) => Right(d)
-  }
+    case Success(d)        => Right(d)
 
-  def test: Unit = {
-
+  def test(): Unit =
     val divisionResultSuccess: DivisionResult = safeDivide(4, 2)
 
     // commutative
@@ -38,10 +35,7 @@ object UnionTypes {
     // calling `either` function with union typed value.
     println(either(divisionResultFailure))
 
-    val list: Cons[Int] | Empty = Cons(1, Cons(2, Cons(3, Empty())))
-    val emptyList: Empty | Cons[Any] = Empty()
+    val list: Cons[Int] | Empty.type = Cons(1, Cons(2, Cons(3, Empty)))
+    val emptyList: Empty.type | Cons[Any] = Empty
     println(list)
     println(emptyList)
-
-  }
-}
