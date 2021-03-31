@@ -464,7 +464,7 @@ object Dependencies {
     val testcontainersKafka       = "1.15.2"
     val zio                       = "1.0.5"
     val zioAkkaCluster            = "0.2.0"
-    val zioInteropCats            = "2.2.0.1"
+    val zioInteropCats            = "2.4.0.0"
     val zioInteropReactiveStreams = "1.3.0.7-2"
     val zioKafka                  = "0.14.0"
   }
