@@ -202,6 +202,13 @@ object Dependencies {
     Artifact.scalaTest % Version.scalaTest
   )
 
+  val foundations: Seq[ModuleID] = Seq(
+    // D O T T Y
+    Artifact.scalaCheck % Version.scalaCheck         % Test,
+    "org.scalatest"    %% "scalatest-flatspec"       % "3.2.6" % Test,
+    "org.scalatest"    %% "scalatest-shouldmatchers" % "3.2.6" % Test
+  )
+
   val http4s: Seq[ModuleID] = Seq(
     // H T T P 4 S
     Artifact.http4sBlazeServer % Version.http4s,
@@ -387,6 +394,7 @@ object Dependencies {
     val logback                   = "ch.qos.logback"                         % "logback-classic"
     val mongoScalaBson            = "org.mongodb.scala"                     %% "mongo-scala-bson"
     val postgresql                = "org.postgresql"                         % "postgresql"
+    val scalaCheck                = "org.scalatestplus"                     %% "scalacheck-1-14"
     val scalaTest                 = "org.scalatest"                         %% "scalatest"
     val slick                     = "com.typesafe.slick"                    %% "slick"
     val sparkCore                 = "org.apache.spark"                      %% "spark-core"
@@ -444,6 +452,7 @@ object Dependencies {
     val logback                   = "1.2.3"
     val mongoScalaBson            = "2.9.0"
     val postgres                  = "42.2.19"
+    val scalaCheck                = "3.2.2.0"
     val scalaJavaTime             = "2.0.0"
     val scalaTest                 = "3.2.6"
     val slick                     = "3.3.3"

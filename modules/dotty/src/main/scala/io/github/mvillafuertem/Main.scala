@@ -1,7 +1,7 @@
 package io.github.mvillafuertem
 
 import io.github.mvillafuertem.dotty._
-import io.github.mvillafuertem.foundations.{ Functor, Monoid, PlainFunctionalProgramming, Semigroup }
+import io.github.mvillafuertem.foundations.{ Applicative, Apply, Functor, Monoid, PlainFunctionalProgramming, Semigroup }
 
 object Main {
 
@@ -38,6 +38,10 @@ object Main {
     runExample("Monoid")(Monoid.test())
 
     runExample("Functor")(Functor.test())
+
+    runExample("Apply")(Apply.test())
+
+    runExample("Applicative")(Applicative.test())
 
   }
 

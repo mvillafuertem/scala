@@ -35,6 +35,8 @@ lazy val scala = (project in file("."))
     basic,
     benchmarks,
     cats,
+    foundations,
+    http4s,
     json,
     reflection,
     script,
@@ -190,10 +192,15 @@ lazy val docs = (project in file("modules/docs"))
   .enablePlugins(MdocPlugin)
 
 lazy val dotty = (project in file("modules/dotty"))
-// S E T T I N G S
+  // S E T T I N G S
   .settings(scalaVersion := "3.0.0-RC1")
   .settings(libraryDependencies ++= Dependencies.dotty.map(_.withDottyCompat(scalaVersion.value)))
   .enablePlugins(DottyPlugin)
+
+lazy val foundations = (project in file("modules/foundations"))
+  // S E T T I N G S
+  .settings(commonSettings)
+  .settings(libraryDependencies ++= Dependencies.foundations)
 
 lazy val http4s = (project in file("modules/http4s"))
   // S E T T I N G S
