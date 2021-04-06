@@ -11,7 +11,7 @@ final class RDDApplicationSpec extends AnyFlatSpecLike with Matchers {
 
   behavior of s"${this.getClass}"
 
-  val conf: SparkConf  = new SparkConf().setAppName("RDDApplicationSpec").setMaster("local")
+  val conf: SparkConf  = new SparkConf().setAppName("RDDApplicationSpec").setMaster("local").set("spark.driver.host", "127.0.0.1")
   val sc: SparkContext = new SparkContext(conf)
 
   it should "Filter Airports" in {
