@@ -255,6 +255,10 @@ lazy val spark = (project in file("modules/spark"))
   .settings(scalaVersion := Settings.scala212)
   .settings(Settings.testReport ++ Information.value)
   .settings(libraryDependencies ++= Dependencies.spark)
+  .settings(
+    Test / fork := false,
+    Test / parallelExecution := false
+  )
 
 lazy val sttp = (project in file("modules/sttp"))
 // S E T T I N G S
