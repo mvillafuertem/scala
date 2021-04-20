@@ -205,8 +205,8 @@ object Dependencies {
   val foundations: Seq[ModuleID] = Seq(
     // D O T T Y
     Artifact.scalaCheck % Version.scalaCheck         % Test,
-    "org.scalatest"    %% "scalatest-flatspec"       % "3.2.7" % Test,
-    "org.scalatest"    %% "scalatest-shouldmatchers" % "3.2.7" % Test
+    "org.scalatest"    %% "scalatest-flatspec"       % "3.2.8" % Test,
+    "org.scalatest"    %% "scalatest-shouldmatchers" % "3.2.8" % Test
   )
 
   val http4s: Seq[ModuleID] = Seq(
@@ -432,11 +432,11 @@ object Dependencies {
     val alpakkaKafka              = "2.0.7"
     val alpakkaMongodb            = "2.0.2"
     val alpakkaSlick              = "2.0.2"
-    val awsCdk                    = "1.97.0"
+    val awsCdk                    = "1.99.0"
     val awsLambda                 = "1.2.1"
-    val awsSdk                    = "2.16.43"
+    val awsSdk                    = "2.16.44"
     val cask                      = "0.6.7"
-    val cats                      = "2.5.0"
+    val cats                      = "2.6.0"
     val circe                     = "0.13.0"
     val http4s                    = "1.0.0-M9"
     val curator                   = "5.1.0"
@@ -445,7 +445,7 @@ object Dependencies {
     val h2                        = "1.4.200"
     val java8Compat               = "0.9.1"
     val jslt                      = "0.1.11"
-    val jsoniter                  = "2.7.1"
+    val jsoniter                  = "2.7.2"
     val jwtCirce                  = "4.3.0"
     val kafka                     = "2.7.0"
     val leveldbjniAll             = "1.8"
@@ -454,7 +454,7 @@ object Dependencies {
     val postgres                  = "42.2.19"
     val scalaCheck                = "3.2.2.0"
     val scalaJavaTime             = "2.0.0"
-    val scalaTest                 = "3.2.6"
+    val scalaTest                 = "3.2.8"
     val slick                     = "3.3.3"
     val slinky                    = "0.6.6"
     val spark                     = "3.1.1"
@@ -464,8 +464,8 @@ object Dependencies {
     val testcontainersKafka       = "1.15.3"
     val zio                       = "1.0.6"
     val zioAkkaCluster            = "0.2.0"
-    val zioInteropCats            = "2.4.0.0"
-    val zioInteropReactiveStreams = "1.3.3"
+    val zioInteropCats            = "2.4.1.0"
+    val zioInteropReactiveStreams = "1.3.2"
     val zioKafka                  = "0.14.0"
   }
 
