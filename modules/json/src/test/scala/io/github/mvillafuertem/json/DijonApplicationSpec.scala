@@ -1,6 +1,6 @@
 package io.github.mvillafuertem.json
 
-import com.github.pathikrit.dijon._
+import dijon._
 import org.scalatest.flatspec.AnyFlatSpecLike
 import org.scalatest.matchers.should.Matchers
 
@@ -45,7 +45,7 @@ final class DijonApplicationSpec extends AnyFlatSpecLike with Matchers {
         |""".stripMargin
 
     // w h e n
-    val actual             = json"""$jsonString"""
+    val actual = json"""$jsonString"""
 
     println(actual.selectDynamic("values.bar") == true)
     println(actual -- ("values.baz"))
