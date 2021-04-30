@@ -9,18 +9,36 @@ import java.util.Properties
 
 import org.apache.curator.test.TestingServer
 import org.slf4j.{ Logger, LoggerFactory }
-import kafka.server.{ KafkaConfig, KafkaServerStartable }
+import kafka.server.{ KafkaConfig, KafkaRaftServer, KafkaServer, Server }
+import org.apache.kafka.common.utils.Time
 
 import scala.jdk.CollectionConverters._
 import java.util.Comparator
 
 class KafkaLocalServer private (kafkaProperties: Properties, zooKeeperServer: ZooKeeperLocalServer) {
 
-  private var broker = null.asInstanceOf[KafkaServerStartable]
+  private var broker = null.asInstanceOf[Server]
+
+  private def buildServer(props: Properties): Server = {
+    val config = KafkaConfig.fromProps(props, false)
+    if (config.processRoles.isEmpty) {
+      new KafkaServer(
+        config,
+        Time.SYSTEM,
+        threadNamePrefix = None
+      )
+    } else {
+      new KafkaRaftServer(
+        config,
+        Time.SYSTEM,
+        threadNamePrefix = None
+      )
+    }
+  }
 
   def start(): Unit = {
 
-    broker = KafkaServerStartable.fromProps(kafkaProperties)
+    broker = buildServer(kafkaProperties)
     broker.startup()
   }
 
@@ -28,7 +46,7 @@ class KafkaLocalServer private (kafkaProperties: Properties, zooKeeperServer: Zo
     if (broker != null) {
       broker.shutdown()
       zooKeeperServer.stop()
-      broker = null.asInstanceOf[KafkaServerStartable]
+      broker = null.asInstanceOf[Server]
     }
 
 }
@@ -48,7 +66,7 @@ object KafkaLocalServer {
 
   def apply(cleanOnStart: Boolean): KafkaLocalServer = this(DefaultPort, ZooKeeperLocalServer.DefaultPort, cleanOnStart)
 
-  def apply(kafkaPort: Int, zookeeperServerPort: Int, cleanOnStart: Boolean): KafkaLocalServer           = {
+  def apply(kafkaPort: Int, zookeeperServerPort: Int, cleanOnStart: Boolean): KafkaLocalServer = {
     val kafkaDataDir = dataDirectory(KafkaDataFolderName)
     Log.info(s"Kafka data directory is $kafkaDataDir.")
 
@@ -92,7 +110,11 @@ object KafkaLocalServer {
     if (directory.exists()) try {
       val rootPath = Paths.get(directory.getAbsolutePath)
 
-      val files = Files.walk(rootPath, FileVisitOption.FOLLOW_LINKS).sorted(Comparator.reverseOrder()).iterator().asScala
+      val files = Files
+        .walk(rootPath, FileVisitOption.FOLLOW_LINKS)
+        //.sorted(Comparator.reverseOrder())
+        .iterator()
+        .asScala
       files.foreach(Files.delete)
       Log.debug(s"Deleted ${directory.getAbsolutePath}.")
     } catch {
