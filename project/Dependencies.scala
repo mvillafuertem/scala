@@ -438,7 +438,7 @@ object Dependencies {
     val cask                      = "0.6.7"
     val cats                      = "2.6.0"
     val circe                     = "0.13.0"
-    val http4s                    = "1.0.0-M9"
+    val http4s                    = "1.0.0-M21"
     val curator                   = "5.1.0"
     val dijon                     = "0.3.0"
     val ficus                     = "1.5.0"
@@ -464,7 +464,7 @@ object Dependencies {
     val testcontainersKafka       = "1.15.3"
     val zio                       = "1.0.7"
     val zioAkkaCluster            = "0.2.0"
-    val zioInteropCats            = "2.4.1.0"
+    val zioInteropCats            = "3.0.2.0"
     val zioInteropReactiveStreams = "1.3.4"
     val zioKafka                  = "0.14.0"
   }
