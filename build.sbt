@@ -159,8 +159,8 @@ lazy val `sensor-controller` = (project in file("modules/akka/sensor-controller"
   .settings(commonSettings)
   .settings(libraryDependencies ++= Dependencies.`sensor-controller`)
   .settings(
-    PB.targets in Compile := Seq(
-      scalapb.gen() -> (sourceManaged in Compile).value
+    Compile / PB.targets := Seq(
+      scalapb.gen() -> (Compile / sourceManaged).value
     )
   )
   // P L U G I N S
