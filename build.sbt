@@ -194,8 +194,7 @@ lazy val docs = (project in file("modules/docs"))
 lazy val dotty = (project in file("modules/dotty"))
   // S E T T I N G S
   .settings(scalaVersion := "3.0.0-RC1")
-  .settings(libraryDependencies ++= Dependencies.dotty.map(_.withDottyCompat(scalaVersion.value)))
-  .enablePlugins(DottyPlugin)
+  .settings(libraryDependencies ++= Dependencies.dotty.map(_.cross(CrossVersion.for3Use2_13)))
 
 lazy val foundations = (project in file("modules/foundations"))
   // S E T T I N G S
