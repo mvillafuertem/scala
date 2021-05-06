@@ -1,14 +1,13 @@
 package io.github.mvillafuertem.json
 
+import io.circe._
 import io.circe.generic.auto._
 import io.circe.generic.extras._
-import io.circe.optics.JsonTraversalPath
+import io.circe.optics.JsonPath._
 import io.circe.parser._
 import io.circe.syntax._
-import io.circe.{Decoder, Encoder, HCursor, Json, ParsingFailure}
 import org.scalatest.flatspec.AnyFlatSpecLike
 import org.scalatest.matchers.should.Matchers
-import io.circe.optics.JsonPath._
 
 /**
  * @author Miguel Villafuerte
@@ -53,6 +52,144 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
     )
 
     actual shouldBe expected
+  }
+
+  it should "flatten" in {
+
+    // g i v e n
+    val json: String =
+      """
+        |  {
+        |    "id": "c730433b-082c-4984-9d66-855c243266f0",
+        |    "name": "Foo",
+        |    "counts": [1, 2, 3],
+        |    "values": {
+        |      "bar": true,
+        |      "baz": 100.001,
+        |      "qux": ["a", "b"]
+        |    }
+        |  }
+        |""".stripMargin
+
+    // w h e n
+    val actual: Json = parse(json).getOrElse(Json.Null)
+    def flatten(combineKeys: (String, String) => String)(value: Json): Json = {
+      def flattenToFields(value: Json): Option[Iterable[(String, Json)]] =
+        value.asObject.map(
+          _.toIterable.flatMap { case (k, v) =>
+            flattenToFields(v) match {
+              case None         => List(k -> v)
+              case Some(fields) =>
+                fields.map { case (innerK, innerV) =>
+                  combineKeys(k, innerK) -> innerV
+                }
+            }
+          }
+        )
+
+      flattenToFields(value).fold(value)(Json.fromFields)
+    }
+
+    // t h e n
+    val expected = Json.obj(
+      ("id", Json.fromString("c730433b-082c-4984-9d66-855c243266f0")),
+      ("name", Json.fromString("Foo")),
+      ("counts", Json.arr(Json.fromInt(1), Json.fromInt(2), Json.fromInt(3))),
+      ("values.bar", Json.fromBoolean(true)),
+      ("values.baz", Json.fromDoubleOrNull(100.001)),
+      ("values.qux", Json.arr(Json.fromString("a"), Json.fromString("b")))
+    )
+
+    flatten(_ + "." + _)(actual) shouldBe expected
+  }
+
+  it should "transform string" in {
+
+    // g i v e n
+    val json: String =
+      """
+        |  {
+        |    "id": "c730433b-082c-4984-9d66-855c243266f0",
+        |    "name": "Foo",
+        |    "counts": [1, 2, 3],
+        |    "values": {
+        |      "bar": true,
+        |      "baz": 100.001,
+        |      "qux": ["a", "b"]
+        |    }
+        |  }
+        |""".stripMargin
+
+    // w h e n
+    val actual: Json                                   = parse(json).getOrElse(Json.Null)
+    def transform(js: Json, f: String => String): Json = js
+      .mapString(f)
+      .mapArray(_.map(transform(_, f)))
+      .mapObject { obj =>
+        val updatedObj = obj.toMap.map { case (k, v) =>
+          f(k) -> transform(v, f)
+        }
+        JsonObject.apply(updatedObj.toSeq: _*)
+      }
+
+    // t h e n
+    val expected = Json.obj(
+      ("ID", Json.fromString("C730433B-082C-4984-9D66-855C243266F0")),
+      ("NAME", Json.fromString("FOO")),
+      ("COUNTS", Json.arr(Json.fromInt(1), Json.fromInt(2), Json.fromInt(3))),
+      (
+        "VALUES",
+        Json.obj(
+          ("BAR", Json.fromBoolean(true)),
+          ("BAZ", Json.fromDoubleOrNull(100.001)),
+          ("QUX", Json.arr(Json.fromString("A"), Json.fromString("B")))
+        )
+      )
+    )
+
+    transform(actual, s => s.toUpperCase) shouldBe expected
+  }
+
+  it should "transform string values" in {
+
+    // g i v e n
+    val json: String =
+      """
+        |  {
+        |    "id": "c730433b-082c-4984-9d66-855c243266f0",
+        |    "name": "Foo",
+        |    "counts": [1, 2, 3],
+        |    "values": {
+        |      "bar": true,
+        |      "baz": 100.001,
+        |      "qux": ["a", "b"]
+        |    }
+        |  }
+        |""".stripMargin
+
+    // w h e n
+    val actual: Json                                                 = parse(json).getOrElse(Json.Null)
+    def transformStringValues(json: Json, f: String => String): Json = json
+      .mapString(f)
+      .mapArray(a => a.map(transformStringValues(_, f)))
+      .mapObject(obj => JsonObject(obj.toMap.view.mapValues(transformStringValues(_, f)).toSeq: _*))
+
+    // t h e n
+    val expected = Json.obj(
+      ("id", Json.fromString("C730433B-082C-4984-9D66-855C243266F0")),
+      ("name", Json.fromString("FOO")),
+      ("counts", Json.arr(Json.fromInt(1), Json.fromInt(2), Json.fromInt(3))),
+      (
+        "values",
+        Json.obj(
+          ("bar", Json.fromBoolean(true)),
+          ("baz", Json.fromDoubleOrNull(100.001)),
+          ("qux", Json.arr(Json.fromString("A"), Json.fromString("B")))
+        )
+      )
+    )
+
+    transformStringValues(actual, s => s.toUpperCase) shouldBe expected
   }
 
   it should "encode class" in {
@@ -389,6 +526,99 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
 
     actual.map(_ shouldBe expected)
 
+  }
+
+  it should "schema" in {
+
+    // g i v e n
+    val json: String =
+      """
+        |{
+        |  "$id": "https://example.com/person.schema.json",
+        |  "$schema": "https://json-schema.org/draft/2020-12/schema",
+        |  "title": "Person",
+        |  "type": "object",
+        |  "properties": {
+        |    "firstName": {
+        |      "type": "string",
+        |      "description": "The person's first name."
+        |    },
+        |    "lastName": {
+        |      "type": "string",
+        |      "description": "The person's last name."
+        |    },
+        |    "age": {
+        |      "description": "Age in years which must be equal to or greater than zero.",
+        |      "type": "integer",
+        |      "minimum": 0
+        |    }
+        |  }
+        |}
+        |""".stripMargin
+
+    // w h e n
+    val actual: Json             = parse(json).getOrElse(Json.Null)
+    def schema(json: Json): Json = json.mapObject { obj =>
+      if (obj.contains("type") && !obj.contains("$schema")) {
+        val updatedObj = obj.toMap.map { case (key, value) => key -> schema(value) }
+        JsonObject(("anyOf", Json.arr(updatedObj.asJson, Json.obj(("type", Json.fromString("null"))))))
+      } else {
+        if (!obj.asJson.isObject) {
+          obj
+        } else {
+          val updatedObj = obj.toMap.map { case (key, value) => key -> schema(value) }
+          updatedObj.asJsonObject
+        }
+      }
+    }
+
+    // t h e n
+    val expected = parse("""
+                           |{
+                           |  "$id": "https://example.com/person.schema.json",
+                           |  "$schema": "https://json-schema.org/draft/2020-12/schema",
+                           |  "title": "Person",
+                           |  "type": "object",
+                           |  "properties": {
+                           |    "firstName": {
+                           |      "anyOf": [
+                           |        {
+                           |          "type": "string",
+                           |          "description": "The person's first name."
+                           |        },
+                           |        {
+                           |          "type": "null"
+                           |        }
+                           |      ]
+                           |    },
+                           |    "lastName": {
+                           |      "anyOf": [
+                           |        {
+                           |          "type": "string",
+                           |          "description": "The person's last name."
+                           |        },
+                           |        {
+                           |          "type": "null"
+                           |        }
+                           |      ]
+                           |    },
+                           |    "age": {
+                           |      "anyOf": [
+                           |        {
+                           |          "description": "Age in years which must be equal to or greater than zero.",
+                           |          "type": "integer",
+                           |          "minimum": 0
+                           |        },
+                           |        {
+                           |          "type": "null"
+                           |        }
+                           |      ]
+                           |    }
+                           |  }
+                           |}
+                           |""".stripMargin).getOrElse(Json.Null)
+
+    schema(actual) shouldBe expected
   }
 
 }

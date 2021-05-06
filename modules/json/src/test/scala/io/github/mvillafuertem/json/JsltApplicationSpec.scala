@@ -72,7 +72,7 @@ final class JsltApplicationSpec extends AnyFlatSpec with Matchers {
     )
 
     // W H E N
-    val actual        = jslt.apply(jsonNodeInput)
+    val actual = jslt.apply(jsonNodeInput)
 
     // T H E N
     val expected = mapper.readTree("""{"caracteristicas":{"localizacion":{"velocidad":36}}}""")
@@ -89,7 +89,7 @@ final class JsltApplicationSpec extends AnyFlatSpec with Matchers {
     )
 
     // W H E N
-    val actual        = jslt.apply(jsonNodeInput)
+    val actual = jslt.apply(jsonNodeInput)
 
     // T H E N
     val expected = mapper.readTree("""{"caracteristicas":{"localizacion":{"longitud":34.969875,"latitud":32.127758,"velocidad":36}}}""")
