@@ -10,30 +10,28 @@ import zio.test._
 import zio.test.environment._
 import io.circe.parser._
 
-// amm `pwd`/modules/script/SQSConsumerSpec.sc
+// amm `pwd`/modules/script/JSONSchemaProcessingSpec.sc
 JSONSchemaProcessingSpec.main(Array())
 
 object JSONSchemaProcessingSpec extends DefaultRunnableSpec {
-
-  import $file.JSONSchemaProcessing.JSONSchemaProcessing
 
   override def spec =
     suite("JSONSchemaProcessingSpec")(
       testM("process input1") {
         for {
           json      <- Task.fromEither(parse(inputSchema1))
-          actual      <- JSONSchemaProcessing.process(json)
+          actual      <- JSONSchemaProcessing.JSONSchemaProcessing.process(json)
           expected <- Task.fromEither(parse(expectedSchema1))
         } yield assert(actual)(equalTo(expected))
       },
       testM("process input2") {
         for {
           json      <- Task.fromEither(parse(inputSchema2))
-          actual      <- JSONSchemaProcessing.process(json)
+          actual      <- JSONSchemaProcessing.JSONSchemaProcessing.process(json)
           expected <- Task.fromEither(parse(expectedSchema2))
         } yield assert(actual)(equalTo(expected))
       }
-    )
+    ) @@ TestAspect.timed
 
   lazy val inputSchema1 =
     """

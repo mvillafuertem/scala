@@ -16,6 +16,9 @@ jobs:
           name: Test
           command: ./.cicd/test.sh
       - run:
+          name: Script Test
+          command: ./.cicd/script-test.sh
+      - run:
           name: Benchmarks
           command: ./.cicd/benchmarks.sh
 #      - setup_remote_docker:

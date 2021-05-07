@@ -8,5 +8,5 @@ set -o xtrace
 BASE="$(cd "$(dirname "${0}")" && pwd)"
 source ${BASE}/../.env
 
-sbt clean coverage test coverageReport
-#sbt clean test dependencyUpdates coverageAggregate
+# shellcheck disable=SC2010
+ls -d modules/script/* | grep Spec.sc | xargs -I {} sbt --error ';project script;amm {}'
