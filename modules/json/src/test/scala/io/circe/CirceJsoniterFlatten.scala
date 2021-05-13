@@ -120,14 +120,21 @@ object CirceJsoniterFlatten {
           }
         case JArray(a)   =>
           out.writeArrayStart()
-          a.foreach(v => encodeValue(v, out))
+          val l = a.size
+          var i = 0
+          while (i < l) {
+            val json: Json = a(i)
+            encodeValue(json, out)
+            i += 1
+          }
           out.writeArrayEnd()
         case JObject(o)  =>
           out.writeObjectStart()
-          o.toIterable.foreach {
-            case (k, v) =>
-              out.writeKey(k)
-              encodeValue(v, out)
+          val it = o.toIterable.iterator
+          while (it.hasNext) {
+            val (k, v) = it.next()
+            out.writeKey(k)
+            encodeValue(v, out)
           }
           out.writeObjectEnd()
       }
@@ -138,14 +145,10 @@ object CirceJsoniterFlatten {
   private def decodeNumber(in: JsonReader, n: Byte) =
     JNumber({
       in.rollbackToken()
-      in.setMark() // TODO: add in.readNumberAsString() to Core API of jsoniter-scala
-      var b = n
-      try do b = in.nextByte() while (b >= '0' && b <= '9')
-      catch {
-        case _: JsonReaderException => /* ignore end of input error */
-      } finally in.rollbackToMark()
-      if (b == '.' || b == 'e' || b == 'E') JsonDouble(in.readDouble())
-      else JsonLong(in.readLong())
+      val d = in.readDouble()
+      val i = d.toInt
+      if (i.toDouble == d) JsonLong(i)
+      else JsonDouble(d)
     })
 
   private def decodeBoolean(in: JsonReader) = {

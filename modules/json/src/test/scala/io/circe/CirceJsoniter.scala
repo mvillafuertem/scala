@@ -1,9 +1,10 @@
 package io.circe
 
-import java.util
-
 import com.github.plokhotnyuk.jsoniter_scala.core.{ JsonReader, JsonReaderException, JsonValueCodec, JsonWriter }
 import io.circe.Json.{ JArray, JBoolean, JNull, JNumber, JObject, JString }
+
+import java.util
+import scala.collection.mutable
 
 object CirceJsoniter {
 
@@ -22,35 +23,21 @@ object CirceJsoniter {
         case n @ ('0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '-') =>
           JNumber({
             in.rollbackToken()
-            in.setMark() // TODO: add in.readNumberAsString() to Core API of jsoniter-scala
-            var b = n
-            try do b = in.nextByte() while (b >= '0' && b <= '9')
-            catch {
-              case _: JsonReaderException => /* ignore end of input error */
-            } finally in.rollbackToMark()
-            if (b == '.' || b == 'e' || b == 'E') JsonDouble(in.readDouble())
-            else JsonLong(in.readLong())
+            val d = in.readDouble()
+            val i = d.toInt
+            if (i.toDouble == d) JsonLong(i)
+            else JsonDouble(d)
           })
         case '['                                                                   =>
-          JArray(
-            if (in.isNextToken(']')) Vector.empty
-            else {
+          JArray {
+            val arr = new mutable.ArrayBuffer[Json](4)
+            if (!in.isNextToken(']')) {
               in.rollbackToken()
-              var x                  = new Array[Json](4)
-              var i                  = 0
-              do {
-                if (i == x.length) x = java.util.Arrays.copyOf(x, i << 1)
-                x(i) = decodeValue(in, default)
-                i += 1
-              } while (in.isNextToken(','))
-              val jsons: Array[Json] =
-                if (in.isCurrentToken(']'))
-                  if (i == x.length) x
-                  else java.util.Arrays.copyOf(x, i)
-                else in.arrayEndOrCommaError()
-              jsons.toVector
+              do arr += decodeValue(in, default) while (in.isNextToken(','))
+              if (!in.isCurrentToken(']')) in.arrayEndOrCommaError()
             }
-          )
+            arr.toVector
+          }
         case '{'                                                                   =>
           JObject(
             if (in.isNextToken('}')) JsonObject.empty
@@ -77,14 +64,21 @@ object CirceJsoniter {
           }
         case JArray(a)   =>
           out.writeArrayStart()
-          a.foreach(v => encodeValue(v, out))
+          val l = a.size
+          var i = 0
+          while (i < l) {
+            val json: Json = a(i)
+            encodeValue(json, out)
+            i += 1
+          }
           out.writeArrayEnd()
         case JObject(o)  =>
           out.writeObjectStart()
-          o.toIterable.foreach {
-            case (k, v) =>
-              out.writeKey(k)
-              encodeValue(v, out)
+          val it = o.toIterable.iterator
+          while (it.hasNext) {
+            val (k, v) = it.next()
+            out.writeKey(k)
+            encodeValue(v, out)
           }
           out.writeObjectEnd()
       }
