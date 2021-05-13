@@ -3,31 +3,58 @@
 import $file.JSONSchemaProcessing
 import $ivy.`dev.zio::zio-test-sbt:1.0.7`
 import $ivy.`dev.zio::zio-test:1.0.7`
+import io.circe.parser._
 import zio._
-import zio.console._
 import zio.test.Assertion._
 import zio.test._
-import zio.test.environment._
-import io.circe.parser._
+import zio.test.environment.Live
 
 // amm `pwd`/modules/script/JSONSchemaProcessingSpec.sc
 JSONSchemaProcessingSpec.main(Array())
 
 object JSONSchemaProcessingSpec extends DefaultRunnableSpec {
 
-  override def spec =
+  override def spec: ZSpec[Live with Annotations, Throwable] =
     suite("JSONSchemaProcessingSpec")(
       testM("process input1") {
         for {
-          json      <- Task.fromEither(parse(inputSchema1))
-          actual      <- JSONSchemaProcessing.JSONSchemaProcessing.process(json)
+          json     <- Task.fromEither(parse(inputSchema1))
+          actual   <- JSONSchemaProcessing.JSONSchemaProcessing.process(json)
           expected <- Task.fromEither(parse(expectedSchema1))
         } yield assert(actual)(equalTo(expected))
       },
       testM("process input2") {
         for {
-          json      <- Task.fromEither(parse(inputSchema2))
-          actual      <- JSONSchemaProcessing.JSONSchemaProcessing.process(json)
+          json     <- Task.fromEither(parse(inputSchema2))
+          actual   <- JSONSchemaProcessing.JSONSchemaProcessing.process(json)
+          expected <- Task.fromEither(parse(expectedSchema2))
+        } yield assert(actual)(equalTo(expected))
+      },
+      testM("process2 input1") {
+        for {
+          json     <- Task.fromEither(parse(inputSchema1))
+          actual   <- JSONSchemaProcessing.JSONSchemaProcessing.process2(json)
+          expected <- Task.fromEither(parse(expectedSchema1))
+        } yield assert(actual)(equalTo(expected))
+      },
+      testM("process2 input2") {
+        for {
+          json     <- Task.fromEither(parse(inputSchema2))
+          actual   <- JSONSchemaProcessing.JSONSchemaProcessing.process2(json)
+          expected <- Task.fromEither(parse(expectedSchema2))
+        } yield assert(actual)(equalTo(expected))
+      },
+      testM("process3 input1") {
+        for {
+          json     <- Task.fromEither(parse(inputSchema1))
+          actual   <- JSONSchemaProcessing.JSONSchemaProcessing.process3(json)
+          expected <- Task.fromEither(parse(expectedSchema1))
+        } yield assert(actual)(equalTo(expected))
+      },
+      testM("process3 input2") {
+        for {
+          json     <- Task.fromEither(parse(inputSchema2))
+          actual   <- JSONSchemaProcessing.JSONSchemaProcessing.process3(json)
           expected <- Task.fromEither(parse(expectedSchema2))
         } yield assert(actual)(equalTo(expected))
       }
@@ -123,7 +150,6 @@ object JSONSchemaProcessingSpec extends DefaultRunnableSpec {
       |  }
       |}
       |""".stripMargin
-
 
   lazy val inputSchema2 =
     """

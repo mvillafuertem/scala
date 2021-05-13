@@ -621,4 +621,221 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
     schema(actual) shouldBe expected
   }
 
+  it should "schemaFold" in {
+
+    // g i v e n
+    val json: String =
+      """
+        |{
+        |  "type": "object",
+        |  "properties": {
+        |    "street_address": { "type": "string" },
+        |    "city":           { "type": "string" },
+        |    "state":          { "type": "string" }
+        |  },
+        |  "required": ["street_address", "city", "state"]
+        |}
+        |""".stripMargin
+
+    // w h e n
+    val actual: Json = parse(json).getOrElse(Json.Null)
+    def schemaFold(that: Json): Json = {
+      def recursive(that: Json): Json =
+        that.asObject match {
+          case Some(value) =>
+            value.toIterable
+              .foldLeft(JsonObject.empty) { case (acc, (key, value)) =>
+                if (value.isObject) {
+                  val obj = value.asObject.get
+                  if (obj.contains("type") && !obj.contains("$schema")) {
+                    acc.add(
+                      key,
+                      Json.obj(
+                        ("anyOf", Json.arr(recursive(obj.asJson), Json.obj(("type", Json.fromString("null")))))
+                      )
+                    )
+                  } else {
+                    acc.add(key, recursive(value))
+                  }
+                } else {
+                  acc.add(key, value)
+                }
+              }
+              .asJson
+          case None        => that
+        }
+
+      that.asObject match {
+        case Some(value) if value.contains("type") && !value.contains("$schema") =>
+          Json.obj(
+            (
+              "anyOf",
+              Json.arr(value.mapValues(recursive).asJson, Json.obj(("type", Json.fromString("null"))))
+            )
+          )
+        case Some(value)                                                         => recursive(value.asJson)
+        case None                                                                => that
+      }
+    }
+
+    // t h e n
+    val expected = parse("""
+                           |{
+                           |  "anyOf": [
+                           |    {
+                           |      "type": "object",
+                           |      "properties": {
+                           |        "street_address": {
+                           |          "anyOf": [
+                           |            {
+                           |              "type": "string"
+                           |            },
+                           |            {
+                           |              "type": "null"
+                           |            }
+                           |          ]
+                           |        },
+                           |        "city": {
+                           |          "anyOf": [
+                           |            {
+                           |              "type": "string"
+                           |            },
+                           |            {
+                           |              "type": "null"
+                           |            }
+                           |          ]
+                           |        },
+                           |        "state": {
+                           |          "anyOf": [
+                           |            {
+                           |              "type": "string"
+                           |            },
+                           |            {
+                           |              "type": "null"
+                           |            }
+                           |          ]
+                           |        }
+                           |      },
+                           |      "required": [
+                           |        "street_address",
+                           |        "city",
+                           |        "state"
+                           |      ]
+                           |    },
+                           |    {
+                           |      "type": "null"
+                           |    }
+                           |  ]
+                           |}
+                           |""".stripMargin).getOrElse(Json.Null)
+
+    schemaFold(actual) shouldBe expected
+  }
+
+  it should "schemaFolder" in {
+
+    // g i v e n
+    val json: String =
+      """
+        |{
+        |  "$id": "https://example.com/person.schema.json",
+        |  "$schema": "https://json-schema.org/draft/2020-12/schema",
+        |  "title": "Person",
+        |  "type": "object",
+        |  "properties": {
+        |    "firstName": {
+        |      "type": "string",
+        |      "description": "The person's first name."
+        |    },
+        |    "lastName": {
+        |      "type": "string",
+        |      "description": "The person's last name."
+        |    },
+        |    "age": {
+        |      "description": "Age in years which must be equal to or greater than zero.",
+        |      "type": "integer",
+        |      "minimum": 0
+        |    }
+        |  }
+        |}
+        |""".stripMargin
+
+    // w h e n
+    val actual: Json = parse(json).getOrElse(Json.Null)
+    def schemaFolder(json: Json): Json = {
+      val folder = new Json.Folder[Json] {
+        def onNull: Json                       = Json.Null
+        def onBoolean(value: Boolean): Json    = Json.fromBoolean(value)
+        def onNumber(value: JsonNumber): Json  = Json.fromJsonNumber(value)
+        def onString(value: String): Json      = Json.fromString(value)
+        def onArray(value: Vector[Json]): Json = Json.fromValues(value)
+        def onObject(value: JsonObject): Json  =
+          if (value.contains("type") && !value.contains("$schema")) {
+            Json.fromJsonObject(
+              JsonObject(
+                ("anyOf", Json.arr(JsonObject(value.toMap.view.mapValues(schemaFolder).toSeq: _*).asJson, Json.obj(("type", Json.fromString("null")))))
+              )
+            )
+          } else {
+            if (!value.asJson.isObject) {
+              Json.fromJsonObject(value)
+            } else {
+              val updatedObj = value.toMap.map { case (key, value) => key -> schemaFolder(value) }
+              Json.fromJsonObject(updatedObj.asJsonObject)
+            }
+          }
+      }
+
+      json.foldWith(folder)
+    }
+
+    // t h e n
+    val expected = parse("""
+                           |{
+                           |  "$id": "https://example.com/person.schema.json",
+                           |  "$schema": "https://json-schema.org/draft/2020-12/schema",
+                           |  "title": "Person",
+                           |  "type": "object",
+                           |  "properties": {
+                           |    "firstName": {
+                           |      "anyOf": [
+                           |        {
+                           |          "type": "string",
+                           |          "description": "The person's first name."
+                           |        },
+                           |        {
+                           |          "type": "null"
+                           |        }
+                           |      ]
+                           |    },
+                           |    "lastName": {
+                           |      "anyOf": [
+                           |        {
+                           |          "type": "string",
+                           |          "description": "The person's last name."
+                           |        },
+                           |        {
+                           |          "type": "null"
+                           |        }
+                           |      ]
+                           |    },
+                           |    "age": {
+                           |      "anyOf": [
+                           |        {
+                           |          "description": "Age in years which must be equal to or greater than zero.",
+                           |          "type": "integer",
+                           |          "minimum": 0
+                           |        },
+                           |        {
+                           |          "type": "null"
+                           |        }
+                           |      ]
+                           |    }
+                           |  }
+                           |}
+                           |""".stripMargin).getOrElse(Json.Null)
+
+    schemaFolder(actual) shouldBe expected
+  }
+
 }

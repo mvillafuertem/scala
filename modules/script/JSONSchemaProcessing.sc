@@ -8,12 +8,12 @@ import $ivy.`io.circe::circe-parser:0.12.3`
 import $ivy.`org.slf4j:slf4j-api:1.7.30`
 import io.circe.parser._
 import io.circe.syntax.EncoderOps
-import io.circe.{Json, JsonObject}
-import org.slf4j.{Logger, LoggerFactory}
+import io.circe.{ Json, JsonObject }
+import org.slf4j.{ Logger, LoggerFactory }
 import zio.console._
-import zio.{ExitCode, Task, UIO, URIO, ZIO}
+import zio.{ ExitCode, Task, UIO, URIO, ZIO }
 
-import java.io.{File, FileInputStream}
+import java.io.{ File, FileInputStream }
 import java.nio.charset.StandardCharsets
 
 val rootLogger = LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME).asInstanceOf[ch.qos.logback.classic.Logger]
@@ -41,6 +41,61 @@ object JSONSchemaProcessing extends zio.App {
       }
     }
     schema(json)
+  }
+
+  def process2(json: Json): Task[Json] = Task.effect {
+    def schema2(json: Json): Json = json.mapObject { obj =>
+      if (obj.contains("type") && !obj.contains("$schema")) {
+        val updatedObj = JsonObject(obj.toMap.view.mapValues(schema2).toSeq: _*).asJson
+        JsonObject(("anyOf", Json.arr(updatedObj, Json.obj(("type", Json.fromString("null"))))))
+      } else {
+        if (!obj.asJson.isObject) {
+          obj
+        } else {
+          JsonObject(obj.toMap.view.mapValues(schema2).toSeq: _*)
+        }
+      }
+    }
+    schema2(json)
+  }
+  def process3(json: Json): Task[Json] = Task.effect {
+    def recursive(that: Json): Json  =
+      that.asObject match {
+        case Some(value) =>
+          value.toIterable
+            .foldLeft(JsonObject.empty) { case (acc, (key, value)) =>
+              if (value.isObject) {
+                val obj = value.asObject.get
+                if (obj.contains("type") && !obj.contains("$schema")) {
+                  acc.add(
+                    key,
+                    Json.obj(
+                      ("anyOf", Json.arr(recursive(obj.asJson), Json.obj(("type", Json.fromString("null")))))
+                    )
+                  )
+                } else {
+                  acc.add(key, recursive(value))
+                }
+              } else {
+                acc.add(key, value)
+              }
+            }
+            .asJson
+        case None        => that
+      }
+    def schemaFold(that: Json): Json =
+      that.asObject match {
+        case Some(value) if value.contains("type") && !value.contains("$schema") =>
+          Json.obj(
+            (
+              "anyOf",
+              Json.arr(value.mapValues(recursive).asJson, Json.obj(("type", Json.fromString("null"))))
+            )
+          )
+        case Some(value)                                                         => recursive(value.asJson)
+        case None                                                                => that
+      }
+    schemaFold(json)
   }
 
   def readFile(path: String): Task[FileInputStream] =
