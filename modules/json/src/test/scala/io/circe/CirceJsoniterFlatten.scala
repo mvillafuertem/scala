@@ -77,11 +77,11 @@ object CirceJsoniterFlatten {
             val key    = in.readKeyAsString()
             val str    = k.concat(key)
             val result = decodeValueRecursive(str, in, default)
-            if (result.isObject) {
-              //x.putAll(result.asObject.get.toMap.asJava) // TODO intentar no usar converters .asJava
-              result.asObject.get.toMap.foreach { case (str, json) => x.put(str, json) }
-            } else {
-              x.put(str, result)
+            result match {
+              case JObject(value) =>
+                //x.putAll(result.asObject.get.toMap.asJava) // TODO intentar no usar converters .asJava
+                value.toIterable.foreach { case (str, json) => x.put(str, json) }
+              case _              => x.put(str, result)
             }
           } while (in.isNextToken(','))
           if (!in.isCurrentToken('}')) in.objectEndOrCommaError()
@@ -99,11 +99,11 @@ object CirceJsoniterFlatten {
           do {
             val str    = k.concat(s"[$i]")
             val result = decodeValueRecursive(str, in, default)
-            if (result.isObject) {
-              //m.putAll(result.asObject.get.toMap.asJava) // TODO intentar no usar converters .asJava
-              result.asObject.get.toMap.foreach { case (str, json) => m.put(str, json) }
-            } else {
-              m.put(str, result)
+            result match {
+              case JObject(value) =>
+                //m.putAll(result.asObject.get.toMap.asJava) // TODO intentar no usar converters .asJava
+                value.toIterable.foreach { case (str, json) => m.put(str, json) }
+              case _              => m.put(str, result)
             }
             i += 1
           } while (in.isNextToken(','))
