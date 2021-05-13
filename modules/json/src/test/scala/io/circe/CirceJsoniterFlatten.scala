@@ -1,9 +1,9 @@
 package io.circe
 
-import java.util
-
-import com.github.plokhotnyuk.jsoniter_scala.core.{ JsonReader, JsonReaderException, JsonValueCodec, JsonWriter }
+import com.github.plokhotnyuk.jsoniter_scala.core.{ JsonReader, JsonValueCodec, JsonWriter }
 import io.circe.Json.{ JArray, JBoolean, JNull, JNumber, JObject, JString }
+
+import java.util
 
 object CirceJsoniterFlatten {
 
@@ -60,26 +60,28 @@ object CirceJsoniterFlatten {
         case '"'                                                                   => decodeString(in)
         case 'f' | 't'                                                             => decodeBoolean(in)
         case n @ ('0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '-') => decodeNumber(in, n)
-        case '['                                                                   => decodeArray(in, default)
-        case '{'                                                                   => decodeObject(k, in, default)
+        case '['                                                                   => if (k.isEmpty) decodeArray(k, in, default) else decodeArray(k.concat("."), in, default)
+        case '{'                                                                   => if (k.isEmpty) decodeObject(k, in, default) else decodeObject(k.concat("."), in, default)
         case _                                                                     => in.decodeError("expected JSON value")
       }
 
     override def decodeValue(in: JsonReader, default: Json): Json = decodeValueRecursive("", in, default)
 
-    private def decodeObject(k: String, in: JsonReader, default: Json) =
+    private def decodeObject(k: String, in: JsonReader, default: Json): JObject =
       JObject(
         if (in.isNextToken('}')) JsonObject.empty
         else {
           val x = new util.LinkedHashMap[String, Json]
           in.rollbackToken()
           do {
-            val key = in.readKeyAsString()
-            if (k.isEmpty)
-              x.put(key, decodeValueRecursive(key, in, default))
-            else {
-              val str = k.concat(".").concat(key)
-              x.put(str, decodeValueRecursive(str, in, default))
+            val key    = in.readKeyAsString()
+            val str    = k.concat(key)
+            val result = decodeValueRecursive(str, in, default)
+            if (result.isObject) {
+              //x.putAll(result.asObject.get.toMap.asJava) // TODO intentar no usar converters .asJava
+              result.asObject.get.toMap.foreach { case (str, json) => x.put(str, json) }
+            } else {
+              x.put(str, result)
             }
           } while (in.isNextToken(','))
           if (!in.isCurrentToken('}')) in.objectEndOrCommaError()
@@ -87,24 +89,26 @@ object CirceJsoniterFlatten {
         }
       )
 
-    private def decodeArray(in: JsonReader, default: Json) =
-      JArray(
-        if (in.isNextToken(']')) Vector.empty
+    private def decodeArray(k: String, in: JsonReader, default: Json): JObject =
+      JObject(
+        if (in.isNextToken(']')) JsonObject.empty
         else {
+          val m = new util.LinkedHashMap[String, Json]
           in.rollbackToken()
-          var x                  = new Array[Json](4)
-          var i                  = 0
+          var i = 0
           do {
-            if (i == x.length) x = java.util.Arrays.copyOf(x, i << 1)
-            x(i) = decodeValue(in, default)
+            val str    = k.concat(s"[$i]")
+            val result = decodeValueRecursive(str, in, default)
+            if (result.isObject) {
+              //m.putAll(result.asObject.get.toMap.asJava) // TODO intentar no usar converters .asJava
+              result.asObject.get.toMap.foreach { case (str, json) => m.put(str, json) }
+            } else {
+              m.put(str, result)
+            }
             i += 1
           } while (in.isNextToken(','))
-          val jsons: Array[Json] =
-            if (in.isCurrentToken(']'))
-              if (i == x.length) x
-              else java.util.Arrays.copyOf(x, i)
-            else in.arrayEndOrCommaError()
-          jsons.toVector
+          if (!in.isCurrentToken(']')) in.arrayEndOrCommaError()
+          JsonObject.fromLinkedHashMap(m)
         }
       )
 
