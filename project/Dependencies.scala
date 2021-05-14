@@ -443,7 +443,7 @@ object Dependencies {
     val dijon                     = "0.5.0"
     val ficus                     = "1.5.0"
     val h2                        = "1.4.200"
-    val java8Compat               = "0.9.1"
+    val java8Compat               = "1.0.0"
     val jslt                      = "0.1.11"
     val jsoniter                  = "2.8.1"
     val jwtCirce                  = "4.3.0"
