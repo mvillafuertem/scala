@@ -490,6 +490,72 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
 
   }
 
+  it should "deep merge" in {
+
+    // G I V E N
+    val jsonA =
+      """
+        |{
+        |  "values" : {
+        |    "qux" : [
+        |      "a"
+        |    ]
+        |  }
+        |}
+        |""".stripMargin
+    val jsonB =
+      """
+        |{
+        |  "values" : {
+        |    "qux" : [
+        |      "b"
+        |    ]
+        |  }
+        |}
+        |""".stripMargin
+
+    // W H E N
+    def deepMerge(other: Json, that: Json): Json =
+      (other.asObject, that.asObject) match {
+        case (Some(lhs), Some(rhs)) =>
+          Json.fromJsonObject(
+            lhs.toIterable.foldLeft(rhs) { case (acc, (key, value)) =>
+              rhs(key).fold(acc.add(key, value)) { r =>
+                acc(key).fold(acc.add(key, deepMerge(value, r))) { json =>
+                  if (json.isArray) {
+                    val value1 = value.asArray.get.appendedAll(json.asArray.get) // TODO esto no es seguro, buscar otra forma
+                    acc.add(key, value1.asJson)
+                  } else {
+                    acc.add(key, deepMerge(value, r))
+                  }
+                }
+              }
+            }
+          )
+        case _                      => that
+      }
+
+    val actual = for {
+      a <- parse(jsonA)
+      b <- parse(jsonB)
+    } yield deepMerge(a, b)
+
+    // T H E N
+    val expected = parse("""
+                           |{
+                           |  "values" : {
+                           |    "qux" : [
+                           |      "a",
+                           |      "b"
+                           |    ]
+                           |  }
+                           |}
+                           |""".stripMargin)
+
+    actual shouldBe expected
+
+  }
+
   it should "use of optics" in {
 
     // G I V E N

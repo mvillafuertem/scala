@@ -1,7 +1,7 @@
 package io.circe
 
 import com.github.plokhotnyuk.jsoniter_scala.core.{ JsonReader, JsonValueCodec, JsonWriter }
-import io.circe.Json.{ JArray, JBoolean, JNull, JNumber, JObject, JString }
+import io.circe.Json.{ fromJsonObject, JArray, JBoolean, JNull, JNumber, JObject, JString }
 
 import java.util
 
@@ -27,29 +27,43 @@ object CirceJsoniterFlatten {
 
   private val ArrayElem = """^\[(\d+)\]$""".r
 
+  // TODO Simplificar proceso, ahora se hace en dos pasos componer los json y merge
   def blowup(flattened: Json): Json =
     flattened match {
 
       case JObject(tuples) =>
-        tuples.toIterable.map { case (k, v) => _blowup(k.split('.'), v, Vector.empty[Json]) }
-          .fold(JObject(JsonObject.empty))(_ deepMerge _)
-
-      case JArray(_) => throw new RuntimeException("The parser doesn't support array type")
+        tuples.toIterable.map { case (k, v) => _blowup(k.split('.'), v) }
+          .fold(JObject(JsonObject.empty))(deepMerge)
 
       case _ => throw new RuntimeException("The type was not expected at this position of the document")
     }
 
-  private def _blowup(keys: Array[String] = Array(), value: Json, vector: Vector[Json]): Json =
-    if (keys.isEmpty) value match {
-      case JArray(v) => JArray(v)
-      case _         => value
+  private def deepMerge(other: Json, that: Json): Json =
+    (other.asObject, that.asObject) match {
+      case (Some(lhs), Some(rhs)) =>
+        fromJsonObject(
+          lhs.toIterable.foldLeft(rhs) { case (acc, (key, value)) =>
+            rhs(key).fold(acc.add(key, value)) { r =>
+              acc(key).fold(acc.add(key, deepMerge(value, r))) { json =>
+                if (json.isArray) {
+                  val value1 = value.asArray.get.appendedAll(json.asArray.get) // TODO esto no es seguro, buscar otra forma
+                  acc.add(key, JArray(value1))
+                } else {
+                  acc.add(key, deepMerge(value, r))
+                }
+              }
+            }
+          }
+        )
+      case _                      => that
     }
+
+  private def _blowup(keys: Array[String] = Array(), value: Json): Json =
+    if (keys.isEmpty) value
     else
       keys.head match {
-        case ArrayElem(k) =>
-          val vc = vector.appended(value)
-          _blowup(keys.tail, JArray(vc), vc)
-        case _            => JObject(JsonObject(keys.head -> _blowup(keys.tail, value, vector)))
+        case ArrayElem(_) => JArray(Vector(value))
+        case key          => JObject(JsonObject(key -> _blowup(keys.tail, value)))
       }
 
   implicit val codec: JsonValueCodec[Json] = new JsonValueCodec[Json] {

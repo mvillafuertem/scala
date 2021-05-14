@@ -114,7 +114,7 @@ final class JsoniterApplicationSpec extends AnyFlatSpecLike with Matchers {
 
   }
 
-  ignore should "parse and blown up json string to Json" in {
+  it should "parse and blown up json string to Json" in {
 
     // g i v e n
     val json: String =
@@ -135,9 +135,8 @@ final class JsoniterApplicationSpec extends AnyFlatSpecLike with Matchers {
     implicit val codec: JsonValueCodec[Json] = CirceJsoniter.codec
 
     // w h e n
-    val result: Json = readFromArray(json.getBytes(StandardCharsets.UTF_8))
-    val flattened    = CirceJsoniterFlatten.flatten(result)
-    val actual       = CirceJsoniterFlatten.blowup(flattened)
+    val flattened = readFromArray(json.getBytes(StandardCharsets.UTF_8))
+    val actual    = CirceJsoniterFlatten.blowup(flattened)
 
     // t h e n
     val expected = Json.obj(
@@ -179,7 +178,6 @@ final class JsoniterApplicationSpec extends AnyFlatSpecLike with Matchers {
 
     // w h e n
     val actual: Json = readFromArray(json.getBytes(StandardCharsets.UTF_8))
-    println(actual)
 
     // t h e n
     val expected = Json.obj(
