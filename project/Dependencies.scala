@@ -205,8 +205,8 @@ object Dependencies {
   val foundations: Seq[ModuleID] = Seq(
     // D O T T Y
     Artifact.scalaCheck % Version.scalaCheck         % Test,
-    "org.scalatest"    %% "scalatest-flatspec"       % "3.2.8" % Test,
-    "org.scalatest"    %% "scalatest-shouldmatchers" % "3.2.8" % Test
+    "org.scalatest"    %% "scalatest-flatspec"       % "3.2.9" % Test,
+    "org.scalatest"    %% "scalatest-shouldmatchers" % "3.2.9" % Test
   )
 
   val http4s: Seq[ModuleID] = Seq(
