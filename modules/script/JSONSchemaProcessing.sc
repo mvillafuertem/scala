@@ -1,7 +1,7 @@
 #!/usr/bin/env amm
 
 import $ivy.`ch.qos.logback:logback-classic:1.2.3`
-import $ivy.`dev.zio::zio:1.0.7`
+import $ivy.`dev.zio::zio:1.0.8`
 import $ivy.`io.circe::circe-core:0.12.3`
 import $ivy.`io.circe::circe-generic:0.12.3`
 import $ivy.`io.circe::circe-parser:0.12.3`
