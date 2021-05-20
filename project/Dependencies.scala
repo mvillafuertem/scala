@@ -47,7 +47,7 @@ object Dependencies {
     // A L P A K K A
     Seq(
       // A L P A K K A  I N T E G R A T I O N  T E S T
-      Artifact.akkaSlf4f              % "2.5.32"                    % IntegrationTest,
+      Artifact.akkaSlf4f              % Version.akka                % IntegrationTest,
       Artifact.akkaStreamKafkaTestkit % Version.alpakkaKafka        % IntegrationTest,
       Artifact.logback                % Version.logback             % IntegrationTest,
       Artifact.scalaTest              % Version.scalaTest           % IntegrationTest,
@@ -423,13 +423,13 @@ object Dependencies {
   }
 
   private object Version {
-    val akka                      = "2.6.13"
+    val akka                      = "2.6.14"
     val akkaHttp                  = "10.2.4"
     val akkaHttpCirce             = "1.36.0"
     val akkaPersistenceCassandra  = "0.100"
     val akkaPersistenceInmemory   = "2.5.15.2"
     val akkaPersistenceJdbc       = "3.5.2"
-    val alpakkaKafka              = "2.0.7"
+    val alpakkaKafka              = "2.1.0"
     val alpakkaMongodb            = "2.0.2"
     val alpakkaSlick              = "2.0.2"
     val awsCdk                    = "1.105.0"
