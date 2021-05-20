@@ -35,7 +35,7 @@ object Functor {
       def leaf[T](value: T): Tree[T] = Leaf(value)
       def branch[T](value: T, left: Tree[T], right: Tree[T]): Tree[T] = Branch(value, left, right)
 
-      def maxDepth[T](tree: Tree[T]): Int = {
+      def maxDepth[T](tree: Tree[T]): Int =
         tree match {
           case Leaf(_) => 0
           case Branch(_, left, right) => Math.max(maxDepth(left), maxDepth(right)) + 1

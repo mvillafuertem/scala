@@ -13,7 +13,7 @@ import com.mongodb.client.model.{ Filters, InsertManyOptions, Updates }
 import com.mongodb.reactivestreams.client.MongoCollection
 import org.bson.Document
 import org.bson.codecs.configuration.CodecRegistries.{ fromProviders, fromRegistries }
-import org.mongodb.scala.bson.codecs.DEFAULT_CODEC_REGISTRY
+import org.mongodb.scala.MongoClient.DEFAULT_CODEC_REGISTRY
 import org.mongodb.scala.bson.codecs.Macros._
 import org.scalatest._
 import org.scalatest.concurrent.ScalaFutures

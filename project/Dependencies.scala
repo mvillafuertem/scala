@@ -158,7 +158,7 @@ object Dependencies {
     ).map(_                  % Version.tapir) ++ Seq(
       // A K K A  H T T P  T E S T
       Artifact.akkaHttpTestkit % Version.akkaHttp,
-      Artifact.akkaTestKit     % Version.akka,
+      Artifact.akkaTestKit     % "2.6.13",
       Artifact.scalaTest       % Version.scalaTest
     ).map(_ % Test)
 
@@ -430,7 +430,7 @@ object Dependencies {
     val akkaPersistenceInmemory   = "2.5.15.2"
     val akkaPersistenceJdbc       = "3.5.2"
     val alpakkaKafka              = "2.1.0"
-    val alpakkaMongodb            = "2.0.2"
+    val alpakkaMongodb            = "3.0.0"
     val alpakkaSlick              = "2.0.2"
     val awsCdk                    = "1.105.0"
     val awsLambda                 = "1.2.1"
