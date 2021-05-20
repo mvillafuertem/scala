@@ -203,7 +203,7 @@ object MongoSinkIT {
     override protected def beforeAll(): Unit = {
       container = dockerInfrastructure
       container.start()
-      Source.fromPublisher(db.drop()).runWith(Sink.head).futureValue
+      Source.fromPublisher(db.drop()).run().futureValue
     }
 
     val db: MongoDatabase                                    = client.getDatabase("MongoSinkSpec").withCodecRegistry(codecRegistry)
