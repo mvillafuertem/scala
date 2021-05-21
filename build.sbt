@@ -60,7 +60,7 @@ lazy val scala = (project in file("."))
   .settings(commands += Commands.frontendDevCommand("slinky"))
   .settings(commands += Commands.frontendDevCommand("docs"))
 
-lazy val advanced = (project in file("modules/advanced"))
+lazy val advanced = (project in file("modules/foundations/advanced"))
 // S E T T I N G S
   .settings(commonSettings)
   .settings(libraryDependencies ++= Dependencies.advanced)
@@ -113,7 +113,7 @@ lazy val `aws-sdk` = (project in file("modules/aws/sdk"))
   .settings(commonSettings)
   .settings(libraryDependencies ++= Dependencies.`aws-sdk`)
 
-lazy val basic = (project in file("modules/basic"))
+lazy val basic = (project in file("modules/foundations/basic"))
 // S E T T I N G S
   .settings(commonSettings)
   .settings(libraryDependencies ++= Dependencies.basic)
@@ -166,7 +166,7 @@ lazy val `sensor-controller` = (project in file("modules/akka/sensor-controller"
   // P L U G I N S
   .enablePlugins(GitVersioning)
 
-lazy val algorithms = (project in file("modules/algorithms"))
+lazy val algorithms = (project in file("modules/foundations/algorithms"))
 // S E T T I N G S
   .settings(commonSettings)
   .settings(libraryDependencies ++= Dependencies.algorithms)
@@ -191,12 +191,12 @@ lazy val docs = (project in file("modules/docs"))
   .enablePlugins(ScalaJSBundlerPlugin)
   .enablePlugins(MdocPlugin)
 
-lazy val dotty = (project in file("modules/dotty"))
+lazy val dotty = (project in file("modules/foundations/dotty"))
   // S E T T I N G S
   .settings(scalaVersion := Settings.scala3)
   .settings(libraryDependencies ++= Dependencies.dotty.map(_.cross(CrossVersion.for3Use2_13)))
 
-lazy val foundations = (project in file("modules/foundations"))
+lazy val foundations = (project in file("modules/foundations/foundations"))
   // S E T T I N G S
   .settings(commonSettings)
   .settings(libraryDependencies ++= Dependencies.foundations)
@@ -213,7 +213,7 @@ lazy val json = (project in file("modules/json"))
   .settings(scalacOptions += "-Ymacro-annotations")
   .settings(libraryDependencies ++= Dependencies.json)
 
-lazy val reflection = (project in file("modules/reflection"))
+lazy val reflection = (project in file("modules/foundations/reflection"))
   .dependsOn(algorithms)
   // S E T T I N G S
   .settings(commonSettings)
