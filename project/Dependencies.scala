@@ -431,7 +431,7 @@ object Dependencies {
     val akkaPersistenceJdbc       = "3.5.2"
     val alpakkaKafka              = "2.1.0"
     val alpakkaMongodb            = "3.0.0"
-    val alpakkaSlick              = "2.0.2"
+    val alpakkaSlick              = "3.0.0"
     val awsCdk                    = "1.105.0"
     val awsLambda                 = "1.2.1"
     val awsSdk                    = "2.16.67"
