@@ -5,7 +5,7 @@ import org.http4s.{ HttpRoutes, Request, Response }
 import org.http4s.dsl.Http4sDsl
 import org.http4s.implicits._
 import org.http4s.server.Server
-import org.http4s.server.blaze.BlazeServerBuilder
+import org.http4s.blaze.server.BlazeServerBuilder
 import zio._
 import zio.console.Console
 import zio.interop.catz._
