@@ -1,11 +1,11 @@
 package io.github.mvillafuertem.zio.schedule
 
-import zio.Schedule
 import zio.console.putStr
 import zio.duration._
 import zio.test.Assertion.equalTo
 import zio.test._
 import zio.test.environment.{ TestClock, TestConsole, TestEnvironment }
+import zio.{ Chunk, Ref, Schedule }
 
 object ZScheduleSpec extends DefaultRunnableSpec {
 
@@ -61,13 +61,23 @@ object ZScheduleSpec extends DefaultRunnableSpec {
             actual <- TestConsole.output
           } yield actual
         )(equalTo(Vector("any stuff", "any stuff", "any stuff", "any stuff")))
+      },
+      testM("repeat a spaced message") {
+        assertM(
+          for {
+            ref    <- Ref.make(0)
+            fiber  <- ref
+                        .getAndUpdate(_ + 1)
+                        .repeat(
+                          (Schedule.spaced(10.milliseconds) >>>
+                            Schedule.recurWhile(_ < 100)) *>
+                            Schedule.collectAll[Int]
+                        )
+                        .fork
+            _      <- TestClock.adjust(1000.milliseconds)
+            values <- fiber.join
+          } yield values
+        )(equalTo(Chunk.fromIterable(0 to 100)))
       }
-//      testM("Schedule.unwrap should return a Schedule out of an effect")(
-//        assertM(
-//          for {
-//            effect <- ZIO.succeed(5).map(Schedule.recurs)
-//          } yield Schedule.unwrap(effect)
-//        )(equalTo())
-//      )
-    ) //@@ zio.test.TestAspect.ignore
+    ) @@ zio.test.TestAspect.timed
 }
