@@ -1,31 +1,26 @@
 #!/usr/bin/env amm
 
+import $ivy.`com.softwaremill.sttp.client3::akka-http-backend:3.3.4`
+import $ivy.`com.softwaremill.sttp.client3::async-http-client-backend-zio:3.3.4`
+import $ivy.`com.softwaremill.sttp.client3::circe:3.3.4`
+import $ivy.`com.softwaremill.sttp.client3::core:3.3.4`
 import $ivy.`dev.zio::zio-test:1.0.8`
 import $ivy.`dev.zio::zio:1.0.8`
-import $ivy.`com.softwaremill.sttp.client::akka-http-backend:2.2.9`
-import $ivy.`com.softwaremill.sttp.client::async-http-client-backend-zio:2.2.9`
-import $ivy.`com.softwaremill.sttp.client::circe:2.2.9`
-import $ivy.`com.softwaremill.sttp.client::core:2.2.9`
-import $ivy.`io.circe::circe-generic:0.13.0`
 import $ivy.`io.circe::circe-generic-extras:0.13.0`
-
-import zio.console.{ putStr, putStrLn, Console }
-import io.circe.parser._
-import zio._
-import zio.test.Assertion._
-import zio.test._
-import zio.test.environment.Live
+import $ivy.`io.circe::circe-generic:0.13.0`
+import $ivy.`io.circe::circe-parser:0.13.0`
+import io.circe.generic.extras.Configuration
 import io.circe.generic.extras.auto._
-import io.circe.generic.extras.{ Configuration, ConfiguredJsonCodec }
-import sttp.client.asynchttpclient.WebSocketHandler
-import sttp.client.asynchttpclient.zio.AsyncHttpClientZioBackend
-import sttp.client.circe.{ asJson, _ }
-import sttp.client.{ SttpBackend, _ }
+import sttp.client3._
+import sttp.client3.asynchttpclient.zio._
+import sttp.client3.circe._
+import zio.clock.Clock
+import zio.console.{Console, putStr, putStrLn}
 import zio.duration._
 import zio.test.Assertion.equalTo
 import zio.test._
-import zio.test.environment.{ TestClock, TestEnvironment }
-import zio.{ Chunk, RIO, Schedule, Task }
+import zio.test.environment.{TestClock, TestEnvironment}
+import zio.{Chunk, RIO, Schedule, _}
 
 // amm `pwd`/app/modules/script/SttpRequestWithRepeatPolicy.sc impl
 @main
@@ -38,36 +33,34 @@ def spec(): Unit = SttpRequestWithRepeatPolicySpec.main(Array())
 object SttpRequestWithRepeatPolicy extends zio.App {
 
   // @see https://requestbin.com/r/ene80m1n53nb
-  implicit val customConfig: Configuration                        = Configuration.default
-  val backend: Task[SttpBackend[Task, Nothing, WebSocketHandler]] = AsyncHttpClientZioBackend()
+  implicit val customConfig: Configuration = Configuration.default
 
   case class Response(success: Boolean)
   private val uri = "https://ene80m1n53nb.x.pipedream.net/"
   val requestGET  = basicRequest.get(uri"$uri").response(asJson[Response])
 
+  val program: ZIO[Console with SttpClient with Clock, Throwable, Chunk[Response]] = send(requestGET)
+    .map(_.body)
+    .absolve
+    .repeat(
+      (Schedule.spaced(2.second) >>>
+        Schedule.recurWhile[Long](_ < 5))
+        .tapOutput[Console](n => putStr(n.toString + " ").exitCode) *>
+        Schedule
+          .collectAll[Response]
+          .tapInput[Console, Response](response => putStrLn(response.toString).exitCode)
+    )
+
   override def run(args: List[String]): ZIO[zio.ZEnv, Nothing, ExitCode] =
-    AsyncHttpClientZioBackend().flatMap { implicit backend =>
-      requestGET
-        .send()
-        .map(_.body)
-        .absolve
-        .repeat(
-          (Schedule.spaced(2.second) >>>
-            Schedule.recurWhile[Long](_ < 5))
-            .tapOutput[Console](n => putStr(n.toString + " ").exitCode) *>
-            Schedule
-              .collectAll[Response]
-              .tapInput[Console, Response](response => putStrLn(response.toString).exitCode)
-        )
-        .ensuring(backend.close().ignore)
-    }.exitCode
+    program
+      .provideCustomLayer[Throwable, SttpClient](AsyncHttpClientZioBackend.layer())
+      .exitCode
 }
 
 object SttpRequestWithRepeatPolicySpec extends DefaultRunnableSpec {
 
   // @see https://requestbin.com/r/ene80m1n53nb
-  implicit val customConfig: Configuration                        = Configuration.default
-  val backend: Task[SttpBackend[Task, Nothing, WebSocketHandler]] = AsyncHttpClientZioBackend()
+  implicit val customConfig: Configuration = Configuration.default
 
   case class Response(success: Boolean)
   case class Request(success: Boolean)
@@ -78,31 +71,30 @@ object SttpRequestWithRepeatPolicySpec extends DefaultRunnableSpec {
     suite(getClass.getSimpleName)(
       testM(s"${requestGET.toCurl} ++ repeat policy")(
         assertM(
-          backend.flatMap { implicit backend =>
-            for {
-              fiber <- requestGET
-                         .send()
-                         .map(_.body)
-                         .absolve
-                         .repeat(
-                           (Schedule.spaced(2.second) >>>
-                             Schedule.recurWhile[Long](_ < 5))
-                             .tapOutput[Console](n => putStr(n.toString + " ").exitCode) *>
-                             Schedule
-                               .collectAll[Response]
-                               .tapInput[Console, Response](response => putStrLn(response.toString).exitCode)
-                         )
-                         .catchAll(a =>
-                           zio.console.putStr(a.getMessage) >>>
-                             RIO.effect(Chunk(Response(false)))
-                         )
-                         .fork
-              _     <- TestClock.adjust(20.seconds)
-              _     <- fiber.join.ensuring(backend.close().ignore)
-            } yield ()
-          }
-        )(equalTo(()))
+          (for {
+            fiber  <- AsyncHttpClientZioBackend().flatMap(backend =>
+                        backend
+                          .send(requestGET)
+                          .map(_.body)
+                          .absolve
+                          .repeat(
+                            (Schedule.spaced(2.second) >>>
+                              Schedule.recurWhile[Long](_ < 5))
+                              .tapOutput[Console](n => putStr(n.toString + " ").exitCode) *>
+                              Schedule
+                                .collectAll[Response]
+                                .tapInput[Console, Response](response => putStrLn(response.toString).exitCode)
+                          )
+                          .catchAll(a =>
+                            zio.console.putStr(a.toString) >>>
+                              RIO.effect(Chunk(Response(false)))
+                          )
+                          .fork
+                      )
+            _      <- TestClock.adjust(20.seconds)
+            actual <- fiber.join
+          } yield actual)
+        )(equalTo(Chunk()))
       )
     )
-
 }

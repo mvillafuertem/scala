@@ -1,11 +1,11 @@
 #!/usr/bin/env amm
 
 import $ivy.`ch.qos.logback:logback-classic:1.2.3`
-import $ivy.`com.softwaremill.sttp.client::akka-http-backend:2.2.9`
-import $ivy.`com.softwaremill.sttp.client::async-http-client-backend-zio:2.2.9`
-import $ivy.`com.softwaremill.sttp.client::circe:2.2.9`
-import $ivy.`com.softwaremill.sttp.client::core:2.2.9`
-import $ivy.`dev.zio::zio:1.0.7`
+import $ivy.`com.softwaremill.sttp.client3::akka-http-backend:3.3.4`
+import $ivy.`com.softwaremill.sttp.client3::async-http-client-backend-zio:3.3.4`
+import $ivy.`com.softwaremill.sttp.client3::circe:3.3.4`
+import $ivy.`com.softwaremill.sttp.client3::core:3.3.4`
+import $ivy.`dev.zio::zio:1.0.8`
 import $ivy.`io.circe::circe-generic-extras:0.13.0`
 import $ivy.`io.circe::circe-generic:0.13.0`
 import $ivy.`io.circe::circe-optics:0.13.0`
@@ -14,8 +14,8 @@ import $ivy.`org.slf4j:slf4j-api:1.7.30`
 import io.circe.optics.JsonPath._
 import io.circe.parser._
 import org.slf4j.{ Logger, LoggerFactory }
-import sttp.client.asynchttpclient.zio.AsyncHttpClientZioBackend
-import sttp.client.{ basicRequest, Request, _ }
+import sttp.client3.asynchttpclient.zio.{ send, AsyncHttpClientZioBackend }
+import sttp.client3.{ Request, basicRequest, _ }
 import zio.console.putStrLn
 import zio.duration.durationInt
 import zio.{ ExitCode, IO, Schedule, Task, URIO }
@@ -50,19 +50,19 @@ object JiraApiRequest extends zio.App {
             |}
             |""".stripMargin)
 
-  private def issueGET(issue: String): Request[Either[String, String], Nothing] = basicRequest
+  private def issueGET(issue: String): Request[Either[String, String], Any] = basicRequest
     .get(uri"$uri/api/2/issue/$issue")
 
-  private def issuePOST(issue: String): Request[Either[String, String], Nothing] = basicRequest
+  private def issuePOST(issue: String): Request[Either[String, String], Any] = basicRequest
     .post(uri"$uri/api/2/issue")
 
-  private val metadataGETFilterByProjectKey: Request[Either[String, String], Nothing] = basicRequest
+  private val metadataGETFilterByProjectKey: Request[Either[String, String], Any] = basicRequest
     .get(uri"$uri/api/2/issue/createmeta?projectKeys=TL")
 
-  private val metadataGETFilterByProjectKeyAndDiscoverIssueFieldData: Request[Either[String, String], Nothing] = basicRequest
+  private val metadataGETFilterByProjectKeyAndDiscoverIssueFieldData: Request[Either[String, String], Any] = basicRequest
     .get(uri"$uri/api/2/issue/createmeta?projectKeys=TL&issuetypeNames=Feature&expand=projects.issuetypes.fields")
 
-  private val metadataGETDiscoverIssueFieldData: Request[Either[String, String], Nothing] = basicRequest
+  private val metadataGETDiscoverIssueFieldData = basicRequest
     .get(uri"$uri/api/2/issue/createmeta/TL/issuetypes/10000")
 
   val _modifyCustomField = root.fields.customfield_13500.each.string.modify(_ => "HOLA MUNDO")
@@ -72,55 +72,56 @@ object JiraApiRequest extends zio.App {
   override def run(args: List[String]): URIO[zio.ZEnv, ExitCode] =
     backend.flatMap { implicit backend =>
       for {
-        authResponse     <- authPOST.send()
+        authResponse     <- send(authPOST)
         issue             = "TL-2097"
-        issueGETResponse <- issueGET(issue).cookies(authResponse).send()
+        issueGETResponse <- send(issueGET(issue).cookies(authResponse))
         body             <- IO.fromEither(issueGETResponse.body).mapError(new RuntimeException(_))
         jsonBody         <- Task.fromEither(parse(body).map(_modifyCustomField).map(_.noSpaces))
-        metadata         <- metadataGETDiscoverIssueFieldData.cookies(authResponse).send()
+        metadata         <- send(metadataGETDiscoverIssueFieldData.cookies(authResponse))
         _                <- putStrLn("_________________")
         _                <- putStrLn(metadata.body.getOrElse("💣 ERROR 💥"))
         _                <- putStrLn("_________________")
-        issueResponse    <- issuePOST(issue)
-                              .contentType("application/json")
-                              .body("""
-                                   |{
-                                   |    "fields": {
-                                   |       "project":
-                                   |       {
-                                   |          "key": "TL"
-                                   |       },
-                                   |       "summary": "REST ye merry gentlemen.",
-                                   |       "description": "Creating of an issue using project keys and issue type names using the REST API",
-                                   |       "issuetype": {
-                                   |          "name": "Feature"
-                                   |       },
-                                   |       "labels": ["PR"],
-                                   |       "customfield_13500" : ["TO REPRODUCE ERROR"],
-                                   |       "customfield_10006" : "aDa ZIO Rest API",
-                                   |       "customfield_13300" : ["1592201"],
-                                   |       "customfield_10264" : ["P1"]
-                                   |   }
-                                   |}
-                                   |""".stripMargin)
-                              .cookies(authResponse)
-                              .send()
-                              .repeatN(100)
+        issueResponse    <- send(
+                              issuePOST(issue)
+                                .contentType("application/json")
+                                .body("""
+                                     |{
+                                     |    "fields": {
+                                     |       "project":
+                                     |       {
+                                     |          "key": "TL"
+                                     |       },
+                                     |       "summary": "REST ye merry gentlemen.",
+                                     |       "description": "Creating of an issue using project keys and issue type names using the REST API",
+                                     |       "issuetype": {
+                                     |          "name": "Feature"
+                                     |       },
+                                     |       "labels": ["PR"],
+                                     |       "customfield_13500" : ["TO REPRODUCE ERROR"],
+                                     |       "customfield_10006" : "aDa ZIO Rest API",
+                                     |       "customfield_13300" : ["1592201"],
+                                     |       "customfield_10264" : ["P1"]
+                                     |   }
+                                     |}
+                                     |""".stripMargin)
+                                .cookies(authResponse)
+                            ).repeatN(100)
 
       } yield issueResponse
-    }.fold(
-      { e =>
-        log.error(e.getMessage, e)
-        ExitCode.failure
-      },
-      { r =>
-        log.info(s"Status Code ~> ${r.code}")
-        r.body match {
-          case Left(_)      => log.error(r.toString())
-          case Right(value) => log.info(value)
+    }.provideCustomLayer(AsyncHttpClientZioBackend.layer())
+      .fold(
+        { e =>
+          log.error(e.getMessage, e)
+          ExitCode.failure
+        },
+        { r =>
+          log.info(s"Status Code ~> ${r.code}")
+          r.body match {
+            case Left(_)      => log.error(r.toString())
+            case Right(value) => log.info(value)
+          }
+          ExitCode.success
         }
-        ExitCode.success
-      }
-    )
+      )
 
 }

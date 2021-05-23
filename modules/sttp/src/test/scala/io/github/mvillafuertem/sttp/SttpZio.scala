@@ -2,11 +2,9 @@ package io.github.mvillafuertem.sttp
 
 import io.circe.generic.extras.auto._
 import io.circe.generic.extras.{ Configuration, ConfiguredJsonCodec }
-import sttp.client.asynchttpclient.WebSocketHandler
-import sttp.client.asynchttpclient.zio.AsyncHttpClientZioBackend
-import sttp.client.circe.{ asJson, _ }
-import sttp.client.{ SttpBackend, _ }
-import zio.Task
+import sttp.client3._
+import sttp.client3.asynchttpclient.zio._
+import sttp.client3.circe.{ asJson, _ }
 import zio.test.Assertion.equalTo
 import zio.test._
 import zio.test.environment.TestEnvironment
@@ -14,9 +12,8 @@ import zio.test.environment.TestEnvironment
 object SttpZio extends DefaultRunnableSpec {
 
   // @see https://requestbin.com/r/enwf1kwvx6vnf
-  implicit val customConfig: Configuration                        = Configuration.default.withSnakeCaseMemberNames
+  implicit val customConfig: Configuration = Configuration.default.withSnakeCaseMemberNames
   @ConfiguredJsonCodec case class RequestSnakeCase(successSnakeCase: Boolean)
-  val backend: Task[SttpBackend[Task, Nothing, WebSocketHandler]] = AsyncHttpClientZioBackend()
 
   case class Response(success: Boolean)
   case class Request(success: Boolean)
@@ -25,62 +22,60 @@ object SttpZio extends DefaultRunnableSpec {
   private val requestPOST            = basicRequest.post(uri"$uri").response(asJson[Response]).body[RequestSnakeCase](RequestSnakeCase(true))
   private val requestPUT             = basicRequest.put(uri"$uri").response(asJson[Response]).body[Request](Request(true))
   private val requestDELETE          = basicRequest.delete(uri"$uri").response(asJson[Response])
-  private val equalToResponseSuccess = equalTo(Response(true))
+  private val equalToResponseSuccess = equalTo[Response, Response](Response(true))
 
   override def spec: Spec[TestEnvironment, TestFailure[Throwable], TestSuccess] =
     suite(getClass.getSimpleName)(
       testM(s"${requestGET.toCurl}")(
         assertM(
-          backend
-            .flatMap(implicit backend => requestGET.send())
+          send(requestGET)
             .map(_.body)
             .absolve
+            .provideCustomLayer(AsyncHttpClientZioBackend.layer())
         )(equalToResponseSuccess)
       ),
       testM(s"${requestPOST.toCurl}")(
         assertM(
-          backend
-            .flatMap(implicit backend => requestPOST.send())
+          send(requestPOST)
             .map(_.body)
             .absolve
+            .provideCustomLayer(AsyncHttpClientZioBackend.layer())
         )(equalToResponseSuccess)
       ),
       testM(s"${requestPUT.toCurl}")(
         assertM(
-          backend
-            .flatMap(implicit backend => requestPUT.send())
+          send(requestPUT)
             .map(_.body)
             .absolve
+            .provideCustomLayer(AsyncHttpClientZioBackend.layer())
         )(equalToResponseSuccess)
       ),
       testM(s"${requestDELETE.toCurl}")(
         assertM(
-          backend
-            .flatMap(implicit backend => requestDELETE.send())
+          send(requestDELETE)
             .map(_.body)
             .absolve
+            .provideCustomLayer(AsyncHttpClientZioBackend.layer())
         )(equalToResponseSuccess)
       ),
       testM(s"${requestPOST.toCurl} ++ ${requestGET.toCurl}")(
         assertM(
-          backend
-            .flatMap(implicit backend =>
-              for {
-                responsePOST <- requestPOST.send().map(_.body)
-                responseGET  <- requestGET.send().map(_.body).absolve if responsePOST.isRight
-              } yield responseGET
-            )
+          (
+            for {
+              responsePOST <- send(requestPOST).map(_.body)
+              responseGET  <- send(requestGET).map(_.body).absolve if responsePOST.isRight
+            } yield responseGET
+          ).provideCustomLayer(AsyncHttpClientZioBackend.layer())
         )(equalToResponseSuccess)
       ),
       testM(s"${requestPUT.toCurl} ++ ${requestDELETE.toCurl}")(
         assertM(
-          backend
-            .flatMap(implicit backend =>
-              for {
-                responsePOST <- requestPUT.send().map(_.body)
-                responseGET  <- requestDELETE.send().map(_.body).absolve if responsePOST.isRight
-              } yield responseGET
-            )
+          (
+            for {
+              responsePOST <- send(requestPUT).map(_.body)
+              responseGET  <- send(requestDELETE).map(_.body).absolve if responsePOST.isRight
+            } yield responseGET
+          ).provideCustomLayer(AsyncHttpClientZioBackend.layer())
         )(equalToResponseSuccess)
       )
     ) @@ zio.test.TestAspect.flaky
