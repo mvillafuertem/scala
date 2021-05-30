@@ -1,6 +1,6 @@
 #!/usr/bin/env amm
 
-import $ivy.`com.lihaoyi::cask:0.6.7`
+import $ivy.`com.lihaoyi::cask:0.7.11`
 
 // amm ./SimpleWebService.sc &
 @main

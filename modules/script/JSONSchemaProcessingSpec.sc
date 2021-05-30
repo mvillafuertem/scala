@@ -3,6 +3,7 @@
 import $file.JSONSchemaProcessing
 import $ivy.`dev.zio::zio-test-sbt:1.0.8`
 import $ivy.`dev.zio::zio-test:1.0.8`
+
 import io.circe.parser._
 import zio._
 import zio.test.Assertion._

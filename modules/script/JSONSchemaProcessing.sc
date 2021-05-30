@@ -2,10 +2,11 @@
 
 import $ivy.`ch.qos.logback:logback-classic:1.2.3`
 import $ivy.`dev.zio::zio:1.0.8`
-import $ivy.`io.circe::circe-core:0.12.3`
-import $ivy.`io.circe::circe-generic:0.12.3`
-import $ivy.`io.circe::circe-parser:0.12.3`
+import $ivy.`io.circe::circe-core:0.14.1`
+import $ivy.`io.circe::circe-generic:0.14.1`
+import $ivy.`io.circe::circe-parser:0.14.1`
 import $ivy.`org.slf4j:slf4j-api:1.7.30`
+
 import io.circe.parser._
 import io.circe.syntax.EncoderOps
 import io.circe.{ Json, JsonObject }

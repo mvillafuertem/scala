@@ -435,7 +435,7 @@ object Dependencies {
     val awsCdk                    = "1.106.1"
     val awsLambda                 = "1.2.1"
     val awsSdk                    = "2.16.74"
-    val cask                      = "0.6.7"
+    val cask                      = "0.7.11"
     val cats                      = "2.6.1"
     val circe                     = "0.13.0"
     val http4s                    = "1.0.0-M23"

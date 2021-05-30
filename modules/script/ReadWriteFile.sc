@@ -1,8 +1,9 @@
 #!/usr/bin/env amm
 
 import $ivy.`ch.qos.logback:logback-classic:1.2.3`
-import $ivy.`dev.zio::zio:1.0.2`
+import $ivy.`dev.zio::zio:1.0.8`
 import $ivy.`org.slf4j:slf4j-api:1.7.30`
+
 import java.io.{ File, FileInputStream, PrintWriter }
 import java.nio.charset.StandardCharsets
 import org.slf4j.{ Logger, LoggerFactory }
