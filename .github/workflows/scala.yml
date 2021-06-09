@@ -107,7 +107,7 @@ jobs:
           java-package: jdk # (jre, jdk, or jdk+fx) - defaults to jdk
           architecture: x64 # (x64 or x86) - defaults to x64
       - name: Run cdktf
-        run: sbt terraform-cdktf/run && cat modules/terraform-cdktf/src/main/resources/cdk.tf.json
+        run: sbt terraform-cdktf-scalajs/run && cat modules/terraform/cdktf-scalajs/src/main/resources/cdk.tf.json
 
   dotty:
     name: Dotty

@@ -29,7 +29,7 @@ object CdktfApp {
     val app   = new App(
       AppOptions()
         .setStackTraces(false)
-        .setOutdir("modules/terraform-cdktf/src/main/resources/")
+        .setOutdir("modules/terraform/cdktf-scalajs/src/main/resources/")
         .setContext(StringDictionary(("excludeStackIdFromLogicalIds", true), ("excludeStackIdFromLogicalIds", true)))
     )
     val stack = new IamStack(app, "cdktf")

@@ -276,7 +276,7 @@ lazy val tapir = (project in file("modules/tapir"))
   .enablePlugins(BuildInfoPlugin)
   .enablePlugins(GitVersioning)
 
-lazy val `terraform-cdktf` = (project in file("modules/terraform-cdktf"))
+lazy val `terraform-cdktf-scalajs` = (project in file("modules/terraform/cdktf-scalajs"))
 // S E T T I N G S
   .settings(Information.value)
   .settings(Dependencies.`terraform-cdktf`)
@@ -295,6 +295,11 @@ lazy val `terraform-cdktf` = (project in file("modules/terraform-cdktf"))
   // P L U G I N S
   .enablePlugins(ScalablyTypedConverterExternalNpmPlugin)
   .enablePlugins(ScalaJSPlugin)
+
+//lazy val `terraform-cdktf-scala` = (project in file("modules/terraform/cdktf-scala"))
+//// S E T T I N G S
+//  .settings(Information.value)
+//  .settings(Dependencies.`terraform-cdktf`)
 
 lazy val cdktf = taskKey[Unit]("cdktf synth")
 
