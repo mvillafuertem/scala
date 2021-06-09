@@ -13,7 +13,7 @@ import scala.annotation.targetName
  *  ¿Qué es Using Clauses? http://dotty.epfl.ch/docs/reference/contextual/using-clauses.html
  *
  */
-object MIO extends App:
+object MIO:// extends App:
 
   trait Functor[F[_]]:
     def fmap[A, B](f: A => B): F[A] => F[B]
