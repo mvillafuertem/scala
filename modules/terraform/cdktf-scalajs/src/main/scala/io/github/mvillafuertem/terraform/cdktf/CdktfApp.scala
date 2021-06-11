@@ -2,8 +2,7 @@ package io.github.mvillafuertem.terraform.cdktf
 
 import org.scalablytyped.runtime.StringDictionary
 import typings.cdktf.appMod.AppOptions
-import typings.cdktf.mod.{ App, NamedRemoteWorkspace, RemoteBackend, S3Backend }
-import typings.cdktf.remoteBackendMod.RemoteBackendProps
+import typings.cdktf.cdktfMod.{ App, S3Backend }
 import typings.cdktf.s3BackendMod.S3BackendProps
 // 1. cdktf get
 // 2. sbt terraform-cdktf/run

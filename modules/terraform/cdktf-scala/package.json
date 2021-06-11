@@ -1,0 +1,19 @@
+{
+  "name": "terraform-cdktf-scala",
+  "version": "0.1.0",
+  "description": "",
+  "license": "MIT",
+  "scripts": {
+    "get": "cdktf get",
+    "build": "yarn get && tsc",
+    "compile": "tsc --pretty",
+    "synth": "cdktf synth",
+    "plan": "cd ./cdktf.out && terraform init && terraform plan",
+    "apply": "terraform apply ./cdktf.out"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "cdktf-cli": "^0.4.1"
+  },
+  "private": true
+}
