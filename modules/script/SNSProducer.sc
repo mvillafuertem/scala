@@ -3,8 +3,8 @@
 import $ivy.`ch.qos.logback:logback-classic:1.2.3`
 import $ivy.`com.jsoniter:jsoniter:0.9.23`
 import $ivy.`dev.zio::zio-sqs:0.4.2`
-import $ivy.`dev.zio::zio-streams:1.0.8`
-import $ivy.`dev.zio::zio:1.0.8`
+import $ivy.`dev.zio::zio-streams:1.0.9`
+import $ivy.`dev.zio::zio:1.0.9`
 import $ivy.`org.slf4j:slf4j-api:1.7.30`
 import $ivy.`software.amazon.awssdk:aws-sdk-java:2.16.74`
 
@@ -17,6 +17,7 @@ import zio.clock._
 import zio.console._
 import zio.{ Promise, Queue, Task, UIO, ZIO, _ }
 import zio.stream.{ Stream, ZSink, ZStream }
+import zio.ZIO._
 
 val rootLogger = LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME).asInstanceOf[ch.qos.logback.classic.Logger]
 rootLogger.setLevel(ch.qos.logback.classic.Level.INFO)

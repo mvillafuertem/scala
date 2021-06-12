@@ -14,7 +14,7 @@ object AkkaClusterChatApp extends App {
   override def run(args: List[String]): ZIO[zio.ZEnv, Nothing, ExitCode] =
     program
       .provideLayer(Console.live ++ actorSystem)
-      .catchAll(e => console.putStrLn(e.toString).as(ExitCode.failure))
+      .catchAll(e => console.putStrLn(e.toString).orDie.as(ExitCode.failure))
 
   val program: ZIO[Console with Has[ActorSystem], Throwable, ExitCode] =
     (for {

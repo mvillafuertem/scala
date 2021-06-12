@@ -30,14 +30,14 @@ object Consumer {
         fiber <- loop(queue).forever.fork
       } yield (queue, fiber)
 
-    def loop(queue: Queue[ConsumerRecord[T]]) =
-      for {
+    def loop(queue: Queue[ConsumerRecord[T]]): URIO[Console with Clock with Random, Unit] =
+      (for {
         nOrder   <- queue.take
         _        <- putStrLn(s"${consumerSettings.color}[${consumerSettings.name}] worker: Starting preparing order $nOrder${scala.Console.RESET}")
         duration <- nextIntBetween(2, 4).map(_.seconds)
         _        <- sleep(duration)
         _        <- putStrLn(s"${consumerSettings.color}[${consumerSettings.name}] worker: Finished order $nOrder${scala.Console.RESET}")
-      } yield ()
+      } yield ()).orDie
 
   }
 

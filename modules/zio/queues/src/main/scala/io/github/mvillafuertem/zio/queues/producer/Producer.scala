@@ -24,10 +24,10 @@ object Producer {
   case class Live[A](producerSettings: ProducerSettings[A]) extends Producer[A] {
 
     def produce(producerRecord: ProducerRecord[A]): URIO[Console, Boolean] =
-      for {
+      (for {
         _      <- putStrLn(s"${scala.Console.CYAN}[${producerSettings.name}] ~ Generating ${producerRecord.value} ${scala.Console.RESET}")
         result <- producerSettings.topic.offer(producerRecord)
-      } yield result
+      } yield result).orDie
 
     def produceChunk(it: Iterable[ProducerRecord[A]]): ZStream[Clock with Console with Random, Nothing, Boolean] =
       ZStream
