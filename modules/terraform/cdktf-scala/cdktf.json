@@ -1,11 +1,10 @@
 {
   "language": "java",
-  "app": "mvn -e -q compile exec:java",
+  "app": "sbt terraform-cdktf-scala/run",
   "terraformProviders": [
     "aws@~> 3.44.0"
   ],
   "terraformModules": [],
-  "codeMakerOutput": "terraform",
   "context": {
     "excludeStackIdFromLogicalIds": "true",
     "allowSepCharsInLogicalIds": "true"

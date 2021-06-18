@@ -1,34 +1,26 @@
 package io.github.mvillafuertem.terraform.cdktf
 
-import software.constructs.Construct
-
-import com.hashicorp.cdktf.App
-import com.hashicorp.cdktf.TerraformStack
+import com.hashicorp._
 import com.hashicorp.cdktf.AppOptions
-import software.constructs.Construct
 
 import scala.jdk.CollectionConverters._
 
 // 1. yarn --cwd modules/terraform/cdktf-scala/ install
 // 2. yarn --cwd modules/terraform/cdktf-scala/ get
-object CdktfApp:
+// 3. sbt "project terraform-cdktf-scala;clean;run"
+object CdktfApp {
 
-  class MyStack(scope: Construct, id: String) extends TerraformStack(scope, id)
-
-
-  def main(args: Array[String]): Unit =
-    val context = Map(
-      ("excludeStackIdFromLogicalIds" -> true),
-      ("excludeStackIdFromLogicalIds" -> true)
-    ).asJava
-
-    val app = new App(
-      AppOptions.Builder()
+  def main(args: Array[String]): Unit = {
+    val app = new cdktf.App(
+      AppOptions.builder()
         .stackTraces(false)
-        .outdir("modules/terraform/cdktf-scalajs/src/main/resources/")
-        .context(context)
+        .outdir("modules/terraform/cdktf-scala/src/main/resources/")
+        .context(Map("excludeStackIdFromLogicalIds" -> true).asJava)
         .build()
     )
-    new MyStack(app, "Hello")
-    app.synth()
 
+    new CdktfStack(app)
+    app.synth()
+  }
+
+}
