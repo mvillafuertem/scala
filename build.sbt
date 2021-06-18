@@ -277,7 +277,7 @@ lazy val tapir = (project in file("modules/tapir"))
   .enablePlugins(BuildInfoPlugin)
   .enablePlugins(GitVersioning)
 
-lazy val `terraform-cdktf-scalajs` = (project in file("modules/terraform/cdktf-scalajs"))
+lazy val `terraform-cdktf-scalajs` = (project in file("modules/hashicorp/terraform-cdktf-scalajs"))
 // S E T T I N G S
   .settings(Information.value)
   .settings(Dependencies.`terraform-cdktf-scalajs`)
@@ -297,7 +297,7 @@ lazy val `terraform-cdktf-scalajs` = (project in file("modules/terraform/cdktf-s
   .enablePlugins(ScalablyTypedConverterExternalNpmPlugin)
   .enablePlugins(ScalaJSPlugin)
 
-lazy val `terraform-cdktf-scala` = (project in file("modules/terraform/cdktf-scala"))
+lazy val `terraform-cdktf-scala` = (project in file("modules/hashicorp/terraform-cdktf-scala"))
 // S E T T I N G S
   .settings(Information.value)
   .settings(scalaVersion := Settings.scala213)
