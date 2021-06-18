@@ -14,7 +14,7 @@ object CdktfApp {
     val app = new cdktf.App(
       AppOptions.builder()
         .stackTraces(false)
-        .outdir("modules/terraform/cdktf-scala/src/main/resources/")
+        .outdir("modules/hashicorp/terraform-cdktf-scala/src/main/resources/")
         .context(Map("excludeStackIdFromLogicalIds" -> true).asJava)
         .build()
     )
