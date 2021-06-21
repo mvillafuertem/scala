@@ -4,6 +4,9 @@ source "amazon-ebs" "ami_source_definition" {
   region        = "eu-west-1"
   source_ami    = "ami-02ace471"
   ssh_username  = "ec2-user"
+  tags = {
+    Name = "bastion"
+  }
 }
 
 build {
@@ -11,7 +14,7 @@ build {
     "source.amazon-ebs.ami_source_definition"
   ]
   provisioner "ansible" {
-    playbook_file = "./playbook.yml"
+    playbook_file = "./ansible/playbook.yml"
   }
 }
 
