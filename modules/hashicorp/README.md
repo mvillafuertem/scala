@@ -53,3 +53,17 @@ terraform plan \
 -out=dev.plan.out
 
 ```
+
+Puede que tengas problemas al usar tus clave de ssh, prueba con estos comandos
+
+```shell
+
+eval `ssh-agent -s`
+
+```
+```shell
+
+ssh-add /root/.ssh/id_rsa
+
+```
+
