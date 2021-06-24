@@ -17,7 +17,7 @@ packer build bastion.pkr.hcl
 # Terraform
 
 
-Si te interesa usar una versión especifica de terraform
+_Si te interesa usar una versión especifica de terraform_
 
 ```shell
 
@@ -64,6 +64,19 @@ eval `ssh-agent -s`
 ```shell
 
 ssh-add /root/.ssh/id_rsa
+
+```
+
+# Ansible
+
+_Instalar roles_
+
+```shell
+
+ansible-galaxy install \
+--role-file ansible/requirements.yml \
+--roles-path ansible/roles \
+--force 
 
 ```
 

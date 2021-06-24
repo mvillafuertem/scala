@@ -4,8 +4,5 @@
   hosts: default
   become: true
 
-  tasks:
-    - name: install Apache
-      package:
-        name: 'httpd'
-        state: present
+  roles:
+    - [roles/...]
