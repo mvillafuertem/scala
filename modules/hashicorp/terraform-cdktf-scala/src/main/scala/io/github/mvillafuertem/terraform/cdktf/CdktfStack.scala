@@ -1,27 +1,59 @@
 package io.github.mvillafuertem.terraform.cdktf
 
-import com.hashicorp.cdktf.TerraformStack
+import com.hashicorp.cdktf.{TerraformOutput, TerraformStack}
 import imports.aws._
 import software.constructs.Construct
 
+import scala.io.Source
 import scala.jdk.CollectionConverters._
 
 final class CdktfStack(scope: Construct) extends TerraformStack(scope, "cdktf-terraform-stack") {
   self: Construct =>
 
+  private val accessKey = Source
+    .fromInputStream(getClass.getResourceAsStream("/aws.credentials/access_key"))
+    .getLines()
+    .mkString("\n")
+
+  private val secretKey = Source
+    .fromInputStream(getClass.getResourceAsStream("/aws.credentials/secret_key"))
+    .getLines()
+    .mkString("\n")
+
   private val _: AwsProvider = AwsProvider.Builder
     .create(self, "cdktf_aws_provider")
+    .allowedAccountIds(List("").asJava)
     .region("eu-west-1")
+    .accessKey(accessKey)
+    .secretKey(secretKey)
     .build()
 
   private val vpc: DataAwsVpc = DataAwsVpc.Builder
     .create(self, "cdktf_vpc")
+    .defaultValue(true)
     .build()
+
+  private val _ = S3Bucket.Builder
+    .create(self, "cdktf_s3")
+    .bucket("cdktf")
+    .versioning(
+      List(
+        S3BucketVersioning
+          .builder()
+          .enabled(true)
+          .build()
+      ).asJava
+    )
+
+  private val publicKey = Source
+    .fromInputStream(getClass.getResourceAsStream("/ssh/id_rsa.pub"))
+    .getLines()
+    .mkString("\n")
 
   private val keyPair: KeyPair = KeyPair.Builder
     .create(self, "cdktf_key_pair")
-    .keyName("cdktf-key-pair")
-    .publicKey("id_rsa.pub")
+    .keyName("cdktf-key")
+    .publicKey(publicKey)
     .build()
 
   private val securityGroup: DataAwsSecurityGroup = DataAwsSecurityGroup.Builder
@@ -50,13 +82,39 @@ final class CdktfStack(scope: Construct) extends TerraformStack(scope, "cdktf-te
     .cidrBlocks(List[String]("0.0.0.0/0").asJava)
     .build()
 
-  private val _: Instance = Instance.Builder
+  private val userData = Source
+    .fromInputStream(getClass.getResourceAsStream("/userData.yml"))
+    .getLines()
+    .mkString("\n")
+
+  private val instance: Instance = Instance.Builder
     .create(self, "cdktf_instance")
     .ami("ami-0947d2ba12ee1ff75")
     .keyName(keyPair.getKeyName)
     .instanceType("t2.micro")
-    .securityGroups(List(securityGroup.getName).asJava)
+    //.securityGroups(List(securityGroup.getName).asJava)
     .associatePublicIpAddress(true)
+    .userData(userData)
     .build()
 
+  private val _: NetworkInterfaceSgAttachment = NetworkInterfaceSgAttachment.Builder
+    .create(self, "cdktf_network_interface_sg_attachment")
+    .securityGroupId(securityGroup.getId)
+    .networkInterfaceId(instance.getPrimaryNetworkInterfaceId)
+    .build()
+
+  private val _: TerraformOutput = TerraformOutput.Builder
+    .create(self, "instance_ip")
+    .value(instance.getPublicIp)
+    .build()
+
+  private val _: TerraformOutput = TerraformOutput.Builder
+    .create(self, "instance_dns")
+    .value(instance.getPublicDns)
+    .build()
+
+  private val _: TerraformOutput = TerraformOutput.Builder
+    .create(self, "ssh_connection")
+    .value(s"ssh -i itexp-key ubuntu@${instance.getPublicDns}")
+    .build()
 }
