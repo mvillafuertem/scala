@@ -4,12 +4,14 @@
   "description": "",
   "license": "MIT",
   "scripts": {
-    "apply": "terraform apply ./src/main/resources/stacks/cdktf-terraform-stack/cdk.tf.json",
+    "apply": "cd ./src/main/resources/stacks/cdktf-terraform-stack && terraform apply",
+    "destroy": "cd ./src/main/resources/stacks/cdktf-terraform-stack && terraform destroy",
     "build": "yarn get && tsc",
     "compile": "tsc --pretty",
     "fetch": "rm -rf ./src/main/java && cdktf get",
     "get": "cdktf get",
     "plan": "cd ./src/main/resources/stacks/cdktf-terraform-stack && terraform init && terraform plan",
+    "migrate": "cd ./src/main/resources/stacks/cdktf-terraform-stack && terraform init -migrate-state",
     "synth": "cdktf synth"
   },
   "dependencies": {},

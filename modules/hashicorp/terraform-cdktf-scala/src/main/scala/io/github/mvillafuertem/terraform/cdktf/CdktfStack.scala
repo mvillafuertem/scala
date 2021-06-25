@@ -56,7 +56,7 @@ final class CdktfStack(scope: Construct) extends TerraformStack(scope, "cdktf-te
     .publicKey(publicKey)
     .build()
 
-  private val securityGroup: DataAwsSecurityGroup = DataAwsSecurityGroup.Builder
+  private val securityGroup: SecurityGroup = SecurityGroup.Builder
     .create(self, "cdktf_security_group")
     .name("cdktf-security-group")
     .vpcId(vpc.getId)
@@ -89,11 +89,11 @@ final class CdktfStack(scope: Construct) extends TerraformStack(scope, "cdktf-te
 
   private val instance: Instance = Instance.Builder
     .create(self, "cdktf_instance")
-    .ami("ami-0947d2ba12ee1ff75")
+    .ami("ami-0f89681a05a3a9de7")
     .keyName(keyPair.getKeyName)
     .instanceType("t2.micro")
     //.securityGroups(List(securityGroup.getName).asJava)
-    .associatePublicIpAddress(true)
+    //.associatePublicIpAddress(true)
     .userData(userData)
     .build()
 
@@ -115,6 +115,6 @@ final class CdktfStack(scope: Construct) extends TerraformStack(scope, "cdktf-te
 
   private val _: TerraformOutput = TerraformOutput.Builder
     .create(self, "ssh_connection")
-    .value(s"ssh -i itexp-key ubuntu@${instance.getPublicDns}")
+    .value(s"ssh -i cdktf ec2-user@${instance.getPublicDns}")
     .build()
 }
