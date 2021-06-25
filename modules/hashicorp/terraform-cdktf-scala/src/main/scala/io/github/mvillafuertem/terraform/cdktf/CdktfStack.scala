@@ -24,26 +24,14 @@ final class CdktfStack(scope: Construct) extends TerraformStack(scope, "cdktf-te
     .create(self, "cdktf_aws_provider")
     .allowedAccountIds(List("").asJava)
     .region("eu-west-1")
-    .accessKey(accessKey)
-    .secretKey(secretKey)
+    //.accessKey(accessKey)
+    //.secretKey(secretKey)
     .build()
 
   private val vpc: DataAwsVpc = DataAwsVpc.Builder
     .create(self, "cdktf_vpc")
     .defaultValue(true)
     .build()
-
-  private val _ = S3Bucket.Builder
-    .create(self, "cdktf_s3")
-    .bucket("cdktf")
-    .versioning(
-      List(
-        S3BucketVersioning
-          .builder()
-          .enabled(true)
-          .build()
-      ).asJava
-    )
 
   private val publicKey = Source
     .fromInputStream(getClass.getResourceAsStream("/ssh/id_rsa.pub"))
@@ -70,6 +58,7 @@ final class CdktfStack(scope: Construct) extends TerraformStack(scope, "cdktf-te
     .`type`("ingress")
     .securityGroupId(securityGroup.getId)
     .cidrBlocks(List[String]("0.0.0.0/0").asJava)
+    .description("VPN Madrid")
     .build()
 
   private val _: SecurityGroupRule = SecurityGroupRule.Builder
@@ -95,6 +84,7 @@ final class CdktfStack(scope: Construct) extends TerraformStack(scope, "cdktf-te
     //.securityGroups(List(securityGroup.getName).asJava)
     //.associatePublicIpAddress(true)
     .userData(userData)
+    .tags(Map("Name" -> "cdktf_instance").asJava)
     .build()
 
   private val _: NetworkInterfaceSgAttachment = NetworkInterfaceSgAttachment.Builder
@@ -115,6 +105,6 @@ final class CdktfStack(scope: Construct) extends TerraformStack(scope, "cdktf-te
 
   private val _: TerraformOutput = TerraformOutput.Builder
     .create(self, "ssh_connection")
-    .value(s"ssh -i cdktf ec2-user@${instance.getPublicDns}")
+    .value(s"ssh -i modules/hashicorp/terraform-cdktf-scala/src/main/resources/ssh/id_rsa ec2-user@${instance.getPublicDns}")
     .build()
 }
