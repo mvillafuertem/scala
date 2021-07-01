@@ -51,6 +51,7 @@ final class CdktfState(scope: Construct, id: String, cdktfStackConfiguration: Cd
     .create(self, "cdktf_s3")
     .bucket(cdktfStackConfiguration.bucket)
     .versioning(versioning)
+    .forceDestroy(true)
     .serverSideEncryptionConfiguration(serverSideEncryptionConfiguration)
     .tags(Map("Environment" -> cdktfStackConfiguration.environment).asJava)
     .build()
