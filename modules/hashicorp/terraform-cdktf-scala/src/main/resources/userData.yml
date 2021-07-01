@@ -16,6 +16,42 @@ packages:
   - gnupg-agent
   - software-properties-common
 write_files:
+  - path: /opt/docker/reverse-proxy/docker-compose.yml
+    content: |
+      version: "2"
+
+      services:
+        nginx-proxy:
+          image: jwilder/nginx-proxy
+          restart: always
+          networks:
+            - reverse-proxy
+          ports:
+            - 80:80
+            - 443:443
+          volumes:
+            - /var/run/docker.sock:/tmp/docker.sock:ro
+            - ./certs:/etc/nginx/certs:ro
+            - /etc/nginx/vhost.d
+            - /usr/share/nginx/html
+        letsencrypt:
+          image: jrcs/letsencrypt-nginx-proxy-companion
+          restart: always
+          volumes:
+            - /var/run/docker.sock:/var/run/docker.sock:ro
+            - ./certs:/etc/nginx/certs:rw
+            - /etc/nginx/vhost.d
+            - /etc/nginx/conf.d
+            - /usr/share/nginx/html
+          volumes_from:
+            - nginx-proxy:rw
+          environment:
+            - NGINX_DOCKER_GEN_CONTAINER=nginx-proxy
+            - NGINX_PROXY_CONTAINER=nginx-proxy
+      networks:
+        reverse-proxy:
+          external: false
+          name: reverse-proxy
   - path: /opt/docker/jira-app/docker-compose.yml
     content: |
       version: "2"
@@ -28,12 +64,22 @@ write_files:
           image: atlassian/jira-software
           restart: always
           networks:
-            atlassian:
-          ports:
-            - 8080:8080
+            - atlassian
+            - reverse-proxy
+          expose:
+            - 8080
+          #ports:
+          #  - 8080:8080
           environment:
+            - JIRA_PROXY_NAME=jira.cdktf-dev.com
+            - JIRA_PROXY_PORT=443
+            - JIRA_PROXY_SCHEME=https
             - SETENV_JVM_MINIMUM_MEMORY=1024m
             - SETENV_JVM_MAXIMUM_MEMORY=2048m
+            - VIRTUAL_PORT=8080
+            - VIRTUAL_HOST=jira.cdktf-dev.com
+            - LETSENCRYPT_HOST=jira.cdktf-dev.com
+            - LETSENCRYPT_EMAIL=jira.cdktf-dev.com
           volumes:
             - ./jira:/var/atlassian/application-data/jira
 
@@ -42,34 +88,39 @@ write_files:
           image: postgres:9.6
           restart: always
           networks:
-            atlassian:
+            - atlassian
           environment:
-            - POSTGRES_DB=db_jira
-            - POSTGRES_USER=u_jira
-            - POSTGRES_PASSWORD=<SET_DB_PASSWORD>
+            - POSTGRES_DB=jiradb
+            - POSTGRES_USER=jira
+            - POSTGRES_PASSWORD=password
             - POSTGRES_ENCODING=UNICODE
             - POSTGRES_COLLATE=C
             - POSTGRES_COLLATE_TYPE=C
           volumes:
             - ./postgresql:/var/lib/postgresql/data
-
       networks:
         atlassian:
+        reverse-proxy:
+          external: true
 runcmd:
-  # install docker following the guide: https://docs.docker.com/install/linux/docker-ce/ubuntu/
-  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-  - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-  - sudo apt-get -y update
-  - sudo apt-get -y install docker-ce docker-ce-cli containerd.io
-  - sudo systemctl enable docker
+  # https://docs.aws.amazon.com/AmazonECS/latest/developerguide/docker-basics.html
+  - sudo yum update -y
+  - sudo amazon-linux-extras install docker -y
+  # - sudo systemctl enable docker
+  - sudo service docker start
+  - sudo usermod -a -G docker ec2-user
   # install docker-compose following the guide: https://docs.docker.com/compose/install/
   - sudo curl -L "https://github.com/docker/compose/releases/download/1.28.5/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
   - sudo chmod +x /usr/local/bin/docker-compose
+  - sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
   # Create directories
+  - mkdir /opt/docker/reverse-proxy/certs
   - mkdir /opt/docker/jira-app/jira
   - mkdir /opt/docker/jira-app/postgresql
   # Pull docker images
+  - cd /opt/docker/reverse-proxy; sudo docker-compose pull 2>&1 | tee ../reverse-proxy-pull.log
   - cd /opt/docker/jira-app; sudo docker-compose pull 2>&1 | tee ../jira-app-pull.log
+  - cd /opt/docker/reverse-proxy; sudo docker-compose up --force-recreate -d 2>&1 | tee ../reverse-proxy.log
   - cd /opt/docker/jira-app; sudo docker-compose up --force-recreate -d 2>&1 | tee ../jira-app.log
   - cd /opt/docker; echo completed > deployment.log
 

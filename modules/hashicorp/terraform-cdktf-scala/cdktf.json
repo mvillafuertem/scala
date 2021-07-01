@@ -5,8 +5,5 @@
     "aws@~> 3.44.0"
   ],
   "terraformModules": [],
-  "context": {
-    "excludeStackIdFromLogicalIds": "true",
-    "allowSepCharsInLogicalIds": "true"
-  }
+  "context": {}
 }
