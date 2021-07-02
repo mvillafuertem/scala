@@ -59,17 +59,6 @@ final class CdktfStack(scope: Construct, id: String, cdktfStackConfiguration: Cd
     .build()
 
   private val _: SecurityGroupRule = SecurityGroupRule.Builder
-    .create(self, "cdktf_ingress_https")
-    .fromPort(443)
-    .toPort(443)
-    .protocol("tcp")
-    .`type`("ingress")
-    .securityGroupId(securityGroup.getId)
-    .cidrBlocks(List[String]("0.0.0.0/0").asJava)
-    .description("Jira")
-    .build()
-
-  private val _: SecurityGroupRule = SecurityGroupRule.Builder
     .create(self, "cdktf_egress")
     .fromPort(0)
     .toPort(0)
@@ -79,6 +68,7 @@ final class CdktfStack(scope: Construct, id: String, cdktfStackConfiguration: Cd
     .cidrBlocks(List[String]("0.0.0.0/0").asJava)
     .build()
 
+  private val _ = new CdktfBastion(self, cdktfStackConfiguration, keyPair, vpc)
   private val instance: Instance = Instance.Builder
     .create(self, "cdktf_instance")
     .ami("ami-0f89681a05a3a9de7")
@@ -99,25 +89,6 @@ final class CdktfStack(scope: Construct, id: String, cdktfStackConfiguration: Cd
     .create(self, "cdktf_network_interface_sg_attachment")
     .securityGroupId(securityGroup.getId)
     .networkInterfaceId(instance.getPrimaryNetworkInterfaceId)
-    .build()
-
-  private val route53Zone: Route53Zone = Route53Zone.Builder
-    .create(self, "cdktf_route_53_zone")
-    .name("cdktf-dev.com")
-    .tags(
-      Map(
-        "Environment" -> cdktfStackConfiguration.environment
-      ).asJava
-    )
-    .build()
-
-  private val route53Record: Route53Record = Route53Record.Builder
-    .create(self, "cdktf_route_53_record")
-    .zoneId(route53Zone.getId)
-    .name(s"jira.${route53Zone.getName}")
-    .`type`("A")
-    .ttl(300)
-    .records(List(instance.getPublicIp).asJava)
     .build()
 
   private val _: BudgetsBudget = BudgetsBudget.Builder
@@ -169,7 +140,7 @@ final class CdktfStack(scope: Construct, id: String, cdktfStackConfiguration: Cd
 
   private val _: TerraformOutput = TerraformOutput.Builder
     .create(self, "ping_connection")
-    .value(s"ping ${route53Record.getName}")
+    .value(s"ping ${instance.getPublicIp}")
     .build()
 
   private val _: TerraformOutput = TerraformOutput.Builder

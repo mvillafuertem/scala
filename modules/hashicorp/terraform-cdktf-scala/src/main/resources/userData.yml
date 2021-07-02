@@ -16,42 +16,6 @@ packages:
   - gnupg-agent
   - software-properties-common
 write_files:
-  - path: /opt/docker/reverse-proxy/docker-compose.yml
-    content: |
-      version: "2"
-
-      services:
-        nginx-proxy:
-          image: jwilder/nginx-proxy
-          restart: always
-          networks:
-            - reverse-proxy
-          ports:
-            - 80:80
-            - 443:443
-          volumes:
-            - /var/run/docker.sock:/tmp/docker.sock:ro
-            - ./certs:/etc/nginx/certs:ro
-            - /etc/nginx/vhost.d
-            - /usr/share/nginx/html
-        letsencrypt:
-          image: jrcs/letsencrypt-nginx-proxy-companion
-          restart: always
-          volumes:
-            - /var/run/docker.sock:/var/run/docker.sock:ro
-            - ./certs:/etc/nginx/certs:rw
-            - /etc/nginx/vhost.d
-            - /etc/nginx/conf.d
-            - /usr/share/nginx/html
-          volumes_from:
-            - nginx-proxy:rw
-          environment:
-            - NGINX_DOCKER_GEN_CONTAINER=nginx-proxy
-            - NGINX_PROXY_CONTAINER=nginx-proxy
-      networks:
-        reverse-proxy:
-          external: false
-          name: reverse-proxy
   - path: /opt/docker/jira-app/docker-compose.yml
     content: |
       version: "2"
@@ -65,21 +29,11 @@ write_files:
           restart: always
           networks:
             - atlassian
-            - reverse-proxy
-          expose:
-            - 8080
-          #ports:
-          #  - 8080:8080
+          ports:
+            - 80:8080
           environment:
-            - JIRA_PROXY_NAME=jira.cdktf-dev.com
-            - JIRA_PROXY_PORT=443
-            - JIRA_PROXY_SCHEME=https
             - SETENV_JVM_MINIMUM_MEMORY=1024m
             - SETENV_JVM_MAXIMUM_MEMORY=2048m
-            - VIRTUAL_PORT=8080
-            - VIRTUAL_HOST=jira.cdktf-dev.com
-            - LETSENCRYPT_HOST=jira.cdktf-dev.com
-            - LETSENCRYPT_EMAIL=jira.cdktf-dev.com
           volumes:
             - ./jira:/var/atlassian/application-data/jira
 
@@ -100,8 +54,6 @@ write_files:
             - ./postgresql:/var/lib/postgresql/data
       networks:
         atlassian:
-        reverse-proxy:
-          external: true
 runcmd:
   # https://docs.aws.amazon.com/AmazonECS/latest/developerguide/docker-basics.html
   - sudo yum update -y
@@ -114,13 +66,10 @@ runcmd:
   - sudo chmod +x /usr/local/bin/docker-compose
   - sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
   # Create directories
-  - mkdir /opt/docker/reverse-proxy/certs
   - mkdir /opt/docker/jira-app/jira
   - mkdir /opt/docker/jira-app/postgresql
   # Pull docker images
-  - cd /opt/docker/reverse-proxy; sudo docker-compose pull 2>&1 | tee ../reverse-proxy-pull.log
   - cd /opt/docker/jira-app; sudo docker-compose pull 2>&1 | tee ../jira-app-pull.log
-  - cd /opt/docker/reverse-proxy; sudo docker-compose up --force-recreate -d 2>&1 | tee ../reverse-proxy.log
   - cd /opt/docker/jira-app; sudo docker-compose up --force-recreate -d 2>&1 | tee ../jira-app.log
   - cd /opt/docker; echo completed > deployment.log
 
