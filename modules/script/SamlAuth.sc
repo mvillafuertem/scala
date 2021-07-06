@@ -1,10 +1,10 @@
 import $ivy.`ch.qos.logback:logback-classic:1.2.3`
-import $ivy.`com.softwaremill.sttp.tapir::tapir-akka-http-server:0.17.19`
-import $ivy.`com.softwaremill.sttp.tapir::tapir-core:0.17.19`
-import $ivy.`com.softwaremill.sttp.tapir::tapir-json-circe:0.17.19`
-import $ivy.`com.softwaremill.sttp.tapir::tapir-openapi-circe-yaml:0.17.19`
-import $ivy.`com.softwaremill.sttp.tapir::tapir-openapi-docs:0.17.19`
-import $ivy.`com.softwaremill.sttp.tapir::tapir-swagger-ui-akka-http:0.17.19`
+import $ivy.`com.softwaremill.sttp.tapir::tapir-akka-http-server:0.17.20`
+import $ivy.`com.softwaremill.sttp.tapir::tapir-core:0.17.20`
+import $ivy.`com.softwaremill.sttp.tapir::tapir-json-circe:0.17.20`
+import $ivy.`com.softwaremill.sttp.tapir::tapir-openapi-circe-yaml:0.17.20`
+import $ivy.`com.softwaremill.sttp.tapir::tapir-openapi-docs:0.17.20`
+import $ivy.`com.softwaremill.sttp.tapir::tapir-swagger-ui-akka-http:0.17.20`
 import $ivy.`dev.zio::zio:1.0.9`
 import $ivy.`org.scala-lang.modules::scala-xml:2.0.0`
 import $ivy.`org.slf4j:slf4j-api:1.7.30`
