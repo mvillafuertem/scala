@@ -1,6 +1,6 @@
 import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
 import sbt.Keys.libraryDependencies
-import sbt.{ CrossVersion, Def, _ }
+import sbt.{ Def, _ }
 
 object Dependencies {
 
@@ -204,12 +204,11 @@ object Dependencies {
 
   val foundations: Seq[ModuleID] = Seq(
     // D O T T Y
-    Artifact.scalaCheck % Version.scalaCheck         % Test,
-    "org.scalatest"    %% "scalatest-flatspec"       % "3.2.9" % Test,
-    "org.scalatest"    %% "scalatest-shouldmatchers" % "3.2.9" % Test
-  )
+    Artifact.scalaCheck % Version.scalaCheck,
+    Artifact.scalaTest  % Version.scalaTest
+  ).map(_ % Test)
 
-  val http4s: Seq[ModuleID] = Seq(
+  val http4s: Seq[ModuleID]      = Seq(
     // H T T P 4 S
     Artifact.http4sBlazeServer % Version.http4s,
     Artifact.http4sDsl         % Version.http4s,
@@ -334,7 +333,7 @@ object Dependencies {
     "software.constructs" % "constructs" % "3.3.77"
   ) ++ Seq(
     // T E R R A F O R M  C D K T F  T E S T
-    "org.scalatest" %% "scalatest" % Version.scalaTest % Test
+    "org.scalatest"      %% "scalatest"  % Version.scalaTest % Test
   )
 
   val zio: Seq[ModuleID] =
@@ -463,7 +462,7 @@ object Dependencies {
     val postgres                  = "42.2.23"
     val scalaCheck                = "3.2.2.0"
     val scalaJavaTime             = "2.0.0"
-    val scalaTest                 = "3.2.8"
+    val scalaTest                 = "3.2.9"
     val slick                     = "3.3.3"
     val slinky                    = "0.6.6"
     val spark                     = "3.1.2"
