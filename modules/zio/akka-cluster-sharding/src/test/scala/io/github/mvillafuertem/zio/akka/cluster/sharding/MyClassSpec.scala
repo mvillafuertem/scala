@@ -59,13 +59,12 @@ final class MyClassSpec extends AnyFlatSpecLike with BootstrapRuntime with Match
 
     val clazz = new MyClass
 
-    val program: ZIO[Console, Nothing, Seq[Int]] = for {
-
-      _      <- zio.console.putStrLn("Hola")
-      stream <- clazz.a.runCollect
-      _      <- zio.console.putStrLn("Adios")
-
-    } yield stream
+    val program: ZIO[Console, Nothing, Seq[Int]] =
+      (for {
+        _      <- zio.console.putStrLn("Hola")
+        stream <- clazz.a.runCollect
+        _      <- zio.console.putStrLn("Adios")
+      } yield stream).orDie
 
     val value: Seq[Int] = unsafeRun(program)
     value should have size 10
@@ -117,6 +116,6 @@ class Pepe(my: My[MyType]) {
       stream <- my.a.runCollect
       _      <- zio.console.putStrLn("Adios")
 
-    } yield stream) repeat foo.tapOutput(a => zio.console.putStrLn(s"Completed $a"))
+    } yield stream) repeat foo.tapOutput(a => zio.ZIO.debug(s"Completed $a"))
 
 }

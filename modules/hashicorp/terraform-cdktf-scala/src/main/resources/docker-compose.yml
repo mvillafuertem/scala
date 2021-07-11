@@ -1,0 +1,49 @@
+version: "2"
+
+services:
+  #Jira image from Atlassian
+  jira:
+    depends_on:
+      - postgresql
+    image: atlassian/jira-software
+    restart: always
+    networks:
+      - atlassian
+      - reverse-proxy
+    expose:
+      - 8080
+    #ports:
+    #  - 8080:8080
+    environment:
+      - JIRA_PROXY_NAME=jira.cdktf-dev.com
+      - JIRA_PROXY_PORT=443
+      - JIRA_PROXY_SCHEME=https
+      - SETENV_JVM_MINIMUM_MEMORY=1024m
+      - SETENV_JVM_MAXIMUM_MEMORY=2048m
+      - VIRTUAL_PORT=8080
+      - VIRTUAL_HOST=jira.cdktf-dev.com
+      - LETSENCRYPT_HOST=jira.cdktf-dev.com
+      - LETSENCRYPT_EMAIL=jira.cdktf-dev.com
+    volumes:
+      - ./jira:/var/atlassian/application-data/jira
+
+  #Database service
+  postgresql:
+    image: postgres:9.6
+    restart: always
+    networks:
+      - atlassian
+    environment:
+      - POSTGRES_DB=jiradb
+      - POSTGRES_USER=jira
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_ENCODING=UNICODE
+      - POSTGRES_COLLATE=C
+      - POSTGRES_COLLATE_TYPE=C
+    volumes:
+      - ./postgresql:/var/lib/postgresql/data
+
+networks:
+  atlassian:
+  reverse-proxy:
+    external: true

@@ -1,0 +1,214 @@
+{
+  "//": {
+    "metadata": {
+      "version": "0.2.2",
+      "stackName": "cdktf"
+    }
+  },
+  "terraform": {
+    "required_providers": {
+      "aws": {
+        "version": "~> 3.0",
+        "source": "aws"
+      }
+    },
+    "backend": {
+      "s3": {
+        "bucket": "cdktf",
+        "key": "terraform.tfstate",
+        "region": "us-east-1"
+      }
+    }
+  },
+  "provider": {
+    "aws": [
+      {
+        "region": "us-east-1"
+      }
+    ]
+  },
+  "data": {
+    "aws_region": {
+      "useast1": {
+        "//": {
+          "metadata": {
+            "path": "cdktf/us-east-1",
+            "uniqueId": "useast1"
+          }
+        }
+      }
+    }
+  },
+  "resource": {
+    "aws_s3_bucket": {
+      "s3": {
+        "bucket": "cdktf",
+        "versioning": [
+          {
+            "enabled": true
+          }
+        ],
+        "//": {
+          "metadata": {
+            "path": "cdktf/s3",
+            "uniqueId": "s3"
+          }
+        }
+      }
+    },
+    "aws_budgets_budget": {
+      "monthlycostbudget": {
+        "budget_type": "COST",
+        "limit_amount": "1.0",
+        "limit_unit": "USD",
+        "name": "Monthly Cost Budget",
+        "time_period_start": "2020-11-06_00:00",
+        "time_unit": "MONTHLY",
+        "cost_types": [
+          {
+            "include_credit": true,
+            "include_other_subscription": true,
+            "include_recurring": true,
+            "include_refund": true,
+            "include_support": true,
+            "include_tax": true,
+            "include_upfront": true
+          }
+        ],
+        "notification": [
+          {
+            "comparison_operator": "GREATER_THAN",
+            "notification_type": "FORECASTED",
+            "subscriber_email_addresses": [
+              "pepe@gmail.com"
+            ],
+            "threshold": 10,
+            "threshold_type": "PERCENTAGE"
+          }
+        ],
+        "//": {
+          "metadata": {
+            "path": "cdktf/monthly-cost-budget",
+            "uniqueId": "monthlycostbudget"
+          }
+        }
+      }
+    },
+    "aws_iam_group": {
+      "developers": {
+        "name": "developers",
+        "path": "/users/",
+        "//": {
+          "metadata": {
+            "path": "cdktf/developers",
+            "uniqueId": "developers"
+          }
+        }
+      }
+    },
+    "aws_iam_group_policy_attachment": {
+      "groupPolicyAttachmentDevelopers": {
+        "group": "developers",
+        "policy_arn": "arn:aws:iam::aws:policy/AdministratorAccess",
+        "depends_on": [
+          "aws_iam_group.developers"
+        ],
+        "//": {
+          "metadata": {
+            "path": "cdktf/groupPolicyAttachmentDevelopers",
+            "uniqueId": "groupPolicyAttachmentDevelopers"
+          }
+        }
+      }
+    },
+    "aws_iam_user": {
+      "pepe": {
+        "name": "pepe",
+        "path": "/users/",
+        "//": {
+          "metadata": {
+            "path": "cdktf/pepe",
+            "uniqueId": "pepe"
+          }
+        }
+      }
+    },
+    "aws_security_group": {
+      "securityGroup": {
+        "description": "securityGroup",
+        "name": "securityGroup",
+        "tags": {
+          "Name": ""
+        },
+        "vpc_id": "",
+        "//": {
+          "metadata": {
+            "path": "cdktf/securityGroup",
+            "uniqueId": "securityGroup"
+          }
+        }
+      }
+    },
+    "aws_security_group_rule": {
+      "securityGroupRuleIngress": {
+        "cidr_blocks": [
+          "0.0.0.0/0"
+        ],
+        "from_port": 0,
+        "protocol": "-1",
+        "security_group_id": "${aws_security_group.securityGroup.id}",
+        "to_port": 0,
+        "type": "ingress",
+        "//": {
+          "metadata": {
+            "path": "cdktf/securityGroupRuleIngress",
+            "uniqueId": "securityGroupRuleIngress"
+          }
+        }
+      },
+      "securityGroupRuleEgress": {
+        "cidr_blocks": [
+          "0.0.0.0/0"
+        ],
+        "from_port": 0,
+        "protocol": "all",
+        "security_group_id": "${aws_security_group.securityGroup.id}",
+        "to_port": 0,
+        "type": "egress",
+        "//": {
+          "metadata": {
+            "path": "cdktf/securityGroupRuleEgress",
+            "uniqueId": "securityGroupRuleEgress"
+          }
+        }
+      }
+    },
+    "aws_instance": {
+      "instance": {
+        "ami": "ami-0947d2ba12ee1ff75",
+        "instance_type": "t2.micro",
+        "security_groups": [
+          "${aws_security_group.securityGroup.name}"
+        ],
+        "tags": {
+          "Name": "instance"
+        },
+        "ebs_block_device": [
+          {
+            "device_name": "/dev/xvda",
+            "encrypted": false,
+            "iops": 100,
+            "volume_size": 8,
+            "volume_type": "gp2"
+          }
+        ],
+        "//": {
+          "metadata": {
+            "path": "cdktf/instance",
+            "uniqueId": "instance"
+          }
+        }
+      }
+    }
+  }
+}

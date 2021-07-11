@@ -5,12 +5,13 @@ import $ivy.`com.softwaremill.sttp.client3::akka-http-backend:3.3.5`
 import $ivy.`com.softwaremill.sttp.client3::async-http-client-backend-zio:3.3.5`
 import $ivy.`com.softwaremill.sttp.client3::circe:3.3.5`
 import $ivy.`com.softwaremill.sttp.client3::core:3.3.5`
-import $ivy.`dev.zio::zio:1.0.8`
+import $ivy.`dev.zio::zio:1.0.9`
 import $ivy.`io.circe::circe-generic-extras:0.14.1`
-import $ivy.`io.circe::circe-generic:0.14.0`
-import $ivy.`io.circe::circe-optics:0.13.0`
-import $ivy.`io.circe::circe-parser:0.14.0`
+import $ivy.`io.circe::circe-generic:0.14.1`
+import $ivy.`io.circe::circe-optics:0.14.1`
+import $ivy.`io.circe::circe-parser:0.14.1`
 import $ivy.`org.slf4j:slf4j-api:1.7.30`
+
 import io.circe.optics.JsonPath._
 import io.circe.parser._
 import org.slf4j.{ Logger, LoggerFactory }
@@ -19,6 +20,7 @@ import sttp.client3.{ Request, basicRequest, _ }
 import zio.console.putStrLn
 import zio.duration.durationInt
 import zio.{ ExitCode, IO, Schedule, Task, URIO }
+import zio.ZIO._
 
 val rootLogger = LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME).asInstanceOf[ch.qos.logback.classic.Logger]
 rootLogger.setLevel(ch.qos.logback.classic.Level.INFO)
@@ -78,9 +80,9 @@ object JiraApiRequest extends zio.App {
         body             <- IO.fromEither(issueGETResponse.body).mapError(new RuntimeException(_))
         jsonBody         <- Task.fromEither(parse(body).map(_modifyCustomField).map(_.noSpaces))
         metadata         <- send(metadataGETDiscoverIssueFieldData.cookies(authResponse))
-        _                <- putStrLn("_________________")
-        _                <- putStrLn(metadata.body.getOrElse("💣 ERROR 💥"))
-        _                <- putStrLn("_________________")
+        _                <- ZIO.debug("_________________")
+        _                <- ZIO.debug(metadata.body.getOrElse("💣 ERROR 💥"))
+        _                <- ZIO.debug("_________________")
         issueResponse    <- send(
                               issuePOST(issue)
                                 .contentType("application/json")

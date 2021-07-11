@@ -4,8 +4,8 @@ import zio.console.putStr
 import zio.duration._
 import zio.test.Assertion.equalTo
 import zio.test._
-import zio.test.environment.{ TestClock, TestConsole, TestEnvironment }
-import zio.{ Chunk, Ref, Schedule }
+import zio.test.environment.{TestClock, TestConsole, TestEnvironment}
+import zio.{Chunk, Ref, Schedule, ZIO}
 
 object ZScheduleSpec extends DefaultRunnableSpec {
 
@@ -39,7 +39,7 @@ object ZScheduleSpec extends DefaultRunnableSpec {
                                       .repeat(
                                         Schedule
                                           .exponential(10.milliseconds)
-                                          .tapOutput(d => putStr(d.toString)) >>>
+                                          .tapOutput(d => putStr(d.toString).orDie) >>>
                                           Schedule
                                             .recurWhile(_ < 20.milliseconds)
                                       )

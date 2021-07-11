@@ -1,28 +1,19 @@
 package io.github.mvillafuertem.terraform.cdktf
 
 import org.scalablytyped.runtime.StringDictionary
-import typings.cdktf.mod.{ S3Backend, TerraformStack, TerraformVariable }
-import typings.cdktf.s3BackendMod.S3BackendProps
+import typings.cdktf.cdktfMod.TerraformStack
 import typings.cdktf.terraformDependableMod.ITerraformDependable
-import typings.cdktf.terraformResourceMod.TerraformResource
-import typings.cdktf.terraformVariableMod.TerraformVariableConfig
 import typings.cdktfProviderAws.awsProviderMod.AwsProviderConfig
 import typings.cdktfProviderAws.budgetsBudgetMod.{ BudgetsBudgetConfig, BudgetsBudgetCostTypes, BudgetsBudgetNotification }
-import typings.cdktfProviderAws.cloudwatchMetricAlarmMod.CloudwatchMetricAlarmConfig
+import typings.cdktfProviderAws.dataAwsRegionMod.DataAwsRegion
 import typings.cdktfProviderAws.iamGroupMod.IamGroupConfig
 import typings.cdktfProviderAws.iamGroupPolicyAttachmentMod.IamGroupPolicyAttachmentConfig
 import typings.cdktfProviderAws.iamUserMod.IamUserConfig
 import typings.cdktfProviderAws.instanceMod.{ InstanceConfig, InstanceEbsBlockDevice }
-import typings.cdktfProviderAws.mod.Instance
-import typings.cdktfProviderAws.mod._
-import typings.cdktfProviderAws.securityGroupMod.SecurityGroup
-import typings.cdktfProviderAws.mod.SnsTopicSubscription
+import typings.cdktfProviderAws.mod.{ Instance, _ }
 import typings.cdktfProviderAws.s3BucketMod.{ S3BucketConfig, S3BucketVersioning }
-import typings.cdktfProviderAws.securityGroupMod.{ SecurityGroupConfig, SecurityGroupEgress, SecurityGroupIngress }
+import typings.cdktfProviderAws.securityGroupMod.{ SecurityGroup, SecurityGroupConfig }
 import typings.cdktfProviderAws.securityGroupRuleMod.SecurityGroupRuleConfig
-import typings.cdktfProviderAws.snsTopicMod.SnsTopicConfig
-import typings.cdktfProviderAws.snsTopicSubscriptionMod.SnsTopicSubscriptionConfig
-import typings.cdktfProviderAws.dataAwsRegionMod.DataAwsRegion
 import typings.constructs.mod.Construct
 
 import scala.scalajs.js

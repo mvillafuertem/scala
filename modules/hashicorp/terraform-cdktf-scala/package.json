@@ -1,0 +1,27 @@
+{
+  "name": "terraform-cdktf-scala",
+  "version": "0.1.0",
+  "description": "",
+  "license": "MIT",
+  "scripts": {
+    "apply": "cd ./src/main/resources/stacks/cdktf-terraform-stack && terraform apply",
+    "applyState": "cd ./src/main/resources/stacks/cdktf-terraform-state && terraform apply",
+    "destroy": "cd ./src/main/resources/stacks/cdktf-terraform-stack && terraform destroy",
+    "destroyState": "cd ./src/main/resources/stacks/cdktf-terraform-state && terraform destroy",
+    "build": "yarn get && tsc",
+    "compile": "tsc --pretty",
+    "fetch": "rm -rf ./src/main/java && cdktf get",
+    "get": "cdktf get",
+    "plan": "cd ./src/main/resources/stacks/cdktf-terraform-stack && terraform init && terraform plan",
+    "planState": "cd ./src/main/resources/stacks/cdktf-terraform-state && terraform init && terraform plan",
+    "migrate": "cd ./src/main/resources/stacks/cdktf-terraform-stack && terraform init -migrate-state",
+    "migrateState": "cd ./src/main/resources/stacks/cdktf-terraform-state && terraform init -migrate-state",
+    "reconfigure": "cd ./src/main/resources/stacks/cdktf-terraform-stack && terraform init -reconfigure",
+    "synth": "cdktf synth"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "cdktf-cli": "^0.4.1"
+  },
+  "private": true
+}
