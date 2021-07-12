@@ -1,6 +1,6 @@
 import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
 import sbt.Keys.libraryDependencies
-import sbt.{ Def, _ }
+import sbt.{Def, _}
 
 object Dependencies {
 
@@ -202,13 +202,19 @@ object Dependencies {
     Artifact.scalaTest % Version.scalaTest
   )
 
-  val foundations: Seq[ModuleID] = Seq(
+  val foundations: Seq[ModuleID]   = Seq(
     // D O T T Y
     Artifact.scalaCheck % Version.scalaCheck,
     Artifact.scalaTest  % Version.scalaTest
   ).map(_ % Test)
 
-  val http4s: Seq[ModuleID]      = Seq(
+  val `graalvm-cli`: Seq[ModuleID] = Seq(
+    // G R A A L  V M
+    Artifact.picocli        % Version.picocli,
+    Artifact.picocliCodegen % Version.picocli % Provided
+  )
+
+  val http4s: Seq[ModuleID] = Seq(
     // H T T P 4 S
     Artifact.http4sBlazeServer % Version.http4s,
     Artifact.http4sDsl         % Version.http4s,
@@ -401,6 +407,8 @@ object Dependencies {
     val leveldbjniAll             = "org.fusesource.leveldbjni"              % "leveldbjni-all"
     val logback                   = "ch.qos.logback"                         % "logback-classic"
     val mongoScalaBson            = "org.mongodb.scala"                     %% "mongo-scala-bson"
+    val picocli                   = "info.picocli"                           % "picocli"
+    val picocliCodegen            = "info.picocli"                           % "picocli-codegen"
     val postgresql                = "org.postgresql"                         % "postgresql"
     val scalaCheck                = "org.scalatestplus"                     %% "scalacheck-1-14"
     val scalaTest                 = "org.scalatest"                         %% "scalatest"
@@ -459,6 +467,7 @@ object Dependencies {
     val leveldbjniAll             = "1.8"
     val logback                   = "1.2.3"
     val mongoScalaBson            = "4.2.3"
+    val picocli                   = "4.6.1"
     val postgres                  = "42.2.23"
     val scalaCheck                = "3.2.2.0"
     val scalaJavaTime             = "2.0.0"

@@ -201,6 +201,13 @@ lazy val foundations = (project in file("modules/foundations/foundations"))
   .settings(commonSettings)
   .settings(libraryDependencies ++= Dependencies.foundations)
 
+lazy val `graalvm-cli` = (project in file("modules/graalvm/cli"))
+  // S E T T I N G S
+  .settings(commonSettings)
+  .settings(libraryDependencies ++= Dependencies.`graalvm-cli`)
+  .settings(GraalVMSettings.value)
+  .enablePlugins(GraalVMNativeImagePlugin)
+
 lazy val http4s = (project in file("modules/http4s"))
   // S E T T I N G S
   .settings(commonSettings)
