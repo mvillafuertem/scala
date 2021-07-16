@@ -1,11 +1,11 @@
 package io.github.mvillafuertem.zio.schedule
 
-import zio.console.putStr
+import zio.console.{ putStr, Console }
 import zio.duration._
 import zio.test.Assertion.equalTo
 import zio.test._
-import zio.test.environment.{TestClock, TestConsole, TestEnvironment}
-import zio.{Chunk, Ref, Schedule, ZIO}
+import zio.test.environment.{ TestClock, TestConsole, TestEnvironment }
+import zio.{ console, Chunk, Has, Ref, Schedule, ZIO, ZManaged }
 
 object ZScheduleSpec extends DefaultRunnableSpec {
 
@@ -78,6 +78,23 @@ object ZScheduleSpec extends DefaultRunnableSpec {
             values <- fiber.join
           } yield values
         )(equalTo(Chunk.fromIterable(0 to 100)))
+      },
+      testM("runtime") {
+        assertM {
+          val acquire      = console.putStr("Acquiring").as("Hello").orDie
+          val release      = console.putStr("Releasing").orDie
+          val managedLayer = ZManaged.make(acquire)(_ => release).toLayer
+          (for {
+            myRuntime <- ZIO.runtime[Has[String] with Console with TestConsole]
+            _          = myRuntime.unsafeRun {
+                           for {
+                             myVal <- ZIO.service[String]
+                             _     <- console.putStrLn(myVal).orDie
+                           } yield ()
+                         }
+            actual    <- TestConsole.output
+          } yield actual).provideSomeLayer[TestEnvironment](managedLayer ++ Console.live)
+        }(equalTo(Vector("Acquiring")))
       }
     ) @@ zio.test.TestAspect.timed
 }
