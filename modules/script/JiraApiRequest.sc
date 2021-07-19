@@ -1,6 +1,6 @@
 #!/usr/bin/env amm
 
-import $ivy.`ch.qos.logback:logback-classic:1.2.3`
+import $ivy.`ch.qos.logback:logback-classic:1.2.4`
 import $ivy.`com.softwaremill.sttp.client3::akka-http-backend:3.3.5`
 import $ivy.`com.softwaremill.sttp.client3::async-http-client-backend-zio:3.3.5`
 import $ivy.`com.softwaremill.sttp.client3::circe:3.3.5`

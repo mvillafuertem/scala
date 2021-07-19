@@ -1,4 +1,4 @@
-import $ivy.`ch.qos.logback:logback-classic:1.2.3`
+import $ivy.`ch.qos.logback:logback-classic:1.2.4`
 import $ivy.`com.jsoniter:jsoniter:0.9.23`
 import $ivy.`dev.zio::zio-sqs:0.2.2`
 import $ivy.`dev.zio::zio-streams:1.0.9`
