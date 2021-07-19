@@ -1,6 +1,6 @@
 #!/usr/bin/env amm
 
-import $ivy.`ch.qos.logback:logback-classic:1.2.3`
+import $ivy.`ch.qos.logback:logback-classic:1.2.4`
 import $ivy.`dev.zio::zio:1.0.9`
 import $ivy.`org.slf4j:slf4j-api:1.7.30`
 

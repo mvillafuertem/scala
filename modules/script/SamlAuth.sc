@@ -1,4 +1,4 @@
-import $ivy.`ch.qos.logback:logback-classic:1.2.3`
+import $ivy.`ch.qos.logback:logback-classic:1.2.4`
 import $ivy.`com.softwaremill.sttp.tapir::tapir-akka-http-server:0.17.20`
 import $ivy.`com.softwaremill.sttp.tapir::tapir-core:0.17.20`
 import $ivy.`com.softwaremill.sttp.tapir::tapir-json-circe:0.17.20`
