@@ -5,7 +5,7 @@ import $ivy.`com.softwaremill.sttp.client3::akka-http-backend:3.3.5`
 import $ivy.`com.softwaremill.sttp.client3::async-http-client-backend-zio:3.3.5`
 import $ivy.`com.softwaremill.sttp.client3::circe:3.3.5`
 import $ivy.`com.softwaremill.sttp.client3::core:3.3.5`
-import $ivy.`dev.zio::zio:1.0.9`
+import $ivy.`dev.zio::zio:1.0.10`
 import $ivy.`io.circe::circe-generic-extras:0.14.1`
 import $ivy.`io.circe::circe-generic:0.14.1`
 import $ivy.`io.circe::circe-optics:0.14.1`
