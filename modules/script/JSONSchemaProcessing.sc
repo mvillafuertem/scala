@@ -1,7 +1,7 @@
 #!/usr/bin/env amm
 
-import $ivy.`ch.qos.logback:logback-classic:1.2.3`
-import $ivy.`dev.zio::zio:1.0.8`
+import $ivy.`ch.qos.logback:logback-classic:1.2.4`
+import $ivy.`dev.zio::zio:1.0.9`
 import $ivy.`io.circe::circe-core:0.14.1`
 import $ivy.`io.circe::circe-generic:0.14.1`
 import $ivy.`io.circe::circe-parser:0.14.1`
@@ -13,6 +13,7 @@ import io.circe.{ Json, JsonObject }
 import org.slf4j.{ Logger, LoggerFactory }
 import zio.console._
 import zio.{ ExitCode, Task, UIO, URIO, ZIO }
+import zio.ZIO._
 
 import java.io.{ File, FileInputStream }
 import java.nio.charset.StandardCharsets
@@ -110,13 +111,13 @@ object JSONSchemaProcessing extends zio.App {
       bytes  <- Task.effect(is.readAllBytes())
       json   <- Task.fromEither(parse(new String(bytes, StandardCharsets.UTF_8)))
       result <- process(json)
-      _      <- putStrLn(result.spaces2)
+      _      <- ZIO.debug(result.spaces2)
     } yield ()
 
   def program(args: List[String]): ZIO[Console, Throwable, Unit] =
     readFile(args.head)
       .bracket(closeFile)(processSchema)
-      .onError(ex => putStrLn(s"Failed to read file: ${ex.failures}"))
+      .onError(ex => ZIO.debug(s"Failed to read file: ${ex.failures}"))
 
   override def run(args: List[String]): URIO[zio.ZEnv, ExitCode] =
     program(args).fold(_ => ExitCode.failure, _ => ExitCode.success)

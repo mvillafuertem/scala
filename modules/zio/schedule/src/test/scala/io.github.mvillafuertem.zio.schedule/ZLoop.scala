@@ -69,5 +69,5 @@ object ZLoop extends zio.App {
   // Here the interpreter runs the program and perform side-effects
   override def run(args: List[String]): ZIO[zio.ZEnv, Nothing, ExitCode] =
     (program as ExitCode.success)
-      .catchAllCause(cause => putStrLn(s"${cause.prettyPrint}") as ExitCode.failure)
+      .catchAllCause(cause => putStrLn(s"${cause.prettyPrint}").orDie as ExitCode.failure)
 }

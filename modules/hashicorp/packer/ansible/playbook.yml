@@ -1,0 +1,8 @@
+---
+# playbook.yml
+- name: 'Provision Image'
+  hosts: default
+  become: true
+
+  roles:
+    - [roles/...]

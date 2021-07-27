@@ -194,12 +194,19 @@ lazy val docs = (project in file("modules/docs"))
 lazy val dotty = (project in file("modules/foundations/dotty"))
   // S E T T I N G S
   .settings(scalaVersion := Settings.scala3)
-  .settings(libraryDependencies ++= Dependencies.dotty.map(_.cross(CrossVersion.for3Use2_13)))
+  .settings(libraryDependencies ++= Dependencies.dotty)
 
 lazy val foundations = (project in file("modules/foundations/foundations"))
   // S E T T I N G S
   .settings(commonSettings)
   .settings(libraryDependencies ++= Dependencies.foundations)
+
+lazy val `graalvm-cli` = (project in file("modules/graalvm/cli"))
+  // S E T T I N G S
+  .settings(commonSettings)
+  .settings(libraryDependencies ++= Dependencies.`graalvm-cli`)
+  .settings(GraalVMSettings.value)
+  .enablePlugins(GraalVMNativeImagePlugin)
 
 lazy val http4s = (project in file("modules/http4s"))
   // S E T T I N G S
@@ -221,9 +228,10 @@ lazy val reflection = (project in file("modules/foundations/reflection"))
 
 lazy val script = (project in file("modules/script"))
 // S E T T I N G S
-  .settings(scalaVersion := "2.13.3")
+  .settings(scalaVersion := Settings.scala213)
+  .settings(crossScalaVersions := Seq(Settings.scala213))
   .settings(libraryDependencies ++= Dependencies.script)
-  .settings(libraryDependencies ++= Seq("com.lihaoyi" % "ammonite" % "2.3.8" % Test cross CrossVersion.full))
+  .settings(libraryDependencies ++= Seq("com.lihaoyi" % "ammonite" % "2.4.0" % Test cross CrossVersion.full))
   .settings(commands += Commands.ammoniteCommand)
 
 lazy val slick = (project in file("modules/slick"))
@@ -276,10 +284,10 @@ lazy val tapir = (project in file("modules/tapir"))
   .enablePlugins(BuildInfoPlugin)
   .enablePlugins(GitVersioning)
 
-lazy val `terraform-cdktf-scalajs` = (project in file("modules/terraform/cdktf-scalajs"))
+lazy val `terraform-cdktf-scalajs` = (project in file("modules/hashicorp/terraform-cdktf-scalajs"))
 // S E T T I N G S
   .settings(Information.value)
-  .settings(Dependencies.`terraform-cdktf`)
+  .settings(Dependencies.`terraform-cdktf-scalajs`)
   // S C A L A B L Y T Y P E D
   .settings(stMinimize := Selection.All)
   .settings(
@@ -296,10 +304,11 @@ lazy val `terraform-cdktf-scalajs` = (project in file("modules/terraform/cdktf-s
   .enablePlugins(ScalablyTypedConverterExternalNpmPlugin)
   .enablePlugins(ScalaJSPlugin)
 
-//lazy val `terraform-cdktf-scala` = (project in file("modules/terraform/cdktf-scala"))
-//// S E T T I N G S
-//  .settings(Information.value)
-//  .settings(Dependencies.`terraform-cdktf`)
+lazy val `terraform-cdktf-scala` = (project in file("modules/hashicorp/terraform-cdktf-scala"))
+// S E T T I N G S
+  .settings(Information.value)
+  .settings(scalaVersion := Settings.scala213)
+  .settings(libraryDependencies ++= Dependencies.`terraform-cdktf-scala`)
 
 lazy val cdktf = taskKey[Unit]("cdktf synth")
 

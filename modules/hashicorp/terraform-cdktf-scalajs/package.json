@@ -1,0 +1,25 @@
+{
+  "name": "terraform-cdktf-scalajs",
+  "version": "0.1.0",
+  "description": "",
+  "license": "MIT",
+  "scripts": {
+    "get": "cdktf get",
+    "build": "yarn get && tsc",
+    "compile": "tsc --pretty",
+    "synth": "cdktf synth",
+    "plan": "cd ./cdktf.out && terraform init && terraform plan",
+    "apply": "terraform apply ./cdktf.out"
+  },
+  "dependencies": {
+    "@cdktf/provider-aws": "^1.0.119",
+    "cdktf": "^0.4.1",
+    "constructs": "^3.3.97",
+    "node": "^16.5.0"
+  },
+  "devDependencies": {
+    "cdktf-cli": "^0.4.1",
+    "@types/node": "^16.3.2"
+  },
+  "private": true
+}

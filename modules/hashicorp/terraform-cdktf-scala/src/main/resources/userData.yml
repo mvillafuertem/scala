@@ -1,0 +1,78 @@
+#cloud-config
+# Documento acerca de este lenguaje:
+# https://cloudinit.readthedocs.io/en/latest/topics/examples.html
+groups:
+  - docker
+users:
+  - default
+  # the docker service account
+  - name: docker-service
+    groups: docker
+package_update: true
+packages:
+  - apt-transport-https
+  - ca-certificates
+  - curl
+  - gnupg-agent
+  - software-properties-common
+write_files:
+  - path: /opt/docker/jira-app/docker-compose.yml
+    content: |
+      version: "2"
+
+      services:
+        #Jira image from Atlassian
+        jira:
+          depends_on:
+            - postgresql
+          image: atlassian/jira-software
+          restart: always
+          networks:
+            - atlassian
+          ports:
+            - 80:8080
+          environment:
+            - SETENV_JVM_MINIMUM_MEMORY=1024m
+            - SETENV_JVM_MAXIMUM_MEMORY=2048m
+          volumes:
+            - ./jira:/var/atlassian/application-data/jira
+
+        #Database service
+        postgresql:
+          image: postgres:9.6
+          restart: always
+          networks:
+            - atlassian
+          environment:
+            - POSTGRES_DB=jiradb
+            - POSTGRES_USER=jira
+            - POSTGRES_PASSWORD=password
+            - POSTGRES_ENCODING=UNICODE
+            - POSTGRES_COLLATE=C
+            - POSTGRES_COLLATE_TYPE=C
+          volumes:
+            - ./postgresql:/var/lib/postgresql/data
+      networks:
+        atlassian:
+runcmd:
+  # https://docs.aws.amazon.com/AmazonECS/latest/developerguide/docker-basics.html
+  - sudo yum update -y
+  - sudo amazon-linux-extras install docker -y
+  # - sudo systemctl enable docker
+  - sudo service docker start
+  - sudo usermod -a -G docker ec2-user
+  # install docker-compose following the guide: https://docs.docker.com/compose/install/
+  - sudo curl -L "https://github.com/docker/compose/releases/download/1.28.5/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+  - sudo chmod +x /usr/local/bin/docker-compose
+  - sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+  # Create directories
+  - mkdir /opt/docker/jira-app/jira
+  - mkdir /opt/docker/jira-app/postgresql
+  # Pull docker images
+  - cd /opt/docker/jira-app; sudo docker-compose pull 2>&1 | tee ../jira-app-pull.log
+  - cd /opt/docker/jira-app; sudo docker-compose up --force-recreate -d 2>&1 | tee ../jira-app.log
+  - cd /opt/docker; echo completed > deployment.log
+
+power_state:
+  #mode: reboot
+  #message: Restarting after installing docker & docker-compose

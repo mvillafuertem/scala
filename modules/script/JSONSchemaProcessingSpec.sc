@@ -1,8 +1,8 @@
 #!/usr/bin/env amm
 
 import $file.JSONSchemaProcessing
-import $ivy.`dev.zio::zio-test-sbt:1.0.8`
-import $ivy.`dev.zio::zio-test:1.0.8`
+import $ivy.`dev.zio::zio-test-sbt:1.0.9`
+import $ivy.`dev.zio::zio-test:1.0.9`
 
 import io.circe.parser._
 import zio._
