@@ -1,10 +1,12 @@
 #!/usr/bin/env amm
 
+import $ivy.`ch.qos.logback:logback-classic:1.2.3`
 import $ivy.`com.lihaoyi::mainargs:0.2.1`
 import $ivy.`dev.zio::zio-logging-slf4j:0.5.12`
 import $ivy.`dev.zio::zio:1.0.11`
 
-import mainargs.{ arg, main, Flag }
+import MinimalScriptZioApp.Config
+import mainargs.{ arg, main, Flag, ParserForClass }
 import zio.logging.log
 import zio.logging.slf4j.Slf4jLogger
 import zio.{ ExitCode, Task, URIO, ZEnv }
@@ -13,15 +15,8 @@ import zio.{ ExitCode, Task, URIO, ZEnv }
   name = "minimal-script-zio-app",
   doc = ""
 )
-def minimalScriptZioApp(
-                         @arg(short = 'f', doc = "String to print repeatedly")
-                         foo: String,
-                         @arg(name = "my-num", doc = "How many times to print string")
-                         myNum: Option[Int],
-                         @arg(doc = "Example flag, can be passed without any value to become true")
-                         bool: Flag
-                       ): Unit =
-  MinimalScriptZioApp.main(Array())
+def minimalScriptZioApp(config: Config): Unit =
+  MinimalScriptZioApp.main(Array(config.foo, config.myNum.toString, config.bool.toString))
 
 object MinimalScriptZioApp extends zio.App {
 
@@ -35,4 +30,14 @@ object MinimalScriptZioApp extends zio.App {
     .provideSomeLayer[ZEnv](loggerLayer)
     .exitCode
 
+  // Configuration
+  implicit def configParser: ParserForClass[Config] = ParserForClass[Config]
+  case class Config(
+                     @arg(short = 'f', doc = "String to print repeatedly")
+                     foo: String,
+                     @arg(name = "my-num", doc = "How many times to print string")
+                     myNum: Int = 2,
+                     @arg(doc = "Example flag")
+                     bool: Flag
+                   )
 }
