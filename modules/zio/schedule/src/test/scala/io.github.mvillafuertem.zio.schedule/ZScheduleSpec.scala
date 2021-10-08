@@ -1,11 +1,12 @@
 package io.github.mvillafuertem.zio.schedule
 
-import zio.console.{ putStr, Console }
+import zio.Schedule.Decision
+import zio.console.{Console, putStr}
 import zio.duration._
 import zio.test.Assertion.equalTo
 import zio.test._
-import zio.test.environment.{ TestClock, TestConsole, TestEnvironment }
-import zio.{ console, Chunk, Has, Ref, Schedule, ZIO, ZManaged }
+import zio.test.environment.{TestClock, TestConsole, TestEnvironment}
+import zio.{Chunk, Has, Ref, Schedule, ZIO, ZManaged, console}
 
 object ZScheduleSpec extends DefaultRunnableSpec {
 
@@ -69,9 +70,13 @@ object ZScheduleSpec extends DefaultRunnableSpec {
             fiber  <- ref
                         .getAndUpdate(_ + 1)
                         .repeat(
-                          (Schedule.spaced(10.milliseconds) >>>
+                          ((Schedule.spaced(10.milliseconds) >>>
                             Schedule.recurWhile(_ < 100)) *>
-                            Schedule.collectAll[Int]
+                            Schedule.collectAll[Int])
+                            .onDecision {
+                              case Decision.Done(_)                 => ZIO.debug(s"done trying")
+                              case Decision.Continue(attempt, _, _) => ZIO.debug(s"attempt #$attempt")
+                            }
                         )
                         .fork
             _      <- TestClock.adjust(1000.milliseconds)
