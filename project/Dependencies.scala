@@ -454,7 +454,7 @@ object Dependencies {
     val cask                      = "0.7.11"
     val cats                      = "2.6.1"
     val circe                     = "0.13.0"
-    val http4s                    = "1.0.0-M28"
+    val http4s                    = "1.0.0-M29"
     val curator                   = "5.2.0"
     val dijon                     = "0.5.0"
     val ficus                     = "1.5.1"
