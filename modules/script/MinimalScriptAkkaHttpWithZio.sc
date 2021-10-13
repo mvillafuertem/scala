@@ -1,17 +1,19 @@
 import $ivy.`ch.qos.logback:logback-classic:1.2.3`
 import $ivy.`com.lihaoyi::mainargs:0.2.1`
 import $ivy.`com.softwaremill.sttp.tapir::tapir-akka-http-server:0.17.19`
+import $ivy.`com.softwaremill.sttp.tapir::tapir-json-circe:0.17.19`
 import $ivy.`dev.zio::zio-logging-slf4j:0.5.12`
 import $ivy.`dev.zio::zio:1.0.11`
 import MinimalScriptZioApp.Config
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.server.Route
-import mainargs.{ arg, main, Flag, ParserForClass }
+import io.circe.Json
+import mainargs.{ arg, main, ParserForClass }
 import org.slf4j.{ Logger, LoggerFactory }
+import sttp.tapir.json.circe._
 import sttp.tapir.server.akkahttp.AkkaHttpServerInterpreter
-import sttp.tapir.{ endpoint, stringBody }
-import zio.console.Console
+import sttp.tapir.{ anyJsonBody, endpoint, paths, stringBody }
 import zio.logging.slf4j.Slf4jLogger
 import zio.logging.{ log, Logging }
 import zio.{ ExitCode, Has, Task, URIO, ZEnv, ZLayer, ZManaged }
@@ -27,54 +29,65 @@ rootLogger.setLevel(ch.qos.logback.classic.Level.INFO)
   doc = ""
 )
 def minimalScriptZioApp(config: Config): Unit =
-  MinimalScriptZioApp.main(Array(config.foo, config.myNum.toString, config.bool.toString))
+  MinimalScriptZioApp.main(Array(config.interface, config.port.toString))
 
 object MinimalScriptZioApp extends zio.App {
 
   val loggerLayer = Slf4jLogger.make((_, message) => message)
 
   override def run(args: List[String]): URIO[zio.ZEnv, ExitCode] = (for {
-    _      <- Task().tap(_ => log.info("Start"))
-    server <- AkkaHttpServer.make("0.0.0.0", 8080).useForever.forkDaemon
-    _      <- Task.fromFuture(ec => Future(println("Hola"))(ec)) *>
-      log.info(s"___________") *>
-      Task.fromFuture(ec =>
-        Future {
-          Thread.sleep(10000)
-          println("Adios")
-        }(ec)
-      ) *>
-      log.info(s"Press Any Key to stop the demo server") *> zio.console.getStrLn
+    server <- AkkaHttpServer.make(args.head, args(1).toInt).useForever.forkDaemon
+    _      <- log.info(s"Press Any Key to stop the demo server") *> zio.console.getStrLn
     _      <- server.interrupt
   } yield ())
     .catchAll(e => log.error(s"${e.getClass.getName} : ${e.getMessage}"))
     .provideSomeLayer[ZEnv](
-      Routes.live >+>
-        AkkaHttpServer.actorSystemLive >+>
-        loggerLayer
+      loggerLayer >+>
+        Routes.live >+>
+        AkkaHttpServer.actorSystemLive
     )
     .exitCode
 
   // Configuration
   implicit def configParser: ParserForClass[Config] = ParserForClass[Config]
   case class Config(
-                     @arg(short = 'f', doc = "String to print repeatedly")
-                     foo: String,
-                     @arg(name = "my-num", doc = "How many times to print string")
-                     myNum: Int = 2,
-                     @arg(doc = "Example flag")
-                     bool: Flag
+                     @arg(short = 'i', doc = "")
+                     interface: String = "0.0.0.0",
+                     @arg(name = "p", doc = "")
+                     port: Int = 8080
                    )
-
   object Routes {
     val live: ZLayer[Any, Throwable, Has[Route]] = (for {
-      runtime <- ZManaged.runtime[Any]
-      route   <- ZManaged.effect {
-        val serverEndpoint = endpoint.get
-          .in("hello")
-          .out(stringBody)
-        AkkaHttpServerInterpreter.toRoute(serverEndpoint)(_ => runtime.unsafeRunToFuture(Task.effect(Right[Unit, String]("Hello World!"))))
-      }
+      runtime        <- ZManaged.runtime[Any]
+      serverLogic     = (method: String) =>
+        (paths: List[String], input: Json) =>
+          runtime.unsafeRunToFuture(
+            Task
+              .effect(Right[Unit, String]("ok"))
+              .tap(_ => log.info(s"""$method
+                                    |/${paths.mkString("/")}
+                                    |${input.spaces2}
+                                    |""".stripMargin))
+              .provideLayer(loggerLayer)
+          )
+      serverEndpoints =
+        List(
+          endpoint.get
+            .in("hello")
+            .out(stringBody)
+            .serverLogic[Future](_ => runtime.unsafeRunToFuture(Task.effect(Right[Unit, String]("Hello World!")))),
+          endpoint.put
+            .in(paths)
+            .in(anyJsonBody[Json])
+            .out(stringBody)
+            .serverLogic[Future](serverLogic("POST").tupled),
+          endpoint.post
+            .in(paths)
+            .in(anyJsonBody[Json])
+            .out(stringBody)
+            .serverLogic[Future](serverLogic("POST").tupled)
+        )
+      route          <- ZManaged.effect(AkkaHttpServerInterpreter.toRoute(serverEndpoints))
     } yield route).toLayer
 
   }
