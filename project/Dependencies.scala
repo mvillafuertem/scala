@@ -468,7 +468,7 @@ object Dependencies {
     val logback                   = "1.2.6"
     val mongoScalaBson            = "4.3.3"
     val picocli                   = "4.6.1"
-    val postgres                  = "42.2.24"
+    val postgres                  = "42.3.0"
     val scalaCheck                = "3.2.2.0"
     val scalaJavaTime             = "2.0.0"
     val scalaTest                 = "3.2.10"
