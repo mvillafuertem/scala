@@ -76,8 +76,9 @@ final class IamStack(scope: Construct, name: String) extends TerraformStack(scop
   new BudgetsBudget(
     self,
     "monthly-cost-budget",
-    BudgetsBudgetConfig("COST", "1.0", "USD", "2020-11-06_00:00", "MONTHLY")
+    BudgetsBudgetConfig("COST", "1.0", "USD", "MONTHLY")
       .setName("Monthly Cost Budget")
+      .setTimePeriodStart("2020-11-06_00:00")
       .setCostTypes(
         js.Array[BudgetsBudgetCostTypes](
           BudgetsBudgetCostTypes()
@@ -151,7 +152,9 @@ final class IamStack(scope: Construct, name: String) extends TerraformStack(scop
   new Instance(
     self,
     "instance",
-    InstanceConfig("ami-0947d2ba12ee1ff75", "t2.micro")
+    InstanceConfig()
+      .setAmi("ami-0947d2ba12ee1ff75")
+      .setInstanceType("t2.micro")
       .setTags(StringDictionary("Name" -> "instance"))
       .setSecurityGroups(js.Array[String](securityGroup.name))
       .setEbsBlockDevice(js.Array[InstanceEbsBlockDevice](ebsBlockDevice))

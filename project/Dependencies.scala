@@ -71,7 +71,7 @@ object Dependencies {
   val advanced: Seq[ModuleID] = Seq(
     // A D V A N C E D  T E S T
     Artifact.scalaTest        % Version.scalaTest          % Test,
-    "org.scala-lang.modules" %% "scala-parser-combinators" % "2.0.0"
+    "org.scala-lang.modules" %% "scala-parser-combinators" % "2.1.0"
   )
 
   val algorithms: Seq[ModuleID] = Seq(
@@ -335,8 +335,8 @@ object Dependencies {
 
   val `terraform-cdktf-scala`: Seq[ModuleID] = Seq(
     // T E R R A F O R M  C D K T F
-    "com.hashicorp"       % "cdktf"      % "0.4.1",
-    "software.constructs" % "constructs" % "3.3.77"
+    "com.hashicorp"       % "cdktf"      % "0.7.0",
+    "software.constructs" % "constructs" % "10.0.9"
   ) ++ Seq(
     // T E R R A F O R M  C D K T F  T E S T
     "org.scalatest"      %% "scalatest"  % Version.scalaTest % Test
@@ -441,49 +441,49 @@ object Dependencies {
   private object Version {
     val akka                      = "2.6.14"
     val akkaHttp                  = "10.2.6"
-    val akkaHttpCirce             = "1.37.0"
+    val akkaHttpCirce             = "1.38.2"
     val akkaPersistenceCassandra  = "0.100"
     val akkaPersistenceInmemory   = "2.5.15.2"
     val akkaPersistenceJdbc       = "3.5.2"
     val alpakkaKafka              = "2.1.0"
     val alpakkaMongodb            = "3.0.3"
     val alpakkaSlick              = "3.0.3"
-    val awsCdk                    = "1.122.0"
+    val awsCdk                    = "1.129.0"
     val awsLambda                 = "1.2.1"
-    val awsSdk                    = "2.17.39"
+    val awsSdk                    = "2.17.66"
     val cask                      = "0.7.11"
     val cats                      = "2.6.1"
     val circe                     = "0.13.0"
-    val http4s                    = "1.0.0-M25"
+    val http4s                    = "1.0.0-M29"
     val curator                   = "5.2.0"
     val dijon                     = "0.5.0"
     val ficus                     = "1.5.1"
     val h2                        = "1.4.200"
-    val java8Compat               = "1.0.0"
+    val java8Compat               = "1.0.1"
     val jslt                      = "0.1.11"
-    val jsoniter                  = "2.10.2"
+    val jsoniter                  = "2.11.0"
     val jwtCirce                  = "4.3.0"
     val kafka                     = "2.8.0"
     val leveldbjniAll             = "1.8"
     val logback                   = "1.2.6"
-    val mongoScalaBson            = "4.3.2"
+    val mongoScalaBson            = "4.3.3"
     val picocli                   = "4.6.1"
-    val postgres                  = "42.2.23"
+    val postgres                  = "42.3.0"
     val scalaCheck                = "3.2.2.0"
     val scalaJavaTime             = "2.0.0"
-    val scalaTest                 = "3.2.9"
+    val scalaTest                 = "3.2.10"
     val slick                     = "3.3.3"
     val slinky                    = "0.6.6"
-    val spark                     = "3.1.2"
-    val sttp                      = "3.3.14"
+    val spark                     = "3.2.0"
+    val sttp                      = "3.3.16"
     val tapir                     = "0.17.19"
-    val testcontainers            = "0.39.7"
-    val testcontainersKafka       = "1.16.0"
-    val zio                       = "1.0.11"
+    val testcontainers            = "0.39.9"
+    val testcontainersKafka       = "1.16.2"
+    val zio                       = "1.0.12"
     val zioAkkaCluster            = "0.2.0"
     val zioInteropCats            = "3.1.1.0"
-    val zioInteropReactiveStreams = "1.3.5"
-    val zioKafka                  = "0.16.0"
+    val zioInteropReactiveStreams = "1.3.8"
+    val zioKafka                  = "0.17.1"
   }
 
 }
