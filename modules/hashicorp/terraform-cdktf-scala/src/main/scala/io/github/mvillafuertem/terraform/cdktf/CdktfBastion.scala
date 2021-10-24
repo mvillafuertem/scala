@@ -1,7 +1,11 @@
 package io.github.mvillafuertem.terraform.cdktf
 
 import com.hashicorp.cdktf.{ TerraformOutput, TerraformResourceLifecycle }
-import imports.aws._
+import imports.aws.auto_scaling.AutoscalingGroup
+import imports.aws.data_sources.LaunchConfiguration
+import imports.aws.ec2.KeyPair
+import imports.aws.elb._
+import imports.aws.vpc.{ DataAwsVpc, SecurityGroup, SecurityGroupRule, Subnet }
 import io.github.mvillafuertem.terraform.cdktf.CdktfStack.CdktfStackConfiguration
 import software.constructs.Construct
 
@@ -37,13 +41,11 @@ final class CdktfBastion(scope: Construct, cdktfStackConfiguration: CdktfStackCo
     .protocol("HTTP")
     .vpcId(vpc.getId)
     .healthCheck(
-      List(
-        AlbTargetGroupHealthCheck
-          .builder()
-          .path("/health")
-          .port("80")
-          .build()
-      ).asJava
+      AlbTargetGroupHealthCheck
+        .builder()
+        .path("/health")
+        .port("80")
+        .build()
     )
     .build()
 

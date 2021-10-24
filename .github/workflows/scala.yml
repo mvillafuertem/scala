@@ -109,12 +109,12 @@ jobs:
       - name: Run cdktf
         run: |
           sbt terraform-cdktf-scalajs/run && \
-          cat modules/hashicorp/terraform-cdktf-scalajs/src/main/resources/cdk.tf.json && \
-          yarn --cwd modules/hashicorp/terraform-cdktf-scala/ install && \
-          yarn --cwd modules/hashicorp/terraform-cdktf-scala/ get && \
-          sbt "terraform-cdktf-scala/run" && \
-          cat modules/hashicorp/terraform-cdktf-scala/src/main/resources/stacks/cdktf-terraform-stack/cdk.tf.json && \
-          cat modules/hashicorp/terraform-cdktf-scala/src/main/resources/stacks/cdktf-terraform-state/cdk.tf.json
+          cat modules/hashicorp/terraform-cdktf-scalajs/src/main/resources/cdk.tf.json # && \
+          # yarn --cwd modules/hashicorp/terraform-cdktf-scala/ install && \
+          # yarn --cwd modules/hashicorp/terraform-cdktf-scala/ get && \
+          # sbt "terraform-cdktf-scala/run" && \
+          # cat modules/hashicorp/terraform-cdktf-scala/src/main/resources/stacks/cdktf-terraform-stack/cdk.tf.json && \
+          # cat modules/hashicorp/terraform-cdktf-scala/src/main/resources/stacks/cdktf-terraform-state/cdk.tf.json
 
   dotty:
     name: Dotty
