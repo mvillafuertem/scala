@@ -10,7 +10,7 @@
     "destroyState": "cd ./src/main/resources/stacks/cdktf-terraform-state && terraform destroy",
     "build": "yarn get && tsc",
     "compile": "tsc --pretty",
-    "fetch": "rm -rf ./src/main/java && cdktf get",
+    "fetch": "rm -rf ./src/main/java ./src/main/resources/imports ./node_modules/cdktf-cli/node_modules/@types && cdktf get",
     "get": "cdktf get",
     "plan": "cd ./src/main/resources/stacks/cdktf-terraform-stack && terraform init && terraform plan",
     "planState": "cd ./src/main/resources/stacks/cdktf-terraform-state && terraform init && terraform plan",
@@ -21,7 +21,8 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "cdktf-cli": "^0.7.0"
+    "cdktf-cli": "^0.7.0",
+    "@types/node": "14.17.27"
   },
   "private": true
 }
