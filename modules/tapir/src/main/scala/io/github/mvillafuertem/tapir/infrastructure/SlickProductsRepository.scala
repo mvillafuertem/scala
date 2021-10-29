@@ -22,15 +22,15 @@ trait SlickProductsRepository extends ProductsRepository with InfrastructureConf
 
   override def create(product: Product): IO[ProductException, ProductId] = {
     val insert = (products += product).map(_ => product.productId)
-    ZIO.fromDBIO(insert).provide(self).refineOrDie {
-      case e: Exception => new ProductException(e)
+    ZIO.fromDBIO(insert).provide(self).refineOrDie { case e: Exception =>
+      new ProductException(e)
     }
   }
 
   override def getAll: IO[ProductException, ZStream[Any, Throwable, Product]] = {
     val getAll: StreamingDBIO[Seq[Product], Product] = products.result
-    ZIO.fromStreamingDBIO(getAll).provide(self).refineOrDie {
-      case e: Exception => new ProductException(e)
+    ZIO.fromStreamingDBIO(getAll).provide(self).refineOrDie { case e: Exception =>
+      new ProductException(e)
     }
   }
 

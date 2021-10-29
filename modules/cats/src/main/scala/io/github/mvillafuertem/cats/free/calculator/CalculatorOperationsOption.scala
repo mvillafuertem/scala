@@ -22,7 +22,7 @@ object CalculatorOperationsOption {
     }
 
   // P R O G R A M  O P T I O N
-  def programOption(a: Int, b: Int): Ops[Int]           =
+  def programOption(a: Int, b: Int): Ops[Int] =
     for {
 
       c <- sum[Int](a, b)

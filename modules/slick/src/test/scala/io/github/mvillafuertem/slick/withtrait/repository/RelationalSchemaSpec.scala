@@ -5,7 +5,8 @@ import org.scalatest.flatspec.AsyncFlatSpecLike
 import org.scalatest.matchers.should.Matchers
 
 /**
- * @author Miguel Villafuerte
+ * @author
+ *   Miguel Villafuerte
  */
 final class RelationalSchemaSpec extends InfrastructureConfigurationSpec with AsyncFlatSpecLike with Matchers {
 

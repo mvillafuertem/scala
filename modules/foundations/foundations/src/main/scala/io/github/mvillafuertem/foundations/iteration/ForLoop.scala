@@ -78,9 +78,9 @@ object ForLoop {
   // e. Refactor `sum`, `size`, `min` and `wordCount` using the higher-order
   // function you defined above.
 
-  //////////////////////////////////////////////
+  // ////////////////////////////////////////////
   // Bonus question (not covered by the video)
-  //////////////////////////////////////////////
+  // ////////////////////////////////////////////
 
   // f. `foldLeft` can be used to implement most of the List API.
   // Do you want to give it a try? For example, can you implement

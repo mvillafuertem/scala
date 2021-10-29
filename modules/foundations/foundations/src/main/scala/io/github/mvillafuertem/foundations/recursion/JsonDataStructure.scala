@@ -37,7 +37,7 @@ object JsonDataStructure {
   //    },                                          },
   //    "country": "UK",                            "country": "***",
   //  }                                           }
-  //}                                           }
+  // }                                           }
   def anonymize(json: Json): Json =
     json match {
       case _: JsonNumber    => JsonNumber(0)
@@ -84,9 +84,9 @@ object JsonDataStructure {
         array.map(depth).maxOption.fold(0)(_ + 1)
     }
 
-  //////////////////////////////////////////////
+  // ////////////////////////////////////////////
   // Bonus question (not covered by the video)
-  //////////////////////////////////////////////
+  // ////////////////////////////////////////////
 
   // d. Add the missing cases to JSON enumeration: JsonBoolean, JsonArray and JsonNull.
 

@@ -3,7 +3,7 @@ package io.github.mvillafuertem.advanced.implicits
 import org.scalatest.flatspec.AnyFlatSpecLike
 import org.scalatest.matchers.should.Matchers
 
-import scala.concurrent.{ExecutionContext, ExecutionContextExecutor}
+import scala.concurrent.{ ExecutionContext, ExecutionContextExecutor }
 
 class ConditionalImplicitValuesSpec extends AnyFlatSpecLike with Matchers {
 
@@ -15,7 +15,7 @@ class ConditionalImplicitValuesSpec extends AnyFlatSpecLike with Matchers {
     implicit val ec: ExecutionContextExecutor = ExecutionContext.global
 
     // w h e n
-    val actual = ConditionalImplicitValues().n1(1).n2(2).run()//(ConditionalImplicit.conditionalImplicitFromExecutionContext(ec))
+    val actual = ConditionalImplicitValues().n1(1).n2(2).run() // (ConditionalImplicit.conditionalImplicitFromExecutionContext(ec))
 
     // t h e n
     actual shouldBe 3

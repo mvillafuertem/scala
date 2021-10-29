@@ -4,8 +4,7 @@ import picocli.CommandLine.Model.CommandSpec
 
 object Commands {
 
-  val login: CommandSpec = CommandSpec
-    .create
+  val login: CommandSpec = CommandSpec.create
     .name("login")
 
 }

@@ -125,39 +125,14 @@ object JSONSchemaProcessing extends zio.App {
 }
 
 /**
- * original code augment.jq
- * bash$ jq -f augment.jq input-schema.json
+ * original code augment.jq bash$ jq -f augment.jq input-schema.json
  *
- * def has_field(field):
- *  type == "object" and has(field);
+ * def has_field(field): type == "object" and has(field);
  *
- * def this_or_null:
- *  if has_field("type") and (has_field("$schema") | not)
- *  then
- *    {
- *      anyOf: [
- *        .,
- *        {
- *          type: "null"
- *        }
- *      ]
- *    }
- *  else
- *    .
- *  end;
+ * def this_or_null: if has_field("type") and (has_field("$schema") | not) then { anyOf: [ ., { type: "null" } ] } else . end;
  *
- * def make_nullable_recursively(is_already):
- *  if type != "object"
- *  then
- *    .
- *  else
- *    with_entries(
- *      {
- *        key: .key,
- *        value: (.value | make_nullable_recursively(has_field("anyOf")) | if is_already then . else this_or_null end)
- *      }
- *    ) | this_or_null
- *  end;
+ * def make_nullable_recursively(is_already): if type != "object" then . else with_entries( { key: .key, value: (.value |
+ * make_nullable_recursively(has_field("anyOf")) | if is_already then . else this_or_null end) } ) | this_or_null end;
  *
  * make_nullable_recursively(has_field("anyOf"))
  */

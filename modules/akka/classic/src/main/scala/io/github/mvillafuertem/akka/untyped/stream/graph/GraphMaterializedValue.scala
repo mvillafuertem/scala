@@ -18,8 +18,8 @@ object GraphMaterializedValue extends App {
 
   /**
    * A Composite component (Sink)
-   * - Print out all strings which are lowercase
-   * - Counts the strings that are short (< 5 chars)
+   *   - Print out all strings which are lowercase
+   *   - Counts the strings that are short (< 5 chars)
    */
   // Step 1 - Setting up the fundamentals for the graph
   val complexWordSink = Sink.fromGraph(
@@ -43,14 +43,14 @@ object GraphMaterializedValue extends App {
 
   import actorSystem.dispatcher
 
-  val shortStringsCountFuture                                         = wordSource.toMat(complexWordSink)(Keep.right).run()
+  val shortStringsCountFuture = wordSource.toMat(complexWordSink)(Keep.right).run()
   shortStringsCountFuture.onComplete {
     case Success(count)     => println(s"The total number of short strings is $count")
     case Failure(exception) => println(s"The count of short strins failed $exception")
   }
 
   /**
-   *  Exercise
+   * Exercise
    */
   def enhanceFlow[A, B](flow: Flow[A, B, _]): Flow[A, B, Future[Int]] = {
 

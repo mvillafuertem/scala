@@ -20,7 +20,7 @@ import scala.scalajs.js.Dynamic.literal
     if (props.children.head.contains('\n'))
       div(
         className := "code-block",
-        style := literal(
+        style     := literal(
           borderRadius = "10px",
           overflow = "hidden"
         )
@@ -138,9 +138,7 @@ object DocsTree {
     useEffect(
       () => {
         val xhr = new XMLHttpRequest
-        xhr.onload = _ => {
-          setDocument(Some(xhr.responseText))
-        }
+        xhr.onload = _ => setDocument(Some(xhr.responseText))
 
         xhr.open("GET", docsFilePath(props))
         xhr.send()
@@ -150,21 +148,21 @@ object DocsTree {
 
     div(
       className := "article fill-right",
-      style := literal(
+      style     := literal(
         marginTop = "40px",
         paddingLeft = "15px",
         boxSizing = "border-box"
       )
     )(
       div(
-        style := literal(
+        style     := literal(
           display = "flex",
           flexDirection = "row"
         ),
         className := "docs-page"
       )(
         div(
-          style := literal(
+          style     := literal(
             width = "calc(100% - 300px)"
           ),
           className := "docs-content"
@@ -188,14 +186,14 @@ object DocsTree {
           )
         ),
         div(
-          style := literal(
+          style     := literal(
             width = "300px",
             marginLeft = "20px"
           ),
           className := "docs-sidebar"
         )(
           div(
-            style := literal(
+            style     := literal(
               position = "fixed",
               top = "60px",
               height = "calc(100vh - 60px)",
@@ -214,12 +212,11 @@ object DocsTree {
                 width = "300px"
               )
             )(
-              DocsTree.tree.map {
-                case (group, value) =>
-                  DocsGroup(
-                    name = group,
-                    isOpen = group == selectedGroup
-                  )(value).withKey(group)
+              DocsTree.tree.map { case (group, value) =>
+                DocsGroup(
+                  name = group,
+                  isOpen = group == selectedGroup
+                )(value).withKey(group)
               }
             )
           )

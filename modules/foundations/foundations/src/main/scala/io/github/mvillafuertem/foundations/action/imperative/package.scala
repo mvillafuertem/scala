@@ -1,7 +1,7 @@
 package io.github.mvillafuertem.foundations.action
 
 import scala.annotation.tailrec
-import scala.util.{Failure, Success, Try}
+import scala.util.{ Failure, Success, Try }
 
 package object imperative {
 
@@ -46,9 +46,9 @@ package object imperative {
 
   // 5. Refactor `readDateOfBirthRetry` using `retry` and `onError` in `UserCreationExercises`.
 
-  //////////////////////////////////////////////
+  // ////////////////////////////////////////////
   // Bonus questions (not covered by the video)
-  //////////////////////////////////////////////
+  // ////////////////////////////////////////////
 
   // 6. Write a property based for `retry`. For example,
   // Step 1. Generate a function that throws an exception for the first `n` evaluations.

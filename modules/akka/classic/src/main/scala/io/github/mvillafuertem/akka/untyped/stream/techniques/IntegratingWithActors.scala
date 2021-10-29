@@ -39,10 +39,9 @@ object IntegratingWithActors extends App {
   // Equivalent ^
   // numberSource.ask[Int](parallelism = 4)(simpleActor).to(Sink.ignore).run()
 
-  private val completionMatcher: PartialFunction[Any, CompletionStrategy] = {
-    case Done =>
-      // complete stream immediately if we send it Done
-      CompletionStrategy.immediately
+  private val completionMatcher: PartialFunction[Any, CompletionStrategy] = { case Done =>
+    // complete stream immediately if we send it Done
+    CompletionStrategy.immediately
   }
   // Actor as a Source
   val actorPoweredSource                                                  = Source.actorRef[Int](

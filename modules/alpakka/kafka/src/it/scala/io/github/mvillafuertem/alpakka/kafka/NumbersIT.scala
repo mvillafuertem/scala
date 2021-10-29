@@ -19,7 +19,8 @@ import scala.concurrent.duration._
 import scala.concurrent.{ Await, Future }
 
 /**
- * @author Miguel Villafuerte
+ * @author
+ *   Miguel Villafuerte
  */
 final class NumbersIT extends NumbersConfigurationIT {
 

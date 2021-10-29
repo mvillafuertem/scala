@@ -21,9 +21,8 @@ object ConditionalImplicitValues {
   object ConditionalImplicit {
 
     /**
-     * Esto viene a significar que te voy a crear una evidencia implicita,
-     * siempre que encuentre una evidencia implicita de ExecutionContext, es decir,
-     * está condicionado a que exista un implicito de ExecutionContext
+     * Esto viene a significar que te voy a crear una evidencia implicita, siempre que encuentre una evidencia implicita de ExecutionContext, es decir, está
+     * condicionado a que exista un implicito de ExecutionContext
      */
     implicit def conditionalImplicitFromExecutionContext(implicit ec: ExecutionContext): ConditionalImplicit = new ConditionalImplicit()
 

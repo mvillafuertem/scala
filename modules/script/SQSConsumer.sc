@@ -26,10 +26,12 @@ rootLogger.setLevel(ch.qos.logback.classic.Level.INFO)
 
 // amm `pwd`/SQSConsumer.sc
 @main
-def main(@arg(doc = "access key") key: String ,
-         @arg(doc = "access secret") secret: String ,
-         @arg(doc = "region") region: String ,
-         @arg(doc = "name of queue") queue: String): Unit =
+def main(
+  @arg(doc = "access key") key: String,
+  @arg(doc = "access secret") secret: String,
+  @arg(doc = "region") region: String,
+  @arg(doc = "name of queue") queue: String
+): Unit =
   SQSConsumer.main(Array(key, secret, region, queue))
 
 case class SQSConsumerProperties(key: String, secret: String, region: String, queue: String)

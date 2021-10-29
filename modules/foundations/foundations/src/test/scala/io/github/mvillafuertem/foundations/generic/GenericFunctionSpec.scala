@@ -11,9 +11,9 @@ import java.time.format.DateTimeFormatter
 
 final class GenericFunctionSpec extends AnyFlatSpec with Matchers with ScalaCheckDrivenPropertyChecks {
 
-  ////////////////////
+  // //////////////////
   // Exercise 1: Pair
-  ////////////////////
+  // //////////////////
 
   it should "Pair swap" in {
     forAll((first: String, second: String) => Pair(first, second).swap shouldBe Pair(second, first))
@@ -39,9 +39,9 @@ final class GenericFunctionSpec extends AnyFlatSpec with Matchers with ScalaChec
     Pair(0, 2).map3(Pair(3, 4))(Pair(4, 6))(_ + _ + _) shouldBe Pair(7, 12)
   }
 
-  ////////////////////////////
+  // //////////////////////////
   // Exercise 2: Predicate
-  ////////////////////////////
+  // //////////////////////////
 
   def False[A]: Predicate[A] = Predicate(_ => false)
   def True[A]: Predicate[A]  = Predicate(_ => true)
@@ -75,9 +75,9 @@ final class GenericFunctionSpec extends AnyFlatSpec with Matchers with ScalaChec
     isValidUser(User("x", 23)) shouldBe false    // name is too small
   }
 
-  ////////////////////////////
+  // //////////////////////////
   // Exercise 3: JsonDecoder
-  ////////////////////////////
+  // //////////////////////////
 
   it should "JsonDecoder UserId" in {
     userIdDecoder.decode("1234") shouldBe UserId(1234)
@@ -99,7 +99,7 @@ final class GenericFunctionSpec extends AnyFlatSpec with Matchers with ScalaChec
   }
 
   val genLocalDate: Gen[LocalDate] = Gen.choose(LocalDate.MIN.toEpochDay, LocalDate.MAX.toEpochDay).map(LocalDate.ofEpochDay)
-  //implicit val arbitraryLocalDate: Arbitrary[LocalDate] = Arbitrary(genLocalDate)
+  // implicit val arbitraryLocalDate: Arbitrary[LocalDate] = Arbitrary(genLocalDate)
   it should "JsonDecoder LocalDate round-trip" in {
     forAll(genLocalDate) { (localDate: LocalDate) =>
       val json = s""""${DateTimeFormatter.ISO_LOCAL_DATE.format(localDate)}""""

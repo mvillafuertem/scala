@@ -6,8 +6,7 @@ object ZLoop extends zio.App {
   import zio.console._
 
   /**
-   * Loops with the specified effectual function, collecting the results into a
-   * list. The moral equivalent of:
+   * Loops with the specified effectual function, collecting the results into a list. The moral equivalent of:
    *
    * {{{
    * var s  = initial
@@ -21,11 +20,8 @@ object ZLoop extends zio.App {
    * as.reverse
    * }}}
    *
-   * def loop[R, E, A, S](initial: S)(cont: S => Boolean, inc: S => S)(body: S => ZIO[R, E, A]): ZIO[R, E, List[A]] =
-   * if (cont(initial))
-   *   body(initial).flatMap(a => loop(inc(initial))(cont, inc)(body).map(as => a :: as))
-   * else
-   *   ZIO.succeedNow(List.empty[A])
+   * def loop[R, E, A, S](initial: S)(cont: S => Boolean, inc: S => S)(body: S => ZIO[R, E, A]): ZIO[R, E, List[A]] = if (cont(initial)) body(initial).flatMap(a
+   * => loop(inc(initial))(cont, inc)(body).map(as => a :: as)) else ZIO.succeedNow(List.empty[A])
    */
   /*
    * concepts

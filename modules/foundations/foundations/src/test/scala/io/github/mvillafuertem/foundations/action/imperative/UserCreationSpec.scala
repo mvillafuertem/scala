@@ -75,8 +75,8 @@ class UserCreationSpec extends AnyFlatSpec with Matchers with ScalaCheckDrivenPr
     val inputs  = ListBuffer("Eda", "18-03-2001", "Y")
     val outputs = ListBuffer.empty[String]
     val console = Console.mock(inputs, outputs)
-    val now = Instant.now()
-    val clock = Clock.constant(now)
+    val now     = Instant.now()
+    val clock   = Clock.constant(now)
     val result  = readUser(console, clock)
 
     val expected = User(
@@ -89,9 +89,9 @@ class UserCreationSpec extends AnyFlatSpec with Matchers with ScalaCheckDrivenPr
     result shouldBe expected
   }
 
-  //////////////////////////////////////////////
+  // ////////////////////////////////////////////
   // PART 2: Error handling
-  //////////////////////////////////////////////
+  // ////////////////////////////////////////////
 
   ignore should "readSubscribeToMailingListRetry negative maxAttempt" in {
     val console = Console.mock(ListBuffer.empty[String], ListBuffer.empty[String])

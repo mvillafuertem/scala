@@ -3,17 +3,17 @@ package io.github.mvillafuertem.akka.typed.interaction.patterns
 import akka.actor.typed.scaladsl.Behaviors
 
 /**
- * @author Miguel Villafuerte
+ * @author
+ *   Miguel Villafuerte
  */
 object FireAndForget {
 
   case class PrintMe(message: String)
 
   object Printer {
-    val behavior = Behaviors.receive[PrintMe] {
-      case (context, PrintMe(message)) =>
-        context.log.info(message)
-        Behaviors.same
+    val behavior = Behaviors.receive[PrintMe] { case (context, PrintMe(message)) =>
+      context.log.info(message)
+      Behaviors.same
     }
   }
 

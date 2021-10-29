@@ -7,7 +7,8 @@ import zio.ZIO
 import zio.stream.ZStream
 
 /**
- * @author Miguel Villafuerte
+ * @author
+ *   Miguel Villafuerte
  */
 final class GetAllProducts {
 

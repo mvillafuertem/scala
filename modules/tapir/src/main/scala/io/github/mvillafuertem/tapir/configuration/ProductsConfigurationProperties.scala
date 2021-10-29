@@ -4,7 +4,8 @@ import com.typesafe.config.ConfigFactory
 import io.github.mvillafuertem.tapir.configuration.ProductsConfigurationProperties._
 
 /**
- * @author Miguel Villafuerte
+ * @author
+ *   Miguel Villafuerte
  */
 final case class ProductsConfigurationProperties(
   name: String = ConfigFactory.load().getString(s"$path.name"),

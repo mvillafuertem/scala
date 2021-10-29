@@ -6,14 +6,14 @@ import scala.sys.process._
 
 object Tasks {
 
-  private val synth = taskKey[Int]("cdktf synth")
-  private val deploy = taskKey[Int]("cdktf deploy")
+  private val synth   = taskKey[Int]("cdktf synth")
+  private val deploy  = taskKey[Int]("cdktf deploy")
   private val destroy = taskKey[Int]("cdktf destroy")
-  private val plan = taskKey[Int]("terraform plan")
-  private val apply = taskKey[Int]("terraform apply")
+  private val plan    = taskKey[Int]("terraform plan")
+  private val apply   = taskKey[Int]("terraform apply")
 
   val cdktfTask: Seq[Def.Setting[_]] = Seq(
-    synth := {
+    synth   := {
       val log     = sLog.value
       val result  = (Compile / npmInstallDependencies).value
       log.success("---------------------------------------------")
@@ -29,7 +29,7 @@ object Tasks {
       )
       Process(command).!
     },
-    deploy := {
+    deploy  := {
       val log     = sLog.value
       val result  = (Compile / npmInstallDependencies).value
       log.success("---------------------------------------------")
@@ -61,7 +61,7 @@ object Tasks {
       )
       Process(command).!
     },
-    plan := {
+    plan    := {
       val log     = sLog.value
       val result  = (Compile / npmInstallDependencies).value
       log.success("---------------------------------------------")

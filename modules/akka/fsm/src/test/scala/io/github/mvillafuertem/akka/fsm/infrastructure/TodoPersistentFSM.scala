@@ -47,8 +47,8 @@ final class TodoPersistentFSM extends ScalaTestWithActorTestKit(TodoPersistentFS
     // G I V E N
     val eventSeed = EventSeed("12", "12")
 
-    //val alertSeedBehavior = EventSeedBehavior(nextPid())
-    //val c = spawn(alertSeedBehavior)
+    // val alertSeedBehavior = EventSeedBehavior(nextPid())
+    // val c = spawn(alertSeedBehavior)
     val probe = TestProbe[EventSeedState]()
 
     // W H E N

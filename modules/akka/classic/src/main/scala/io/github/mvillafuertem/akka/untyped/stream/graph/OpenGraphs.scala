@@ -11,8 +11,8 @@ object OpenGraphs extends App {
 
   /**
    * A Composite source that concatenates 2 sources
-   * - Emits ALL the elements from the first sources
-   * - Then All the elements from second
+   *   - Emits ALL the elements from the first sources
+   *   - Then All the elements from second
    */
   val firstSource  = Source(1 to 10)
   val secondSource = Source(42 to 1000)
@@ -33,7 +33,7 @@ object OpenGraphs extends App {
       SourceShape(concat.out)
 
     }
-  ) //.to(Sink.foreach(println)).run()
+  ) // .to(Sink.foreach(println)).run()
 
   /**
    * Complex Sink
@@ -42,7 +42,7 @@ object OpenGraphs extends App {
   val secondSink = Sink.foreach[Int](x => println(s"Meaningful thin 2: $x"))
 
   // Step 1 - Setting up the fundamentals for the graph
-  val sinkGraph   = Sink.fromGraph(
+  val sinkGraph = Sink.fromGraph(
     GraphDSL.create() { implicit builder =>
       import GraphDSL.Implicits._
 
@@ -61,16 +61,15 @@ object OpenGraphs extends App {
   // firstSource.to(sinkGraph).run()
 
   /**
-   * Complex Flow
-   * Write your ouw flow that is composed of two others flows
-   * - One that adds 1 to a number
-   * - One that does number * 10
+   * Complex Flow Write your ouw flow that is composed of two others flows
+   *   - One that adds 1 to a number
+   *   - One that does number * 10
    */
   val incrementer = Flow[Int].map(_ + 1)
   val multiplier  = Flow[Int].map(_ * 10)
 
   // Step 1 - Setting up the fundamentals for the graph
-  val flowGraph                                                                      = Flow.fromGraph(
+  val flowGraph = Flow.fromGraph(
     GraphDSL.create() { implicit builder =>
       import GraphDSL.Implicits._
 
@@ -86,7 +85,7 @@ object OpenGraphs extends App {
     }
   )
 
-  //firstSource.via(flowGraph).to(Sink.foreach(println)).run()
+  // firstSource.via(flowGraph).to(Sink.foreach(println)).run()
 
   /**
    * Flow from a Sink and a Source?
@@ -106,6 +105,6 @@ object OpenGraphs extends App {
     )
 
   // uncomment
-  //private val f: Flow[String, Int, NotUsed] = Flow.fromSinkAndSourceCoupled(Sink.foreach[String](println), Source(1 to 10))
+  // private val f: Flow[String, Int, NotUsed] = Flow.fromSinkAndSourceCoupled(Sink.foreach[String](println), Source(1 to 10))
 
 }

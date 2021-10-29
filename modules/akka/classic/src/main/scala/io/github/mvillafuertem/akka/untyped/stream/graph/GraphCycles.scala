@@ -9,7 +9,7 @@ object GraphCycles extends App {
   implicit val actorSystem: ActorSystem        = ActorSystem("BidirectionalFlows")
   implicit val actorMaterializer: Materializer = Materializer(actorSystem)
 
-  val accelerator        = GraphDSL.create() { implicit builder =>
+  val accelerator = GraphDSL.create() { implicit builder =>
     import GraphDSL.Implicits._
 
     val sourceShape      = builder.add(Source(1 to 100))
@@ -28,9 +28,9 @@ object GraphCycles extends App {
   // RunnableGraph.fromGraph(accelerator).run()
 
   /**
-   *  Solution 1: MergePreferred
+   * Solution 1: MergePreferred
    */
-  val actualAccelerator  = GraphDSL.create() { implicit builder =>
+  val actualAccelerator = GraphDSL.create() { implicit builder =>
     import GraphDSL.Implicits._
 
     val sourceShape      = builder.add(Source(1 to 100))
@@ -45,12 +45,12 @@ object GraphCycles extends App {
     ClosedShape
   }
 
-  //RunnableGraph.fromGraph(actualAccelerator).run()
+  // RunnableGraph.fromGraph(actualAccelerator).run()
 
   /**
-   *  Solution 2: Buffer
+   * Solution 2: Buffer
    */
-  val bufferedRepeater   = GraphDSL.create() { implicit builder =>
+  val bufferedRepeater = GraphDSL.create() { implicit builder =>
     import GraphDSL.Implicits._
 
     val sourceShape   = builder.add(Source(1 to 100))
@@ -73,10 +73,9 @@ object GraphCycles extends App {
   // Boundedness vs Liveness
 
   /**
-   * Challenge
-   * Create a fan-in shape
-   * - Two inputs which will be fed with EXACTLY ONE number
-   * - Output will emit an INFINITE FIBONACCI SEQUENCE based off those 2 numbers
+   * Challenge Create a fan-in shape
+   *   - Two inputs which will be fed with EXACTLY ONE number
+   *   - Output will emit an INFINITE FIBONACCI SEQUENCE based off those 2 numbers
    *
    * 1, 3, 3, 5, 8 ...
    *

@@ -10,8 +10,8 @@ final class TaskManagementActor extends Actor with ActorLogging {
 
   implicit val executionContext: ExecutionContext = context.dispatcher
 
-  def closed(task: Task): Receive = {
-    case _ => sender() ! TaskManagementError(s"This task ${task.id} can not be opened, please create a new task")
+  def closed(task: Task): Receive = { case _ =>
+    sender() ! TaskManagementError(s"This task ${task.id} can not be opened, please create a new task")
   }
 
   def opened(task: Task): Receive = {

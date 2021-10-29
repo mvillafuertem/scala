@@ -10,7 +10,7 @@ import typings.cdktfProviderAws.iamMod.IAM._
 import typings.cdktfProviderAws.mod.DataSources.DataAwsRegion
 import typings.cdktfProviderAws.mod.IAM.IamGroup
 import typings.cdktfProviderAws.mod.S3.S3Bucket
-import typings.cdktfProviderAws.mod.VPC.{SecurityGroup, SecurityGroupRule}
+import typings.cdktfProviderAws.mod.VPC.{ SecurityGroup, SecurityGroupRule }
 import typings.cdktfProviderAws.mod._
 import typings.cdktfProviderAws.s3Mod.S3.{ S3BucketConfig, S3BucketVersioning }
 import typings.cdktfProviderAws.vpcMod.VPC.{ SecurityGroupConfig, SecurityGroupRuleConfig }
@@ -37,12 +37,12 @@ final class IamStack(scope: Construct, name: String) extends TerraformStack(scop
     S3BucketConfig()
       .setBucket("cdktf")
       .setVersioning(
-          S3BucketVersioning()
-            .setEnabled(true)
+        S3BucketVersioning()
+          .setEnabled(true)
       )
   )
 
-  //BudgetsBudgetConfig
+  // BudgetsBudgetConfig
 
 //  private val topic: SnsTopic = new SnsTopic(
 //    self,
@@ -78,14 +78,14 @@ final class IamStack(scope: Construct, name: String) extends TerraformStack(scop
       .setName("Monthly Cost Budget")
       .setTimePeriodStart("2020-11-06_00:00")
       .setCostTypes(
-          BudgetsBudgetCostTypes()
-            .setIncludeRefund(true)
-            .setIncludeCredit(true)
-            .setIncludeUpfront(true)
-            .setIncludeRecurring(true)
-            .setIncludeOtherSubscription(true)
-            .setIncludeTax(true)
-            .setIncludeSupport(true)
+        BudgetsBudgetCostTypes()
+          .setIncludeRefund(true)
+          .setIncludeCredit(true)
+          .setIncludeUpfront(true)
+          .setIncludeRecurring(true)
+          .setIncludeOtherSubscription(true)
+          .setIncludeTax(true)
+          .setIncludeSupport(true)
       )
       .setNotification(
         js.Array[BudgetsBudgetNotification](
@@ -154,7 +154,7 @@ final class IamStack(scope: Construct, name: String) extends TerraformStack(scop
       .setTags(StringDictionary("Name" -> "instance"))
       .setSecurityGroups(js.Array[String](securityGroup.name.get))
       .setEbsBlockDevice(js.Array[InstanceEbsBlockDevice](ebsBlockDevice))
-    //.deleteRootBlockDevice
+    // .deleteRootBlockDevice
   )
 
 }

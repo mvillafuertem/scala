@@ -73,12 +73,12 @@ final class MyClassSpec extends AnyFlatSpecLike with BootstrapRuntime with Match
 
   "Pepe" should "Stream" in {
 
-    //val clazz = new MyClass
-    //val pepe = new Pepe(clazz)
+    // val clazz = new MyClass
+    // val pepe = new Pepe(clazz)
 
-    //val value = unsafeRun(pepe.b)
+    // val value = unsafeRun(pepe.b)
 
-    //value shouldBe 1
+    // value shouldBe 1
 
   }
 

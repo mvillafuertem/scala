@@ -33,11 +33,11 @@ object MinimalScriptZioApp extends zio.App {
   // Configuration
   implicit def configParser: ParserForClass[Config] = ParserForClass[Config]
   case class Config(
-                     @arg(short = 'f', doc = "String to print repeatedly")
-                     foo: String,
-                     @arg(name = "my-num", doc = "How many times to print string")
-                     myNum: Int = 2,
-                     @arg(doc = "Example flag")
-                     bool: Flag
-                   )
+    @arg(short = 'f', doc = "String to print repeatedly")
+    foo: String,
+    @arg(name = "my-num", doc = "How many times to print string")
+    myNum: Int = 2,
+    @arg(doc = "Example flag")
+    bool: Flag
+  )
 }

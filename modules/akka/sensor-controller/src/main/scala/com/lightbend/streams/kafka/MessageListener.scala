@@ -45,7 +45,7 @@ class MessageListener[K, V](
   keyDeserealizer: String,
   valueDeserealizer: String,
   processor: RecordProcessorTrait[K, V]
-) extends Runnable   {
+) extends Runnable {
 
   import MessageListener._
   import scala.jdk.CollectionConverters._

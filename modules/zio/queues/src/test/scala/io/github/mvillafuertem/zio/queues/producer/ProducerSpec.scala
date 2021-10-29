@@ -1,6 +1,6 @@
 package io.github.mvillafuertem.zio.queues.producer
 
-import io.github.mvillafuertem.zio.queues.RestaurantOrderExchangeApp.{Bacon, Coffee, Order, Sandwich}
+import io.github.mvillafuertem.zio.queues.RestaurantOrderExchangeApp.{ Bacon, Coffee, Order, Sandwich }
 import zio.clock.Clock
 import zio.console.Console
 import zio.random.Random
@@ -8,7 +8,7 @@ import zio.stream._
 import zio.test.Assertion.equalTo
 import zio.test._
 import zio.test.environment.TestEnvironment
-import zio.{Chunk, ExecutionStrategy, ZQueue}
+import zio.{ Chunk, ExecutionStrategy, ZQueue }
 
 object ProducerSpec extends DefaultRunnableSpec {
 

@@ -83,7 +83,7 @@ final class TraverseSpec extends AsyncFlatSpec with Matchers {
     }
 
     val result = for {
-      r3 <- f3() // parallel tasks
+      r3 <- f3()                                     // parallel tasks
       r4 <- Future(r3.repo + r3.flatten + r3.shadow) // task waiting for 3 previous tasks
     } yield r4
 
@@ -114,12 +114,12 @@ final class TraverseSpec extends AsyncFlatSpec with Matchers {
     }
 
     val result4 = for {
-      r3 <- f3() // parallel tasks
+      r3 <- f3()                                     // parallel tasks
       r4 <- Future(r3.repo + r3.flatten + r3.shadow) // task waiting for 3 previous tasks
     } yield r4
 
-    val result = result4.recoverWith {
-      case e: RuntimeException => Future(e.getMessage)
+    val result = result4.recoverWith { case e: RuntimeException =>
+      Future(e.getMessage)
     }
 
     result map { actual => actual shouldBe "Service result F[102] failed" }
@@ -133,9 +133,8 @@ object TraverseSpec {
 
   implicit class EnrichedFuture[A](future: Future[A]) {
     def toValidatedNel: Future[ValidatedNel[Throwable, A]] =
-      future.map(Validated.valid).recover {
-        case e =>
-          Validated.invalidNel(e)
+      future.map(Validated.valid).recover { case e =>
+        Validated.invalidNel(e)
       }
   }
 
@@ -162,7 +161,7 @@ object TraverseSpec {
   /*
     returns a delay between 5 and maxDelay
    */
-  def getDelay(maxDelay: Int): Int          = {
+  def getDelay(maxDelay: Int): Int = {
     val minDelay = 5
     if (maxDelay < minDelay) minDelay
     else {

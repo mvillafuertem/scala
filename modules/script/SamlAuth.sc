@@ -185,8 +185,8 @@ trait AkkaHttpServer {
     ](make)
 
   def make(
-            routes: Route
-          ): ZManaged[ZEnv, Throwable, Future[Http.ServerBinding]] =
+    routes: Route
+  ): ZManaged[ZEnv, Throwable, Future[Http.ServerBinding]] =
     ZManaged.runtime[ZEnv].flatMap { implicit runtime: Runtime[ZEnv] =>
       ZManaged.makeEffect {
         implicit lazy val untypedSystem: ActorSystem = ActorSystem("saml-auth")

@@ -17,18 +17,17 @@ final class VendingMachineActor extends Actor with ActorLogging {
     case _                             => sender() ! VendingError("MachineNotInitialized")
   }
 
-  def operational(inventory: Map[String, Int], prices: Map[String, Int]): Receive = {
-    case RequestProduct(product) =>
-      inventory.get(product) match {
+  def operational(inventory: Map[String, Int], prices: Map[String, Int]): Receive = { case RequestProduct(product) =>
+    inventory.get(product) match {
 
-        case None | Some(0) =>
-          sender() ! VendingError("ProductNotAvailable")
+      case None | Some(0) =>
+        sender() ! VendingError("ProductNotAvailable")
 
-        case Some(_) =>
-          val price = prices(product)
-          sender() ! Instruction(s"Please insert $price dollars")
-          context.become(waitForMoney(inventory, prices, product, 0, startReceiveMoneyTimeoutSchedule(), sender()))
-      }
+      case Some(_) =>
+        val price = prices(product)
+        sender() ! Instruction(s"Please insert $price dollars")
+        context.become(waitForMoney(inventory, prices, product, 0, startReceiveMoneyTimeoutSchedule(), sender()))
+    }
   }
 
   def waitForMoney(

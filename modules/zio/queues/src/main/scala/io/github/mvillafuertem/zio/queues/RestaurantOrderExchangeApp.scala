@@ -1,8 +1,8 @@
 package io.github.mvillafuertem.zio.queues
 
-import io.github.mvillafuertem.zio.queues.consumer.{Consumer, ConsumerRecord, ConsumerSettings}
+import io.github.mvillafuertem.zio.queues.consumer.{ Consumer, ConsumerRecord, ConsumerSettings }
 import io.github.mvillafuertem.zio.queues.infrastructure.Topic
-import io.github.mvillafuertem.zio.queues.producer.{Producer, ProducerRecord, ProducerSettings}
+import io.github.mvillafuertem.zio.queues.producer.{ Producer, ProducerRecord, ProducerSettings }
 import zio._
 import zio.clock.Clock
 import zio.console.Console
@@ -72,13 +72,13 @@ object RestaurantOrderExchangeApp extends zio.App {
         kitchenTopic = Topic.Live(kitchen, Map.empty)
         barTopic     = Topic.Live(bar, Map.empty)
         loop         = for {
-                 job <- jobQueue.take
-                 _   <- job.value match {
-                        case Coffee   => bar.offer(ConsumerRecord(job.id, job.value))
-                        case Sandwich => kitchen.offer(ConsumerRecord(job.id, job.value))
-                        case Bacon    => kitchen.offer(ConsumerRecord(job.id, job.value))
-                      }
-               } yield ()
+                         job <- jobQueue.take
+                         _   <- job.value match {
+                                  case Coffee   => bar.offer(ConsumerRecord(job.id, job.value))
+                                  case Sandwich => kitchen.offer(ConsumerRecord(job.id, job.value))
+                                  case Bacon    => kitchen.offer(ConsumerRecord(job.id, job.value))
+                                }
+                       } yield ()
         fiber       <- loop.forever.fork
       } yield (jobQueue, kitchenTopic, barTopic, fiber)
   }

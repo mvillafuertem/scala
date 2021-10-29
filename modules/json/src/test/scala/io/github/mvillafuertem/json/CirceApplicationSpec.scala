@@ -10,7 +10,8 @@ import org.scalatest.flatspec.AnyFlatSpecLike
 import org.scalatest.matchers.should.Matchers
 
 /**
- * @author Miguel Villafuerte
+ * @author
+ *   Miguel Villafuerte
  */
 final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
 
@@ -72,7 +73,7 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
         |""".stripMargin
 
     // w h e n
-    val actual: Json = parse(json).getOrElse(Json.Null)
+    val actual: Json                                                        = parse(json).getOrElse(Json.Null)
     def flatten(combineKeys: (String, String) => String)(value: Json): Json = {
       def flattenToFields(value: Json): Option[Iterable[(String, Json)]] =
         value.asObject.map(
@@ -704,7 +705,7 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
         |""".stripMargin
 
     // w h e n
-    val actual: Json = parse(json).getOrElse(Json.Null)
+    val actual: Json                 = parse(json).getOrElse(Json.Null)
     def schemaFold(that: Json): Json = {
       def recursive(that: Json): Json =
         that.asObject match {
@@ -827,7 +828,7 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
         |""".stripMargin
 
     // w h e n
-    val actual: Json = parse(json).getOrElse(Json.Null)
+    val actual: Json                   = parse(json).getOrElse(Json.Null)
     def schemaFolder(json: Json): Json = {
       val folder = new Json.Folder[Json] {
         def onNull: Json                       = Json.Null

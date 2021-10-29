@@ -7,7 +7,8 @@ import io.github.mvillafuertem.akka.fsm.infrastructure.ToDoFSM.{ GetToDo, State,
 import org.scalatest.flatspec.AnyFlatSpecLike
 
 /**
- * @author Miguel Villafuerte
+ * @author
+ *   Miguel Villafuerte
  */
 class ToDoApplicationSpec extends ScalaTestWithActorTestKit with AnyFlatSpecLike {
 

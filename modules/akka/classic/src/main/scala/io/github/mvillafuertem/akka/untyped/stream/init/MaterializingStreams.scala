@@ -35,7 +35,7 @@ object MaterializingStreams extends App {
   simpleSource.viaMat(simpleFlow)(Keep.left)
   simpleSource.viaMat(simpleFlow)(Keep.both)
 
-  val graph           = simpleSource.viaMat(simpleFlow)(Keep.right).toMat(simpleSink)(Keep.right)
+  val graph = simpleSource.viaMat(simpleFlow)(Keep.right).toMat(simpleSink)(Keep.right)
   graph.run().onComplete {
     case Success(_)         => println("Stream proccesing finished")
     case Failure(exception) => println(s"Stream processing failed with $exception")
@@ -43,7 +43,7 @@ object MaterializingStreams extends App {
 
   // Syntactic Sugar
   // source.to(Sink.reduce)(Keep.right)
-  val sum             = Source(1 to 10).runWith(Sink.reduce[Int](_ + _))
+  val sum = Source(1 to 10).runWith(Sink.reduce[Int](_ + _))
   Source(1 to 10).runReduce[Int](_ + _)
 
   // Backwards
@@ -54,8 +54,7 @@ object MaterializingStreams extends App {
   Flow[Int].map(x => x * 2).runWith(simpleSource, simpleSink)
 
   /**
-   * Return the last element out of a source (use Sink.last)
-   * Compute the total word count of a stream of sentences (map, fold, reduce)
+   * Return the last element out of a source (use Sink.last) Compute the total word count of a stream of sentences (map, fold, reduce)
    */
   val sentences       = List("Hello Word", "Hello Jupiter", "Hello Mars")
   val sentencesSource = Source(sentences)

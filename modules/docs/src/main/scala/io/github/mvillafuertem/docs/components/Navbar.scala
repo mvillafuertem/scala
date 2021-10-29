@@ -75,7 +75,7 @@ import scala.scalajs.js
           )
         ),
         div(
-          style := js.Dynamic.literal(
+          style     := js.Dynamic.literal(
             display = "flex",
             height = "100%",
             alignItems = "center",
@@ -84,19 +84,19 @@ import scala.scalajs.js
           className := "sidebar-right"
         )(
           a(
-            href := "https://gitter.im/shadaj/slinky",
+            href  := "https://gitter.im/shadaj/slinky",
             style := smallLinkStyle
           )(
             "Community"
           ),
           a(
-            href := "https://github.com/shadaj/slinky/blob/master/CHANGELOG.md",
+            href  := "https://github.com/shadaj/slinky/blob/master/CHANGELOG.md",
             style := smallLinkStyle
           )(
             "v0.6.5"
           ),
           a(
-            href := "https://github.com/shadaj/slinky",
+            href  := "https://github.com/shadaj/slinky",
             style := smallLinkStyle
           )(
             "GitHub"

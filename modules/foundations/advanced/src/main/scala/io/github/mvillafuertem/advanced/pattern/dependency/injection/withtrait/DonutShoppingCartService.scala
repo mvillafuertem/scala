@@ -10,7 +10,7 @@ class DonutShoppingCartService[T](
     println("DonutShoppingCartService->bookOrder")
 
     donutInventoryService.checkStock(donut) match {
-      case true  =>
+      case true =>
         val price = donutPricingService.calculatePrice(donut)
         donutOrderService.createOrder(donut, quantity, price) // the id of the booked order
 

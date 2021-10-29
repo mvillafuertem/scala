@@ -10,35 +10,27 @@ object Reader {
   type User           = String
 
   /**
-   * 1. Repositorio con colaboradores (usando injeccion de dependencias)
+   *   1. Repositorio con colaboradores (usando injeccion de dependencias)
    *
-   * class UserRepository(pool: ConnectionPool) {
-   * def createUser(userName: String, age: Int): User = ???
-   * }
+   * class UserRepository(pool: ConnectionPool) { def createUser(userName: String, age: Int): User = ??? }
    */
 
   /**
    * 2. Bajamos el nivel de injección a la función, quedaría algo así
    *
-   * class UserRepository {
-   * def createUser(userName: String, age: Int, pool: ConnectionPool): User = ???
-   * }
+   * class UserRepository { def createUser(userName: String, age: Int, pool: ConnectionPool): User = ??? }
    */
 
   /**
    * 3. Currificamos nuestra función
    *
-   * class UserRepository {
-   * def createUser(userName: String, age: Int)(pool: ConnectionPool): User = ???
-   * }
+   * class UserRepository { def createUser(userName: String, age: Int)(pool: ConnectionPool): User = ??? }
    */
 
   /**
    * 4. Cambiamos el tipo de retorno a función
    *
-   * class UserRepository {
-   * def createUser(userName: String, age: Int): ConnectionPool => User = { pool => ??? }
-   * }
+   * class UserRepository { def createUser(userName: String, age: Int): ConnectionPool => User = { pool => ??? } }
    */
 
   /**
@@ -46,9 +38,7 @@ object Reader {
    *
    * case class Reader(fun: ConnectionPool => User)
    *
-   * class UserRepository {
-   * def createUser(userName: String, age: Int): Reader = Reader { pool => ??? }
-   * }
+   * class UserRepository { def createUser(userName: String, age: Int): Reader = Reader { pool => ??? } }
    */
 
   /** 6. Aqui empieza lo interesante, generalizamos nuestra función parametrizando los tipos y añadimos los operadores map y flatmap */
