@@ -1,6 +1,6 @@
 import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
 import sbt.Keys.libraryDependencies
-import sbt.{Def, _}
+import sbt.{ Def, _ }
 
 object Dependencies {
 
@@ -106,7 +106,7 @@ object Dependencies {
     Artifact.testcontainersCore % Version.testcontainers
   )).map(_ % IntegrationTest)
 
-  val basic: Seq[ModuleID]     = Seq(
+  val basic: Seq[ModuleID] = Seq(
     // B A S I C  T E S T
     Artifact.scalaTest % Version.scalaTest % Test
   )
@@ -119,7 +119,7 @@ object Dependencies {
     Artifact.scalaTest % Version.scalaTest % Test
   )
 
-  val `akka-fsm`: Seq[ModuleID]          =
+  val `akka-fsm`: Seq[ModuleID] =
     // A K K A  F S M
     Seq(
       Artifact.akkaPersistenceTyped % Version.akka,
@@ -142,7 +142,7 @@ object Dependencies {
       Artifact.scalaTest             % Version.scalaTest
     ).map(_ % Test)
 
-  val `akka-http`: Seq[ModuleID]         =
+  val `akka-http`: Seq[ModuleID] =
     // A K K A  H T T P
     Seq(
       Artifact.logback       % Version.logback,
@@ -179,7 +179,7 @@ object Dependencies {
       Artifact.zioTest         % Version.zio
     ).map(_                    % Test)
 
-  val cats: Seq[ModuleID]                = Seq(
+  val cats: Seq[ModuleID] = Seq(
     // C A T S
     Artifact.catsCore,
     Artifact.catsFree
@@ -188,7 +188,7 @@ object Dependencies {
     Artifact.scalaTest % Version.scalaTest
   ).map(_ % Test)
 
-  val docs: Def.Setting[Seq[ModuleID]]   = libraryDependencies ++= Seq(
+  val docs: Def.Setting[Seq[ModuleID]] = libraryDependencies ++= Seq(
     // P R O D U C T I O N
     "me.shadaj" %%% "slinky-hot",
     "me.shadaj" %%% "slinky-react-router"
@@ -202,7 +202,7 @@ object Dependencies {
     Artifact.scalaTest % Version.scalaTest
   )
 
-  val foundations: Seq[ModuleID]   = Seq(
+  val foundations: Seq[ModuleID] = Seq(
     // D O T T Y
     Artifact.scalaCheck % Version.scalaCheck,
     Artifact.scalaTest  % Version.scalaTest
@@ -222,7 +222,7 @@ object Dependencies {
     Artifact.zioInteropCats    % Version.zioInteropCats
   )
 
-  val json: Seq[ModuleID]                = Seq(
+  val json: Seq[ModuleID] = Seq(
     // J S O N
     Artifact.circeGeneric,
     Artifact.circeGenericExtras,
@@ -238,19 +238,19 @@ object Dependencies {
     Artifact.scalaTest % Version.scalaTest
   ).map(_ % Test)
 
-  val reflection: Seq[ModuleID]          =
+  val reflection: Seq[ModuleID] =
     Seq(
       // R E F L E C T I O N  T E S T
       Artifact.scalaTest % Version.scalaTest
     ).map(_ % Test)
 
-  val script: Seq[ModuleID]              =
+  val script: Seq[ModuleID] =
     Seq(
       // S C R I P T  T E S T
       Artifact.scalaTest % Version.scalaTest
     ).map(_ % Test)
 
-  val slick: Seq[ModuleID]               =
+  val slick: Seq[ModuleID] =
     // S L I C K
     Seq(
       Artifact.alpakkaSlick % Version.alpakkaSlick,
@@ -267,7 +267,7 @@ object Dependencies {
     "io.github.cquiroz" %%% "scala-java-time" % Version.scalaJavaTime
   )
 
-  val spark: Seq[ModuleID]                                  =
+  val spark: Seq[ModuleID] =
     // S P A R K
     Seq(
       Artifact.sparkCore,
@@ -278,7 +278,7 @@ object Dependencies {
       Artifact.scalaTest % Version.scalaTest
     ).map(_ % Test)
 
-  val sttp: Seq[ModuleID]                                   =
+  val sttp: Seq[ModuleID] =
     // S T T P
     Seq(
       Artifact.sttpAsyncAkka,
@@ -298,7 +298,7 @@ object Dependencies {
       Artifact.scalaTest % Version.scalaTest
     ).map(_ % Test)
 
-  val tapir: Seq[ModuleID]                                  =
+  val tapir: Seq[ModuleID] =
     // T A P I R
     Seq(
       //"org.iq80.leveldb" % "leveldb" % "0.12",
@@ -468,7 +468,7 @@ object Dependencies {
     val logback                   = "1.2.6"
     val mongoScalaBson            = "4.3.3"
     val picocli                   = "4.6.1"
-    val postgres                  = "42.3.0"
+    val postgres                  = "42.3.1"
     val scalaCheck                = "3.2.2.0"
     val scalaJavaTime             = "2.0.0"
     val scalaTest                 = "3.2.10"
