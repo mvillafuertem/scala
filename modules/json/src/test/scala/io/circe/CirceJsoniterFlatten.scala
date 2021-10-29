@@ -93,7 +93,7 @@ object CirceJsoniterFlatten {
             val result = decodeValueRecursive(str, in, default)
             result match {
               case JObject(value) =>
-                //x.putAll(result.asObject.get.toMap.asJava) // TODO intentar no usar converters .asJava
+                // x.putAll(result.asObject.get.toMap.asJava) // TODO intentar no usar converters .asJava
                 value.toIterable.foreach { case (str, json) => x.put(str, json) }
               case _              => x.put(str, result)
             }
@@ -115,7 +115,7 @@ object CirceJsoniterFlatten {
             val result = decodeValueRecursive(str, in, default)
             result match {
               case JObject(value) =>
-                //m.putAll(result.asObject.get.toMap.asJava) // TODO intentar no usar converters .asJava
+                // m.putAll(result.asObject.get.toMap.asJava) // TODO intentar no usar converters .asJava
                 value.toIterable.foreach { case (str, json) => m.put(str, json) }
               case _              => m.put(str, result)
             }

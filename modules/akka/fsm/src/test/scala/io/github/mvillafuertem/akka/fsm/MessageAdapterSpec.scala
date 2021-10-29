@@ -7,7 +7,8 @@ import MessageAdapterSpec.Infrastructure.{ Closed, State }
 import org.scalatest.flatspec.AnyFlatSpecLike
 
 /**
- * @author Miguel Villafuerte
+ * @author
+ *   Miguel Villafuerte
  */
 final class MessageAdapterSpec extends ScalaTestWithActorTestKit with AnyFlatSpecLike {
 
@@ -24,7 +25,7 @@ final class MessageAdapterSpec extends ScalaTestWithActorTestKit with AnyFlatSpe
     val probe = TestProbe[State]()
 
     // W H E N
-    //app ! Application.Open("PEPEPE", probe.ref)
+    // app ! Application.Open("PEPEPE", probe.ref)
     app ! Application.Close("PEPEPE", probe.ref)
 
     // T H E N

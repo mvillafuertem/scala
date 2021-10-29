@@ -43,7 +43,7 @@ object AkkaTemperatureController {
     .withProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest")
 
   // Sink
-  val heaterSettings  =
+  val heaterSettings =
     ProducerSettings(controllerManager.settings.config.getConfig("akka.kafka.producer"), new ByteArraySerializer, new ByteArraySerializer)
       .withBootstrapServers(kafkaConfig.brokers)
 

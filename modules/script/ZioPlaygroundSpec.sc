@@ -25,13 +25,13 @@ object ZioPlaygroundSpec extends DefaultRunnableSpec {
       _      <- putStrLn("START")
       allFib <- zio.blocking.effectBlocking(Thread sleep 1000L).fork
       r      <- ZIO.effectAsync[Any, Throwable, Boolean](
-        cb =>
-          Future { Thread.sleep(1000L); true } onComplete {
-            case scala.util.Success(value)     => cb(ZIO.effect(value))
-            case scala.util.Failure(exception) => cb(ZIO.fail(exception))
-          },
-        List(allFib.id)
-      )
+                  cb =>
+                    Future { Thread.sleep(1000L); true } onComplete {
+                      case scala.util.Success(value)     => cb(ZIO.effect(value))
+                      case scala.util.Failure(exception) => cb(ZIO.fail(exception))
+                    },
+                  List(allFib.id)
+                )
       _      <- putStrLn("STOP")
     } yield r
 
@@ -41,12 +41,12 @@ object ZioPlaygroundSpec extends DefaultRunnableSpec {
         assertM(
           for {
             fiber  <- sideEffect
-              .repeat(
-                (Schedule.spaced(2.second) >>> Schedule.recurWhile[Long](_ < 5)) *>
-                  Schedule.collectAll[Boolean].tapInput[Console, Boolean](response => putStrLn(response.toString).exitCode)
-              )
-              .catchAll(_ => RIO.effect(Chunk(false)))
-              .fork
+                        .repeat(
+                          (Schedule.spaced(2.second) >>> Schedule.recurWhile[Long](_ < 5)) *>
+                            Schedule.collectAll[Boolean].tapInput[Console, Boolean](response => putStrLn(response.toString).exitCode)
+                        )
+                        .catchAll(_ => RIO.effect(Chunk(false)))
+                        .fork
             _      <- TestClock.adjust(20.seconds)
             _      <- putStrLn("Adjusted")
             actual <- fiber.join

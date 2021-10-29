@@ -45,7 +45,7 @@ final class NumbersKafkaIT extends SpecBase with TestcontainersKafkaLike {
       .mapAsync(1) { n =>
         (if (Integer.valueOf(n.record.value()) == 8)
            Future.failed(new RuntimeException("bad luck"))
-         //Future.successful(None)
+         // Future.successful(None)
          else Future.successful(Option(n.record.value()))).recover { case error: RuntimeException =>
           log.error("", error)
           None
@@ -104,7 +104,7 @@ final class NumbersKafkaIT extends SpecBase with TestcontainersKafkaLike {
       .log("Numbers Input")
       .via(graph)
       .log("Numbers Output")
-      //.via(Transactional.flow(producerSettings, group))
+      // .via(Transactional.flow(producerSettings, group))
       .viaMat(KillSwitches.single)(Keep.both)
       .toMat(Transactional.sink(producerSettings, group))(Keep.left)
       .run()

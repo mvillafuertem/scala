@@ -1,7 +1,7 @@
 package io.github.mvillafuertem.tapir
 
 import io.github.mvillafuertem.tapir.configuration.ProductsServiceConfiguration
-import zio.{ExitCode, Managed, UIO, ZIO}
+import zio.{ ExitCode, Managed, UIO, ZIO }
 
 import scala.concurrent.ExecutionContext
 
@@ -17,6 +17,6 @@ object ProductsServiceApplication extends ProductsServiceConfiguration with zio.
           _ <- httpServer(actorSystem)
         } yield 0
       )
-    .exitCode
+      .exitCode
 
 }

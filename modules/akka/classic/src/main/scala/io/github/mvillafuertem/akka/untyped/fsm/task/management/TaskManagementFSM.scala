@@ -17,7 +17,7 @@ final class TaskManagementFSM extends FSM[TaskState, TaskData] {
       } else {
         taskRepository += (task.id -> task)
         sender() ! TaskManagementInfo("Task opened")
-        //context.become(opened(task))
+        // context.become(opened(task))
         goto(Opened) using Open(task)
       }
     case _                           =>
@@ -29,17 +29,16 @@ final class TaskManagementFSM extends FSM[TaskState, TaskData] {
     case Event(Close(id), Open(_)) =>
       taskRepository(id)
       sender() ! TaskManagementInfo("Task closed")
-      //context.become(closed(task))
+      // context.become(closed(task))
       goto(Closed) using Close(id)
     case _                         =>
       sender() ! TaskManagementInfo("Task is already open")
       stay()
   }
 
-  when(Closed) {
-    case Event(_, Close(id)) =>
-      sender() ! TaskManagementError(s"This task $id can not be opened, please create a new task")
-      stay()
+  when(Closed) { case Event(_, Close(id)) =>
+    sender() ! TaskManagementError(s"This task $id can not be opened, please create a new task")
+    stay()
   }
 
   initialize()

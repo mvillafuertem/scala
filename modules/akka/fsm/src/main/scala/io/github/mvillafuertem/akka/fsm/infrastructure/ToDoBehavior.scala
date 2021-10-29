@@ -8,7 +8,8 @@ import ToDoBehavior.Command
 import io.github.mvillafuertem.akka.fsm.domain.ToDo
 
 /**
- * @author Miguel Villafuerte
+ * @author
+ *   Miguel Villafuerte
  */
 final class ToDoBehavior(context: ActorContext[Command]) {
 

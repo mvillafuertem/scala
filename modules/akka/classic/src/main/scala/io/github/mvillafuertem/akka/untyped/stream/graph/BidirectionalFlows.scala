@@ -10,7 +10,7 @@ object BidirectionalFlows extends App {
   implicit val actorMaterializer: Materializer = Materializer(actorSystem)
 
   /**
-   *  Example: Cryptography
+   * Example: Cryptography
    */
   def encrypt(n: Int)(string: String) = string.map(c => (c + n).toChar)
   def decrypt(n: Int)(string: String) = string.map(c => (c - n).toChar)

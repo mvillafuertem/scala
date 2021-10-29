@@ -6,9 +6,9 @@ import scala.util.{ Failure, Success, Try }
 
 object GenericFunction {
 
-  ////////////////////
+  // //////////////////
   // Exercise 1: Pair
-  ////////////////////
+  // //////////////////
 
   val names: Pair[String] = Pair("John", "Elisabeth")
   val ages: Pair[Int]     = Pair(32, 46)
@@ -59,14 +59,14 @@ object GenericFunction {
   lazy val products: Pair[Product] =
     productNames.zipWith(productPrices)(Product)
 
-  ////////////////////////////
+  // //////////////////////////
   // Exercise 2: Predicate
-  ////////////////////////////
+  // //////////////////////////
 
   val isPositive: Predicate[Int] =
     Predicate((number: Int) => number >= 0)
 
-  val isEven: Predicate[Int]             =
+  val isEven: Predicate[Int] =
     Predicate((number: Int) => number % 2 == 0)
 
   lazy val isOddPositive: Predicate[Int] =
@@ -145,9 +145,9 @@ object GenericFunction {
 
   def isBiggerThan(min: Int): Predicate[Int] = Predicate(_ >= min)
 
-  ////////////////////////////
+  // //////////////////////////
   // Exercise 3: JsonDecoder
-  ////////////////////////////
+  // //////////////////////////
 
   // very basic representation of JSON
   type Json = String
@@ -228,9 +228,9 @@ object GenericFunction {
 //      case Success(value) => value
 //    }
 
-  //////////////////////////////////////////////
+  // ////////////////////////////////////////////
   // Bonus question (not covered by the video)
-  //////////////////////////////////////////////
+  // ////////////////////////////////////////////
 
   // 3f. How would you define and implement a `JsonDecoder` for a generic `Option`?
   // such as we can decode:

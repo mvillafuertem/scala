@@ -11,7 +11,8 @@ import org.scalatest.matchers.should.Matchers
 import scala.concurrent.duration._
 
 /**
- * @author Miguel Villafuerte
+ * @author
+ *   Miguel Villafuerte
  */
 final class PersistentActorSpec extends ScalaTestWithActorTestKit(PersistentActorSpec.conf) with AnyFlatSpecLike with Matchers {
 

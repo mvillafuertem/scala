@@ -101,8 +101,8 @@ lazy val `aws-cdk` = (project in file("modules/aws/cdk"))
   .settings(Defaults.itSettings)
   .settings(AssemblySettings.value)
   .settings(commonSettings)
-  //.settings(resolvers += "GitHub Package Registry" at "https://maven.pkg.github.com/hashicorp/terraform-cdk")
-  //.settings(credentials += Credentials("GitHub Package Registry", "maven.pkg.github.com", "mvillafuertem", ""))
+  // .settings(resolvers += "GitHub Package Registry" at "https://maven.pkg.github.com/hashicorp/terraform-cdk")
+  // .settings(credentials += Credentials("GitHub Package Registry", "maven.pkg.github.com", "mvillafuertem", ""))
   .settings(libraryDependencies ++= Dependencies.`aws-cdk`)
 
 lazy val `aws-sdk` = (project in file("modules/aws/sdk"))
@@ -128,7 +128,7 @@ lazy val cask = (project in file("modules/cask"))
   .settings(commonSettings)
   .settings(libraryDependencies ++= Dependencies.cask)
   .settings(
-    dockerBaseImage := "adoptopenjdk:11-hotspot",
+    dockerBaseImage    := "adoptopenjdk:11-hotspot",
     dockerExposedPorts := Seq(8080)
   )
   .enablePlugins(JavaAppPackaging)
@@ -263,7 +263,7 @@ lazy val spark = (project in file("modules/spark"))
   .settings(Settings.testReport ++ Information.value)
   .settings(libraryDependencies ++= Dependencies.spark)
   .settings(
-    Test / fork := false,
+    Test / fork              := false,
     Test / parallelExecution := false
   )
 
@@ -291,11 +291,11 @@ lazy val `terraform-cdktf-scalajs` = (project in file("modules/hashicorp/terrafo
   // S C A L A B L Y T Y P E D
   .settings(stMinimize := Selection.All)
   .settings(
-    scalaVersion := Settings.scala213,
+    scalaVersion                    := Settings.scala213,
     scalaJSLinkerConfig ~= (_.withModuleKind(ModuleKind.CommonJSModule)),
     scalaJSUseMainModuleInitializer := true,
     /* ScalablyTypedConverterExternalNpmPlugin requires that we define how to install node dependencies and where they are */
-    externalNpm := {
+    externalNpm                     := {
       Process("yarn", baseDirectory.value).!
       baseDirectory.value
     }

@@ -4,14 +4,14 @@ import akka.actor.typed.ActorRef
 import akka.actor.typed.scaladsl.Behaviors
 
 /**
- * @author Miguel Villafuerte
+ * @author
+ *   Miguel Villafuerte
  */
 object RequestResponseWithAsk {
 
-  val behavior = Behaviors.receiveMessage[Request] {
-    case Request(query, respondTo) =>
-      respondTo ! Response("Hello!")
-      Behaviors.same
+  val behavior = Behaviors.receiveMessage[Request] { case Request(query, respondTo) =>
+    respondTo ! Response("Hello!")
+    Behaviors.same
   }
 
   case class Request(query: String, respondTo: ActorRef[Response])

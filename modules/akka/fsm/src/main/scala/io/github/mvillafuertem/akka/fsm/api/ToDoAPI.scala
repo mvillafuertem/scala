@@ -18,14 +18,15 @@ import sttp.tapir.openapi.OpenAPI
 import sttp.tapir.openapi.circe.yaml._
 import sttp.tapir.server.akkahttp._
 import sttp.tapir.swagger.akkahttp.SwaggerAkka
-import sttp.tapir.{ Endpoint, endpoint, oneOf, statusCode, statusDefaultMapping, _ }
+import sttp.tapir.{ endpoint, oneOf, statusCode, statusDefaultMapping, Endpoint, _ }
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.util.{ Failure, Success }
 
 /**
- * @author Miguel Villafuerte
+ * @author
+ *   Miguel Villafuerte
  */
 final class ToDoAPI() {
 
@@ -183,7 +184,7 @@ object ToDoAPI {
       .get
       .in("health")
       .out(anyJsonBody[HealthInfo].example(BuildInfo.toMap))
-  //.errorOut(statusCode)
+  // .errorOut(statusCode)
 
   // 400
   lazy val badRequestErrorInfo          = ErrorInfo(model.StatusCodes.BadRequest.reason, model.StatusCodes.BadRequest.defaultMessage)

@@ -51,8 +51,8 @@ trait RelationalRepositories extends RelationalInfrastructure {
   lazy val edgeTable = TableQuery[Edges]
 
   /**
-   *
-   * @param db database back-end definition for the Vertex repository
+   * @param db
+   *   database back-end definition for the Vertex repository
    */
   class RelationalVertexRepository(val db: JdbcBackend#DatabaseDef)
       extends RelationalRepository[VertexDBO, Vertexes](db)
@@ -62,23 +62,26 @@ trait RelationalRepositories extends RelationalInfrastructure {
     /**
      * Searches for an Vertex Entity into the repository.
      *
-     * @param tenantId tenant identifier
-     * @param assetId  device identifier
-     * @return a Vertex if exists and is unique, otherwise returns a domain error
+     * @param tenantId
+     *   tenant identifier
+     * @param assetId
+     *   device identifier
+     * @return
+     *   a Vertex if exists and is unique, otherwise returns a domain error
      */
     def findByCode(tenantId: Long, assetId: Long): Future[VertexDBO] =
       vertexTable.filter(vertex => vertex.tenantId === tenantId && vertex.assetId === assetId).result.flatMap { xs =>
         xs.length match {
           case 1 => DBIO.successful(xs.head)
-          //TODO case _ => DBIO.failed(AssetComposerException(NonExistentEntityError))
+          // TODO case _ => DBIO.failed(AssetComposerException(NonExistentEntityError))
         }
       }
 
   }
 
   /**
-   *
-   * @param db database back-end definition for the Edge repository
+   * @param db
+   *   database back-end definition for the Edge repository
    */
   class RelationalEdgeRepository(val db: JdbcBackend#DatabaseDef) extends RelationalRepository[EdgeDBO, Edges](db) with EdgeRepository[Future, EdgeDBO] {
 
@@ -94,7 +97,7 @@ trait RelationalRepositories extends RelationalInfrastructure {
       edgeTable.filter(edge => edge.startVertexId === startVertexId && edge.endVertexId === endVertexId).result.flatMap { xs =>
         xs.length match {
           case 1 => DBIO.successful(xs.head)
-          //TODO case _ => DBIO.failed(AssetComposerException(NonExistentEntityError))
+          // TODO case _ => DBIO.failed(AssetComposerException(NonExistentEntityError))
         }
       }
   }

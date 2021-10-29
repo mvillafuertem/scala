@@ -5,7 +5,7 @@ import java.util.Properties
 
 import org.apache.kafka.common.serialization.ByteArraySerializer
 
-object MessageSender                                                                                   {
+object MessageSender {
   private val ACKCONFIGURATION = "all"  // Blocking on the full commit of the record
   private val RETRYCOUNT       = "1"    // Number of retries on put
   private val BATCHSIZE        = "1024" // Buffers for unsent records for each partition - controlls batching

@@ -9,7 +9,8 @@ import akka.persistence.typed.scaladsl.EventSourcedBehavior.CommandHandler
 import scala.concurrent.duration._
 
 /**
- * @author Miguel Villafuerte
+ * @author
+ *   Miguel Villafuerte
  */
 object PersistentActor {
 

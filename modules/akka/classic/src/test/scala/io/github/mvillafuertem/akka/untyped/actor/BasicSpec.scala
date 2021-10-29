@@ -6,7 +6,8 @@ import org.scalatest.BeforeAndAfterAll
 import org.scalatest.flatspec.AnyFlatSpecLike
 
 /**
- * @author Miguel Villafuerte
+ * @author
+ *   Miguel Villafuerte
  */
 final class BasicSpec extends TestKit(ActorSystem("BasicSpec")) with ImplicitSender with AnyFlatSpecLike with BeforeAndAfterAll {
 

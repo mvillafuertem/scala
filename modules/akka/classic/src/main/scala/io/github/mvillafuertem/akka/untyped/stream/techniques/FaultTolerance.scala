@@ -16,30 +16,30 @@ object FaultTolerance extends App {
   implicit val actorMaterializer: Materializer = Materializer(actorSystem)
 
   // 1. Logging
-  val faultySource  = Source(1 to 10).map(e => if (e == 6) throw new RuntimeException else e)
+  val faultySource = Source(1 to 10).map(e => if (e == 6) throw new RuntimeException else e)
   faultySource
     .log("trackingElements")
     .to(Sink.ignore)
-  //.run()
+  // .run()
 
   // 2. Gracefully terminating a stream
-  faultySource.recover {
-    case _: RuntimeException => Int.MinValue
+  faultySource.recover { case _: RuntimeException =>
+    Int.MinValue
   }.log("gracefulSource")
     .to(Sink.ignore)
-  //.run()
+  // .run()
 
   // 3. Recover with another stream
   faultySource
     .recoverWithRetries(
       3,
-      {
-        case _: RuntimeException => Source(90 to 99)
+      { case _: RuntimeException =>
+        Source(90 to 99)
       }
     )
     .log("recoverWithRetries")
     .to(Sink.ignore)
-  //.run()
+  // .run()
 
   // 4. Backoff supervision
   val restartSource = RestartSource.onFailuresWithBackoff(
@@ -54,13 +54,13 @@ object FaultTolerance extends App {
   restartSource
     .log("restartBackoff")
     .to(Sink.ignore)
-  //.run()
+  // .run()
 
   // 5. Supervision strategy
   val numbers = Source(1 to 20)
-  //.map(n => if (n == 13) throw new RuntimeException("bad luck") else n)
+    // .map(n => if (n == 13) throw new RuntimeException("bad luck") else n)
     .mapAsync(1)(n => if (n == 13) Future.failed(new RuntimeException("bad luck")) else Future.successful(n))
-  //.log("supervision")
+  // .log("supervision")
 
   val supervisedNumbers = numbers
 //    .withAttributes(ActorAttributes.supervisionStrategy {
@@ -74,7 +74,7 @@ object FaultTolerance extends App {
 //    case _ => Stop
 //  })
 
-  //supervisedNumbers.to(Sink.ignore).run()
+  // supervisedNumbers.to(Sink.ignore).run()
 
   val output = Sink.foreach[(Int, Int)](println)
 
@@ -85,7 +85,7 @@ object FaultTolerance extends App {
 
         // Step 2 - Add the necessary components of this graph
         val broadcast = builder.add(Broadcast[Int](2)) // Fan-Out operator
-        val zip       = builder.add(Zip[Int, Int]())     // Fan-In operator
+        val zip       = builder.add(Zip[Int, Int]())   // Fan-In operator
 
         // Step 3 - Tying up the components
         supervisedNumbers ~> broadcast

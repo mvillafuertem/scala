@@ -4,7 +4,8 @@ import akka.actor.typed.{ ActorRef, Behavior }
 import akka.actor.typed.scaladsl.Behaviors
 
 /**
- * @author Miguel Villafuerte
+ * @author
+ *   Miguel Villafuerte
  */
 object AdaptedResponse {
 
@@ -13,10 +14,9 @@ object AdaptedResponse {
 
   object ActorRequester {
 
-    val behavior: Behaviors.Receive[Request] = Behaviors.receiveMessage[Request] {
-      case Request(query, respondTo) =>
-        respondTo ! WrappedResponse(Response(query))
-        Behaviors.same
+    val behavior: Behaviors.Receive[Request] = Behaviors.receiveMessage[Request] { case Request(query, respondTo) =>
+      respondTo ! WrappedResponse(Response(query))
+      Behaviors.same
     }
 
   }
@@ -26,7 +26,7 @@ object AdaptedResponse {
   object ActorReceiver {
 
     val behavior: Behavior[WrappedResponse] = Behaviors.setup[WrappedResponse] { context =>
-      //val responseAdapter =
+      // val responseAdapter =
       context.messageAdapter(response => WrappedResponse(response))
 
       Behaviors.receiveMessage[WrappedResponse] { wrappedResponse: WrappedResponse =>

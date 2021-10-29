@@ -15,12 +15,12 @@ import sttp.client3._
 import sttp.client3.asynchttpclient.zio._
 import sttp.client3.circe._
 import zio.clock.Clock
-import zio.console.{Console, putStr, putStrLn}
+import zio.console.{ putStr, putStrLn, Console }
 import zio.duration._
 import zio.test.Assertion.equalTo
 import zio.test._
-import zio.test.environment.{TestClock, TestEnvironment}
-import zio.{Chunk, RIO, Schedule, _}
+import zio.test.environment.{ TestClock, TestEnvironment }
+import zio.{ Chunk, RIO, Schedule, _ }
 
 // amm `pwd`/app/modules/script/SttpRequestWithRepeatPolicy.sc impl
 @main

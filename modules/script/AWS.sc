@@ -16,10 +16,12 @@ rootLogger.setLevel(ch.qos.logback.classic.Level.INFO)
 
 // amm `pwd`/SQSConsumer.sc
 @main
-def main(@arg(doc = "access key") key: String ,
-         @arg(doc = "access secret") secret: String ,
-         @arg(doc = "region") region: String ,
-         @arg(doc = "name of queue") queue: String): Unit =
+def main(
+  @arg(doc = "access key") key: String,
+  @arg(doc = "access secret") secret: String,
+  @arg(doc = "region") region: String,
+  @arg(doc = "name of queue") queue: String
+): Unit =
   AWS.main(Array(key, secret, region, queue))
 
 case class AWSProperties(key: String, secret: String, region: String, queue: String)
@@ -39,5 +41,5 @@ object AWS extends zio.App {
       properties <- ZIO.access[ZAWSProperties](_.get)
       _          <- UIO(log.info(s"Ready to receive messages from ${properties}"))
     } yield ())
-  //.tapError(_ => UIO(log.error(s"e")))
+  // .tapError(_ => UIO(log.error(s"e")))
 }

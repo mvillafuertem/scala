@@ -28,7 +28,7 @@ final class RDDApplicationSpec extends AnyFlatSpecLike with Matchers {
 
     // t h e n
     actual.count() shouldBe 6410
-    //actual.saveAsTextFile("target/airports_not_in_usa_pair_rdd.txt")
+    // actual.saveAsTextFile("target/airports_not_in_usa_pair_rdd.txt")
 
   }
 
@@ -46,7 +46,7 @@ final class RDDApplicationSpec extends AnyFlatSpecLike with Matchers {
 
     // t h e n
     actual.count() shouldBe 8107
-    //actual.saveAsTextFile("target/airports_map_value_uppercase.text")
+    // actual.saveAsTextFile("target/airports_map_value_uppercase.text")
 
   }
 

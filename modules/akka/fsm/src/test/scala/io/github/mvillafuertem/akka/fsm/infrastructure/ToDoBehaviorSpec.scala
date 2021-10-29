@@ -17,7 +17,8 @@ import scala.concurrent.duration._
 import scala.language.postfixOps
 
 /**
- * @author Miguel Villafuerte
+ * @author
+ *   Miguel Villafuerte
  */
 final class ToDoBehaviorSpec
     extends ScalaTestWithActorTestKit(ToDoBehaviorSpec.conf)

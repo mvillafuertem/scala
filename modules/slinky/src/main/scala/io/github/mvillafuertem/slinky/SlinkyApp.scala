@@ -4,7 +4,7 @@ import io.github.mvillafuertem.slinky.components._
 import org.scalajs.dom
 import slinky.web.ReactDOM
 import slinky.web.html._
-import zio.{App, ExitCode, ZIO}
+import zio.{ App, ExitCode, ZIO }
 
 object SlinkyApp extends App {
 

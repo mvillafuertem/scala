@@ -19,7 +19,7 @@ class Queue[A] {
     }
   }
 
-  def dequeue: A = { //Devuelve el elemento del cabeza de la cola y lo elimina Si la cola está vacía, devuelve como resultado 0 y un mensaje de error
+  def dequeue: A = { // Devuelve el elemento del cabeza de la cola y lo elimina Si la cola está vacía, devuelve como resultado 0 y un mensaje de error
     var nodo: Node[A] = ???
     var resul: A      = ???
     if (cabeza == null)
@@ -37,7 +37,7 @@ class Queue[A] {
   def isEmpty: Boolean = // Comprueba si la cola está vacía
     cabeza == null
 
-  def peek: A = { //Devuelve el elemento del cabeza de la cola Si la cola está vacía, devuelve como resultado -999 y un mensaje de error
+  def peek: A = { // Devuelve el elemento del cabeza de la cola Si la cola está vacía, devuelve como resultado -999 y un mensaje de error
     var resul: A = ???
     if (!this.isEmpty) resul = cabeza.value
     else println("Error, la cola está vacía")

@@ -6,7 +6,8 @@ import io.github.mvillafuertem.tapir.domain.repository.ProductsRepository
 import sttp.tapir.server.akkahttp._
 
 /**
- * @author Miguel Villafuerte
+ * @author
+ *   Miguel Villafuerte
  */
 final class ProductsApi(productsRepository: ProductsRepository) extends ProductsEndpoint {
 

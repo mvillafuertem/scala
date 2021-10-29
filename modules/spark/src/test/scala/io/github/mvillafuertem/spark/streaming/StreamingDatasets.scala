@@ -6,7 +6,7 @@ import org.apache.spark.sql.types._
 
 object StreamingDatasets {
 
-  val spark = SparkSession
+  val spark                    = SparkSession
     .builder()
     .appName("Streaming Datasets")
     .master("local[2]")

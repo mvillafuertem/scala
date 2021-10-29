@@ -77,7 +77,7 @@ final class CdktfStack(scope: Construct, id: String, cdktfStackConfiguration: Cd
     .ami("ami-0f89681a05a3a9de7")
     .keyName(keyPair.getKeyName)
     .instanceType("t2.medium")
-    //.securityGroups(List(securityGroup.getName).asJava)
+    // .securityGroups(List(securityGroup.getName).asJava)
     .associatePublicIpAddress(true)
     .userData(cdktfStackConfiguration.userData)
     .tags(

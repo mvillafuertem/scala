@@ -13,8 +13,8 @@ object ComplexOpenGraphs extends App {
 
   /**
    * Max3 Operator
-   * - 3 Inputs of type Int
-   * - The maximum of the 3
+   *   - 3 Inputs of type Int
+   *   - The maximum of the 3
    */
   // Step 1 - Setting up the fundamentals for the graph
   val max3StaticGraph = GraphDSL.create() { implicit builder =>
@@ -54,19 +54,18 @@ object ComplexOpenGraphs extends App {
       // Step 4 - Return a shape
       ClosedShape
     }
-  ) //.run()
+  ) // .run()
 
   // Same for UniformFanOutShape
   /**
    * Non-uniform Fan Out Shape
    *
-   * Processing bank transactions
-   * Tx suspicious if amount > 10000
+   * Processing bank transactions Tx suspicious if amount > 10000
    *
    * Streams component for Tx
    *
-   * - Output1 ~ Let the transaction go through
-   * - Output2 ~ Suspicious Tx ids
+   *   - Output1 ~ Let the transaction go through
+   *   - Output2 ~ Suspicious Tx ids
    */
   case class Transaction(id: String, source: String, recipient: String, amount: Int, date: Date)
 

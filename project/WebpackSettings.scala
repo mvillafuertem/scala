@@ -11,8 +11,7 @@ import scalajsbundler.sbtplugin.ScalaJSBundlerPlugin.autoImport.webpack
 object WebpackSettings {
 
   /**
-   * Implement the `dist` task defined above.
-   * Most of this is really just to copy the index.html file around.
+   * Implement the `dist` task defined above. Most of this is really just to copy the index.html file around.
    */
   lazy val browserProject: Project => Project =
     _.settings(

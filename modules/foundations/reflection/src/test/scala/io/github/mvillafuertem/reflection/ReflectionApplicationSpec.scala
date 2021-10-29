@@ -5,11 +5,9 @@ import org.scalatest.flatspec.AnyFlatSpecLike
 final class ReflectionApplicationSpec extends AnyFlatSpecLike {
 
   /**
-   * @see https://lampwww.epfl.ch/~michelou/scala/scala-reflection.html
-   *      https://medium.com/@giposse/scala-reflection-d835832ed13a
-   * OptManifest <— ClassManifest <— Manifest <— AnyValManifest
-   *              \
-   *               \— NoManifest
+   * @see
+   *   https://lampwww.epfl.ch/~michelou/scala/scala-reflection.html https://medium.com/@giposse/scala-reflection-d835832ed13a OptManifest <— ClassManifest <—
+   *   Manifest <— AnyValManifest \ \— NoManifest
    */
 
   behavior of "Reflection Application"

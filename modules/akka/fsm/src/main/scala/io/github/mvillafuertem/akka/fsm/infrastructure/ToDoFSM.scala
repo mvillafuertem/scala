@@ -6,7 +6,8 @@ import ToDoFSM.Command
 import io.github.mvillafuertem.akka.fsm.domain.ToDo
 
 /**
- * @author Miguel Villafuerte
+ * @author
+ *   Miguel Villafuerte
  */
 final class ToDoFSM(context: ActorContext[Command]) {
 
@@ -27,7 +28,7 @@ final class ToDoFSM(context: ActorContext[Command]) {
           idle(Closed(toDo))
 
         case (state, GetToDo(replyTo)) =>
-          //context.log.info(s"$state")
+          // context.log.info(s"$state")
           replyTo ! state
           Behaviors.unhandled
 

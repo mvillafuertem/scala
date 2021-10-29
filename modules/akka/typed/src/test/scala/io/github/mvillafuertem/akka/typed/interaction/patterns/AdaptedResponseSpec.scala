@@ -4,7 +4,8 @@ import akka.actor.testkit.typed.scaladsl.{ ScalaTestWithActorTestKit, TestProbe 
 import org.scalatest.flatspec.AnyFlatSpecLike
 
 /**
- * @author Miguel Villafuerte
+ * @author
+ *   Miguel Villafuerte
  */
 final class AdaptedResponseSpec extends ScalaTestWithActorTestKit with AnyFlatSpecLike {
 

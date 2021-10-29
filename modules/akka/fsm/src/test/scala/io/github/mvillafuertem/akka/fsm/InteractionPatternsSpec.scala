@@ -16,14 +16,13 @@ class InteractionPatternsSpec extends ScalaTestWithActorTestKit with AnyFlatSpec
   it should "contain a sample for adapted response" in {
 
     // G I V E N
-    val backend = spawn(Behaviors.receiveMessage[Backend.Request] {
-      case Backend.StartTranslationJob(taskId, site @ _, replyTo) =>
-        replyTo ! Backend.JobStarted(taskId)
-        replyTo ! Backend.JobProgress(taskId, 0.25)
-        replyTo ! Backend.JobProgress(taskId, 0.50)
-        replyTo ! Backend.JobProgress(taskId, 0.75)
-        replyTo ! Backend.JobCompleted(taskId, new URI("https://akka.io/docs/sv/"))
-        Behaviors.same
+    val backend = spawn(Behaviors.receiveMessage[Backend.Request] { case Backend.StartTranslationJob(taskId, site @ _, replyTo) =>
+      replyTo ! Backend.JobStarted(taskId)
+      replyTo ! Backend.JobProgress(taskId, 0.25)
+      replyTo ! Backend.JobProgress(taskId, 0.50)
+      replyTo ! Backend.JobProgress(taskId, 0.75)
+      replyTo ! Backend.JobCompleted(taskId, new URI("https://akka.io/docs/sv/"))
+      Behaviors.same
     })
 
     val frontend = spawn(Frontend.translator(backend))

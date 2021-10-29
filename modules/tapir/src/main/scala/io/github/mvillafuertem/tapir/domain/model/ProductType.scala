@@ -1,7 +1,8 @@
 package io.github.mvillafuertem.tapir.domain.model
 
 /**
- * @author Miguel Villafuerte
+ * @author
+ *   Miguel Villafuerte
  */
 sealed trait ProductType
 

@@ -16,7 +16,7 @@ import io.circe.optics.JsonPath._
 import io.circe.parser._
 import org.slf4j.{ Logger, LoggerFactory }
 import sttp.client3.asynchttpclient.zio.{ send, AsyncHttpClientZioBackend }
-import sttp.client3.{ Request, basicRequest, _ }
+import sttp.client3.{ basicRequest, Request, _ }
 import zio.console.putStrLn
 import zio.duration.durationInt
 import zio.{ ExitCode, IO, Schedule, Task, URIO }

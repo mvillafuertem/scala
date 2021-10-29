@@ -4,7 +4,8 @@ import slick.basic.DatabaseConfig
 import slick.jdbc.JdbcProfile
 
 /**
- * @author Miguel Villafuerte
+ * @author
+ *   Miguel Villafuerte
  */
 trait InfrastructureConfigurationSpec {
 

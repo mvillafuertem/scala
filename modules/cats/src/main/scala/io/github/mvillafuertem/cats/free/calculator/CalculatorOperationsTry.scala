@@ -20,7 +20,7 @@ object CalculatorOperationsTry {
     }
 
   // P R O G R A M  T R Y
-  def programTry(a: Int, b: Int): Ops[Int]        =
+  def programTry(a: Int, b: Int): Ops[Int] =
     for {
 
       c <- sum[Int](a, b)

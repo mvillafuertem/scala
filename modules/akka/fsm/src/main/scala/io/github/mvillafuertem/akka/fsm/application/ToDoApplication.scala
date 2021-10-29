@@ -5,7 +5,8 @@ import io.github.mvillafuertem.akka.fsm.domain.ToDo
 import io.github.mvillafuertem.akka.fsm.infrastructure.ToDoFSM.{ Close, Command, Open }
 
 /**
- * @author Miguel Villafuerte
+ * @author
+ *   Miguel Villafuerte
  */
 final class ToDoApplication(fsm: ActorRef[Command]) {
 
