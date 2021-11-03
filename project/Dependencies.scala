@@ -466,7 +466,7 @@ object Dependencies {
     val kafka                     = "2.8.0"
     val leveldbjniAll             = "1.8"
     val logback                   = "1.2.6"
-    val mongoScalaBson            = "4.3.3"
+    val mongoScalaBson            = "4.3.4"
     val picocli                   = "4.6.1"
     val postgres                  = "42.3.1"
     val scalaCheck                = "3.2.2.0"
