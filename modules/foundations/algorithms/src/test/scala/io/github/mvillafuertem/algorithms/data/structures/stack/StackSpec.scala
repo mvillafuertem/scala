@@ -10,7 +10,7 @@ class StackSpec extends AnyFlatSpec with Matchers {
   it should "show" in {
 
     // G I V E N
-    val stack  = new Stack[Int]
+    val stack = new Stack[Int]
     stack.push(1)
     stack.push(2)
 
@@ -27,7 +27,7 @@ class StackSpec extends AnyFlatSpec with Matchers {
   it should "length" in {
 
     // G I V E N
-    val stack  = new Stack[Int]
+    val stack = new Stack[Int]
     stack.push(1)
     stack.push(2)
 
@@ -69,7 +69,7 @@ class StackSpec extends AnyFlatSpec with Matchers {
   ignore should "peek" in {
 
     // G I V E N
-    val stack  = new Stack[Int]
+    val stack = new Stack[Int]
     stack.push(1)
 
     // W H E N
@@ -83,7 +83,7 @@ class StackSpec extends AnyFlatSpec with Matchers {
   ignore should "pop" in {
 
     // G I V E N
-    val stack  = new Stack[Int]
+    val stack = new Stack[Int]
     stack.push(1)
 
     // W H E N

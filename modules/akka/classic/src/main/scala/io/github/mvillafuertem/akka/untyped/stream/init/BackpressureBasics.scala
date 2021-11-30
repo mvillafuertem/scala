@@ -22,7 +22,7 @@ object BackpressureBasics extends App {
   // fastSource.to(slowSink).run() // fusing ?!
 
   // This is Backpressure
-  fastSource.async.to(slowSink) //.run()
+  fastSource.async.to(slowSink) // .run()
 
   val simpleFlow = Flow[Int].map { x =>
     println(s"Incoming $x")
@@ -33,7 +33,7 @@ object BackpressureBasics extends App {
     .via(simpleFlow)
     .async
     .to(slowSink)
-  //.run()
+  // .run()
 
   // Reactions to Backpressure (in order)
   // - Try to slow down if possible
@@ -42,16 +42,14 @@ object BackpressureBasics extends App {
   // - Tear donw/kill the whole stream (failure)
 
   /**
-   * 1  - 16 nobody is backpressured
-   * 17 - 26 flow will buffer, flow will start dropping at the next element
-   * 26 - 1000 flow will always drop the oldest element
+   * 1 - 16 nobody is backpressured 17 - 26 flow will buffer, flow will start dropping at the next element 26 - 1000 flow will always drop the oldest element
    */
   val bufferedFlow = simpleFlow.buffer(10, overflowStrategy = OverflowStrategy.dropHead)
   fastSource.async
     .via(bufferedFlow)
     .async
     .to(slowSink)
-  //.run()
+  // .run()
 
   // Overflow Strategies
   // - Drop Head = oldest

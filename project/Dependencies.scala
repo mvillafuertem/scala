@@ -1,6 +1,6 @@
 import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
 import sbt.Keys.libraryDependencies
-import sbt.{Def, _}
+import sbt.{ Def, _ }
 
 object Dependencies {
 
@@ -11,8 +11,8 @@ object Dependencies {
       Artifact.akkaSlf4f,
       Artifact.akkaStream
     ).map(_               % Version.akka) ++ Seq(
-      //Artifact.akkaPersistenceCassandra % Version.akkaPersistenceCassandra,
-      //Artifact.akkaPersistenceJdbc % Version.akkaPersistenceJdbc,
+      // Artifact.akkaPersistenceCassandra % Version.akkaPersistenceCassandra,
+      // Artifact.akkaPersistenceJdbc % Version.akkaPersistenceJdbc,
       Artifact.logback    % Version.logback,
       Artifact.postgresql % Version.postgres
     ) ++ Seq(
@@ -20,8 +20,8 @@ object Dependencies {
       Artifact.akkaStreamTestkit,
       Artifact.akkaTestKit
     ).map(_ % Version.akka) ++ Seq(
-      //Artifact.akkaPersistenceCassandraLauncher % Version.akkaPersistenceCassandra % Test,
-      //Artifact.akkaPersistenceInmemory % Version.akkaPersistenceInmemory % Test,
+      // Artifact.akkaPersistenceCassandraLauncher % Version.akkaPersistenceCassandra % Test,
+      // Artifact.akkaPersistenceInmemory % Version.akkaPersistenceInmemory % Test,
       Artifact.scalaTest % Version.scalaTest % "it,test"
     )
 
@@ -39,7 +39,7 @@ object Dependencies {
       Artifact.akkaActorTestkitTyped,
       Artifact.akkaStreamTestkit
     ).map(_ % Version.akka) ++ Seq(
-      //Artifact.akkaPersistenceInmemory % Version.akkaPersistenceInmemory % Test,
+      // Artifact.akkaPersistenceInmemory % Version.akkaPersistenceInmemory % Test,
       Artifact.scalaTest % Version.scalaTest % "it,test"
     )
 
@@ -71,7 +71,7 @@ object Dependencies {
   val advanced: Seq[ModuleID] = Seq(
     // A D V A N C E D  T E S T
     Artifact.scalaTest        % Version.scalaTest          % Test,
-    "org.scala-lang.modules" %% "scala-parser-combinators" % "2.0.0"
+    "org.scala-lang.modules" %% "scala-parser-combinators" % "2.1.0"
   )
 
   val algorithms: Seq[ModuleID] = Seq(
@@ -80,8 +80,8 @@ object Dependencies {
   )
 
   val `aws-cdk`: Seq[ModuleID] = Seq(
-    //"com.hashicorp" % "cdktf" % "0.0.17",
-    //"software.constructs" % "constructs" % "3.0.0"
+    // "com.hashicorp" % "cdktf" % "0.0.17",
+    // "software.constructs" % "constructs" % "3.0.0"
   ) ++ Seq(
     // A W S
     Artifact.awsCdkEcsPatterns
@@ -106,7 +106,7 @@ object Dependencies {
     Artifact.testcontainersCore % Version.testcontainers
   )).map(_ % IntegrationTest)
 
-  val basic: Seq[ModuleID]     = Seq(
+  val basic: Seq[ModuleID] = Seq(
     // B A S I C  T E S T
     Artifact.scalaTest % Version.scalaTest % Test
   )
@@ -119,13 +119,13 @@ object Dependencies {
     Artifact.scalaTest % Version.scalaTest % Test
   )
 
-  val `akka-fsm`: Seq[ModuleID]          =
+  val `akka-fsm`: Seq[ModuleID] =
     // A K K A  F S M
     Seq(
       Artifact.akkaPersistenceTyped % Version.akka,
-      //"org.iq80.leveldb" % "leveldb" % "0.12",
+      // "org.iq80.leveldb" % "leveldb" % "0.12",
       Artifact.leveldbjniAll        % Version.leveldbjniAll,
-      //Artifact.akkaPersistenceInmemory % Version.akkaPersistenceInmemory,
+      // Artifact.akkaPersistenceInmemory % Version.akkaPersistenceInmemory,
       Artifact.logback              % Version.logback
     ) ++ Seq(
       Artifact.tapirCore,
@@ -142,7 +142,7 @@ object Dependencies {
       Artifact.scalaTest             % Version.scalaTest
     ).map(_ % Test)
 
-  val `akka-http`: Seq[ModuleID]         =
+  val `akka-http`: Seq[ModuleID] =
     // A K K A  H T T P
     Seq(
       Artifact.logback       % Version.logback,
@@ -179,7 +179,7 @@ object Dependencies {
       Artifact.zioTest         % Version.zio
     ).map(_                    % Test)
 
-  val cats: Seq[ModuleID]                = Seq(
+  val cats: Seq[ModuleID] = Seq(
     // C A T S
     Artifact.catsCore,
     Artifact.catsFree
@@ -188,7 +188,7 @@ object Dependencies {
     Artifact.scalaTest % Version.scalaTest
   ).map(_ % Test)
 
-  val docs: Def.Setting[Seq[ModuleID]]   = libraryDependencies ++= Seq(
+  val docs: Def.Setting[Seq[ModuleID]] = libraryDependencies ++= Seq(
     // P R O D U C T I O N
     "me.shadaj" %%% "slinky-hot",
     "me.shadaj" %%% "slinky-react-router"
@@ -202,7 +202,7 @@ object Dependencies {
     Artifact.scalaTest % Version.scalaTest
   )
 
-  val foundations: Seq[ModuleID]   = Seq(
+  val foundations: Seq[ModuleID] = Seq(
     // D O T T Y
     Artifact.scalaCheck % Version.scalaCheck,
     Artifact.scalaTest  % Version.scalaTest
@@ -222,7 +222,7 @@ object Dependencies {
     Artifact.zioInteropCats    % Version.zioInteropCats
   )
 
-  val json: Seq[ModuleID]                = Seq(
+  val json: Seq[ModuleID] = Seq(
     // J S O N
     Artifact.circeGeneric,
     Artifact.circeGenericExtras,
@@ -238,19 +238,19 @@ object Dependencies {
     Artifact.scalaTest % Version.scalaTest
   ).map(_ % Test)
 
-  val reflection: Seq[ModuleID]          =
+  val reflection: Seq[ModuleID] =
     Seq(
       // R E F L E C T I O N  T E S T
       Artifact.scalaTest % Version.scalaTest
     ).map(_ % Test)
 
-  val script: Seq[ModuleID]              =
+  val script: Seq[ModuleID] =
     Seq(
       // S C R I P T  T E S T
       Artifact.scalaTest % Version.scalaTest
     ).map(_ % Test)
 
-  val slick: Seq[ModuleID]               =
+  val slick: Seq[ModuleID] =
     // S L I C K
     Seq(
       Artifact.alpakkaSlick % Version.alpakkaSlick,
@@ -267,7 +267,7 @@ object Dependencies {
     "io.github.cquiroz" %%% "scala-java-time" % Version.scalaJavaTime
   )
 
-  val spark: Seq[ModuleID]                                  =
+  val spark: Seq[ModuleID] =
     // S P A R K
     Seq(
       Artifact.sparkCore,
@@ -278,7 +278,7 @@ object Dependencies {
       Artifact.scalaTest % Version.scalaTest
     ).map(_ % Test)
 
-  val sttp: Seq[ModuleID]                                   =
+  val sttp: Seq[ModuleID] =
     // S T T P
     Seq(
       Artifact.sttpAsyncAkka,
@@ -298,10 +298,10 @@ object Dependencies {
       Artifact.scalaTest % Version.scalaTest
     ).map(_ % Test)
 
-  val tapir: Seq[ModuleID]                                  =
+  val tapir: Seq[ModuleID] =
     // T A P I R
     Seq(
-      //"org.iq80.leveldb" % "leveldb" % "0.12",
+      // "org.iq80.leveldb" % "leveldb" % "0.12",
       Artifact.akkaActorTyped            % Version.akka,
       Artifact.akkaStreamTyped           % Version.akka,
       Artifact.zio                       % Version.zio,
@@ -335,8 +335,8 @@ object Dependencies {
 
   val `terraform-cdktf-scala`: Seq[ModuleID] = Seq(
     // T E R R A F O R M  C D K T F
-    "com.hashicorp"       % "cdktf"      % "0.4.1",
-    "software.constructs" % "constructs" % "3.3.77"
+    "com.hashicorp"       % "cdktf"      % "0.7.0",
+    "software.constructs" % "constructs" % "10.0.9"
   ) ++ Seq(
     // T E R R A F O R M  C D K T F  T E S T
     "org.scalatest"      %% "scalatest"  % Version.scalaTest % Test
@@ -359,11 +359,11 @@ object Dependencies {
     ).map(_ % Test)
 
   private object Artifact {
-    //"org.iq80.leveldb" % "leveldb" % "0.12",
-    //val akkaPersistenceCassandra = "com.typesafe.akka" %% "akka-persistence-cassandra"
-    //val akkaPersistenceCassandraLauncher = "com.typesafe.akka" %% "akka-persistence-cassandra-launcher"
-    //val akkaPersistenceInmemory = "com.github.dnvriend" %% "akka-persistence-inmemory"
-    //val akkaPersistenceJdbc = "com.github.dnvriend" %% "akka-persistence-jdbc"
+    // "org.iq80.leveldb" % "leveldb" % "0.12",
+    // val akkaPersistenceCassandra = "com.typesafe.akka" %% "akka-persistence-cassandra"
+    // val akkaPersistenceCassandraLauncher = "com.typesafe.akka" %% "akka-persistence-cassandra-launcher"
+    // val akkaPersistenceInmemory = "com.github.dnvriend" %% "akka-persistence-inmemory"
+    // val akkaPersistenceJdbc = "com.github.dnvriend" %% "akka-persistence-jdbc"
     val akkaActorTestkitTyped     = "com.typesafe.akka"                     %% "akka-actor-testkit-typed"
     val akkaActorTyped            = "com.typesafe.akka"                     %% "akka-actor-typed"
     val akkaHttp                  = "com.typesafe.akka"                     %% "akka-http"
@@ -441,49 +441,49 @@ object Dependencies {
   private object Version {
     val akka                      = "2.6.14"
     val akkaHttp                  = "10.2.6"
-    val akkaHttpCirce             = "1.37.0"
+    val akkaHttpCirce             = "1.38.2"
     val akkaPersistenceCassandra  = "0.100"
     val akkaPersistenceInmemory   = "2.5.15.2"
     val akkaPersistenceJdbc       = "3.5.2"
-    val alpakkaKafka              = "2.1.1"
-    val alpakkaMongodb            = "3.0.3"
-    val alpakkaSlick              = "3.0.3"
-    val awsCdk                    = "1.118.0"
+    val alpakkaKafka              = "2.1.0"
+    val alpakkaMongodb            = "3.0.4"
+    val alpakkaSlick              = "3.0.4"
+    val awsCdk                    = "1.134.0"
     val awsLambda                 = "1.2.1"
-    val awsSdk                    = "2.17.17"
+    val awsSdk                    = "2.17.92"
     val cask                      = "0.7.11"
-    val cats                      = "2.6.1"
+    val cats                      = "2.7.0"
     val circe                     = "0.13.0"
-    val http4s                    = "1.0.0-M24"
+    val http4s                    = "1.0.0-M29"
     val curator                   = "5.2.0"
-    val dijon                     = "0.5.0"
-    val ficus                     = "1.5.0"
-    val h2                        = "1.4.200"
-    val java8Compat               = "1.0.0"
+    val dijon                     = "0.6.0"
+    val ficus                     = "1.5.1"
+    val h2                        = "2.0.202"
+    val java8Compat               = "1.0.2"
     val jslt                      = "0.1.11"
-    val jsoniter                  = "2.9.1"
+    val jsoniter                  = "2.12.0"
     val jwtCirce                  = "4.3.0"
     val kafka                     = "2.8.0"
     val leveldbjniAll             = "1.8"
-    val logback                   = "1.2.5"
-    val mongoScalaBson            = "4.3.1"
+    val logback                   = "1.2.7"
+    val mongoScalaBson            = "4.4.0"
     val picocli                   = "4.6.1"
-    val postgres                  = "42.2.23"
+    val postgres                  = "42.3.1"
     val scalaCheck                = "3.2.2.0"
     val scalaJavaTime             = "2.0.0"
-    val scalaTest                 = "3.2.9"
+    val scalaTest                 = "3.2.10"
     val slick                     = "3.3.3"
     val slinky                    = "0.6.6"
-    val spark                     = "3.1.2"
-    val sttp                      = "3.3.13"
+    val spark                     = "3.2.0"
+    val sttp                      = "3.3.17"
     val tapir                     = "0.17.19"
-    val testcontainers            = "0.39.5"
-    val testcontainersKafka       = "1.16.0"
-    val zio                       = "1.0.9"
+    val testcontainers            = "0.39.12"
+    val testcontainersKafka       = "1.16.2"
+    val zio                       = "1.0.12"
     val zioAkkaCluster            = "0.2.0"
-    val zioInteropCats            = "3.1.1.0"
-    val zioInteropReactiveStreams = "1.3.5"
-    val zioKafka                  = "0.15.0"
+    val zioInteropCats            = "3.2.9.0"
+    val zioInteropReactiveStreams = "1.3.8"
+    val zioKafka                  = "0.17.1"
   }
 
 }

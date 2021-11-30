@@ -1,10 +1,9 @@
 package io.github.mvillafuertem.advanced.implicits
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 
 /**
- * Se pueden entiende inferencia de terminos,
- * igual que inferencia de tipos. Mirar test
+ * Se pueden entiende inferencia de terminos, igual que inferencia de tipos. Mirar test
  */
 object ImplicitsAsTermInference {
 

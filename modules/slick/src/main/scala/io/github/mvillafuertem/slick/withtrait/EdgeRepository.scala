@@ -1,7 +1,8 @@
 package io.github.mvillafuertem.slick.withtrait
 
 /**
- * @author Miguel Villafuerte
+ * @author
+ *   Miguel Villafuerte
  */
 trait EdgeRepository[F[_], T] extends BaseRepository[F, T] {
 

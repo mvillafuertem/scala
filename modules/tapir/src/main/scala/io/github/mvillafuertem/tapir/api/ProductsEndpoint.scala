@@ -7,7 +7,8 @@ import sttp.tapir._
 import sttp.tapir.json.circe._
 
 /**
- * @author Miguel Villafuerte
+ * @author
+ *   Miguel Villafuerte
  */
 trait ProductsEndpoint extends ProductsCodec {
 
@@ -50,7 +51,7 @@ trait ProductsEndpoint extends ProductsCodec {
 
   // e x a m p l e
 
-  //private val vectorProductsExample: Vector[Product] = Vector(Product(ProductId(), "", New))
+  // private val vectorProductsExample: Vector[Product] = Vector(Product(ProductId(), "", New))
 
 }
 

@@ -9,7 +9,8 @@ import sttp.tapir.json.circe._
 import sttp.tapir.{ Codec, Validator }
 
 /**
- * @author Miguel Villafuerte
+ * @author
+ *   Miguel Villafuerte
  */
 trait ProductsCodec {
 

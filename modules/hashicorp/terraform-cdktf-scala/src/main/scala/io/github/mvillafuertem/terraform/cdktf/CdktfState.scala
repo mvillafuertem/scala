@@ -2,10 +2,11 @@ package io.github.mvillafuertem.terraform.cdktf
 
 import com.hashicorp.cdktf.{ TerraformOutput, TerraformStack }
 import imports.aws._
+import imports.aws.dynamo_db.{ DynamodbTable, DynamodbTableAttribute }
+import imports.aws.s3._
 import io.github.mvillafuertem.terraform.cdktf.CdktfStack.CdktfStackConfiguration
 import software.constructs.Construct
 
-import java.util
 import scala.jdk.CollectionConverters._
 
 final class CdktfState(scope: Construct, id: String, cdktfStackConfiguration: CdktfStackConfiguration) extends TerraformStack(scope, id) {
@@ -19,33 +20,27 @@ final class CdktfState(scope: Construct, id: String, cdktfStackConfiguration: Cd
     .profile(cdktfStackConfiguration.profile)
     .build()
 
-  private val serverSideEncryptionConfiguration: util.List[S3BucketServerSideEncryptionConfiguration] = List(
+  private val serverSideEncryptionConfiguration: S3BucketServerSideEncryptionConfiguration =
     S3BucketServerSideEncryptionConfiguration
       .builder()
       .rule(
-        List(
-          S3BucketServerSideEncryptionConfigurationRule
-            .builder()
-            .applyServerSideEncryptionByDefault(
-              List(
-                S3BucketServerSideEncryptionConfigurationRuleApplyServerSideEncryptionByDefault
-                  .builder()
-                  .sseAlgorithm("AES256")
-                  .build()
-              ).asJava
-            )
-            .build()
-        ).asJava
+        S3BucketServerSideEncryptionConfigurationRule
+          .builder()
+          .applyServerSideEncryptionByDefault(
+            S3BucketServerSideEncryptionConfigurationRuleApplyServerSideEncryptionByDefault
+              .builder()
+              .sseAlgorithm("AES256")
+              .build()
+          )
+          .build()
       )
       .build()
-  ).asJava
 
-  private val versioning: util.List[S3BucketVersioning] = List(
+  private val versioning: S3BucketVersioning =
     S3BucketVersioning
       .builder()
       .enabled(true)
       .build()
-  ).asJava
 
   private val s3Bucket: S3Bucket = S3Bucket.Builder
     .create(self, "cdktf_s3")

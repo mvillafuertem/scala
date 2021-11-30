@@ -7,7 +7,8 @@ import org.scalatest.matchers.should.Matchers
 import scala.concurrent.Future
 
 /**
- * @author Miguel Villafuerte
+ * @author
+ *   Miguel Villafuerte
  */
 final class RequestResponseWithAskSpec extends ScalaTestWithActorTestKit with AsyncFlatSpecLike with Matchers {
 

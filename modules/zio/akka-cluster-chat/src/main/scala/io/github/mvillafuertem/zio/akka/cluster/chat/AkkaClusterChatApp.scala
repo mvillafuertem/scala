@@ -4,7 +4,7 @@ import akka.actor.ActorSystem
 import io.github.mvillafuertem.zio.akka.cluster.chat.application._
 import io.github.mvillafuertem.zio.akka.cluster.chat.configuration._
 import zio.console.Console
-import zio.{App, ExitCode, Has, ZIO, console}
+import zio.{ console, App, ExitCode, Has, ZIO }
 
 // TODO
 //  sbt zio/run -J-Dconfig.resource=application1.conf

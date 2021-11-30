@@ -2,7 +2,7 @@ import com.typesafe.sbt.SbtNativePackager.autoImport.packageName
 import com.typesafe.sbt.packager.docker.DockerPlugin.autoImport.{ dockerUpdateLatest, Docker }
 import com.typesafe.sbt.packager.graalvmnativeimage.GraalVMNativeImagePlugin.autoImport.graalVMNativeImageOptions
 import sbt.Keys._
-import sbt.{ Compile, Logger, settingKey, taskKey, _ }
+import sbt.{ settingKey, taskKey, Compile, Logger, _ }
 
 import java.nio.file.{ Files, StandardCopyOption }
 
@@ -22,7 +22,7 @@ object GraalVMSettings {
   }
 
   lazy val value: Seq[Def.Setting[_]] = Seq(
-    processAnnotations := {
+    processAnnotations           := {
       val log = streams.value.log
 
       log.info("Processing annotations ...")
@@ -38,11 +38,11 @@ object GraalVMSettings {
 
       log.info("Done processing annotations.")
     },
-    Compile / packageBin := (Compile / packageBin dependsOn (Compile / processAnnotations)).value,
-    Docker / packageName := "docker-test",
-    dockerUpdateLatest := true,
+    Compile / packageBin         := (Compile / packageBin dependsOn (Compile / processAnnotations)).value,
+    Docker / packageName         := "docker-test",
+    dockerUpdateLatest           := true,
     dockerGraalvmNativeImageName := "docker-graalvm-native-test",
-    dockerGraalvmNative := {
+    dockerGraalvmNative          := {
       val log = streams.value.log
 
       val stageDir = target.value / "native-docker" / "stage"
@@ -105,7 +105,7 @@ object GraalVMSettings {
 
       log.info(s"Build image ${dockerGraalvmNativeImageName.value}")
     },
-    graalVMNativeImageOptions := Seq("--report-unsupported-elements-at-runtime")
+    graalVMNativeImageOptions    := Seq("--report-unsupported-elements-at-runtime")
   )
 
 }

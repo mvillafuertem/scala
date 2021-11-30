@@ -20,26 +20,25 @@ final class VendingMachineFSM extends FSM[VendingState, VendingData] {
 
   }
 
-  when(Operational) {
-    case Event(RequestProduct(product), Initialized(inventory, prices)) =>
-      inventory.get(product) match {
+  when(Operational) { case Event(RequestProduct(product), Initialized(inventory, prices)) =>
+    inventory.get(product) match {
 
-        case None | Some(0) =>
-          sender() ! VendingError("ProductNotAvailable")
-          stay()
-        case Some(_)        =>
-          val price = prices(product)
-          sender() ! Instruction(s"Please insert $price dollars")
-          //context.become(waitForMoney(inventory, prices, product, 0, startReceiveMoneyTimeoutSchedule(), sender()))
-          goto(WaitForMoney) using WaitForMoneyData(inventory, prices, product, 0, sender())
-      }
+      case None | Some(0) =>
+        sender() ! VendingError("ProductNotAvailable")
+        stay()
+      case Some(_)        =>
+        val price = prices(product)
+        sender() ! Instruction(s"Please insert $price dollars")
+        // context.become(waitForMoney(inventory, prices, product, 0, startReceiveMoneyTimeoutSchedule(), sender()))
+        goto(WaitForMoney) using WaitForMoneyData(inventory, prices, product, 0, sender())
+    }
   }
 
   when(WaitForMoney, stateTimeout = 1 second) {
     case Event(StateTimeout, WaitForMoneyData(inventory, prices, product, money, requester))         =>
       requester ! VendingError("RequestTimedOut")
       if (money > 0) requester ! GiveBackChange(money)
-      //context.become(operational(inventory, prices))
+      // context.become(operational(inventory, prices))
       goto(Operational) using Initialized(inventory, prices)
     case Event(ReceiveMoney(amount), WaitForMoneyData(inventory, prices, product, money, requester)) =>
       val price = prices(product)
@@ -62,8 +61,8 @@ final class VendingMachineFSM extends FSM[VendingState, VendingData] {
       }
   }
 
-  onTransition {
-    case stateA -> stateB => log.info(s"Trasitioning from $stateA to $stateB")
+  onTransition { case stateA -> stateB =>
+    log.info(s"Trasitioning from $stateA to $stateB")
   }
 
   initialize()

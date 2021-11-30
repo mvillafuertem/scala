@@ -16,21 +16,20 @@ object ChildActors extends App {
 
     var child: ActorRef = null
 
-    override def receive: Receive = {
-      case CreateChild(name) =>
-        println(s"${self.path} creating child")
-        val childRef = context.actorOf(Props[Child](), name)
-        context.become(withChild(childRef))
+    override def receive: Receive = { case CreateChild(name) =>
+      println(s"${self.path} creating child")
+      val childRef = context.actorOf(Props[Child](), name)
+      context.become(withChild(childRef))
     }
 
-    def withChild(childRef: ActorRef): Receive = {
-      case TellChild(message) => childRef forward message
+    def withChild(childRef: ActorRef): Receive = { case TellChild(message) =>
+      childRef forward message
     }
   }
 
   class Child extends Actor {
-    override def receive: Receive = {
-      case message => println(s"${self.path} I got $message")
+    override def receive: Receive = { case message =>
+      println(s"${self.path} I got $message")
     }
   }
 
@@ -97,15 +96,14 @@ object ChildActors extends App {
   }
 
   class CreditCard extends Actor {
-    override def receive: Receive = {
-      case AttachToAccount(account) => context.become(attachedTo(account))
+    override def receive: Receive = { case AttachToAccount(account) =>
+      context.become(attachedTo(account))
     }
 
-    def attachedTo(account: NaiveBankAccount): Receive = {
-      case CheckStatus =>
-        println(s"${self.path} your message has been processed")
-        // benign
-        account.withdraw(1) // because I can
+    def attachedTo(account: NaiveBankAccount): Receive = { case CheckStatus =>
+      println(s"${self.path} your message has been processed")
+      // benign
+      account.withdraw(1) // because I can
     }
   }
 

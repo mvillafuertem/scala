@@ -1,12 +1,9 @@
 package io.github.mvillafuertem.advanced.implicits
 
 /**
- * Su funcionamiento es el mismo que ImplicitForExtensionMethods
- * pero te quitas el boilerplate de crear metodos implicitos a partir
- * de una clase
+ * Su funcionamiento es el mismo que ImplicitForExtensionMethods pero te quitas el boilerplate de crear metodos implicitos a partir de una clase
  */
 object ImplicitClass {
-
 
   implicit class MyStringOpsAdapter(s: String) {
 

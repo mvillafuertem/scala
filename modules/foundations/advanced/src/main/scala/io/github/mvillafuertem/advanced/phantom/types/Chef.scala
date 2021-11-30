@@ -3,7 +3,8 @@ package io.github.mvillafuertem.advanced.phantom.types
 import io.github.mvillafuertem.advanced.phantom.types.Chef.Food
 
 /**
- * @author Miguel Villafuerte
+ * @author
+ *   Miguel Villafuerte
  */
 final class Chef[Pizza <: Chef.Pizza](ingredients: Seq[String] = Seq()) {
   import Chef.Pizza._
@@ -17,7 +18,7 @@ final class Chef[Pizza <: Chef.Pizza](ingredients: Seq[String] = Seq()) {
   def build(implicit ev: Pizza =:= FullPizza): Food = Food(ingredients)
 }
 
-object Chef                                                             {
+object Chef {
 
   case class Food(ingredients: Seq[String])
   sealed trait Pizza

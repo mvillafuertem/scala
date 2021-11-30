@@ -5,7 +5,8 @@ import io.github.mvillafuertem.akka.fsm.domain.ToDo
 import org.scalatest.flatspec.AnyFlatSpecLike
 
 /**
- * @author Miguel Villafuerte
+ * @author
+ *   Miguel Villafuerte
  */
 final class ToDoFSMSpec extends ScalaTestWithActorTestKit with AnyFlatSpecLike {
 

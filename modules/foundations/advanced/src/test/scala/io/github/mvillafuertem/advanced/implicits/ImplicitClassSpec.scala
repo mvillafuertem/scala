@@ -16,8 +16,7 @@ final class ImplicitClassSpec extends AnyFlatSpecLike with Matchers {
     val actual = "Hello".mapToDummy(_.toUpper)
 
     /**
-     * Scala hace esto por nosotros new MyStringOpsAdapter("Hello").mapToDummy(_.toUpper)
-     * es mucho mas limpio que usar ImplicitsForExtensionMethods
+     * Scala hace esto por nosotros new MyStringOpsAdapter("Hello").mapToDummy(_.toUpper) es mucho mas limpio que usar ImplicitsForExtensionMethods
      */
 
     // t h e n

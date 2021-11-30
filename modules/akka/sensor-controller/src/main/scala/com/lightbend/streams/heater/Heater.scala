@@ -32,7 +32,7 @@ object Heater {
     )
 
     // Create kafka broker
-    val kafka  = KafkaLocalServer(true)
+    val kafka = KafkaLocalServer(true)
     kafka.start()
     println(s"Kafka Cluster created")
 
@@ -40,7 +40,7 @@ object Heater {
     val sender = MessageSender[Array[Byte], Array[Byte]](kafkaConfig.brokers)
 
     // Start listener for control signal
-    val listener    = MessageListener(brokers, kafkaConfig.heaterinputtopic, kafkaConfig.heatersourcegroup, new ControlProcessor())
+    val listener = MessageListener(brokers, kafkaConfig.heaterinputtopic, kafkaConfig.heatersourcegroup, new ControlProcessor())
     listener.start()
 
     // Start control publishing

@@ -12,13 +12,14 @@ import scala.concurrent.{ ExecutionContextExecutor, Future }
 import scala.util.{ Failure, Success }
 
 /**
- * @author Miguel Villafuerte
+ * @author
+ *   Miguel Villafuerte
  */
 final class ToDoApplicationConfiguration(context: ActorContext[Done]) extends ToDoConfiguration {
 
   private val log = LoggerFactory.getLogger(getClass)
 
-  //override lazy val log: Logger = context.system.log
+  // override lazy val log: Logger = context.system.log
   implicit lazy val untypedSystem: actor.ActorSystem          = context.system.toClassic
   implicit lazy val materializer: Materializer                = Materializer(untypedSystem)
   implicit lazy val contextExecutor: ExecutionContextExecutor = context.system.executionContext
@@ -36,10 +37,9 @@ final class ToDoApplicationConfiguration(context: ActorContext[Done]) extends To
       context.self ! Done
   }
 
-  private val behavior: Behaviors.Receive[Done] = Behaviors.receiveMessage {
-    case Done =>
-      log.error(s"Server could not start!")
-      Behaviors.stopped
+  private val behavior: Behaviors.Receive[Done] = Behaviors.receiveMessage { case Done =>
+    log.error(s"Server could not start!")
+    Behaviors.stopped
   }
 
 }

@@ -43,11 +43,8 @@ object UserCreation {
   // Note: You can use `throw new IllegalArgumentException("...")` to throw an exception.
 
   /**
-   * Si nos fijamos en el Test, solo estamos probando la forma
-   * en la que parsea los datos, pero no la interaccion con el usuario
-   * y esto supone no probar completamente nuestra aplicacion.
-   * Para poder probar la interaccion del usuario necesitamos
-   * inyectar una Console interface a nuestro método.
+   * Si nos fijamos en el Test, solo estamos probando la forma en la que parsea los datos, pero no la interaccion con el usuario y esto supone no probar
+   * completamente nuestra aplicacion. Para poder probar la interaccion del usuario necesitamos inyectar una Console interface a nuestro método.
    */
   def readSubscribeToMailingList(): Boolean = {
     println("Would you like to subscribe to our mailing list? [Y/N]")
@@ -130,9 +127,9 @@ object UserCreation {
     user
   }
 
-  //////////////////////////////////////////////
+  // ////////////////////////////////////////////
   // PART 2: Error handling
-  //////////////////////////////////////////////
+  // ////////////////////////////////////////////
 
   // 5. Implement `readSubscribeToMailingListRetry` which behaves like
   // `readSubscribeToMailingList` but retries if the user enters an invalid input.
@@ -175,9 +172,9 @@ object UserCreation {
   // 7. Update `readUser` so that it allows the user to make up to 2 mistakes (3 attempts)
   // when entering their date of birth and mailing list subscription flag.
 
-  //////////////////////////////////////////////
+  // ////////////////////////////////////////////
   // Bonus question (not covered by the videos)
-  //////////////////////////////////////////////
+  // ////////////////////////////////////////////
 
   // 8. Implement `readSubscribeToMailingListRetry` using a while-loop instead of a recursion.
 

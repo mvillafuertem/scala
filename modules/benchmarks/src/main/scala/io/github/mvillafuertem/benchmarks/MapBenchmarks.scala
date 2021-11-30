@@ -1,7 +1,7 @@
 package io.github.mvillafuertem.benchmarks
 
 import java.util
-import java.util.concurrent.{ConcurrentHashMap, TimeUnit}
+import java.util.concurrent.{ ConcurrentHashMap, TimeUnit }
 
 import org.openjdk.jmh.annotations._
 
@@ -11,9 +11,9 @@ import org.openjdk.jmh.annotations._
 class MapBenchmarks {
 
   private[this] var chm: ConcurrentHashMap[Int, String] = _
-  private[this] var map: Map[Int, String] = _
-  private[this] var array: Array[String] = _
-  private[this] var jhm: util.Map[Int, String] = _
+  private[this] var map: Map[Int, String]               = _
+  private[this] var array: Array[String]                = _
+  private[this] var jhm: util.Map[Int, String]          = _
 
   @Setup
   def setup(): Unit = {
@@ -28,22 +28,18 @@ class MapBenchmarks {
   }
 
   @Benchmark
-  def chmGet(): String = {
+  def chmGet(): String =
     chm.get(10)
-  }
 
   @Benchmark
-  def simGet(): Option[String] = {
+  def simGet(): Option[String] =
     map.get(10)
-  }
 
   @Benchmark
-  def jhmGet(): String = {
+  def jhmGet(): String =
     jhm.get(10)
-  }
 
   @Benchmark
-  def arrayGet(): String = {
+  def arrayGet(): String =
     array(2)
-  }
 }

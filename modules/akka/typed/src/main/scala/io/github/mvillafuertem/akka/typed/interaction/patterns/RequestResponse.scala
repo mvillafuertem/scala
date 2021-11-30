@@ -4,7 +4,8 @@ import akka.actor.typed.ActorRef
 import akka.actor.typed.scaladsl.Behaviors
 
 /**
- * @author Miguel Villafuerte
+ * @author
+ *   Miguel Villafuerte
  */
 object RequestResponse {
 
@@ -13,20 +14,18 @@ object RequestResponse {
 
   object RequestActor {
 
-    val behavior = Behaviors.receiveMessage[Request] {
-      case Request(query, respondTo) =>
-        respondTo ! Response(query)
-        Behaviors.same
+    val behavior = Behaviors.receiveMessage[Request] { case Request(query, respondTo) =>
+      respondTo ! Response(query)
+      Behaviors.same
     }
 
   }
 
   object ResponseActor {
 
-    val behavior = Behaviors.receiveMessage[Response] {
-      case Response(result) =>
-        println(s"Received message: $result")
-        Behaviors.same
+    val behavior = Behaviors.receiveMessage[Response] { case Response(result) =>
+      println(s"Received message: $result")
+      Behaviors.same
     }
 
   }

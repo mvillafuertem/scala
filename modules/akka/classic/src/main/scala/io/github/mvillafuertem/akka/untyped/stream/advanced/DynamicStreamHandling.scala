@@ -13,9 +13,9 @@ object DynamicStreamHandling extends App {
   import actorSystem.dispatcher
 
   // 1. Kill Switch
-  val killSwitchFlow                           = KillSwitches.single[Int]
-  val counter                                  = Source(LazyList.from(1)).throttle(1, 1 second).log("counter")
-  val sink                                     = Sink.ignore
+  val killSwitchFlow = KillSwitches.single[Int]
+  val counter        = Source(LazyList.from(1)).throttle(1, 1 second).log("counter")
+  val sink           = Sink.ignore
 
   //  val killSwitch = counter
   //    .viaMat(killSwitchFlow)(Keep.right)
@@ -53,9 +53,9 @@ object DynamicStreamHandling extends App {
   materializedSource.runWith(Sink.foreach[Int](println))
 
   /**
-   *  Combine a mergeHub and a broadcastHub
+   * Combine a mergeHub and a broadcastHub
    *
-   *  A publisher-subscriber component
+   * A publisher-subscriber component
    */
   val merge                           = MergeHub.source[String]
   val broadcast                       = BroadcastHub.sink[String]

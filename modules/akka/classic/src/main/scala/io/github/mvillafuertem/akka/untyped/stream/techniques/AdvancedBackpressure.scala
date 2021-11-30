@@ -34,7 +34,7 @@ object AdvancedBackpressure extends App {
   def sendEmail(notification: Notification) =
     println(s"Dear ${notification.email}, you have an event ${notification.pagerEvent}")
 
-  val notificationSink                          = Flow[PagerEvent]
+  val notificationSink = Flow[PagerEvent]
     .map(event => Notification(oncallEngineer, event))
     .to(Sink.foreach[Notification](sendEmail))
 
@@ -56,14 +56,14 @@ object AdvancedBackpressure extends App {
   // eventSource.via(aggregateNotificationFlow).async.to(Sink.foreach[Notification](sendEmailSlow)).run()
 
   // Slow producers: extrapolate/expand
-  val slowCounter               = Source(LazyList(1)).throttle(1, 1 second)
-  val hungrySink                = Sink.foreach[Int](println)
+  val slowCounter = Source(LazyList(1)).throttle(1, 1 second)
+  val hungrySink  = Sink.foreach[Int](println)
 
   val extrapolator = Flow[Int].extrapolate(element => Iterator.from(element))
   val repeater     = Flow[Int].extrapolate(element => Iterator.continually(element))
 
-  //slowCounter.via(extrapolator).to(hungrySink).run()
-  //slowCounter.via(repeater).to(hungrySink).run()
+  // slowCounter.via(extrapolator).to(hungrySink).run()
+  // slowCounter.via(repeater).to(hungrySink).run()
 
   val expander = Flow[Int].expand(element => Iterator.from(element))
   slowCounter.via(expander).to(hungrySink).run()

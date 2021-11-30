@@ -8,8 +8,8 @@ object ActorIntroLogging extends App {
   class SimpleActorWithExplicitLogger extends Actor {
     val log = Logging(context.system, this)
 
-    override def receive: Receive = {
-      case message => log.info(message.toString)
+    override def receive: Receive = { case message =>
+      log.info(message.toString)
     }
   }
 

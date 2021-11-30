@@ -34,7 +34,7 @@ trait ProductsServiceConfiguration extends InfrastructureConfiguration {
       )
 
     for {
-      //actorSystem <- ZIO.environment[ActorSystem[_]]
+      // actorSystem <- ZIO.environment[ActorSystem[_]]
       _ <- Task
              .fromFuture(_ => eventualBinding)
              .mapError { exception =>
@@ -45,7 +45,7 @@ trait ProductsServiceConfiguration extends InfrastructureConfiguration {
                exception
              }
              .forever
-      //_ <- UIO.effectTotal(actorSystem.log.info(s"Server online at http://${server.localAddress.getHostString}:${server.localAddress.getPort}/"))
+      // _ <- UIO.effectTotal(actorSystem.log.info(s"Server online at http://${server.localAddress.getHostString}:${server.localAddress.getPort}/"))
 
     } yield ()
 
@@ -56,10 +56,9 @@ trait ProductsServiceConfiguration extends InfrastructureConfiguration {
       Behaviors.setup[Done] { context =>
         context.setLoggerName(this.getClass)
         context.log.info(s"Starting ${productsConfigurationProperties.name}... ${BuildInfo.toJson}")
-        Behaviors.receiveMessage {
-          case Done =>
-            context.log.error(s"Server could not start!")
-            Behaviors.stopped
+        Behaviors.receiveMessage { case Done =>
+          context.log.error(s"Server could not start!")
+          Behaviors.stopped
         }
       },
       "ProductsServiceApplication"

@@ -3,7 +3,7 @@ package io.github.mvillafuertem.advanced.implicits
 import org.scalatest.flatspec.AsyncFlatSpecLike
 import org.scalatest.matchers.should.Matchers
 
-import scala.concurrent.{ExecutionContext, ExecutionContextExecutor}
+import scala.concurrent.{ ExecutionContext, ExecutionContextExecutor }
 
 final class ImplicitsAsTermInferenceSpec extends AsyncFlatSpecLike with Matchers {
 

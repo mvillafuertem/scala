@@ -12,7 +12,7 @@ object Settings {
       .withModuleKind(ModuleKind.CommonJSModule)),
     scalacOptions += "-Ymacro-annotations",
     // S C A L A J S  B U N D L E R
-    useYarn := true,
+    useYarn                         := true,
     // W E B P A C K
     Compile / fastOptJS / webpackExtraArgs += "--mode=development",
     Compile / fullOptJS / webpackExtraArgs += "--mode=production",
@@ -28,12 +28,12 @@ object Settings {
 
   lazy val scala213 = "2.13.6"
   lazy val scala212 = "2.12.13"
-  lazy val scala3   = "3.0.1"
+  lazy val scala3   = "3.1.0"
 
   lazy val value: Seq[Def.Setting[_]] = Seq(
     // autoScalaLibrary := false,
-    scalaVersion := scala213,
-    scalacOptions := {
+    scalaVersion                        := scala213,
+    scalacOptions                       := {
       val default = Seq(
         "-deprecation",
         "-feature",
@@ -43,7 +43,7 @@ object Settings {
         "-language:postfixOps",
         "-language:reflectiveCalls",
         "-unchecked",
-        //"-Xfatal-warnings",
+        // "-Xfatal-warnings",
         "-Xlint"
       )
       if (version.value.endsWith("SNAPSHOT"))
@@ -53,13 +53,13 @@ object Settings {
       // check against early initialization
     },
     javaOptions += "-Duser.timezone=UTC",
-    Test / fork := false,
-    Test / parallelExecution := false,
-    IntegrationTest / fork := false,
+    Test / fork                         := false,
+    Test / parallelExecution            := false,
+    IntegrationTest / fork              := false,
     IntegrationTest / parallelExecution := false,
-    Global / cancelable := true,
+    Global / cancelable                 := true,
     // OneJar
-    exportJars := true
+    exportJars                          := true
   )
 
   lazy val testReport: Seq[Def.Setting[_]] = Seq(

@@ -4,7 +4,8 @@ import akka.actor.testkit.typed.scaladsl.ScalaTestWithActorTestKit
 import org.scalatest.flatspec.AnyFlatSpecLike
 
 /**
- * @author Miguel Villafuerte
+ * @author
+ *   Miguel Villafuerte
  */
 final class FireAndForgetSpec extends ScalaTestWithActorTestKit with AnyFlatSpecLike {
 

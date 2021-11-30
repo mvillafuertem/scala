@@ -4,7 +4,8 @@ import com.typesafe.config.ConfigFactory
 import ToDoConfigurationProperties._
 
 /**
- * @author Miguel Villafuerte
+ * @author
+ *   Miguel Villafuerte
  */
 final case class ToDoConfigurationProperties(
   name: String = ConfigFactory.load().getString(s"$basePath.name"),

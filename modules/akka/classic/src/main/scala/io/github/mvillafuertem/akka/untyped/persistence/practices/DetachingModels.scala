@@ -18,21 +18,18 @@ object DetachingModels extends App {
 
     override def persistenceId: String = "coupon-manager"
 
-    override def receiveCommand: Receive = {
-
-      case ApplyCoupon(coupon, user) =>
-        if (!coupons.contains(coupon.code))
-          persist(CouponApplied(coupon.code, user)) { e =>
-            log.info(s"Persisted $e")
-            coupons.put(coupon.code, user)
-          }
+    override def receiveCommand: Receive = { case ApplyCoupon(coupon, user) =>
+      if (!coupons.contains(coupon.code))
+        persist(CouponApplied(coupon.code, user)) { e =>
+          log.info(s"Persisted $e")
+          coupons.put(coupon.code, user)
+        }
 
     }
 
-    override def receiveRecover: Receive = {
-      case event @ CouponApplied(code, user) =>
-        log.info(s"Recovered $event")
-        coupons.put(code, user)
+    override def receiveRecover: Receive = { case event @ CouponApplied(code, user) =>
+      log.info(s"Recovered $event")
+      coupons.put(code, user)
     }
   }
 
@@ -77,7 +74,7 @@ class ModelAdapter extends EventAdapter {
     }
 
   // Actor -> toJournal -> Serializer -> Journal
-  override def toJournal(event: Any): Any                          =
+  override def toJournal(event: Any): Any =
     event match {
       case event @ CouponApplied(code, user) =>
         println(s"Converting $event to DataModel")

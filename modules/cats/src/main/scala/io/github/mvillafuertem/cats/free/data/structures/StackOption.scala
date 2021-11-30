@@ -7,7 +7,7 @@ import io.github.mvillafuertem.cats.free.data.structures.StackADT.{ Push, _ }
 object StackOption {
 
   // I N T E R P R E T E R  O P T I O N
-  val compilerOption: StackADT ~> Option           =
+  val compilerOption: StackADT ~> Option =
     new (StackADT ~> Option) {
 
       val stack = new Stack[Int]
@@ -28,9 +28,9 @@ object StackOption {
     for {
 
       s <- push[Int](a)
-      //_ <- pop()
-      //_ <- peek[Int]()
-      //f <- show[Int]()
+      // _ <- pop()
+      // _ <- peek[Int]()
+      // f <- show[Int]()
 
     } yield s
 }

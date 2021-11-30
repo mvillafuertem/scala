@@ -4,16 +4,16 @@ import org.scalablytyped.runtime.StringDictionary
 import typings.cdktf.cdktfMod.TerraformStack
 import typings.cdktf.terraformDependableMod.ITerraformDependable
 import typings.cdktfProviderAws.awsProviderMod.AwsProviderConfig
-import typings.cdktfProviderAws.budgetsBudgetMod.{ BudgetsBudgetConfig, BudgetsBudgetCostTypes, BudgetsBudgetNotification }
-import typings.cdktfProviderAws.dataAwsRegionMod.DataAwsRegion
-import typings.cdktfProviderAws.iamGroupMod.IamGroupConfig
-import typings.cdktfProviderAws.iamGroupPolicyAttachmentMod.IamGroupPolicyAttachmentConfig
-import typings.cdktfProviderAws.iamUserMod.IamUserConfig
-import typings.cdktfProviderAws.instanceMod.{ InstanceConfig, InstanceEbsBlockDevice }
-import typings.cdktfProviderAws.mod.{ Instance, _ }
-import typings.cdktfProviderAws.s3BucketMod.{ S3BucketConfig, S3BucketVersioning }
-import typings.cdktfProviderAws.securityGroupMod.{ SecurityGroup, SecurityGroupConfig }
-import typings.cdktfProviderAws.securityGroupRuleMod.SecurityGroupRuleConfig
+import typings.cdktfProviderAws.budgetsMod.Budgets.{ BudgetsBudget, BudgetsBudgetConfig, BudgetsBudgetCostTypes, BudgetsBudgetNotification }
+import typings.cdktfProviderAws.ec2Mod.EC2.{ Instance, InstanceConfig, InstanceEbsBlockDevice }
+import typings.cdktfProviderAws.iamMod.IAM._
+import typings.cdktfProviderAws.mod.DataSources.DataAwsRegion
+import typings.cdktfProviderAws.mod.IAM.IamGroup
+import typings.cdktfProviderAws.mod.S3.S3Bucket
+import typings.cdktfProviderAws.mod.VPC.{ SecurityGroup, SecurityGroupRule }
+import typings.cdktfProviderAws.mod._
+import typings.cdktfProviderAws.s3Mod.S3.{ S3BucketConfig, S3BucketVersioning }
+import typings.cdktfProviderAws.vpcMod.VPC.{ SecurityGroupConfig, SecurityGroupRuleConfig }
 import typings.constructs.mod.Construct
 
 import scala.scalajs.js
@@ -37,14 +37,12 @@ final class IamStack(scope: Construct, name: String) extends TerraformStack(scop
     S3BucketConfig()
       .setBucket("cdktf")
       .setVersioning(
-        js.Array[S3BucketVersioning](
-          S3BucketVersioning()
-            .setEnabled(true)
-        )
+        S3BucketVersioning()
+          .setEnabled(true)
       )
   )
 
-  //BudgetsBudgetConfig
+  // BudgetsBudgetConfig
 
 //  private val topic: SnsTopic = new SnsTopic(
 //    self,
@@ -76,19 +74,18 @@ final class IamStack(scope: Construct, name: String) extends TerraformStack(scop
   new BudgetsBudget(
     self,
     "monthly-cost-budget",
-    BudgetsBudgetConfig("COST", "1.0", "USD", "2020-11-06_00:00", "MONTHLY")
+    BudgetsBudgetConfig("COST", "1.0", "USD", "MONTHLY")
       .setName("Monthly Cost Budget")
+      .setTimePeriodStart("2020-11-06_00:00")
       .setCostTypes(
-        js.Array[BudgetsBudgetCostTypes](
-          BudgetsBudgetCostTypes()
-            .setIncludeRefund(true)
-            .setIncludeCredit(true)
-            .setIncludeUpfront(true)
-            .setIncludeRecurring(true)
-            .setIncludeOtherSubscription(true)
-            .setIncludeTax(true)
-            .setIncludeSupport(true)
-        )
+        BudgetsBudgetCostTypes()
+          .setIncludeRefund(true)
+          .setIncludeCredit(true)
+          .setIncludeUpfront(true)
+          .setIncludeRecurring(true)
+          .setIncludeOtherSubscription(true)
+          .setIncludeTax(true)
+          .setIncludeSupport(true)
       )
       .setNotification(
         js.Array[BudgetsBudgetNotification](
@@ -151,11 +148,13 @@ final class IamStack(scope: Construct, name: String) extends TerraformStack(scop
   new Instance(
     self,
     "instance",
-    InstanceConfig("ami-0947d2ba12ee1ff75", "t2.micro")
+    InstanceConfig()
+      .setAmi("ami-0947d2ba12ee1ff75")
+      .setInstanceType("t2.micro")
       .setTags(StringDictionary("Name" -> "instance"))
-      .setSecurityGroups(js.Array[String](securityGroup.name))
+      .setSecurityGroups(js.Array[String](securityGroup.name.get))
       .setEbsBlockDevice(js.Array[InstanceEbsBlockDevice](ebsBlockDevice))
-    //.deleteRootBlockDevice
+    // .deleteRootBlockDevice
   )
 
 }

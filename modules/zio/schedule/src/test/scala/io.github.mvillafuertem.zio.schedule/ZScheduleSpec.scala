@@ -1,5 +1,6 @@
 package io.github.mvillafuertem.zio.schedule
 
+import zio.Schedule.Decision
 import zio.console.{ putStr, Console }
 import zio.duration._
 import zio.test.Assertion.equalTo
@@ -26,8 +27,8 @@ object ZScheduleSpec extends DefaultRunnableSpec {
                                     ) // Print the message every 1 second until twice
                                     .fork // Fork is only necessary for testing
             _                  <- TestClock.adjust(2.seconds)
-            _                  <- fiberInitialDelay.join // This is not necessary
-            _                  <- fiberRepeatedDelay.join // This is not necessary
+            _ <- fiberInitialDelay.join   // This is not necessary
+            _ <- fiberRepeatedDelay.join  // This is not necessary
             actual             <- TestConsole.output
           } yield actual
         )(equalTo(Vector("Start", "Initial Delay", "Repeated Delay", "Repeated Delay", "Repeated Delay")))
@@ -69,9 +70,12 @@ object ZScheduleSpec extends DefaultRunnableSpec {
             fiber  <- ref
                         .getAndUpdate(_ + 1)
                         .repeat(
-                          (Schedule.spaced(10.milliseconds) >>>
+                          ((Schedule.spaced(10.milliseconds) >>>
                             Schedule.recurWhile(_ < 100)) *>
-                            Schedule.collectAll[Int]
+                            Schedule.collectAll[Int]).onDecision {
+                            case Decision.Done(_)                 => ZIO.debug(s"done trying")
+                            case Decision.Continue(attempt, _, _) => ZIO.debug(s"attempt #$attempt")
+                          }
                         )
                         .fork
             _      <- TestClock.adjust(1000.milliseconds)

@@ -15,7 +15,8 @@ import scala.concurrent.{ Await, Future }
 import scala.util.{ Failure, Success, Try }
 
 /**
- * @author Miguel Villafuerte
+ * @author
+ *   Miguel Villafuerte
  */
 final class TestingStreamsSpec extends TestKit(ActorSystem("TestingStreams")) with AnyWordSpecLike with BeforeAndAfterAll {
 
@@ -205,10 +206,15 @@ final class TestingStreamsSpec extends TestKit(ActorSystem("TestingStreams")) wi
           val workerCount = 4
 
           val validation = b.add(validationGraph)
-          val partition  = b.add(Partition[Option[Int]](workerCount, {
-            case Some(value) => value % workerCount
-            case None => throw new RuntimeException()
-          }))
+          val partition  = b.add(
+            Partition[Option[Int]](
+              workerCount,
+              {
+                case Some(value) => value % workerCount
+                case None        => throw new RuntimeException()
+              }
+            )
+          )
           val merge      = b.add(Merge[Int](workerCount + 1))
 
           validation.out(0) ~> partition.in

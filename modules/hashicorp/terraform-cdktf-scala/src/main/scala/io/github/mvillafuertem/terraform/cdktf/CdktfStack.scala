@@ -1,7 +1,10 @@
 package io.github.mvillafuertem.terraform.cdktf
 
-import com.hashicorp.cdktf.{TerraformOutput, TerraformStack}
+import com.hashicorp.cdktf.{ TerraformOutput, TerraformStack }
 import imports.aws._
+import imports.aws.budgets.{ BudgetsBudget, BudgetsBudgetCostTypes, BudgetsBudgetNotification }
+import imports.aws.ec2.{ Instance, KeyPair }
+import imports.aws.vpc.{ DataAwsVpc, NetworkInterfaceSgAttachment, SecurityGroup, SecurityGroupRule }
 import io.github.mvillafuertem.terraform.cdktf.CdktfStack.CdktfStackConfiguration
 import software.constructs.Construct
 
@@ -68,13 +71,13 @@ final class CdktfStack(scope: Construct, id: String, cdktfStackConfiguration: Cd
     .cidrBlocks(List[String]("0.0.0.0/0").asJava)
     .build()
 
-  private val _ = new CdktfBastion(self, cdktfStackConfiguration, keyPair, vpc)
+  private val _                  = new CdktfBastion(self, cdktfStackConfiguration, keyPair, vpc)
   private val instance: Instance = Instance.Builder
     .create(self, "cdktf_instance")
     .ami("ami-0f89681a05a3a9de7")
     .keyName(keyPair.getKeyName)
     .instanceType("t2.medium")
-    //.securityGroups(List(securityGroup.getName).asJava)
+    // .securityGroups(List(securityGroup.getName).asJava)
     .associatePublicIpAddress(true)
     .userData(cdktfStackConfiguration.userData)
     .tags(
@@ -100,18 +103,16 @@ final class CdktfStack(scope: Construct, id: String, cdktfStackConfiguration: Cd
     .timePeriodStart("2021-06-01_00:00")
     .timeUnit("MONTHLY")
     .costTypes(
-      List(
-        BudgetsBudgetCostTypes
-          .builder()
-          .includeRefund(true)
-          .includeCredit(true)
-          .includeUpfront(true)
-          .includeRecurring(true)
-          .includeOtherSubscription(true)
-          .includeTax(true)
-          .includeSupport(true)
-          .build()
-      ).asJava
+      BudgetsBudgetCostTypes
+        .builder()
+        .includeRefund(true)
+        .includeCredit(true)
+        .includeUpfront(true)
+        .includeRecurring(true)
+        .includeOtherSubscription(true)
+        .includeTax(true)
+        .includeSupport(true)
+        .build()
     )
     .notification(
       List(

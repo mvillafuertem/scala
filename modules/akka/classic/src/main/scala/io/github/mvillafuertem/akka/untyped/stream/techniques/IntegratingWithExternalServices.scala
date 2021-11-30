@@ -64,7 +64,7 @@ object IntegratingWithExternalServices extends App {
   // Guarantees the relative order of elements
   val pagedEmailsSink: Sink[String, Future[Done]] = Sink.foreach[String](email => println(s"Successfully sent notification to $email"))
 
-  //pagedEngineerEmails.to(pagedEmailsSink).run()
+  // pagedEngineerEmails.to(pagedEmailsSink).run()
 
   class PagerActor extends Actor with ActorLogging {
     private val engineers = List("Daniel", "John", "Pepe")
@@ -88,9 +88,8 @@ object IntegratingWithExternalServices extends App {
 
         engineerEmail
       }
-    override def receive: Receive            = {
-      case pagerEvent: PagerEvent =>
-        sender() ! processEvent(pagerEvent)
+    override def receive: Receive            = { case pagerEvent: PagerEvent =>
+      sender() ! processEvent(pagerEvent)
     }
   }
 

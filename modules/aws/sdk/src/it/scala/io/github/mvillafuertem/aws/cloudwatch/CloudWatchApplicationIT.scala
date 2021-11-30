@@ -3,14 +3,14 @@ package io.github.mvillafuertem.aws.cloudwatch
 import java.net.URI
 
 import io.github.mvillafuertem.aws.cloudwatch.CloudWatchApplicationIT.CloudWatchApplicationConfigurationIT
-import io.github.mvillafuertem.aws.{LocalStackConfigurationIT, RichCloudWatchAsyncClientBuilder}
+import io.github.mvillafuertem.aws.{ LocalStackConfigurationIT, RichCloudWatchAsyncClientBuilder }
 import org.testcontainers.containers
 import org.testcontainers.containers.wait.strategy.Wait
-import software.amazon.awssdk.auth.credentials.{AwsBasicCredentials, AwsCredentialsProvider, StaticCredentialsProvider}
+import software.amazon.awssdk.auth.credentials.{ AwsBasicCredentials, AwsCredentialsProvider, StaticCredentialsProvider }
 import software.amazon.awssdk.http.HttpStatusCode
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.cloudwatch.CloudWatchAsyncClient
-import software.amazon.awssdk.services.cloudwatch.model.{ListMetricsResponse, PutDashboardRequest, PutDashboardResponse}
+import software.amazon.awssdk.services.cloudwatch.model.{ ListMetricsResponse, PutDashboardRequest, PutDashboardResponse }
 
 import scala.compat.java8.FutureConverters.CompletionStageOps
 import scala.concurrent.Future
