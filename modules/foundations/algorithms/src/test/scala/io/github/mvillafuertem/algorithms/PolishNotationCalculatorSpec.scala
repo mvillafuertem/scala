@@ -1,4 +1,4 @@
-package io.github.mvillafuertem.algorithms.data.structures.stack
+package io.github.mvillafuertem.algorithms
 
 import org.scalatest.flatspec.AnyFlatSpecLike
 import org.scalatest.matchers.should.Matchers
