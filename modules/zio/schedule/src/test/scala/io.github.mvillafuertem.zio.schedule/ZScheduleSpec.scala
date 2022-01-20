@@ -27,8 +27,8 @@ object ZScheduleSpec extends DefaultRunnableSpec {
                                     ) // Print the message every 1 second until twice
                                     .fork // Fork is only necessary for testing
             _                  <- TestClock.adjust(2.seconds)
-            _ <- fiberInitialDelay.join   // This is not necessary
-            _ <- fiberRepeatedDelay.join  // This is not necessary
+            _                  <- fiberInitialDelay.join  // This is not necessary
+            _                  <- fiberRepeatedDelay.join // This is not necessary
             actual             <- TestConsole.output
           } yield actual
         )(equalTo(Vector("Start", "Initial Delay", "Repeated Delay", "Repeated Delay", "Repeated Delay")))
