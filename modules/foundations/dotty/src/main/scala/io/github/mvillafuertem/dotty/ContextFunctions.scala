@@ -1,12 +1,12 @@
 package io.github.mvillafuertem.dotty
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 import scala.util.Try
 
 /**
-  * Context Functions:
-  *  - https://dotty.epfl.ch/docs/reference/contextual/context-functions.html
-  *  - https://www.scala-lang.org/blog/2016/12/07/implicit-function-types.html
-  */
+ * Context Functions:
+ *   - https://dotty.epfl.ch/docs/reference/contextual/context-functions.html
+ *   - https://www.scala-lang.org/blog/2016/12/07/implicit-function-types.html
+ */
 object ContextFunctions:
 
   object context:
@@ -24,8 +24,8 @@ object ContextFunctions:
 
     def sumStrings(x: String, y: String): Parseable[Int] =
       val parser = summon[GivenInstances.StringParser[Int]]
-      val tryA = parser.parse(x)
-      val tryB = parser.parse(y)
+      val tryA   = parser.parse(x)
+      val tryB   = parser.parse(y)
 
       for
         a <- tryA

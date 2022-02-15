@@ -220,7 +220,7 @@ object TodoPersistentFSM {
           }
 
         // Debe crear otra alerta
-        case _: AlertSentState =>
+        case _: AlertSentState          =>
           throw new IllegalStateException(s"unexpected event [$event] in state [$state]")
       }
     }
