@@ -19,14 +19,15 @@ RUN curl -Lo /usr/local/bin/coursier https://github.com/coursier/coursier/releas
     chmod +x /usr/local/bin/coursier
 
 USER $NB_UID
-ENV SCALA_VERSION 2.13.4
+ENV SCALA_VERSION 2.13.5
+ENV ALMOND_SCALA_VERSION 2.13.4
 ENV ALMOND_VERSION 0.11.2
 
 # Install Almond kernel
 RUN coursier bootstrap \
       -r jitpack \
-      -i user -I user:sh.almond:scala-kernel-api_$SCALA_VERSION:$ALMOND_VERSION \
-      sh.almond:scala-kernel_$SCALA_VERSION:$ALMOND_VERSION \
+      -i user -I user:sh.almond:scala-kernel-api_$ALMOND_SCALA_VERSION:$ALMOND_VERSION \
+      sh.almond:scala-kernel_$ALMOND_SCALA_VERSION:$ALMOND_VERSION \
       --default=true --sources \
       -o almond \
       -M almond.ScalaKernel
