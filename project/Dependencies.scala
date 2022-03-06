@@ -458,7 +458,7 @@ object Dependencies {
     val curator                   = "5.2.0"
     val dijon                     = "0.6.0"
     val ficus                     = "1.5.2"
-    val h2                        = "2.0.206"
+    val h2                        = "2.1.210"
     val java8Compat               = "1.0.2"
     val jslt                      = "0.1.11"
     val jsoniter                  = "2.13.6"
