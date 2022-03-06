@@ -1,8 +1,8 @@
 package io.github.mvillafuertem.dotty
 
 /**
-  * Trait Parameters: https://dotty.epfl.ch/docs/reference/other-new-features/trait-parameters.html
-  */
+ * Trait Parameters: https://dotty.epfl.ch/docs/reference/other-new-features/trait-parameters.html
+ */
 object TraitParams:
 
   trait Base(val msg: String)

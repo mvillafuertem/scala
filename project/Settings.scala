@@ -7,9 +7,10 @@ object Settings {
 
   lazy val valueJs: Seq[Def.Setting[_]] = value ++ Seq(
     scalaJSUseMainModuleInitializer := true,
-    scalaJSLinkerConfig ~= (/* disabled because it somehow triggers many warnings */
-    _.withSourceMap(false)
-      .withModuleKind(ModuleKind.CommonJSModule)),
+    scalaJSLinkerConfig ~= ( /* disabled because it somehow triggers many warnings */
+      _.withSourceMap(false)
+        .withModuleKind(ModuleKind.CommonJSModule)
+    ),
     scalacOptions += "-Ymacro-annotations",
     // S C A L A J S  B U N D L E R
     useYarn                         := true,

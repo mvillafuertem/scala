@@ -1,9 +1,9 @@
 package io.github.mvillafuertem.dotty
 
 /**
-  * Multiversal Equality: https://dotty.epfl.ch/docs/reference/contextual/multiversal-equality.html
-  * scala.CanEqual definition: https://github.com/lampepfl/dotty/blob/master/library/src/scala/CanEqual.scala
-  */
+ * Multiversal Equality: https://dotty.epfl.ch/docs/reference/contextual/multiversal-equality.html scala.CanEqual definition:
+ * https://github.com/lampepfl/dotty/blob/master/library/src/scala/CanEqual.scala
+ */
 object MultiversalEquality:
 
   def test(): Unit =

@@ -25,8 +25,7 @@ final class TaskManagementActor extends Actor with ActorLogging {
   def idle: Receive = {
 
     case Open(task) =>
-      if (taskRepository.contains(task.id))
-        sender() ! TaskManagementError("Task duplicated")
+      if (taskRepository.contains(task.id)) sender() ! TaskManagementError("Task duplicated")
       else {
         taskRepository += (task.id -> task)
         sender() ! TaskManagementInfo("Task opened")

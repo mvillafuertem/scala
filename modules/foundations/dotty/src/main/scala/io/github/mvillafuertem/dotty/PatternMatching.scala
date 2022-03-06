@@ -1,15 +1,14 @@
 package io.github.mvillafuertem.dotty
 
 /**
-  * Pattern Matching: https://dotty.epfl.ch/docs/reference/changed-features/pattern-matching.html
-  */
+ * Pattern Matching: https://dotty.epfl.ch/docs/reference/changed-features/pattern-matching.html
+ */
 object PatternMatching:
 
   object booleanPattern:
 
     object Even:
       def unapply(s: String): Boolean = s.length % 2 == 0
-
 
   object productPattern:
 
@@ -21,12 +20,11 @@ object PatternMatching:
 
       // Not used by pattern matching: Product is only used as a marker trait.
       def canEqual(that: Any): Boolean = ???
-      def productArity: Int = ???
-      def productElement(n: Int): Any = ???
+      def productArity: Int            = ???
+      def productElement(n: Int): Any  = ???
 
     object Person:
       def unapply(a: (String, Int)): Person = Person(a._1, a._2)
-
 
   object seqPattern:
 
@@ -37,16 +35,14 @@ object PatternMatching:
         if names.size < 2 then None
         else Some(names.last :: names.head :: names.drop(1).dropRight(1).toList)
 
-
   object namePattern:
 
     class Name(val name: String):
       def get: String = name
-      def isEmpty = name.isEmpty
+      def isEmpty     = name.isEmpty
 
     object Name:
       def unapply(s: String): Name = Name(s)
-
 
   def test(): Unit =
     import booleanPattern.*

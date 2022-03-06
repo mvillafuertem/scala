@@ -39,8 +39,7 @@ object AlertBehavior {
         if (state.history.exists(_.id == alert.id)) {
           throw new RuntimeException("Alert Duplicated")
           Effect.none
-        } else
-          Effect.persist(Opened(alert))
+        } else Effect.persist(Opened(alert))
       case Close(id)         => Effect.persist(Closed(id))
       case GetAlert(replyTo) =>
         replyTo ! state

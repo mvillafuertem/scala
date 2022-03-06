@@ -55,9 +55,15 @@ object OperatorFusion extends App {
   // .run()
 
   // Ordering guarantees without async
-  Source(1 to 3).map { element => println(s"Flow A: $element"); element } // .async
-    .map { element => println(s"Flow B: $element"); element }             // .async
-    .map { element => println(s"Flow C: $element"); element }             // .async
+  Source(1 to 3).map { element =>
+    println(s"Flow A: $element"); element
+  }   // .async
+    .map { element =>
+      println(s"Flow B: $element"); element
+    } // .async
+    .map { element =>
+      println(s"Flow C: $element"); element
+    } // .async
     .runWith(Sink.ignore)
 
 }

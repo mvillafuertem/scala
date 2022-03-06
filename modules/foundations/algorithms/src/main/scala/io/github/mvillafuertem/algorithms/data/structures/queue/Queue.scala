@@ -10,8 +10,7 @@ class Queue[A] {
 
   def enqueue(value: A): Unit = {
     val nuevo = Node(value, null)
-    if (cabeza != null)
-      fin.next = nuevo
+    if (cabeza != null) fin.next = nuevo
     else {
       cabeza = nuevo
       fin = nuevo
@@ -22,8 +21,7 @@ class Queue[A] {
   def dequeue: A = { // Devuelve el elemento del cabeza de la cola y lo elimina Si la cola está vacía, devuelve como resultado 0 y un mensaje de error
     var nodo: Node[A] = ???
     var resul: A      = ???
-    if (cabeza == null)
-      println("Error, la cola está vacía")
+    if (cabeza == null) println("Error, la cola está vacía")
     else {
       nodo = cabeza
       cabeza = nodo.next

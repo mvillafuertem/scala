@@ -3,3 +3,8 @@ listen:
 
 storage:
   dir: /opt/notebooks
+
+dependencies:
+  scala:
+    - dev.zio:zio_2.13:1.0.13
+    - dev.zio:zio-test_2.13:1.0.13

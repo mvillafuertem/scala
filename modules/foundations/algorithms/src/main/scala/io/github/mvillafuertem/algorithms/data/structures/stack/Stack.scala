@@ -21,8 +21,7 @@ class Stack[A] extends Equals {
 
   def pop: A = {
     var value: A = ???
-    if (isEmpty)
-      System.out.println("Error, la pila está vacía")
+    if (isEmpty) System.out.println("Error, la pila está vacía")
     else {
       value = front.value
       front = front.next

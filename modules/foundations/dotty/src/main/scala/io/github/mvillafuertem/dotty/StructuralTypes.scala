@@ -1,8 +1,8 @@
 package io.github.mvillafuertem.dotty
 
 /**
-  * Structural Types: https://dotty.epfl.ch/docs/reference/changed-features/structural-types.html
-  */
+ * Structural Types: https://dotty.epfl.ch/docs/reference/changed-features/structural-types.html
+ */
 object StructuralTypes:
 
   case class Record(elems: (String, Any)*) extends Selectable:
@@ -23,6 +23,6 @@ object StructuralTypes:
 
     println(invalidPerson.name)
     // age field is java.util.NoSuchElementException: None.get
-    //println(invalidPerson.age)
+    // println(invalidPerson.age)
 
 end StructuralTypes
