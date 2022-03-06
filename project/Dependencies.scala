@@ -465,7 +465,7 @@ object Dependencies {
     val jwtCirce                  = "4.3.0"
     val kafka                     = "2.8.0"
     val leveldbjniAll             = "1.8"
-    val logback                   = "1.2.10"
+    val logback                   = "1.2.11"
     val mongoScalaBson            = "4.4.2"
     val picocli                   = "4.6.1"
     val postgres                  = "42.3.3"
