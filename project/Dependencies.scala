@@ -457,7 +457,7 @@ object Dependencies {
     val http4s                    = "1.0.0-M31"
     val curator                   = "5.2.0"
     val dijon                     = "0.6.0"
-    val ficus                     = "1.5.1"
+    val ficus                     = "1.5.2"
     val h2                        = "2.0.204"
     val java8Compat               = "1.0.2"
     val jslt                      = "0.1.11"
