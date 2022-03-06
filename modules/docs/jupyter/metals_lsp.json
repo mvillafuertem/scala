@@ -1,0 +1,12 @@
+{
+  "LanguageServerManager": {
+    "language_servers": {
+      "metals": {
+        "version": 2,
+        "argv": ["/home/jovyan/metals"],
+        "languages": ["scala"],
+        "mime_types": ["text/x-scala"]
+      }
+    }
+  }
+}
