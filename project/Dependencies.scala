@@ -296,7 +296,7 @@ object Dependencies {
       // S T T P  T E S T
       Artifact.zioTest,
       Artifact.zioTestSbt
-    ).map(_ % Version.zio % Test) ++ Seq(
+    ).map(_ % "2.0.0-RC2" % Test) ++ Seq(
       Artifact.scalaTest % Version.scalaTest
     ).map(_ % Test)
 
@@ -456,7 +456,7 @@ object Dependencies {
     val awsSdk                    = "2.17.145"
     val cask                      = "0.7.11"
     val cats                      = "2.7.0"
-    val circe                     = "0.13.0"
+    val circe                     = "0.14.1"
     val http4s                    = "1.0.0-M31"
     val curator                   = "5.2.0"
     val dijon                     = "0.6.0"
@@ -478,7 +478,7 @@ object Dependencies {
     val slick                     = "3.3.3"
     val slinky                    = "0.6.6"
     val spark                     = "3.2.1"
-    val sttp                      = "3.3.18"
+    val sttp                      = "3.5.1"
     val tapir                     = "0.20.1"
     val testcontainers            = "0.40.2"
     val testcontainersKafka       = "1.16.3"

@@ -7,7 +7,6 @@ import sttp.client3.asynchttpclient.zio._
 import sttp.client3.circe.{ asJson, _ }
 import zio.test.Assertion.equalTo
 import zio.test._
-import zio.test.environment.TestEnvironment
 
 object SttpZio extends DefaultRunnableSpec {
 
