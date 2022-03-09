@@ -2,7 +2,8 @@ package io.github.mvillafuertem.zio.akka.cluster.chat.application
 
 import akka.actor.ActorSystem
 import com.typesafe.config.{ Config, ConfigFactory }
-import io.github.mvillafuertem.zio.akka.cluster.chat.domain._
+import io.github.mvillafuertem.zio.akka.cluster.chat.application.Application._
+import io.github.mvillafuertem.zio.akka.cluster.chat.domain.Domain._
 import zio._
 import zio.akka.cluster.pubsub.PubSub
 import zio.akka.cluster.sharding.Sharding

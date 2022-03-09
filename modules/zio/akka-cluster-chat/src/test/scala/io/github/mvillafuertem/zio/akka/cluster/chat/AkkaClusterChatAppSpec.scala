@@ -5,7 +5,7 @@ import zio.console.Console
 import zio.test.Assertion.equalTo
 import zio.test._
 import zio.test.environment.{ TestConsole, TestEnvironment }
-import io.github.mvillafuertem.zio.akka.cluster.chat.configuration.actorSystem
+import io.github.mvillafuertem.zio.akka.cluster.chat.configuration.Configuration.actorSystem
 
 object AkkaClusterChatAppSpec extends DefaultRunnableSpec {
 

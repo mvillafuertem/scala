@@ -1,6 +1,6 @@
 import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
 import sbt.Keys.libraryDependencies
-import sbt.{Def, _}
+import sbt.{ Def, _ }
 
 object Dependencies {
 
@@ -47,7 +47,7 @@ object Dependencies {
     // A L P A K K A
     Seq(
       // A L P A K K A  I N T E G R A T I O N  T E S T
-      Artifact.akkaSlf4f              % Version.akka                % IntegrationTest,
+      Artifact.akkaSlf4f              % "2.6.14"                    % IntegrationTest,
       Artifact.akkaStreamKafkaTestkit % Version.alpakkaKafka        % IntegrationTest,
       Artifact.logback                % Version.logback             % IntegrationTest,
       Artifact.scalaTest              % Version.scalaTest           % IntegrationTest,
@@ -158,7 +158,7 @@ object Dependencies {
     ).map(_                  % Version.tapir) ++ Seq(
       // A K K A  H T T P  T E S T
       Artifact.akkaHttpTestkit % Version.akkaHttp,
-      Artifact.akkaTestKit     % "2.6.13",
+      Artifact.akkaTestKit     % Version.akka,
       Artifact.scalaTest       % Version.scalaTest
     ).map(_ % Test)
 
