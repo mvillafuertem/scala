@@ -11,3 +11,5 @@ trait Domain {
   case class Leave(name: String) extends ChatMessage
 
 }
+
+object Domain extends Domain

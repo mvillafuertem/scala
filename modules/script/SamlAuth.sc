@@ -158,7 +158,7 @@ trait Routes {
             extractLog { log =>
               extractRequestContext { requestContext =>
                 log.info(s"extractRequestContext ~> ${requestContext.request}")
-                AkkaHttpServerInterpreter.toRoute(serverEndpoint)
+                AkkaHttpServerInterpreter().toRoute(serverEndpoint)
               }
             }
           routes

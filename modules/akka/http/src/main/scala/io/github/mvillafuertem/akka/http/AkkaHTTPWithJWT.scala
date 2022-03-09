@@ -53,31 +53,37 @@ object AkkaHTTPWithJWT extends App {
   type AuthToken = String
   final lazy val AccessTokenHeaderName = "X-Auth-Token"
 
-  lazy val auth = endpoint.post
-    .in("auth" / "login")
-    .in(jsonBody[LoginRequest])
-    .out(statusCode(StatusCode.Ok).and(header[AuthToken](AccessTokenHeaderName)))
-    .errorOut(statusCode(StatusCode.Unauthorized))
-    .toRoute {
-      case admin @ LoginRequest("admin", "admin") =>
-        Future.successful {
-          val claim = setClaims(admin.username)
-          val token = JwtCirce.encode(claim, key, algorithm)
-          Right(token)
+  lazy val auth = AkkaHttpServerInterpreter()
+    .toRoute(
+      endpoint.post
+        .in("auth" / "login")
+        .in(jsonBody[LoginRequest])
+        .out(statusCode(StatusCode.Ok).and(header[AuthToken](AccessTokenHeaderName)))
+        .errorOut(statusCode(StatusCode.Unauthorized))
+        .serverLogic[Future] {
+          case admin @ LoginRequest("admin", "admin") =>
+            Future.successful {
+              val claim = setClaims(admin.username)
+              val token = JwtCirce.encode(claim, key, algorithm)
+              Right[Unit, AuthToken](token)
+            }
+          case LoginRequest(_, _)                     => Future.successful(Left[Unit, String]("Unauthorized"))
         }
-      case LoginRequest(_, _)                     => Future.successful(Left("Unauthorized"))
-    }
+    )
 
-  lazy val securedContent = endpoint.get
-    .in("hello")
-    .in(header[AuthToken](AccessTokenHeaderName))
-    .out(stringBody)
-    .errorOut(statusCode(StatusCode.Unauthorized).and(stringBody))
-    .toRoute {
-      case authToken if isTokenExpired(authToken) => Future.successful(Left("Session expired"))
-      case authToken if isTokenValid(authToken)   => Future.successful(Right("Hello World!"))
-      case _                                      => Future(Left("Session expired"))
-    }
+  lazy val securedContent = AkkaHttpServerInterpreter()
+    .toRoute(
+      endpoint.get
+        .in("hello")
+        .in(header[AuthToken](AccessTokenHeaderName))
+        .out(stringBody)
+        .errorOut(statusCode(StatusCode.Unauthorized).and(stringBody))
+        .serverLogic[Future] {
+          case authToken if isTokenExpired(authToken) => Future.successful(Left[String, String]("Session expired"))
+          case authToken if isTokenValid(authToken)   => Future.successful(Right[String, String]("Hello World!"))
+          case _                                      => Future(Left[String, String]("Session expired"))
+        }
+    )
 
   // R U N  A P P L I C A T I O N
   val serverBinding: Future[Http.ServerBinding] =

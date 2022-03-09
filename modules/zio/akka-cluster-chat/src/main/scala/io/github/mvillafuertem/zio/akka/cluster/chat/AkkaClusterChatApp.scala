@@ -1,8 +1,8 @@
 package io.github.mvillafuertem.zio.akka.cluster.chat
 
 import akka.actor.ActorSystem
-import io.github.mvillafuertem.zio.akka.cluster.chat.application._
-import io.github.mvillafuertem.zio.akka.cluster.chat.configuration._
+import io.github.mvillafuertem.zio.akka.cluster.chat.application.Application._
+import io.github.mvillafuertem.zio.akka.cluster.chat.configuration.Configuration._
 import zio.console.Console
 import zio.{ console, App, ExitCode, Has, ZIO }
 

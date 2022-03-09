@@ -2,7 +2,6 @@ package io.github.mvillafuertem.akka.fsm.api
 
 import akka.http.scaladsl.model
 import akka.http.scaladsl.server.Route
-import akka.http.scaladsl.server.directives.DebuggingDirectives
 import io.circe.generic.auto._
 import io.circe.parser.decode
 import io.circe.syntax._
@@ -11,14 +10,14 @@ import io.github.mvillafuertem.akka.fsm.BuildInfo
 import org.slf4j.LoggerFactory
 import sttp.model.StatusCode
 import sttp.tapir.Codec.JsonCodec
-import sttp.tapir.docs.openapi._
+import sttp.tapir.docs.openapi.OpenAPIDocsInterpreter
 import sttp.tapir.generic.auto._
 import sttp.tapir.json.circe._
 import sttp.tapir.openapi.OpenAPI
-import sttp.tapir.openapi.circe.yaml._
+import sttp.tapir.openapi.circe.yaml.RichOpenAPI
 import sttp.tapir.server.akkahttp._
-import sttp.tapir.swagger.akkahttp.SwaggerAkka
-import sttp.tapir.{ endpoint, oneOf, statusCode, statusDefaultMapping, Endpoint, _ }
+import sttp.tapir.swagger.SwaggerUI
+import sttp.tapir.{ endpoint, oneOf, Endpoint, _ }
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -35,26 +34,26 @@ final class ToDoAPI() {
 
   private val log = LoggerFactory.getLogger(getClass)
 
-  val routes: Route = new SwaggerAkka(yml).routes ~ route
-
-  def handleErrors[T](f: Future[T]): Future[Either[HttpError, T]] =
+  def handleErrors[T](f: Future[T]): Future[Either[ErrorInfo, T]] =
     f.transform {
       case Success(v) => Success(Right(v))
       case Failure(e) =>
         log.error("Exception when running endpoint logic", e)
-        Success(Left((StatusCode.Ok, conflictErrorInfo)))
+        Success(Left(conflictErrorInfo))
     }
 
-  private val getBuildInfo: Unit => Future[HealthInfo] = Unit =>
+  private val getBuildInfo: Unit => Future[HealthInfo] = _ =>
     Future.successful({
       val buildInfo: HealthInfo = BuildInfo.toMap
       log.info(s"build-info: $buildInfo")
       buildInfo
     })
 
-  lazy val route: Route = DebuggingDirectives.logRequestResult("actuator-logger") {
-    actuatorEndpoint.toRoute(getBuildInfo andThen handleErrors)
-  }
+  lazy val route: Route = AkkaHttpServerInterpreter()
+    .toRoute(List(actuatorEndpoint.serverLogic(getBuildInfo andThen handleErrors)))
+
+  val routes: Route = AkkaHttpServerInterpreter()
+    .toRoute(SwaggerUI[Future](yml)) ~ route
 
 }
 
@@ -63,7 +62,7 @@ object ToDoAPI {
 //  def apply(log: Logger): ToDoAPI = new ToDoAPI(log)
   def apply(): ToDoAPI = new ToDoAPI()
 
-  lazy val openApi: OpenAPI = List(actuatorEndpoint).toOpenAPI("ToDo API", "1.0")
+  lazy val openApi: OpenAPI = OpenAPIDocsInterpreter().toOpenAPI(List(actuatorEndpoint), "ToDo API", "1.0")
   lazy val yml: String      = openApi.toYaml
 
   final case class ErrorInfo(
@@ -101,90 +100,63 @@ object ToDoAPI {
     implicitly[JsonCodec[Json]]
       .map(a => (decode[HealthInfo](a.noSpaces)).getOrElse(BuildInfo.toMap))(a => a.asJson)
 
-  private val notFoundErrorInfoValue: EndpointOutput[(StatusCode, ErrorInfo)] = statusCode
-    .and(
-      jsonBody[ErrorInfo]
-        .example(notFoundErrorInfo)
-        .description("Not Found")
-    )
+  private val notFoundErrorInfoValue: EndpointOutput[ErrorInfo] =
+    jsonBody[ErrorInfo]
+      .example(notFoundErrorInfo)
+      .description("Not Found")
 
-  private val internalServerErrorErrorInfoValue: EndpointOutput[(StatusCode, ErrorInfo)] = statusCode
-    .and(
-      jsonBody[ErrorInfo]
-        .example(internalServerErrorErrorInfo)
-        .description("Internal Server Error")
-    )
+  private val internalServerErrorErrorInfoValue: EndpointOutput[ErrorInfo] =
+    jsonBody[ErrorInfo]
+      .example(internalServerErrorErrorInfo)
+      .description("Internal Server Error")
 
-  private val serviceUnavailableErrorInfoValue: EndpointOutput[(StatusCode, ErrorInfo)] = statusCode
-    .and(
-      jsonBody[ErrorInfo]
-        .example(serviceUnavailableErrorInfo)
-        .description("Service Unavailable")
-    )
+  private val serviceUnavailableErrorInfoValue: EndpointOutput[ErrorInfo] =
+    jsonBody[ErrorInfo]
+      .example(serviceUnavailableErrorInfo)
+      .description("Service Unavailable")
 
-  private val badRequestErrorInfoValue: EndpointOutput[(StatusCode, ErrorInfo)] = statusCode
-    .and(
-      jsonBody[ErrorInfo]
-        .example(badRequestErrorInfo)
-        .description("Bad Request")
-    )
+  private val badRequestErrorInfoValue: EndpointOutput[ErrorInfo] =
+    jsonBody[ErrorInfo]
+      .example(badRequestErrorInfo)
+      .description("Bad Request")
 
-  private val unauthorizedErrorInfoValue: EndpointOutput[(StatusCode, ErrorInfo)] = statusCode
-    .and(
-      jsonBody[ErrorInfo]
-        .example(unauthorizedErrorInfo)
-        .description("Unauthorized")
-    )
+  private val unauthorizedErrorInfoValue: EndpointOutput[ErrorInfo] =
+    jsonBody[ErrorInfo]
+      .example(unauthorizedErrorInfo)
+      .description("Unauthorized")
 
-  private val forbiddenErrorInfoValue: EndpointOutput[(StatusCode, ErrorInfo)] = statusCode
-    .and(
-      jsonBody[ErrorInfo]
-        .example(forbiddenErrorInfo)
-        .description("Forbidden")
-    )
+  private val forbiddenErrorInfoValue: EndpointOutput[ErrorInfo] =
+    jsonBody[ErrorInfo]
+      .example(forbiddenErrorInfo)
+      .description("Forbidden")
 
-  private val unknownErrorInfoValue: EndpointOutput[(StatusCode, ErrorInfo)] = statusCode
-    .and(
-      jsonBody[ErrorInfo]
-        .example(unknownErrorInfo)
-        .description("unknown error")
-    )
+  private val unknownErrorInfoValue: EndpointOutput[ErrorInfo] =
+    jsonBody[ErrorInfo]
+      .example(unknownErrorInfo)
+      .description("unknown error")
 
-  lazy val baseEndpoint: Endpoint[Unit, HttpError, Unit, Any] =
+  lazy val baseEndpoint: Endpoint[Unit, Unit, ErrorInfo, Unit, Any] =
     endpoint
       .in("api" / "v1.0")
       .errorOut(
-        oneOf(
-          statusMappingValueMatcher(StatusCode.BadRequest, badRequestErrorInfoValue) { case (StatusCode.BadRequest, _) =>
-            true
-          },
-          statusMappingValueMatcher(StatusCode.Unauthorized, unauthorizedErrorInfoValue) { case (StatusCode.Unauthorized, _) =>
-            true
-          },
-          statusMappingValueMatcher(StatusCode.Forbidden, forbiddenErrorInfoValue) { case (StatusCode.Forbidden, _) =>
-            true
-          },
-          statusMappingValueMatcher(StatusCode.NotFound, notFoundErrorInfoValue) { case (StatusCode.NotFound, _) =>
-            true
-          },
-          statusMappingValueMatcher(StatusCode.InternalServerError, internalServerErrorErrorInfoValue) { case (StatusCode.InternalServerError, _) =>
-            true
-          },
-          statusMappingValueMatcher(StatusCode.ServiceUnavailable, serviceUnavailableErrorInfoValue) { case (StatusCode.ServiceUnavailable, _) =>
-            true
-          },
-          statusDefaultMapping(unknownErrorInfoValue)
+        oneOf[ErrorInfo](
+          oneOfVariant(StatusCode.BadRequest, badRequestErrorInfoValue),
+          oneOfVariant(StatusCode.Unauthorized, unauthorizedErrorInfoValue),
+          oneOfVariant(StatusCode.Forbidden, forbiddenErrorInfoValue),
+          oneOfVariant(StatusCode.NotFound, notFoundErrorInfoValue),
+          oneOfVariant(StatusCode.InternalServerError, internalServerErrorErrorInfoValue),
+          oneOfVariant(StatusCode.ServiceUnavailable, serviceUnavailableErrorInfoValue),
+          oneOfDefaultVariant(unknownErrorInfoValue)
         )
       )
 
-  lazy val actuatorEndpoint: Endpoint[Unit, HttpError, HealthInfo, Any] =
+  lazy val actuatorEndpoint: Endpoint[Unit, Unit, ErrorInfo, HealthInfo, Any] =
     baseEndpoint
       .name("service-health")
       .description("ToDo Application Service Health Check Endpoint")
       .get
       .in("health")
-      .out(anyJsonBody[HealthInfo].example(BuildInfo.toMap))
-  // .errorOut(statusCode)
+      .out(customJsonBody[HealthInfo].example(BuildInfo.toMap))
 
   // 400
   lazy val badRequestErrorInfo          = ErrorInfo(model.StatusCodes.BadRequest.reason, model.StatusCodes.BadRequest.defaultMessage)

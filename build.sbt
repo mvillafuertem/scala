@@ -1,8 +1,9 @@
 import _root_.scala.sys.process.{ Process, _ }
+import _root_.scala.{ Console => csl }
 
 Global / onLoad := {
-  val GREEN = "\u001b[32m"
-  val RESET = "\u001b[0m"
+  val GREEN = csl.GREEN
+  val RESET = csl.RESET
   println(s"""$GREEN
              |$GREEN        ███████╗  ██████╗  █████╗  ██╗       █████╗
              |$GREEN        ██╔════╝ ██╔════╝ ██╔══██╗ ██║      ██╔══██╗
@@ -59,6 +60,7 @@ lazy val scala = (project in file("."))
   .settings(commands ++= Commands.value)
   .settings(commands += Commands.frontendDevCommand("slinky"))
   .settings(commands += Commands.frontendDevCommand("docs"))
+  .settings(welcomeMessage)
 
 lazy val advanced = (project in file("modules/foundations/advanced"))
 // S E T T I N G S
@@ -337,3 +339,17 @@ lazy val `zio-schedule` = (project in file("modules/zio/schedule"))
 
 lazy val `zio-streams` = (project in file("modules/zio/streams"))
   .configure(zio)
+
+
+def welcomeMessage: Def.Setting[String] = onLoadMessage := {
+  def header(text: String): String                = s"${csl.BOLD}${csl.MAGENTA}$text${csl.RESET}"
+  def cmd(text: String, description: String = "") = f"${csl.GREEN}> ${csl.CYAN}$text%30s $description${csl.RESET}"
+  //def subItem(text: String): String = s"  ${Console.YELLOW}> ${Console.CYAN}$text${Console.RESET}"
+
+  s"""|${header("sbt")}:
+      |${cmd("build", "- Prepares sources, compiles and runs tests")}
+      |${cmd("prepare", "- Prepares sources by applying both scalafix and scalafmt")}
+      |${cmd("fmt", "- Formats source files using scalafmt")}
+      |${cmd("dependencyBrowseTree", "- It opens a browser window, but it displays a visualization of the dependency tree")}
+      """.stripMargin
+}

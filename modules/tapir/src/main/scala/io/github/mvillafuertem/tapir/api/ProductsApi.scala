@@ -11,6 +11,7 @@ import sttp.tapir.server.akkahttp._
  */
 final class ProductsApi(productsRepository: ProductsRepository) extends ProductsEndpoint {
 
-  val route: Route = productsEndpoint.toRoute(_ => unsafeRunToFuture(productsRepository.find.either).future)
+  val route: Route = AkkaHttpServerInterpreter()
+    .toRoute(productsEndpoint.serverLogic(_ => unsafeRunToFuture(productsRepository.find.either).future))
 
 }

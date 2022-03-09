@@ -1,6 +1,6 @@
 import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
 import sbt.Keys.libraryDependencies
-import sbt.{ Def, _ }
+import sbt.{Def, _}
 
 object Dependencies {
 
@@ -133,7 +133,7 @@ object Dependencies {
       Artifact.tapirJsonCirce,
       Artifact.tapirOpenapiCirceYaml,
       Artifact.tapirOpenapiDocs,
-      Artifact.tapirSwaggerUiAkkaHttp
+      Artifact.tapirSwaggerUiBundle
     ).map(_                         % Version.tapir) ++ Seq(
       // A K K A  F S M  T E S T
       Artifact.akkaActorTestkitTyped % Version.akka,
@@ -154,7 +154,7 @@ object Dependencies {
       Artifact.tapirJsonCirce,
       Artifact.tapirOpenapiCirceYaml,
       Artifact.tapirOpenapiDocs,
-      Artifact.tapirSwaggerUiAkkaHttp
+      Artifact.tapirSwaggerUiBundle
     ).map(_                  % Version.tapir) ++ Seq(
       // A K K A  H T T P  T E S T
       Artifact.akkaHttpTestkit % Version.akkaHttp,
@@ -165,19 +165,20 @@ object Dependencies {
   val `sensor-controller`: Seq[ModuleID] =
     // S E N S O R  C O N T R O L L E R
     Seq(
-      Artifact.akkaActorTyped  % Version.akka,
-      Artifact.akkaStreamTyped % Version.akka,
-      Artifact.alpakkaKafka    % Version.alpakkaKafka,
-      Artifact.ficus           % Version.ficus,
-      Artifact.curator         % Version.curator,
-      Artifact.kafka           % Version.kafka,
-      Artifact.logback         % Version.logback
+      Artifact.akkaActorTyped,
+      Artifact.akkaStreamTyped
+    ).map(_                 % "2.6.14") ++ Seq(
+      Artifact.alpakkaKafka % Version.alpakkaKafka,
+      Artifact.ficus        % Version.ficus,
+      Artifact.curator      % Version.curator,
+      Artifact.kafka        % Version.kafka,
+      Artifact.logback      % Version.logback
     ) ++ Seq(
       // S E N S O R  C O N T R O L L E R  T E S T
       Artifact.akkaHttpTestkit % Version.akkaHttp,
       Artifact.scalaTest       % Version.scalaTest,
       Artifact.zioTest         % Version.zio
-    ).map(_                    % Test)
+    ).map(_ % Test)
 
   val cats: Seq[ModuleID] = Seq(
     // C A T S
@@ -228,11 +229,12 @@ object Dependencies {
     Artifact.circeGenericExtras,
     Artifact.circeOptics,
     Artifact.circeParser
-  ).map(_                   % Version.circe) ++ Seq(
-    Artifact.jsoniterCore   % Version.jsoniter,
-    Artifact.jsoniterMacros % Version.jsoniter,
-    Artifact.dijon          % Version.dijon,
-    Artifact.jslt           % Version.jslt
+  ).map(_ % Version.circe) ++ Seq(
+    Artifact.jsoniterCore,
+    Artifact.jsoniterMacros
+  ).map(_ % Version.jsoniter) ++ Seq(
+    Artifact.dijon % Version.dijon,
+    Artifact.jslt  % Version.jslt
   ) ++ Seq(
     // J S O N  T E S T
     Artifact.scalaTest % Version.scalaTest
@@ -301,9 +303,10 @@ object Dependencies {
   val tapir: Seq[ModuleID] =
     // T A P I R
     Seq(
+      Artifact.akkaActorTyped,
+      Artifact.akkaStreamTyped
+    ).map(_                              % Version.akka) ++ Seq(
       // "org.iq80.leveldb" % "leveldb" % "0.12",
-      Artifact.akkaActorTyped            % Version.akka,
-      Artifact.akkaStreamTyped           % Version.akka,
       Artifact.zio                       % Version.zio,
       Artifact.zioInteropReactiveStreams % Version.zioInteropReactiveStreams,
       Artifact.slick                     % Version.slick,
@@ -315,8 +318,8 @@ object Dependencies {
       Artifact.tapirJsonCirce,
       Artifact.tapirOpenapiCirceYaml,
       Artifact.tapirOpenapiDocs,
-      Artifact.tapirSwaggerUiAkkaHttp
-    ).map(_                              % Version.tapir) ++ Seq(
+      Artifact.tapirSwaggerUiBundle
+    ).map(_ % Version.tapir) ++ Seq(
       // T A P I R  T E S T
       Artifact.akkaHttpTestkit % Version.akkaHttp,
       Artifact.scalaTest       % Version.scalaTest,
@@ -425,7 +428,7 @@ object Dependencies {
     val tapirJsonCirce            = "com.softwaremill.sttp.tapir"           %% "tapir-json-circe"
     val tapirOpenapiCirceYaml     = "com.softwaremill.sttp.tapir"           %% "tapir-openapi-circe-yaml"
     val tapirOpenapiDocs          = "com.softwaremill.sttp.tapir"           %% "tapir-openapi-docs"
-    val tapirSwaggerUiAkkaHttp    = "com.softwaremill.sttp.tapir"           %% "tapir-swagger-ui-akka-http"
+    val tapirSwaggerUiBundle      = "com.softwaremill.sttp.tapir"           %% "tapir-swagger-ui-bundle"
     val testcontainersCore        = "com.dimafeng"                          %% "testcontainers-scala-core"
     val testcontainersKafka       = "org.testcontainers"                     % "kafka"
     val zio                       = "dev.zio"                               %% "zio"
@@ -439,7 +442,7 @@ object Dependencies {
   }
 
   private object Version {
-    val akka                      = "2.6.14"
+    val akka                      = "2.6.18"
     val akkaHttp                  = "10.2.8"
     val akkaHttpCirce             = "1.39.2"
     val akkaPersistenceCassandra  = "0.100"
@@ -476,7 +479,7 @@ object Dependencies {
     val slinky                    = "0.6.6"
     val spark                     = "3.2.1"
     val sttp                      = "3.3.18"
-    val tapir                     = "0.17.19"
+    val tapir                     = "0.20.1"
     val testcontainers            = "0.40.2"
     val testcontainersKafka       = "1.16.3"
     val zio                       = "1.0.13"

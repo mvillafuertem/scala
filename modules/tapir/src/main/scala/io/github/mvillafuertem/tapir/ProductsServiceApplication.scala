@@ -5,6 +5,7 @@ import zio.{ ExitCode, Managed, UIO, ZIO }
 
 import scala.concurrent.ExecutionContext
 
+// open http://localhost:8080/api/v1.0/docs/docs.yaml
 object ProductsServiceApplication extends ProductsServiceConfiguration with zio.App {
 
   override implicit val executionContext: ExecutionContext = platform.executor.asEC

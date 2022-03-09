@@ -20,7 +20,7 @@ trait ProductsEndpoint extends ProductsCodec {
   private[api] lazy val baseApiResource: EndpointInput[Unit] = apiResource / apiVersion
 
   // e n d p o i n t
-  private[api] lazy val baseEndpoint: Endpoint[Unit, Unit, Unit, Any] =
+  private[api] lazy val baseEndpoint: Endpoint[Unit, Unit, Unit, Unit, Any] =
     endpoint
       .in(baseApiResource)
       .name(apiNameResource)
@@ -34,10 +34,10 @@ trait ProductsEndpoint extends ProductsCodec {
   private[api] lazy val offsetParameter                             = query[Option[Int]]("offset").description("Position the initial product to retrieve")
   private[api] lazy val productsQuery: EndpointInput[ProductsQuery] =
     path[ProductType]("type")
-      .map(Some(_))(_.get)
+      .map(Option(_))(_.get)
       .and(offsetParameter)
       .and(limitParameter)
-      .mapTo(ProductsQuery)
+      .mapTo[ProductsQuery]
 
   private[api] lazy val baseProductsResource = productsResource / productsQuery
 

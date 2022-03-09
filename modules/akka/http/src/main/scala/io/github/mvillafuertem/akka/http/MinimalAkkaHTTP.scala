@@ -16,10 +16,13 @@ object MinimalAkkaHTTP extends App {
   private implicit val dispatcher: ExecutionContextExecutor = actorSystem.dispatcher
 
   // R O U T E
-  val route = endpoint.get
-    .in("hello")
-    .out(stringBody)
-    .toRoute(_ => Future(Right("Hello World!")))
+  val route = AkkaHttpServerInterpreter()
+    .toRoute(
+      endpoint.get
+        .in("hello")
+        .out(stringBody)
+        .serverLogic[Future](_ => Future(Right("Hello World!")))
+    )
 
   // R U N  A P P L I C A T I O N
   val serverBinding: Future[Http.ServerBinding] =

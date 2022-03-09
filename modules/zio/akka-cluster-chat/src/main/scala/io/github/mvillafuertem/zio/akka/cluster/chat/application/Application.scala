@@ -1,7 +1,7 @@
 package io.github.mvillafuertem.zio.akka.cluster.chat.application
 
 import akka.actor.ActorSystem
-import io.github.mvillafuertem.zio.akka.cluster.chat.domain._
+import io.github.mvillafuertem.zio.akka.cluster.chat.domain.Domain._
 import zio.akka.cluster.pubsub.{ PubSub, Publisher }
 import zio.akka.cluster.sharding.{ Entity, Sharding }
 import zio.console.Console
@@ -47,3 +47,5 @@ trait Application {
     } yield ()).forever
 
 }
+
+object Application extends Application

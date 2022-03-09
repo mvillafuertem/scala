@@ -1,8 +1,8 @@
 package io.github.mvillafuertem.zio.akka.cluster.chat.configuration
 
 import akka.actor.ActorSystem
-import io.github.mvillafuertem.zio.akka.cluster.chat.application.chatroomBehavior
-import io.github.mvillafuertem.zio.akka.cluster.chat.domain._
+import io.github.mvillafuertem.zio.akka.cluster.chat.application.Application.chatroomBehavior
+import io.github.mvillafuertem.zio.akka.cluster.chat.domain.Domain._
 import zio.akka.cluster.pubsub.PubSub
 import zio.akka.cluster.sharding.Sharding
 import zio.{ Has, Managed, Task, ZIO, ZLayer }
@@ -19,3 +19,5 @@ trait Configuration {
     } yield sharding
 
 }
+
+object Configuration extends Configuration

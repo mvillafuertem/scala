@@ -25,12 +25,13 @@ final class ToDoApplicationConfiguration(context: ActorContext[Done]) extends To
   implicit lazy val contextExecutor: ExecutionContextExecutor = context.system.executionContext
 
   val serverBinding: Future[Http.ServerBinding] =
-    Http()(untypedSystem)
-      .bindAndHandle(toDoAPI.routes, toDoConfigurationProperties.interface, toDoConfigurationProperties.port)
+    Http()
+      .newServerAt(toDoConfigurationProperties.interface, toDoConfigurationProperties.port)
+      .bind(toDoAPI.routes)
 
   serverBinding.onComplete {
     case Success(bound) =>
-      log.info(s"Server online at http://${bound.localAddress.getHostString}:${bound.localAddress.getPort}/")
+      log.info(s"Server online at http://${bound.localAddress.getHostString}:${bound.localAddress.getPort}/docs")
     case Failure(e)     =>
       log.error(s"Server could not start!")
       e.printStackTrace()
