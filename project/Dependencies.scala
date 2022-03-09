@@ -47,7 +47,7 @@ object Dependencies {
     // A L P A K K A
     Seq(
       // A L P A K K A  I N T E G R A T I O N  T E S T
-      Artifact.akkaSlf4f              % "2.6.14"                    % IntegrationTest,
+      Artifact.akkaSlf4f              % "2.6.15"                    % IntegrationTest,
       Artifact.akkaStreamKafkaTestkit % Version.alpakkaKafka        % IntegrationTest,
       Artifact.logback                % Version.logback             % IntegrationTest,
       Artifact.scalaTest              % Version.scalaTest           % IntegrationTest,
@@ -167,7 +167,7 @@ object Dependencies {
     Seq(
       Artifact.akkaActorTyped,
       Artifact.akkaStreamTyped
-    ).map(_                 % "2.6.14") ++ Seq(
+    ).map(_                 % "2.6.15") ++ Seq(
       Artifact.alpakkaKafka % Version.alpakkaKafka,
       Artifact.ficus        % Version.ficus,
       Artifact.curator      % Version.curator,
