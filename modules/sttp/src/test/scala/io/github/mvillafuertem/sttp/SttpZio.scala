@@ -13,13 +13,18 @@ object SttpZio extends DefaultRunnableSpec {
 
   // @see https://requestbin.com/r/enwf1kwvx6vnf
   implicit val customConfig: Configuration = Configuration.default.withSnakeCaseMemberNames
-  @ConfiguredJsonCodec case class RequestSnakeCase(successSnakeCase: Boolean)
+  // After update sttp from 3.3.18 to 3.5.1 appears this error
+  // Symbol 'type zio.Has' is missing from the classpath.
+  // This symbol is required by 'type zio.test.Annotations'.
+  // Make sure that type Has is in your classpath and check for conflicting dependencies with `-Ylog-classpath`.
+  // A full rebuild may help if 'package.class' was compiled against an incompatible version of zio.
+  // @ConfiguredJsonCodec case class RequestSnakeCase(successSnakeCase: Boolean)
 
   case class Response(success: Boolean)
   case class Request(success: Boolean)
   private val uri                    = "https://enwf1kwvx6vnf.x.pipedream.net/"
   private val requestGET             = basicRequest.get(uri"$uri").response(asJson[Response])
-  private val requestPOST            = basicRequest.post(uri"$uri").response(asJson[Response]).body[RequestSnakeCase](RequestSnakeCase(true))
+  private val requestPOST            = basicRequest.post(uri"$uri").response(asJson[Response]).body[Request](Request(true))
   private val requestPUT             = basicRequest.put(uri"$uri").response(asJson[Response]).body[Request](Request(true))
   private val requestDELETE          = basicRequest.delete(uri"$uri").response(asJson[Response])
   private val equalToResponseSuccess = equalTo[Response, Response](Response(true))

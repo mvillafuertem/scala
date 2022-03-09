@@ -13,7 +13,6 @@ import kafka.server.{ KafkaConfig, KafkaRaftServer, KafkaServer, Server }
 import org.apache.kafka.common.utils.Time
 
 import scala.jdk.CollectionConverters._
-import java.util.Comparator
 
 class KafkaLocalServer private (kafkaProperties: Properties, zooKeeperServer: ZooKeeperLocalServer) {
 
