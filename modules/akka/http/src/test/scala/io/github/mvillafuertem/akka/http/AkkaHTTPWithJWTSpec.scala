@@ -5,7 +5,7 @@ import akka.http.scaladsl.model.{ HttpHeader, StatusCodes }
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.server.RouteConcatenation._
 import akka.http.scaladsl.testkit.ScalatestRouteTest
-import de.heikoseeberger.akkahttpcirce.FailFastCirceSupport._
+import de.heikoseeberger.akkahttpcirce.FailFastCirceSupport.marshaller
 import io.circe.generic.auto._
 import io.github.mvillafuertem.akka.http.AkkaHTTPWithJWT.{ auth, securedContent, AccessTokenHeaderName, LoginRequest }
 import org.scalatest.flatspec.AnyFlatSpec
@@ -20,6 +20,7 @@ final class AkkaHTTPWithJWTSpec extends AnyFlatSpec with Matchers with Scalatest
   it should "return 403 Unauthorized upon GET / " in {
     Get("/hello").addHeader(RawHeader(AccessTokenHeaderName, "asdfads")) ~> routes ~> check {
       status shouldBe StatusCodes.Unauthorized
+      responseAs[String] shouldBe "Session expired"
     }
   }
 
@@ -27,6 +28,7 @@ final class AkkaHTTPWithJWTSpec extends AnyFlatSpec with Matchers with Scalatest
     Post("/auth/login", LoginRequest("admin", "something")) ~> routes ~> check {
       header(AccessTokenHeaderName) shouldBe Some(_: HttpHeader)
       status shouldBe StatusCodes.Unauthorized
+      responseAs[String] shouldBe ""
     }
   }
 
@@ -34,6 +36,7 @@ final class AkkaHTTPWithJWTSpec extends AnyFlatSpec with Matchers with Scalatest
     Post("/auth/login", LoginRequest("admin", "admin")) ~> routes ~> check {
       header(AccessTokenHeaderName) shouldBe Some(_: HttpHeader)
       status shouldBe StatusCodes.OK
+      responseAs[String] shouldBe ""
     }
   }
 
@@ -42,6 +45,7 @@ final class AkkaHTTPWithJWTSpec extends AnyFlatSpec with Matchers with Scalatest
       header(AccessTokenHeaderName).map { accessTokenHeader =>
         Get("/hello").addHeader(RawHeader(AccessTokenHeaderName, accessTokenHeader.value())) ~> routes ~> check {
           status shouldBe StatusCodes.OK
+          responseAs[String] shouldBe "Hello World!"
         }
       }
     }
