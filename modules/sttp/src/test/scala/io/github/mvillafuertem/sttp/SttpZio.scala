@@ -1,8 +1,10 @@
 package io.github.mvillafuertem.sttp
 
+import io.circe
 import io.circe.generic.extras.auto._
 import io.circe.generic.extras.{ Configuration, ConfiguredJsonCodec }
 import org.asynchttpclient.DefaultAsyncHttpClient
+import sttp.client3
 import sttp.client3._
 import sttp.client3.asynchttpclient.zio._
 import sttp.client3.circe.{ asJson, _ }
@@ -10,6 +12,7 @@ import sttp.tapir.client.sttp.SttpClientInterpreter
 import sttp.tapir.generic.auto.schemaForCaseClass
 import sttp.tapir.json.circe.jsonBody
 import sttp.tapir.{ endpoint, stringBody, DecodeResult }
+import zio.Task
 import zio.test.Assertion.equalTo
 import zio.test._
 
@@ -21,25 +24,32 @@ object SttpZio extends DefaultRunnableSpec {
 
   case class Response(success: Boolean)
   case class Request(success: Boolean)
-  private val uri                 = "https://enwf1kwvx6vnf.x.pipedream.net/"
-  private val requestGET          = basicRequest.get(uri"$uri").response(asJson[Response])
-  private val requestPOST         = basicRequest.post(uri"$uri").response(asJson[Response]).body[RequestSnakeCase](RequestSnakeCase(true))
-  private val requestPUT          = basicRequest.put(uri"$uri").response(asJson[Response]).body[Request](Request(true))
-  private val requestDELETE       = basicRequest.delete(uri"$uri").response(asJson[Response])
-  private val baseEndpoint        = endpoint.out(jsonBody[Response]).errorOut(stringBody)
-  private val requestEndpointGET  =
+  private val uri           = "https://enwf1kwvx6vnf.x.pipedream.net/"
+  private val requestGET    = basicRequest.get(uri"$uri").response(asJson[Response])
+  private val requestPOST   = basicRequest.post(uri"$uri").response(asJson[Response]).body[RequestSnakeCase](RequestSnakeCase(true))
+  private val requestPUT    = basicRequest.put(uri"$uri").response(asJson[Response]).body[Request](Request(true))
+  private val requestDELETE = basicRequest.delete(uri"$uri").response(asJson[Response])
+  private val baseEndpoint  = endpoint.out(jsonBody[Response]).errorOut(stringBody)
+
+  private val requestEndpointGET: RequestT[Identity, Either[ResponseException[String, circe.Error], Response], Any] =
     SttpClientInterpreter()
       .toRequest(baseEndpoint.get, Some(uri"$uri"))
       .apply()
       .response(asJson[Response])
-  private val requestEndpointPOST =
+
+  private val requestEndpointPOST: client3.Request[Response, Any] =
     SttpClientInterpreter()
-      .toRequest(baseEndpoint.in(jsonBody[Request]).post, Some(uri"$uri"))
+      .toRequestThrowErrors(baseEndpoint.in(jsonBody[Request]).post, Some(uri"$uri"))
       .apply(Request(true))
-      .response(asJson[Response])
-  private val requestEndpointPUT  =
+
+  private val requestEndpointPUT: Task[DecodeResult[Either[String, Response]]] =
     SttpClientInterpreter()
-      .toClient(baseEndpoint.get, Some(uri"$uri"), AsyncHttpClientZioBackend.usingClient(runner.runtime, new DefaultAsyncHttpClient()))
+      .toClient(baseEndpoint.in(jsonBody[Request]).put, Some(uri"$uri"), AsyncHttpClientZioBackend.usingClient(runner.runtime, new DefaultAsyncHttpClient()))
+      .apply(Request(true))
+
+  private val requestEndpointDELETE: Task[Response] =
+    SttpClientInterpreter()
+      .toClientThrowErrors(baseEndpoint.delete, Some(uri"$uri"), AsyncHttpClientZioBackend.usingClient(runner.runtime, new DefaultAsyncHttpClient()))
       .apply()
 
   private val equalToResponseSuccess = equalTo[Response, Response](Response(true))
@@ -110,7 +120,6 @@ object SttpZio extends DefaultRunnableSpec {
         assertM(
           send(requestEndpointPOST)
             .map(_.body)
-            .absolve
             .provideCustomLayer(AsyncHttpClientZioBackend.layer())
         )(equalToResponseSuccess)
       ),
@@ -123,6 +132,9 @@ object SttpZio extends DefaultRunnableSpec {
               case Right(value) => Right(value)
             }
         }.absolve)(equalToResponseSuccess)
+      ),
+      test("requestEndpointDELETE")(
+        assertM(requestEndpointDELETE)(equalToResponseSuccess)
       )
     ) @@ zio.test.TestAspect.flaky
 
