@@ -61,7 +61,6 @@ object SttpZio extends DefaultRunnableSpec {
           send(requestGET)
             .map(_.body)
             .absolve
-            .provideCustomLayer(AsyncHttpClientZioBackend.layer())
         )(equalToResponseSuccess)
       ),
       test(s"${requestPOST.toCurl}")(
@@ -69,7 +68,6 @@ object SttpZio extends DefaultRunnableSpec {
           send(requestPOST)
             .map(_.body)
             .absolve
-            .provideCustomLayer(AsyncHttpClientZioBackend.layer())
         )(equalToResponseSuccess)
       ),
       test(s"${requestPUT.toCurl}")(
@@ -77,7 +75,6 @@ object SttpZio extends DefaultRunnableSpec {
           send(requestPUT)
             .map(_.body)
             .absolve
-            .provideCustomLayer(AsyncHttpClientZioBackend.layer())
         )(equalToResponseSuccess)
       ),
       test(s"${requestDELETE.toCurl}")(
@@ -85,27 +82,22 @@ object SttpZio extends DefaultRunnableSpec {
           send(requestDELETE)
             .map(_.body)
             .absolve
-            .provideCustomLayer(AsyncHttpClientZioBackend.layer())
         )(equalToResponseSuccess)
       ),
       test(s"${requestPOST.toCurl} ++ ${requestGET.toCurl}")(
         assertM(
-          (
-            for {
-              responsePOST <- send(requestPOST).map(_.body)
-              responseGET  <- send(requestGET).map(_.body).absolve if responsePOST.isRight
-            } yield responseGET
-          ).provideCustomLayer(AsyncHttpClientZioBackend.layer())
+          for {
+            responsePOST <- send(requestPOST).map(_.body)
+            responseGET  <- send(requestGET).map(_.body).absolve if responsePOST.isRight
+          } yield responseGET
         )(equalToResponseSuccess)
       ),
       test(s"${requestPUT.toCurl} ++ ${requestDELETE.toCurl}")(
         assertM(
-          (
-            for {
-              responsePOST <- send(requestPUT).map(_.body)
-              responseGET  <- send(requestDELETE).map(_.body).absolve if responsePOST.isRight
-            } yield responseGET
-          ).provideCustomLayer(AsyncHttpClientZioBackend.layer())
+          for {
+            responsePOST <- send(requestPUT).map(_.body)
+            responseGET  <- send(requestDELETE).map(_.body).absolve if responsePOST.isRight
+          } yield responseGET
         )(equalToResponseSuccess)
       ),
       test(s"${requestEndpointGET.toCurl}")(
@@ -113,14 +105,12 @@ object SttpZio extends DefaultRunnableSpec {
           send(requestEndpointGET)
             .map(_.body)
             .absolve
-            .provideCustomLayer(AsyncHttpClientZioBackend.layer())
         )(equalToResponseSuccess)
       ),
       test(s"${requestEndpointPOST.toCurl}")(
         assertM(
           send(requestEndpointPOST)
             .map(_.body)
-            .provideCustomLayer(AsyncHttpClientZioBackend.layer())
         )(equalToResponseSuccess)
       ),
       test("requestEndpointPUT")(
@@ -136,6 +126,8 @@ object SttpZio extends DefaultRunnableSpec {
       test("requestEndpointDELETE")(
         assertM(requestEndpointDELETE)(equalToResponseSuccess)
       )
+    ).provideCustomLayer(
+      AsyncHttpClientZioBackend.layer().mapError(TestFailure.fail)
     ) @@ zio.test.TestAspect.flaky
 
 }
