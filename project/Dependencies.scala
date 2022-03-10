@@ -288,6 +288,10 @@ object Dependencies {
       Artifact.sttpCore,
       Artifact.sttpCirce
     ).map(_ % Version.sttp) ++ Seq(
+      Artifact.tapirCore,
+      Artifact.tapirJsonCirce,
+      Artifact.tapirSttpClient
+    ).map(_ % Version.tapir) ++ Seq(
       Artifact.circeGeneric,
       Artifact.circeGenericExtras
     ).map(_ % Version.circe) ++ Seq(
@@ -428,6 +432,7 @@ object Dependencies {
     val tapirJsonCirce            = "com.softwaremill.sttp.tapir"           %% "tapir-json-circe"
     val tapirOpenapiCirceYaml     = "com.softwaremill.sttp.tapir"           %% "tapir-openapi-circe-yaml"
     val tapirOpenapiDocs          = "com.softwaremill.sttp.tapir"           %% "tapir-openapi-docs"
+    val tapirSttpClient           = "com.softwaremill.sttp.tapir"           %% "tapir-sttp-client"
     val tapirSwaggerUiBundle      = "com.softwaremill.sttp.tapir"           %% "tapir-swagger-ui-bundle"
     val testcontainersCore        = "com.dimafeng"                          %% "testcontainers-scala-core"
     val testcontainersKafka       = "org.testcontainers"                     % "kafka"
