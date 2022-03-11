@@ -6,8 +6,9 @@ import io.circe.generic.extras.{ Configuration, ConfiguredJsonCodec }
 import org.asynchttpclient.DefaultAsyncHttpClient
 import sttp.client3
 import sttp.client3._
-import sttp.client3.asynchttpclient.zio._
+import sttp.client3.asynchttpclient.zio.{ send, AsyncHttpClientZioBackend, SttpClient, SttpClientStubbing }
 import sttp.client3.circe.{ asJson, _ }
+import sttp.model._
 import sttp.tapir.client.sttp.SttpClientInterpreter
 import sttp.tapir.generic.auto.schemaForCaseClass
 import sttp.tapir.json.circe.jsonBody
@@ -15,6 +16,7 @@ import sttp.tapir.{ endpoint, stringBody, DecodeResult }
 import zio.Task
 import zio.test.Assertion.equalTo
 import zio.test._
+import sttp.client3.asynchttpclient.zio
 
 object SttpZio extends DefaultRunnableSpec {
 
@@ -54,80 +56,105 @@ object SttpZio extends DefaultRunnableSpec {
 
   private val equalToResponseSuccess = equalTo[Response, Response](Response(true))
 
+  private val endpointsSuite = suite("endpoints")(
+    test(s"${requestEndpointGET.toCurl}")(
+      assertM(
+        send(requestEndpointGET)
+          .map(_.body)
+          .absolve
+      )(equalToResponseSuccess)
+    ),
+    test(s"${requestEndpointPOST.toCurl}")(
+      assertM(
+        send(requestEndpointPOST)
+          .map(_.body)
+      )(equalToResponseSuccess)
+    ),
+    test("requestEndpointPUT")(
+      assertM(requestEndpointPUT.map {
+        case _: DecodeResult.Failure => Left(new RuntimeException("DecodeResult.Failure"))
+        case DecodeResult.Value(v)   =>
+          v match {
+            case Left(value)  => Left(new RuntimeException(value))
+            case Right(value) => Right(value)
+          }
+      }.absolve)(equalToResponseSuccess)
+    ),
+    test("requestEndpointDELETE")(
+      assertM(requestEndpointDELETE)(equalToResponseSuccess)
+    )
+  )
+
+  private val requestsSuite = suite("requests")(
+    test(s"${requestGET.toCurl}")(
+      assertM(
+        send(requestGET)
+          .map(_.body)
+          .absolve
+      )(equalToResponseSuccess)
+    ),
+    test(s"${requestPOST.toCurl}")(
+      assertM(
+        send(requestPOST)
+          .map(_.body)
+          .absolve
+      )(equalToResponseSuccess)
+    ),
+    test(s"${requestPUT.toCurl}")(
+      assertM(
+        send(requestPUT)
+          .map(_.body)
+          .absolve
+      )(equalToResponseSuccess)
+    ),
+    test(s"${requestDELETE.toCurl}")(
+      assertM(
+        send(requestDELETE)
+          .map(_.body)
+          .absolve
+      )(equalToResponseSuccess)
+    ),
+    test(s"${requestPOST.toCurl} ++ ${requestGET.toCurl}")(
+      assertM(
+        for {
+          responsePOST <- send(requestPOST).map(_.body)
+          responseGET  <- send(requestGET).map(_.body).absolve if responsePOST.isRight
+        } yield responseGET
+      )(equalToResponseSuccess)
+    ),
+    test(s"${requestPUT.toCurl} ++ ${requestDELETE.toCurl}")(
+      assertM(
+        for {
+          responsePOST <- send(requestPUT).map(_.body)
+          responseGET  <- send(requestDELETE).map(_.body).absolve if responsePOST.isRight
+        } yield responseGET
+      )(equalToResponseSuccess)
+    )
+  )
+
+  private val stubsSuite = suite("stubs")(
+    test(s"${requestEndpointGET.toCurl}")(
+      assertM(
+        for {
+          _        <- SttpClientStubbing
+                        .StubbingWhenRequest(_.method == Method.GET)
+                        .thenRespond(Right(Response(true)))
+          response <- send(requestEndpointGET)
+                        .map(_.body)
+                        .absolve
+        } yield response
+      )(equalToResponseSuccess)
+    )
+  )
+
   override def spec: Spec[TestEnvironment, TestFailure[Throwable], TestSuccess] =
     suite(getClass.getSimpleName)(
-      test(s"${requestGET.toCurl}")(
-        assertM(
-          send(requestGET)
-            .map(_.body)
-            .absolve
-        )(equalToResponseSuccess)
+      (requestsSuite + endpointsSuite).provideCustomLayer(
+        AsyncHttpClientZioBackend.layer().mapError(TestFailure.fail)
       ),
-      test(s"${requestPOST.toCurl}")(
-        assertM(
-          send(requestPOST)
-            .map(_.body)
-            .absolve
-        )(equalToResponseSuccess)
-      ),
-      test(s"${requestPUT.toCurl}")(
-        assertM(
-          send(requestPUT)
-            .map(_.body)
-            .absolve
-        )(equalToResponseSuccess)
-      ),
-      test(s"${requestDELETE.toCurl}")(
-        assertM(
-          send(requestDELETE)
-            .map(_.body)
-            .absolve
-        )(equalToResponseSuccess)
-      ),
-      test(s"${requestPOST.toCurl} ++ ${requestGET.toCurl}")(
-        assertM(
-          for {
-            responsePOST <- send(requestPOST).map(_.body)
-            responseGET  <- send(requestGET).map(_.body).absolve if responsePOST.isRight
-          } yield responseGET
-        )(equalToResponseSuccess)
-      ),
-      test(s"${requestPUT.toCurl} ++ ${requestDELETE.toCurl}")(
-        assertM(
-          for {
-            responsePOST <- send(requestPUT).map(_.body)
-            responseGET  <- send(requestDELETE).map(_.body).absolve if responsePOST.isRight
-          } yield responseGET
-        )(equalToResponseSuccess)
-      ),
-      test(s"${requestEndpointGET.toCurl}")(
-        assertM(
-          send(requestEndpointGET)
-            .map(_.body)
-            .absolve
-        )(equalToResponseSuccess)
-      ),
-      test(s"${requestEndpointPOST.toCurl}")(
-        assertM(
-          send(requestEndpointPOST)
-            .map(_.body)
-        )(equalToResponseSuccess)
-      ),
-      test("requestEndpointPUT")(
-        assertM(requestEndpointPUT.map {
-          case _: DecodeResult.Failure => Left(new RuntimeException("DecodeResult.Failure"))
-          case DecodeResult.Value(v)   =>
-            v match {
-              case Left(value)  => Left(new RuntimeException(value))
-              case Right(value) => Right(value)
-            }
-        }.absolve)(equalToResponseSuccess)
-      ),
-      test("requestEndpointDELETE")(
-        assertM(requestEndpointDELETE)(equalToResponseSuccess)
+      stubsSuite.provideCustomLayer[TestFailure[Throwable], SttpClient with zio.SttpClientStubbing.SttpClientStubbing](
+        AsyncHttpClientZioBackend.stubLayer.mapError(TestFailure.fail)
       )
-    ).provideCustomLayer(
-      AsyncHttpClientZioBackend.layer().mapError(TestFailure.fail)
-    ) @@ zio.test.TestAspect.flaky
+    ) @@ TestAspect.flaky
 
 }
