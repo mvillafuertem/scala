@@ -1,4 +1,4 @@
-import _root_.scala.sys.process.{ Process, _ }
+import _root_.scala.sys.process.Process
 import _root_.scala.{ Console => csl }
 
 Global / onLoad := {
@@ -348,6 +348,7 @@ def welcomeMessage: Def.Setting[String] = onLoadMessage := {
 
   s"""|${header("sbt")}:
       |${cmd("build", "- Prepares sources, compiles and runs tests")}
+      |${cmd("testOnly [package.class] -- -z [test]", "- Runs selected tests")}
       |${cmd("prepare", "- Prepares sources by applying both scalafix and scalafmt")}
       |${cmd("fmt", "- Formats source files using scalafmt")}
       |${cmd("dependencyBrowseTree", "- It opens a browser window, but it displays a visualization of the dependency tree")}

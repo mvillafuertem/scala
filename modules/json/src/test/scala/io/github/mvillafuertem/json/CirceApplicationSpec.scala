@@ -234,6 +234,7 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
     // T H E N
     val expected = new Thing("a", 1)
 
+    actual.isRight shouldBe true
     actual.map { result =>
       result.bar shouldBe expected.bar
       result.foo shouldBe expected.foo
@@ -290,8 +291,8 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
     val expectedSomeThing  = SomeThing("a")
     val expectedOtherThing = OtherThing(1)
 
-    someThing.map(result => result.someThing shouldBe expectedSomeThing.someThing)
-    otherThing.map(result => result.otherThing shouldBe expectedOtherThing.otherThing)
+    someThing shouldBe Right(expectedSomeThing)
+    otherThing shouldBe Right(expectedOtherThing)
 
   }
 
@@ -334,7 +335,7 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
     val actual = decode[SomeThingResult]("""{"value":"SomeThing"}""")
 
     // T H E N
-    actual.map(result => result shouldBe ("value", SomeThing))
+    actual shouldBe Right(("value", SomeThing))
 
   }
 
@@ -379,7 +380,7 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
     val expected: User = User(0L, SomeThing)
 
     // T H E N
-    actual.map(result => result shouldBe expected)
+    actual shouldBe Right(expected)
 
   }
 
@@ -414,18 +415,42 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
     case object SomeThing  extends Thing
     case object OtherThing extends Thing
 
-    implicit val decodeThing: Decoder[Thing] = (c: HCursor) =>
+    implicit val decodeThing: Decoder[Seq[Thing]] = (c: HCursor) =>
       for {
-        foo <- c.field("thing").as[String]
-      } yield Seq[Thing](SomeThing).filter(_.toString.equalsIgnoreCase(foo)).head
+        foo <- c.field("thing").as[Seq[String]]
+      } yield foo.flatMap(f => Seq[Thing](SomeThing, OtherThing).filter(_.toString.equalsIgnoreCase(f)))
 
     // W H E N
-    val actual = decode[User]("""{"id": 0,"things":["SomeThing", "OtherThing"]}""")
+    val actual = decode[User]("""{"id": 0,"thing":["SomeThing", "OtherThing"]}""")
 
     // T H E N
     val expected: User = User(0L, Seq(SomeThing, OtherThing))
 
-    actual.map(result => result shouldBe expected)
+    actual shouldBe Right(expected)
+
+  }
+
+  it should "decode case class with sequence of sealed trait with object using decoderHCursor method" in {
+
+    // G I V E N
+    case class User(id: Long, thing: Seq[Thing])
+    sealed trait Thing
+    case object SomeThing  extends Thing
+    case object OtherThing extends Thing
+
+    implicit val decodeThing: Decoder[Seq[Thing]] =  Decoder.decodeHCursor.emap { hcursor =>
+      hcursor.field("thing").as[Seq[String]].left.map(_.message).map(_.flatMap(f =>
+        Seq[Thing](SomeThing, OtherThing).filter(_.toString.equalsIgnoreCase(f))
+      ))
+    }
+
+    // W H E N
+    val actual = decode[User]("""{"id": 0,"thing":["SomeThing", "OtherThing"]}""")
+
+    // T H E N
+    val expected: User = User(0L, Seq(SomeThing, OtherThing))
+
+    actual shouldBe Right(expected)
 
   }
 
@@ -441,7 +466,27 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
     // T H E N
     val expected: Auth = Auth("L7Re1aQ64oi-Tk3WM1CSz0zAPrF_5_f2gTqOkWujN2jJn8C2gTqOkWujN22gTqOkWujG", 4000)
 
-    actual.map(result => result shouldBe expected)
+    actual shouldBe Right(expected)
+
+  }
+
+  it should "encode case class with snake case member name no annotations" in {
+
+    // G I V E N
+    import io.circe.generic.extras.semiauto.deriveConfiguredCodec
+
+    implicit val config: Configuration = Configuration.default.withSnakeCaseMemberNames
+    case class Auth(accessToken: String, expiresIn: Long)
+
+    implicit val decisionElementCodec: Codec[Auth] = deriveConfiguredCodec
+
+    // W H E N
+    val actual = decode[Auth]("""{"access_token": "L7Re1aQ64oi-Tk3WM1CSz0zAPrF_5_f2gTqOkWujN2jJn8C2gTqOkWujN22gTqOkWujG","expires_in": 4000}""")
+
+    // T H E N
+    val expected: Auth = Auth("L7Re1aQ64oi-Tk3WM1CSz0zAPrF_5_f2gTqOkWujN2jJn8C2gTqOkWujN22gTqOkWujG", 4000)
+
+    actual shouldBe Right(expected)
 
   }
 
@@ -591,7 +636,7 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
       )
     )
 
-    actual.map(_ shouldBe expected)
+    actual shouldBe Right(expected)
 
   }
 
