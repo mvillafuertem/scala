@@ -512,6 +512,30 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
 
   }
 
+  it should "semiauto encoder case object of role with defaults" in {
+
+    // G I V E N
+    import io.circe.Codec
+    import io.circe.generic.extras.Configuration
+    import io.circe.generic.extras.semiauto.{ deriveEnumerationCodec, deriveConfiguredCodec }
+
+    case class Person(name: String = "", role: Role = User, permission: Seq[String] = Nil)
+    sealed trait Role
+    case object User extends Role
+
+    implicit val config: Configuration  = Configuration.default.copy(transformConstructorNames = _.toLowerCase).withDefaults
+    implicit val roleCodec: Codec[Role] = deriveEnumerationCodec[Role]
+    implicit val decisionElementCodec: Codec[Person] = deriveConfiguredCodec
+
+
+    // W H E N
+    val actual = decode[Person]("""{}""")
+
+    // T H E N
+    actual shouldBe Right(Person())
+
+  }
+
   it should "manual encoder case object" in {
 
     // G I V E N
@@ -533,6 +557,42 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
 
     // T H E N
     actual shouldBe """{"name":"Pepe","role":"user"}"""
+
+  }
+
+  // @see https://stackoverflow.com/questions/65899574/scala-circe-deriveunwrapped-value-class-doesnt-work-for-missing-member/65905438#65905438
+  it should "manual encoder empty string" in {
+
+    // G I V E N
+    import io.circe.generic.extras.semiauto.{deriveUnwrappedDecoder, deriveUnwrappedEncoder}
+
+    final case class CustomString(value: Option[String])
+    final case class TestString(name: CustomString)
+
+    implicit val customStringDecoder: Decoder[CustomString] =
+      Decoder
+        .decodeOption(deriveUnwrappedDecoder[CustomString])
+        .map(ssOpt => CustomString(ssOpt.flatMap(_.value.flatMap(s => Option.when(s.nonEmpty)(s)))))
+    implicit val customStringEncoder: Encoder[CustomString] = deriveUnwrappedEncoder[CustomString]
+    implicit val testStringCodec: Codec[TestString] = io.circe.generic.semiauto.deriveCodec
+
+
+    // W H E N
+    val testString = TestString(CustomString(Some("test")))
+    val emptyTestString = TestString(CustomString(Some("")))
+    val noneTestString = TestString(CustomString(None))
+    val nullJson = """{"name":null}"""
+    val emptyJson = """{}"""
+
+    // T H E N
+    assert(testString.asJson.noSpaces == """{"name":"test"}""")
+    assert(emptyTestString.asJson.noSpaces == """{"name":""}""")
+    assert(noneTestString.asJson.noSpaces == nullJson)
+    assert(noneTestString.asJson.dropNullValues.noSpaces == emptyJson)
+
+    assert(decode[TestString](nullJson).exists(_ == noneTestString)) // this passes
+    assert(decode[TestString](emptyJson).exists(_ == noneTestString)) // this fails
+
 
   }
 
