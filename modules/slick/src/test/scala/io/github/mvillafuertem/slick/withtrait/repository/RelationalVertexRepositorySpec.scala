@@ -1,13 +1,12 @@
 package io.github.mvillafuertem.slick.withtrait.repository
 
-import java.sql.SQLIntegrityConstraintViolationException
-
 import io.github.mvillafuertem.slick.withtrait.configuration.InfrastructureConfigurationSpec
 import io.github.mvillafuertem.slick.withtrait.model.{ EdgeDBO, VertexDBO }
 import org.scalatest.flatspec.AsyncFlatSpecLike
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.{ BeforeAndAfterEach, OptionValues }
 
+import java.sql.SQLIntegrityConstraintViolationException
 import scala.concurrent.duration.{ FiniteDuration, _ }
 import scala.concurrent.{ Await, Future }
 
@@ -38,8 +37,10 @@ final class RelationalVertexRepositorySpec
   it should "fail inserting a duplicate vertex into the database" in {
 
     recoverToSucceededIf[SQLIntegrityConstraintViolationException] {
-      relationalRepositories.vertexRepository.insert(vertexOne)
-      relationalRepositories.vertexRepository.insert(vertexOne)
+      for {
+        _ <- relationalRepositories.vertexRepository.insert(vertexOne)
+        _ <- relationalRepositories.vertexRepository.insert(vertexOne)
+      } yield ()
     }
   }
 
