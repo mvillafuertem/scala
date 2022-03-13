@@ -43,14 +43,14 @@ object SlickProductsRepository {
   implicit class ZIOObjOps(private val obj: ZIO.type) extends AnyVal {
     def fromDBIO[R](dbio: DBIO[R]): ZIO[InfrastructureConfiguration, Throwable, R] =
       for {
-        db <- ZIO.accessM[InfrastructureConfiguration](_.db)
-        r  <- ZIO.fromFuture(_ => db.run(dbio))
+        db <- obj.accessM[InfrastructureConfiguration](_.db)
+        r  <- obj.fromFuture(_ => db.run(dbio))
       } yield r
 
     def fromStreamingDBIO[T](dbio: StreamingDBIO[_, T]): ZIO[InfrastructureConfiguration, Throwable, ZStream[Any, Throwable, T]] =
       for {
-        db <- ZIO.accessM[InfrastructureConfiguration](_.db)
-        r  <- ZIO.effect(db.stream(dbio).toStream())
+        db <- obj.accessM[InfrastructureConfiguration](_.db)
+        r  <- obj.effect(db.stream(dbio).toStream())
       } yield r
   }
 

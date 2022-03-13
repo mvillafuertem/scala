@@ -1,0 +1,61 @@
+package io.github.mvillafuertem.tapir.configuration
+
+import akka.actor.typed.ActorSystem
+import akka.actor.typed.scaladsl.adapter._
+import akka.http.scaladsl.Http
+import akka.http.scaladsl.server.RouteConcatenation._enhanceRouteWithConcatenation
+import akka.stream.Materializer
+import akka.{ actor, Done }
+import io.github.mvillafuertem.tapir.api.{ ProductsApi, SwaggerApi }
+import io.github.mvillafuertem.tapir.configuration.ActorSystemConfiguration.ZActorSystem
+import io.github.mvillafuertem.tapir.configuration.properties.ProductsConfigurationProperties
+import io.github.mvillafuertem.tapir.configuration.properties.ProductsConfigurationProperties.ZProductsConfigurationProperties
+import io.github.mvillafuertem.tapir.infrastructure.SlickProductsRepository
+import slick.basic.BasicBackend
+import slick.jdbc.H2Profile.backend._
+import zio.{ Has, Runtime, UIO, ZEnv, ZIO, ZLayer, ZManaged }
+
+import scala.concurrent.Future
+import scala.concurrent.duration._
+
+trait AkkaHttpServerConfiguration {
+
+  val live: ZLayer[ZEnv with ZActorSystem with ZProductsConfigurationProperties, Throwable, Has[
+    Future[Http.ServerBinding]
+  ]] =
+    ZLayer.fromServicesManaged[
+      ActorSystem[Done],
+      ProductsConfigurationProperties,
+      ZEnv,
+      Throwable,
+      Future[Http.ServerBinding]
+    ]((actorSystem, properties) => make(actorSystem, properties))
+
+  def make(
+    actorSystem: ActorSystem[_],
+    properties: ProductsConfigurationProperties
+  ): ZManaged[ZEnv, Throwable, Future[Http.ServerBinding]] =
+    ZManaged.runtime[ZEnv].flatMap { implicit runtime: Runtime[ZEnv] =>
+      ZManaged.makeEffect {
+        implicit lazy val untypedSystem: actor.ActorSystem = actorSystem.toClassic
+        implicit lazy val materializer: Materializer       = Materializer(actorSystem)
+        Http()
+          .newServerAt(properties.interface, properties.port)
+          .bind(
+            SwaggerApi.route ~ new ProductsApi(new SlickProductsRepository() {
+              override def db: UIO[BasicBackend#DatabaseDef] = ZIO.effectTotal(Database.forConfig("infrastructure.h2"))
+            }).route
+          )
+      }(_.map(_.terminate(10.second))(runtime.platform.executor.asEC))
+        .tapError(exception =>
+          ZManaged.succeed(actorSystem.log.error(s"Server could not start with parameters [host:port]=[${properties.interface},${properties.port}]", exception))
+        )
+        .tap(future =>
+          ZManaged.succeed(
+            future.map(server => actorSystem.log.info(s"Server online at http://${server.localAddress}/docs"))(runtime.platform.executor.asEC)
+          )
+        )
+    }
+}
+
+object AkkaHttpServerConfiguration extends AkkaHttpServerConfiguration
