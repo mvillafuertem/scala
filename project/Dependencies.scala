@@ -47,26 +47,26 @@ object Dependencies {
     // A L P A K K A
     Seq(
       // A L P A K K A  I N T E G R A T I O N  T E S T
-      Artifact.akkaSlf4f              % "2.6.15"                    % IntegrationTest,
-      Artifact.akkaStreamKafkaTestkit % Version.alpakkaKafka        % IntegrationTest,
-      Artifact.logback                % Version.logback             % IntegrationTest,
-      Artifact.scalaTest              % Version.scalaTest           % IntegrationTest,
-      Artifact.testcontainersCore     % Version.testcontainers      % IntegrationTest,
-      Artifact.testcontainersKafka    % Version.testcontainersKafka % IntegrationTest
-    )
+      Artifact.akkaSlf4f              % Version.akka,
+      Artifact.akkaStreamKafkaTestkit % Version.alpakkaKafka,
+      Artifact.logback                % Version.logback,
+      Artifact.scalaTest              % Version.scalaTest,
+      Artifact.testcontainersCore     % Version.testcontainers,
+      Artifact.testcontainersKafka    % Version.testcontainersKafka
+    ).map(_ % IntegrationTest)
 
   val `alpakka-mongodb`: Seq[ModuleID] =
     // A L P A K K A
     Seq(
       // A L P A K K A  I N T E G R A T I O N  T E S T
-      Artifact.mongoScalaBson     % Version.mongoScalaBson % IntegrationTest,
-      Artifact.akkaStreamTestkit  % Version.akka           % IntegrationTest,
-      Artifact.alpakkaMongodb     % Version.alpakkaMongodb % IntegrationTest,
-      Artifact.akkaSlf4f          % Version.akka           % IntegrationTest,
-      Artifact.logback            % Version.logback        % IntegrationTest,
-      Artifact.scalaTest          % Version.scalaTest      % IntegrationTest,
-      Artifact.testcontainersCore % Version.testcontainers % IntegrationTest
-    )
+      Artifact.mongoScalaBson     % Version.mongoScalaBson,
+      Artifact.akkaStreamTestkit  % Version.akka,
+      Artifact.alpakkaMongodb     % Version.alpakkaMongodb,
+      Artifact.akkaSlf4f          % Version.akka,
+      Artifact.logback            % Version.logback,
+      Artifact.scalaTest          % Version.scalaTest,
+      Artifact.testcontainersCore % Version.testcontainers
+    ).map(_ % IntegrationTest)
 
   val advanced: Seq[ModuleID] = Seq(
     // A D V A N C E D  T E S T
@@ -167,7 +167,7 @@ object Dependencies {
     Seq(
       Artifact.akkaActorTyped,
       Artifact.akkaStreamTyped
-    ).map(_                 % "2.6.15") ++ Seq(
+    ).map(_                 % Version.akka) ++ Seq(
       Artifact.alpakkaKafka % Version.alpakkaKafka,
       Artifact.ficus        % Version.ficus,
       Artifact.curator      % Version.curator,
@@ -453,7 +453,7 @@ object Dependencies {
     val akkaPersistenceCassandra  = "0.100"
     val akkaPersistenceInmemory   = "2.5.15.2"
     val akkaPersistenceJdbc       = "3.5.2"
-    val alpakkaKafka              = "2.1.1"
+    val alpakkaKafka              = "3.0.0"
     val alpakkaMongodb            = "3.0.4"
     val alpakkaSlick              = "3.0.4"
     val awsCdk                    = "1.148.0"
@@ -471,7 +471,7 @@ object Dependencies {
     val jslt                      = "0.1.11"
     val jsoniter                  = "2.13.6"
     val jwtCirce                  = "4.3.0"
-    val kafka                     = "2.8.1"
+    val kafka                     = "3.1.0"
     val leveldbjniAll             = "1.8"
     val logback                   = "1.2.11"
     val mongoScalaBson            = "4.4.2"

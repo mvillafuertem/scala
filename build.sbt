@@ -343,7 +343,7 @@ lazy val `zio-streams` = (project in file("modules/zio/streams"))
 
 def welcomeMessage: Def.Setting[String] = onLoadMessage := {
   def header(text: String): String                = s"${csl.BOLD}${csl.MAGENTA}$text${csl.RESET}"
-  def cmd(text: String, description: String = "") = f"${csl.GREEN}> ${csl.CYAN}$text%30s $description${csl.RESET}"
+  def cmd(text: String, description: String = "") = f"${csl.GREEN}> ${csl.CYAN}$text%40s $description${csl.RESET}"
   //def subItem(text: String): String = s"  ${Console.YELLOW}> ${Console.CYAN}$text${Console.RESET}"
 
   s"""|${header("sbt")}:
