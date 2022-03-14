@@ -311,7 +311,7 @@ object Dependencies {
       Artifact.akkaStreamTyped
     ).map(_                              % Version.akka) ++ Seq(
       // "org.iq80.leveldb" % "leveldb" % "0.12",
-      Artifact.zio                       % Version.zio,
+      Artifact.zio                       % "2.0.0-RC2",
       Artifact.zioInteropReactiveStreams % Version.zioInteropReactiveStreams,
       Artifact.slick                     % Version.slick,
       Artifact.h2                        % Version.h2,

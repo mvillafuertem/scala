@@ -6,11 +6,7 @@ import io.github.mvillafuertem.tapir.domain.model.ProductType
 import io.github.mvillafuertem.tapir.domain.model.ProductType.{ New, Used }
 import sttp.tapir.Codec.{ JsonCodec, PlainCodec }
 import sttp.tapir.json.circe._
-import sttp.tapir.{ Codec, Validator }
-import io.github.mvillafuertem.tapir.domain.model.ProductType
-import io.github.mvillafuertem.tapir.domain.model.ProductType.New
-import sttp.tapir.Codec.PlainCodec
-import sttp.tapir.{Schema, Validator}
+import sttp.tapir.{ Codec, Schema, Validator }
 
 /**
  * @author
@@ -20,8 +16,8 @@ trait ProductsCodec {
 
   // p r o d u c t  t y p e  c o d e c
   implicit def productTypeValidator: Validator.Enumeration[ProductType] = Validator.enumeration(ProductType.productTypes.toList)
-  implicit def productTypeSchema: Schema[ProductType] = Schema.derivedEnumeration[ProductType](encode = Some(_.toString.toLowerCase))
-  
+  implicit def productTypeSchema: Schema[ProductType]                   = Schema.derivedEnumeration[ProductType](encode = Some(_.toString.toLowerCase))
+
   implicit def plainCodecForProductType: PlainCodec[ProductType] =
     Codec.string
       .map[ProductType]((_: String) match {

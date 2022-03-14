@@ -1,7 +1,7 @@
 package io.github.mvillafuertem.tapir.api
 
 import akka.http.scaladsl.server.Route
-import io.github.mvillafuertem.tapir.ProductsServiceApplication.unsafeRunToFuture
+import io.github.mvillafuertem.tapir.ProductsServiceApplication.runtime
 import io.github.mvillafuertem.tapir.domain.repository.ProductsRepository
 import sttp.tapir.server.akkahttp._
 
@@ -12,6 +12,6 @@ import sttp.tapir.server.akkahttp._
 final class ProductsApi(productsRepository: ProductsRepository) extends ProductsEndpoint {
 
   val route: Route = AkkaHttpServerInterpreter()
-    .toRoute(productsEndpoint.serverLogic(_ => unsafeRunToFuture(productsRepository.find.either).future))
+    .toRoute(productsEndpoint.serverLogic(_ => runtime.unsafeRunToFuture(productsRepository.find.either).future))
 
 }

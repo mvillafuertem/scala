@@ -13,6 +13,6 @@ import zio.stream.ZStream
 final class GetAllProducts {
 
   def apply(): ZIO[ProductsRepository, ProductException, ZStream[Any, Throwable, model.Product]] =
-    ZIO.accessM[ProductsRepository](_.getAll)
+    ZIO.environmentWithZIO[ProductsRepository](_.get.getAll)
 
 }

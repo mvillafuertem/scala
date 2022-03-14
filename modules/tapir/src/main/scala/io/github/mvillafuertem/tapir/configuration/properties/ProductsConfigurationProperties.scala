@@ -1,7 +1,6 @@
 package io.github.mvillafuertem.tapir.configuration.properties
 
 import com.typesafe.config.{Config, ConfigFactory}
-import zio.Has
 
 /**
  * @author
@@ -24,7 +23,7 @@ final case class ProductsConfigurationProperties(
 
 object ProductsConfigurationProperties {
 
-  type ZProductsConfigurationProperties = Has[ProductsConfigurationProperties]
+  type ZProductsConfigurationProperties = ProductsConfigurationProperties
 
   def apply(config: Config = ConfigFactory.load().getConfig("application")): ProductsConfigurationProperties =
     new ProductsConfigurationProperties(

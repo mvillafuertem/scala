@@ -22,14 +22,14 @@ trait SlickProductsRepository extends ProductsRepository with InfrastructureConf
 
   override def create(product: Product): IO[ProductException, ProductId] = {
     val insert = (products += product).map(_ => product.productId)
-    ZIO.fromDBIO(insert).provide(self).refineOrDie { case e: Exception =>
+    ZIO.fromDBIO(insert).provideService(self).refineOrDie { case e: Exception =>
       new ProductException(e)
     }
   }
 
   override def getAll: IO[ProductException, ZStream[Any, Throwable, Product]] = {
     val getAll: StreamingDBIO[Seq[Product], Product] = products.result
-    ZIO.fromStreamingDBIO(getAll).provide(self).refineOrDie { case e: Exception =>
+    ZIO.fromStreamingDBIO(getAll).provideService(self).refineOrDie { case e: Exception =>
       new ProductException(e)
     }
   }
@@ -43,14 +43,14 @@ object SlickProductsRepository {
   implicit class ZIOObjOps(private val obj: ZIO.type) extends AnyVal {
     def fromDBIO[R](dbio: DBIO[R]): ZIO[InfrastructureConfiguration, Throwable, R] =
       for {
-        db <- obj.accessM[InfrastructureConfiguration](_.db)
+        db <- obj.environmentWithZIO[InfrastructureConfiguration](_.get.db)
         r  <- obj.fromFuture(_ => db.run(dbio))
       } yield r
 
     def fromStreamingDBIO[T](dbio: StreamingDBIO[_, T]): ZIO[InfrastructureConfiguration, Throwable, ZStream[Any, Throwable, T]] =
       for {
-        db <- obj.accessM[InfrastructureConfiguration](_.db)
-        r  <- obj.effect(db.stream(dbio).toStream())
+        db <- obj.environmentWithZIO[InfrastructureConfiguration](_.get.db)
+        r  <- obj.attempt(db.stream(dbio).toStream())
       } yield r
   }
 

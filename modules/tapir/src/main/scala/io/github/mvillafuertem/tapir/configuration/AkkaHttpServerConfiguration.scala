@@ -13,16 +13,14 @@ import io.github.mvillafuertem.tapir.configuration.properties.ProductsConfigurat
 import io.github.mvillafuertem.tapir.infrastructure.SlickProductsRepository
 import slick.basic.BasicBackend
 import slick.jdbc.H2Profile.backend._
-import zio.{ Has, Runtime, UIO, ZEnv, ZIO, ZLayer, ZManaged }
+import zio.{ Runtime, UIO, ZEnv, ZIO, ZLayer, ZManaged }
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
 
 trait AkkaHttpServerConfiguration {
 
-  val live: ZLayer[ZEnv with ZActorSystem with ZProductsConfigurationProperties, Throwable, Has[
-    Future[Http.ServerBinding]
-  ]] =
+  val live: ZLayer[ZEnv with ZActorSystem with ZProductsConfigurationProperties, Throwable, Future[Http.ServerBinding]] =
     ZLayer.fromServicesManaged[
       ActorSystem[Done],
       ProductsConfigurationProperties,
@@ -36,23 +34,24 @@ trait AkkaHttpServerConfiguration {
     properties: ProductsConfigurationProperties
   ): ZManaged[ZEnv, Throwable, Future[Http.ServerBinding]] =
     ZManaged.runtime[ZEnv].flatMap { implicit runtime: Runtime[ZEnv] =>
-      ZManaged.makeEffect {
+      ZManaged.acquireReleaseAttemptWith {
         implicit lazy val untypedSystem: actor.ActorSystem = actorSystem.toClassic
         implicit lazy val materializer: Materializer       = Materializer(actorSystem)
         Http()
           .newServerAt(properties.interface, properties.port)
           .bind(
             SwaggerApi.route ~ new ProductsApi(new SlickProductsRepository() {
-              override def db: UIO[BasicBackend#DatabaseDef] = ZIO.effectTotal(Database.forConfig("infrastructure.h2"))
+              override def db: UIO[BasicBackend#DatabaseDef] = ZIO.succeed(Database.forConfig("infrastructure.h2"))
             }).route
           )
-      }(_.map(_.terminate(10.second))(runtime.platform.executor.asEC))
+      }(_.map(_.terminate(10.second))(runtime.runtimeConfig.executor.asExecutionContext))
         .tapError(exception =>
           ZManaged.succeed(actorSystem.log.error(s"Server could not start with parameters [host:port]=[${properties.interface},${properties.port}]", exception))
         )
         .tap(future =>
           ZManaged.succeed(
-            future.map(server => actorSystem.log.info(s"Server online at http://${server.localAddress}/docs"))(runtime.platform.executor.asEC)
+            future
+              .map(server => actorSystem.log.info(s"Server online at http://${server.localAddress}/docs"))(runtime.runtimeConfig.executor.asExecutionContext)
           )
         )
     }
