@@ -10,10 +10,11 @@
     </appender>
 
     <!-- akka -->
-    <logger name="akka.actor" level="DEBUG"/>
+    <logger name="akka.actor" level="INFO"/>
     <logger name="akka.actor.TimerScheduler" level="INFO"/>
+    <logger name="slick.jdbc.JdbcBackend" level="DEBUG"/>
 
-    <root level="DEBUG">
+    <root level="INFO">
         <appender-ref ref="ASYNC"/>
     </root>
 </configuration>

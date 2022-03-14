@@ -3,7 +3,6 @@ package io.github.mvillafuertem.tapir.application
 import io.github.mvillafuertem.tapir.domain.error.ProductException
 import io.github.mvillafuertem.tapir.domain.model
 import io.github.mvillafuertem.tapir.domain.repository.ProductsRepository
-import zio.ZIO
 import zio.stream.ZStream
 
 /**
@@ -12,7 +11,7 @@ import zio.stream.ZStream
  */
 final class GetAllProducts {
 
-  def apply(): ZIO[ProductsRepository, ProductException, ZStream[Any, Throwable, model.Product]] =
-    ZIO.environmentWithZIO[ProductsRepository](_.get.getAll)
+  def apply(): ZStream[ProductsRepository, ProductException, model.Product] =
+    ZStream.environmentWithStream[ProductsRepository](_.get.getAll)
 
 }

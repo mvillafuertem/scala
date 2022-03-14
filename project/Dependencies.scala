@@ -327,7 +327,7 @@ object Dependencies {
       // T A P I R  T E S T
       Artifact.akkaHttpTestkit % Version.akkaHttp,
       Artifact.scalaTest       % Version.scalaTest,
-      Artifact.zioTest         % Version.zio
+      Artifact.zioTest         % "2.0.0-RC2"
     ).map(_ % Test)
 
   val `terraform-cdktf-scalajs`: Def.Setting[Seq[ModuleID]] = libraryDependencies ++= Seq(
@@ -490,7 +490,7 @@ object Dependencies {
     val zio                       = "1.0.13"
     val zioAkkaCluster            = "0.2.0"
     val zioInteropCats            = "3.2.9.1"
-    val zioInteropReactiveStreams = "1.3.9"
+    val zioInteropReactiveStreams = "2.0.0-RC3"
     val zioKafka                  = "0.17.5"
   }
 

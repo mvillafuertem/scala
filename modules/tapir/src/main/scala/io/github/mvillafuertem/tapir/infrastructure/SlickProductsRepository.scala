@@ -9,7 +9,7 @@ import slick.dbio.{ DBIO, StreamingDBIO }
 import slick.jdbc.H2Profile.api._
 import zio.interop.reactivestreams._
 import zio.stream.ZStream
-import zio.{ IO, UIO, ZIO }
+import zio.{ stream, IO, UIO, ZIO }
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -27,9 +27,9 @@ trait SlickProductsRepository extends ProductsRepository with InfrastructureConf
     }
   }
 
-  override def getAll: IO[ProductException, ZStream[Any, Throwable, Product]] = {
+  override def getAll: stream.Stream[ProductException, Product] = {
     val getAll: StreamingDBIO[Seq[Product], Product] = products.result
-    ZIO.fromStreamingDBIO(getAll).provideService(self).refineOrDie { case e: Exception =>
+    ZStream.fromStreamingDBIO(getAll).provideService(self).refineOrDie { case e: Exception =>
       new ProductException(e)
     }
   }
@@ -46,11 +46,13 @@ object SlickProductsRepository {
         db <- obj.environmentWithZIO[InfrastructureConfiguration](_.get.db)
         r  <- obj.fromFuture(_ => db.run(dbio))
       } yield r
+  }
 
-    def fromStreamingDBIO[T](dbio: StreamingDBIO[_, T]): ZIO[InfrastructureConfiguration, Throwable, ZStream[Any, Throwable, T]] =
+  implicit class ZStreamsObjOps(private val obj: ZStream.type) extends AnyVal {
+    def fromStreamingDBIO[T](dbio: StreamingDBIO[_, T]): ZStream[InfrastructureConfiguration, Throwable, T] =
       for {
         db <- obj.environmentWithZIO[InfrastructureConfiguration](_.get.db)
-        r  <- obj.attempt(db.stream(dbio).toStream())
+        r  <- db.stream(dbio).toStream()
       } yield r
   }
 

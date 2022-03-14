@@ -8,11 +8,12 @@ import org.scalatest.flatspec.AnyFlatSpecLike
 import org.scalatest.matchers.should.Matchers
 import slick.basic.BasicBackend
 import slick.jdbc.H2Profile.backend._
+import zio.stream.ZStream
 import zio.{ BootstrapRuntime, UIO, ZIO }
 
 final class SlickProductsRepositorySpec extends SlickProductsRepositoryConfigurationSpec with AnyFlatSpecLike with Matchers with BootstrapRuntime {
 
-  behavior of "SlickProductsRepositorySpec"
+  behavior of s"${getClass.getSimpleName}"
 
   it should "insert an product into the database" in {
 
@@ -44,16 +45,14 @@ final class SlickProductsRepositorySpec extends SlickProductsRepositoryConfigura
     val product2: model.Product = Product(productId2, name2, productType2)
 
     // w h e n
-    this.unsafeRun(
-      for {
-        _      <- create(product)
-        _      <- create(product2)
-        result <- getAll
-      } yield result.runCollect.map { result =>
-        // t h e n
-        result shouldBe Seq(product, product2)
-      }
-    )
+    (for {
+      _      <- ZStream.fromEffect(create(product))
+      _      <- ZStream.fromEffect(create(product2))
+      result <- getAll
+    } yield result).runCollect.map { result =>
+      // t h e n
+      result shouldBe Seq(product, product2)
+    }
 
   }
 
@@ -63,7 +62,7 @@ object SlickProductsRepositorySpec {
 
   trait SlickProductsRepositoryConfigurationSpec extends InfrastructureConfiguration with SlickProductsRepository {
 
-    override def db: UIO[BasicBackend#DatabaseDef] = ZIO.effectTotal(Database.forConfig("infrastructure.h2"))
+    override def db: UIO[BasicBackend#DatabaseDef] = ZIO.succeed(Database.forConfig("infrastructure.h2"))
 
   }
 

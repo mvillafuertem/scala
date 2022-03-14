@@ -1,11 +1,12 @@
 package io.github.mvillafuertem.tapir.api
 
+import akka.stream.scaladsl.Source
+import akka.util.ByteString
 import io.github.mvillafuertem.tapir.api.ProductsEndpoint.ProductsQuery
-import io.github.mvillafuertem.tapir.domain.model.ProductType
-import sttp.model.StatusCode
+import io.github.mvillafuertem.tapir.domain.model.{Product, ProductType}
+import sttp.capabilities.akka.AkkaStreams
 import sttp.tapir._
-import sttp.tapir.json.circe._
-
+import sttp.tapir.generic.auto._
 /**
  * @author
  *   Miguel Villafuerte
@@ -42,12 +43,12 @@ trait ProductsEndpoint extends ProductsCodec {
   private[api] lazy val baseProductsResource = productsResource / productsQuery
 
   // e n d p o i n t
-  private[api] lazy val productsEndpoint =
+  private[api] lazy val productsEndpoint: Endpoint[Unit, ProductsQuery, Unit, Source[ByteString, Any], Any with AkkaStreams] =
     baseEndpoint.get
       .in(baseProductsResource)
       .name(productsResourceName)
       .description(productsResourceDescription)
-      .out(statusCode(StatusCode.Created).and(jsonBody[String].example("vectorProductsExample")))
+      .out(streamBody(AkkaStreams)(Schema.derived[List[Product]], CodecFormat.Json()))
 
   // e x a m p l e
 
