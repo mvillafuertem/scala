@@ -6,7 +6,7 @@ import io.github.mvillafuertem.tapir.domain.model.{ Product, ProductId }
 import io.github.mvillafuertem.tapir.domain.repository.ProductsRepository
 import io.github.mvillafuertem.tapir.infrastructure.tables.ProductTable
 import slick.dbio.{ DBIO, StreamingDBIO }
-import slick.driver.H2Driver.api._
+import slick.jdbc.H2Profile.api._
 import zio.interop.reactivestreams._
 import zio.stream.ZStream
 import zio.{ IO, UIO, ZIO }

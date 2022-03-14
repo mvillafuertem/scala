@@ -4,7 +4,7 @@ import java.util.UUID
 
 import io.github.mvillafuertem.tapir.domain.model
 import io.github.mvillafuertem.tapir.domain.model.{ Product, ProductId, ProductType }
-import slick.driver.H2Driver.api._
+import slick.jdbc.H2Profile.api._
 import slick.lifted.CaseClassShape
 
 trait ProductTable {
