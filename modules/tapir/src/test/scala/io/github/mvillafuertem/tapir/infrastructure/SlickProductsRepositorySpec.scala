@@ -9,9 +9,9 @@ import org.scalatest.matchers.should.Matchers
 import slick.basic.BasicBackend
 import slick.jdbc.H2Profile.backend._
 import zio.stream.ZStream
-import zio.{ BootstrapRuntime, UIO, ZIO }
+import zio.{ Runtime, RuntimeConfig, UIO, ZEnv, ZEnvironment, ZIO }
 
-final class SlickProductsRepositorySpec extends SlickProductsRepositoryConfigurationSpec with AnyFlatSpecLike with Matchers with BootstrapRuntime {
+final class SlickProductsRepositorySpec extends SlickProductsRepositoryConfigurationSpec with AnyFlatSpecLike with Matchers with Runtime[ZEnv] {
 
   behavior of s"${getClass.getSimpleName}"
 
@@ -24,7 +24,7 @@ final class SlickProductsRepositorySpec extends SlickProductsRepositoryConfigura
     val product: model.Product = Product(productId, name, productType)
 
     // w h e n
-    val actual: ProductId = this.unsafeRun(create(product))
+    val actual: ProductId = unsafeRun(create(product))
 
     // t h e n
     actual shouldBe productId
@@ -45,16 +45,23 @@ final class SlickProductsRepositorySpec extends SlickProductsRepositoryConfigura
     val product2: model.Product = Product(productId2, name2, productType2)
 
     // w h e n
-    (for {
-      _      <- ZStream.fromEffect(create(product))
-      _      <- ZStream.fromEffect(create(product2))
-      result <- getAll
-    } yield result).runCollect.map { result =>
-      // t h e n
-      result shouldBe Seq(product, product2)
-    }
+    unsafeRun(
+      (for {
+        _      <- ZStream.fromZIO(create(product))
+        _      <- ZStream.fromZIO(create(product2))
+        result <- getAll
+      } yield result).runCollect.map { result =>
+        // t h e n
+        result should have size 3
+        result.toList should contain allOf (product, product2)
+      }
+    )
 
   }
+
+  override def environment: ZEnvironment[ZEnv] = ZEnvironment.default
+
+  override def runtimeConfig: RuntimeConfig = RuntimeConfig.default
 
 }
 
