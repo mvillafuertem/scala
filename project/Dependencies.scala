@@ -312,6 +312,7 @@ object Dependencies {
     ).map(_                              % Version.akka) ++ Seq(
       // "org.iq80.leveldb" % "leveldb" % "0.12",
       Artifact.zio                       % "2.0.0-RC2",
+      Artifact.zioLoggingSlf4j           % Version.zioLoggingSlf4j,
       Artifact.zioInteropReactiveStreams % Version.zioInteropReactiveStreams,
       Artifact.slick                     % Version.slick,
       Artifact.h2                        % Version.h2,
@@ -441,6 +442,7 @@ object Dependencies {
     val zioInteropCats            = "dev.zio"                               %% "zio-interop-cats"
     val zioInteropReactiveStreams = "dev.zio"                               %% "zio-interop-reactivestreams"
     val zioKafka                  = "dev.zio"                               %% "zio-kafka"
+    val zioLoggingSlf4j           = "dev.zio"                               %% "zio-logging-slf4j"
     val zioStreams                = "dev.zio"                               %% "zio-streams"
     val zioTest                   = "dev.zio"                               %% "zio-test"
     val zioTestSbt                = "dev.zio"                               %% "zio-test-sbt"
@@ -492,6 +494,7 @@ object Dependencies {
     val zioInteropCats            = "3.2.9.1"
     val zioInteropReactiveStreams = "2.0.0-RC3"
     val zioKafka                  = "0.17.5"
+    val zioLoggingSlf4j           = "2.0.0-RC5"
   }
 
 }

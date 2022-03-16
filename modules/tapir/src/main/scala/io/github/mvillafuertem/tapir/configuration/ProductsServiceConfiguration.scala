@@ -1,7 +1,7 @@
 package io.github.mvillafuertem.tapir.configuration
 
 import io.github.mvillafuertem.tapir.configuration.properties.ProductsConfigurationProperties
-import zio.{ ExitCode, URIO, ZEnv, ZLayer }
+import zio.{ ExitCode, LogLevel, URIO, ZEnv, ZIO, ZLayer }
 
 trait ProductsServiceConfiguration {
 
@@ -10,10 +10,14 @@ trait ProductsServiceConfiguration {
       .provideSomeLayer[ZEnv](ZLayer.succeed[ProductsConfigurationProperties](ProductsConfigurationProperties()) >+> ActorSystemConfiguration.live)
       .fold(
         e => {
-          println(e)
+          ZIO.logLevel(LogLevel.Error) {
+            ZIO.log(e.getMessage)
+          }
           ExitCode.failure
         },
         _ => ExitCode.success
       )
+    // @see https://ziverge.com/blog/a-preview-of-logging-in-zio-2/
+    // .provideSomeLayer(SLF4J.slf4j(LogLevel.Info, LogFormat.colored).toLayer)
 
 }
