@@ -1,11 +1,10 @@
 package io.github.mvillafuertem.tapir.configuration
 
+import akka.actor
 import akka.actor.typed.ActorSystem
 import akka.actor.typed.scaladsl.adapter._
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.server.RouteConcatenation._enhanceRouteWithConcatenation
-import akka.stream.Materializer
-import akka.{ actor, Done }
 import io.github.mvillafuertem.tapir.api.{ ProductsApi, SwaggerApi }
 import io.github.mvillafuertem.tapir.configuration.ActorSystemConfiguration.ZActorSystem
 import io.github.mvillafuertem.tapir.configuration.properties.ProductsConfigurationProperties
@@ -13,7 +12,7 @@ import io.github.mvillafuertem.tapir.configuration.properties.ProductsConfigurat
 import io.github.mvillafuertem.tapir.infrastructure.SlickProductsRepository
 import slick.basic.BasicBackend
 import slick.jdbc.H2Profile.backend._
-import zio.{ Runtime, UIO, ZEnv, ZIO, ZLayer, ZManaged }
+import zio.{ Runtime, UIO, ZEnv, ZEnvironment, ZIO, ZLayer, ZManaged }
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
@@ -21,13 +20,13 @@ import scala.concurrent.duration._
 trait AkkaHttpServerConfiguration {
 
   val live: ZLayer[ZEnv with ZActorSystem with ZProductsConfigurationProperties, Throwable, Future[Http.ServerBinding]] =
-    ZLayer.fromServicesManaged[
-      ActorSystem[Done],
-      ProductsConfigurationProperties,
-      ZEnv,
-      Throwable,
-      Future[Http.ServerBinding]
-    ]((actorSystem, properties) => make(actorSystem, properties))
+    ZLayer.fromManagedEnvironment(
+      for {
+        actorSystem <- ZManaged.service[ZActorSystem]
+        properties  <- ZManaged.service[ZProductsConfigurationProperties]
+        httpServer  <- make(actorSystem, properties).map(ZEnvironment[Future[Http.ServerBinding]](_))
+      } yield httpServer
+    )
 
   def make(
     actorSystem: ActorSystem[_],
@@ -36,7 +35,6 @@ trait AkkaHttpServerConfiguration {
     ZManaged.runtime[ZEnv].flatMap { implicit runtime: Runtime[ZEnv] =>
       ZManaged.acquireReleaseAttemptWith {
         implicit lazy val untypedSystem: actor.ActorSystem = actorSystem.toClassic
-        implicit lazy val materializer: Materializer       = Materializer(actorSystem)
         Http()
           .newServerAt(properties.interface, properties.port)
           .bind(
