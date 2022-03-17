@@ -1,6 +1,10 @@
 package io.github.mvillafuertem.tapir.configuration.properties
 
-import com.typesafe.config.{Config, ConfigFactory}
+import com.typesafe.config.ConfigFactory
+import zio.Layer
+import zio.config.ConfigDescriptor.{ int, nested, string }
+import zio.config.{ ReadError, _ }
+import zio.config.typesafe._
 
 /**
  * @author
@@ -25,11 +29,12 @@ object ProductsConfigurationProperties {
 
   type ZProductsConfigurationProperties = ProductsConfigurationProperties
 
-  def apply(config: Config = ConfigFactory.load().getConfig("application")): ProductsConfigurationProperties =
-    new ProductsConfigurationProperties(
-      name = config.getString("name"),
-      interface = config.getString("server.interface"),
-      port = config.getInt("server.port")
-    )
+  private val configDescriptor: ConfigDescriptor[ProductsConfigurationProperties] =
+    string("name")
+      .zip(nested("server")(string("interface")))
+      .zip(nested("server")(int("port")))
+      .to[ProductsConfigurationProperties]
 
+  val live: Layer[ReadError[String], ZProductsConfigurationProperties] =
+    TypesafeConfig.fromTypesafeConfig(ConfigFactory.load().getConfig("application"), configDescriptor)
 }

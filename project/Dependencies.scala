@@ -311,12 +311,14 @@ object Dependencies {
       Artifact.akkaStreamTyped
     ).map(_                              % Version.akka) ++ Seq(
       // "org.iq80.leveldb" % "leveldb" % "0.12",
-      Artifact.zio                       % "2.0.0-RC2",
-      Artifact.zioLoggingSlf4j           % Version.zioLoggingSlf4j,
-      Artifact.zioInteropReactiveStreams % Version.zioInteropReactiveStreams,
-      Artifact.slick                     % Version.slick,
+      "dev.zio"                         %% "zio-config"          % "3.0.0-RC3",
+      "dev.zio"                         %% "zio-config-typesafe" % "3.0.0-RC3",
       Artifact.h2                        % Version.h2,
-      Artifact.logback                   % Version.logback
+      Artifact.logback                   % Version.logback,
+      Artifact.slick                     % Version.slick,
+      Artifact.zio                       % "2.0.0-RC2",
+      Artifact.zioInteropReactiveStreams % Version.zioInteropReactiveStreams,
+      Artifact.zioLoggingSlf4j           % Version.zioLoggingSlf4j
     ) ++ Seq(
       Artifact.tapirCore,
       Artifact.tapirAkkaHttpServer,

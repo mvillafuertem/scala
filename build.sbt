@@ -1,6 +1,7 @@
 import _root_.scala.sys.process.Process
 import _root_.scala.{ Console => csl }
 
+Global / onChangedBuildSource := ReloadOnSourceChanges
 Global / onLoad := {
   val GREEN = csl.GREEN
   val RESET = csl.RESET

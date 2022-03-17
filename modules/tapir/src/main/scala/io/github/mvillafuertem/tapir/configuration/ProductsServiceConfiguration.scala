@@ -1,13 +1,21 @@
 package io.github.mvillafuertem.tapir.configuration
 
+import io.github.mvillafuertem.tapir.configuration.ActorSystemConfiguration.ZActorSystem
 import io.github.mvillafuertem.tapir.configuration.properties.ProductsConfigurationProperties
+import io.github.mvillafuertem.tapir.configuration.properties.ProductsConfigurationProperties.ZProductsConfigurationProperties
 import zio.{ ExitCode, LogLevel, URIO, ZEnv, ZIO, ZLayer }
 
 trait ProductsServiceConfiguration {
 
   val productsServiceApplication: URIO[ZEnv, ExitCode] =
     AkkaHttpServerConfiguration.live.build.useForever
-      .provideSomeLayer[ZEnv](ZLayer.succeed[ProductsConfigurationProperties](ProductsConfigurationProperties()) >+> ActorSystemConfiguration.live)
+      .provideSomeLayer[ZEnv](
+        ZLayer.make[ZActorSystem with ZProductsConfigurationProperties](
+          ProductsConfigurationProperties.live,
+          ActorSystemConfiguration.live,
+          ZLayer.Debug.mermaid
+        )
+      )
       .fold(
         e => {
           ZIO.logLevel(LogLevel.Error) {
