@@ -5,7 +5,9 @@ import akka.actor.BootstrapSetup
 import akka.actor.typed.ActorSystem
 import akka.actor.typed.scaladsl.Behaviors
 import io.circe.generic.auto._
+import io.circe.parser.parse
 import io.circe.syntax.EncoderOps
+import io.github.mvillafuertem.tapir.BuildInfo
 import io.github.mvillafuertem.tapir.configuration.properties.ProductsConfigurationProperties
 import io.github.mvillafuertem.tapir.configuration.properties.ProductsConfigurationProperties.ZProductsConfigurationProperties
 import zio.{ Runtime, ZLayer, ZManaged }
@@ -20,7 +22,12 @@ trait ActorSystemConfiguration {
     ActorSystem[Done](
       Behaviors.setup[Done] { context =>
         context.setLoggerName(getClass)
-        context.log.info(s"Starting service with configuration ${products.asJson.noSpaces}... ${"BuildInfo.toJson"}")
+        parse(BuildInfo.toJson)
+          .map(_.deepMerge(products.asJson).noSpacesSortKeys)
+          .fold(
+            exception => context.log.error("Error to parse configuration", exception),
+            configuration => context.log.info(s"Starting service with configuration $configuration")
+          )
         Behaviors.receiveMessage { case Done =>
           context.log.error(s"Server could not start!")
           Behaviors.stopped
@@ -33,7 +40,9 @@ trait ActorSystemConfiguration {
   val live: ZLayer[ZProductsConfigurationProperties, Throwable, ZActorSystem] =
     ZManaged
       .runtime[ZProductsConfigurationProperties]
-      .flatMap { implicit runtime: Runtime[ZProductsConfigurationProperties] => make(runtime.environment.get, runtime.runtimeConfig.executor.asExecutionContext) }
+      .flatMap { implicit runtime: Runtime[ZProductsConfigurationProperties] =>
+        make(runtime.environment.get, runtime.runtimeConfig.executor.asExecutionContext)
+      }
       .toLayer
 
   def make(products: ProductsConfigurationProperties, executionContext: ExecutionContext): ZManaged[Any, Throwable, ActorSystem[Done]] =
