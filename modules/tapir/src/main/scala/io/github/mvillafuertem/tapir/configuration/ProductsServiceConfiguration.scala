@@ -3,7 +3,7 @@ package io.github.mvillafuertem.tapir.configuration
 import io.github.mvillafuertem.tapir.configuration.ActorSystemConfiguration.ZActorSystem
 import io.github.mvillafuertem.tapir.configuration.properties.ProductsConfigurationProperties
 import io.github.mvillafuertem.tapir.configuration.properties.ProductsConfigurationProperties.ZProductsConfigurationProperties
-import zio.{ ExitCode, LogLevel, URIO, ZEnv, ZIO, ZLayer }
+import zio.{ ExitCode, URIO, ZEnv, ZLayer }
 
 trait ProductsServiceConfiguration {
 
@@ -16,15 +16,7 @@ trait ProductsServiceConfiguration {
           ZLayer.Debug.mermaid
         )
       )
-      .fold(
-        e => {
-          ZIO.logLevel(LogLevel.Error) {
-            ZIO.log(e.getMessage)
-          }
-          ExitCode.failure
-        },
-        _ => ExitCode.success
-      )
+      .fold(_ => ExitCode.failure, _ => ExitCode.success)
     // @see https://ziverge.com/blog/a-preview-of-logging-in-zio-2/
     // .provideSomeLayer(SLF4J.slf4j(LogLevel.Info, LogFormat.colored).toLayer)
 
