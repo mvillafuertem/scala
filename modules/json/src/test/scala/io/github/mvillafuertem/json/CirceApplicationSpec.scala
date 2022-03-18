@@ -6,6 +6,7 @@ import io.circe.generic.extras._
 import io.circe.optics.JsonPath._
 import io.circe.parser._
 import io.circe.syntax._
+import monocle.{ Optional, Traversal }
 import org.scalatest.flatspec.AnyFlatSpecLike
 import org.scalatest.matchers.should.Matchers
 
@@ -73,7 +74,8 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
         |""".stripMargin
 
     // w h e n
-    val actual: Json                                                        = parse(json).getOrElse(Json.Null)
+    val actual: Json = parse(json).getOrElse(Json.Null)
+
     def flatten(combineKeys: (String, String) => String)(value: Json): Json = {
       def flattenToFields(value: Json): Option[Iterable[(String, Json)]] =
         value.asObject.map(
@@ -122,7 +124,8 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
         |""".stripMargin
 
     // w h e n
-    val actual: Json                                   = parse(json).getOrElse(Json.Null)
+    val actual: Json = parse(json).getOrElse(Json.Null)
+
     def transform(js: Json, f: String => String): Json = js
       .mapString(f)
       .mapArray(_.map(transform(_, f)))
@@ -169,7 +172,8 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
         |""".stripMargin
 
     // w h e n
-    val actual: Json                                                 = parse(json).getOrElse(Json.Null)
+    val actual: Json = parse(json).getOrElse(Json.Null)
+
     def transformStringValues(json: Json, f: String => String): Json = json
       .mapString(f)
       .mapArray(a => a.map(transformStringValues(_, f)))
@@ -438,10 +442,8 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
     case object SomeThing  extends Thing
     case object OtherThing extends Thing
 
-    implicit val decodeThing: Decoder[Seq[Thing]] =  Decoder.decodeHCursor.emap { hcursor =>
-      hcursor.field("thing").as[Seq[String]].left.map(_.message).map(_.flatMap(f =>
-        Seq[Thing](SomeThing, OtherThing).filter(_.toString.equalsIgnoreCase(f))
-      ))
+    implicit val decodeThing: Decoder[Seq[Thing]] = Decoder.decodeHCursor.emap { hcursor =>
+      hcursor.field("thing").as[Seq[String]].left.map(_.message).map(_.flatMap(f => Seq[Thing](SomeThing, OtherThing).filter(_.toString.equalsIgnoreCase(f))))
     }
 
     // W H E N
@@ -517,16 +519,15 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
     // G I V E N
     import io.circe.Codec
     import io.circe.generic.extras.Configuration
-    import io.circe.generic.extras.semiauto.{ deriveEnumerationCodec, deriveConfiguredCodec }
+    import io.circe.generic.extras.semiauto.{ deriveConfiguredCodec, deriveEnumerationCodec }
 
     case class Person(name: String = "", role: Role = User, permission: Seq[String] = Nil)
     sealed trait Role
     case object User extends Role
 
-    implicit val config: Configuration  = Configuration.default.copy(transformConstructorNames = _.toLowerCase).withDefaults
-    implicit val roleCodec: Codec[Role] = deriveEnumerationCodec[Role]
+    implicit val config: Configuration               = Configuration.default.copy(transformConstructorNames = _.toLowerCase).withDefaults
+    implicit val roleCodec: Codec[Role]              = deriveEnumerationCodec[Role]
     implicit val decisionElementCodec: Codec[Person] = deriveConfiguredCodec
-
 
     // W H E N
     val actual = decode[Person]("""{}""")
@@ -564,7 +565,7 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
   it should "manual encoder empty string" in {
 
     // G I V E N
-    import io.circe.generic.extras.semiauto.{deriveUnwrappedDecoder, deriveUnwrappedEncoder}
+    import io.circe.generic.extras.semiauto.{ deriveUnwrappedDecoder, deriveUnwrappedEncoder }
 
     final case class CustomString(value: Option[String])
     final case class TestString(name: CustomString)
@@ -574,15 +575,14 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
         .decodeOption(deriveUnwrappedDecoder[CustomString])
         .map(ssOpt => CustomString(ssOpt.flatMap(_.value.flatMap(s => Option.when(s.nonEmpty)(s)))))
     implicit val customStringEncoder: Encoder[CustomString] = deriveUnwrappedEncoder[CustomString]
-    implicit val testStringCodec: Codec[TestString] = io.circe.generic.semiauto.deriveCodec
-
+    implicit val testStringCodec: Codec[TestString]         = io.circe.generic.semiauto.deriveCodec
 
     // W H E N
-    val testString = TestString(CustomString(Some("test")))
+    val testString      = TestString(CustomString(Some("test")))
     val emptyTestString = TestString(CustomString(Some("")))
-    val noneTestString = TestString(CustomString(None))
-    val nullJson = """{"name":null}"""
-    val emptyJson = """{}"""
+    val noneTestString  = TestString(CustomString(None))
+    val nullJson        = """{"name":null}"""
+    val emptyJson       = """{}"""
 
     // T H E N
     assert(testString.asJson.noSpaces == """{"name":"test"}""")
@@ -590,9 +590,8 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
     assert(noneTestString.asJson.noSpaces == nullJson)
     assert(noneTestString.asJson.dropNullValues.noSpaces == emptyJson)
 
-    assert(decode[TestString](nullJson).exists(_ == noneTestString)) // this passes
+    assert(decode[TestString](nullJson).exists(_ == noneTestString))  // this passes
     assert(decode[TestString](emptyJson).exists(_ == noneTestString)) // this fails
-
 
   }
 
@@ -729,7 +728,8 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
         |""".stripMargin
 
     // w h e n
-    val actual: Json             = parse(json).getOrElse(Json.Null)
+    val actual: Json = parse(json).getOrElse(Json.Null)
+
     def schema(json: Json): Json = json.mapObject { obj =>
       if (obj.contains("type") && !obj.contains("$schema")) {
         val updatedObj = obj.toMap.map { case (key, value) => key -> schema(value) }
@@ -810,7 +810,8 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
         |""".stripMargin
 
     // w h e n
-    val actual: Json                 = parse(json).getOrElse(Json.Null)
+    val actual: Json = parse(json).getOrElse(Json.Null)
+
     def schemaFold(that: Json): Json = {
       def recursive(that: Json): Json =
         that.asObject match {
@@ -933,15 +934,21 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
         |""".stripMargin
 
     // w h e n
-    val actual: Json                   = parse(json).getOrElse(Json.Null)
+    val actual: Json = parse(json).getOrElse(Json.Null)
+
     def schemaFolder(json: Json): Json = {
       val folder = new Json.Folder[Json] {
-        def onNull: Json                       = Json.Null
-        def onBoolean(value: Boolean): Json    = Json.fromBoolean(value)
-        def onNumber(value: JsonNumber): Json  = Json.fromJsonNumber(value)
-        def onString(value: String): Json      = Json.fromString(value)
+        def onNull: Json = Json.Null
+
+        def onBoolean(value: Boolean): Json = Json.fromBoolean(value)
+
+        def onNumber(value: JsonNumber): Json = Json.fromJsonNumber(value)
+
+        def onString(value: String): Json = Json.fromString(value)
+
         def onArray(value: Vector[Json]): Json = Json.fromValues(value)
-        def onObject(value: JsonObject): Json  =
+
+        def onObject(value: JsonObject): Json =
           if (value.contains("type") && !value.contains("$schema")) {
             Json.fromJsonObject(
               JsonObject(
@@ -1008,6 +1015,33 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
                            |""".stripMargin).getOrElse(Json.Null)
 
     schemaFolder(actual) shouldBe expected
+  }
+
+  it should "extract tuples of values from json" in {
+
+    // g i v e n
+    val jsonFileName = "/sample.json"
+    val jsonString   = scala.io.Source.fromInputStream(getClass.getResourceAsStream(jsonFileName)).mkString
+
+    // w h e n
+    val dataField: Traversal[Json, Json]   = root.data.each.json
+    val guidField: Optional[Json, String]  = root.guid.string
+    val nameField: Optional[Json, String]  = root.name.string
+    val friendsField: Optional[Json, Json] = root.friends.json
+
+    // t h e n
+    val actual: Either[ParsingFailure, Seq[(String, String, Json)]] = parse(jsonString)
+      .map(dataField.getAll)
+      .map(jsonElements =>
+        for {
+          element: Json <- jsonElements: List[Json]
+          guid: String  <- guidField.getOption(element): Option[String]
+          name: String  <- nameField.getOption(element): Option[String]
+          friends: Json <- friendsField.getOption(element): Option[Json]
+        } yield (guid, name, friends)
+      )
+
+    actual.isRight shouldBe true
   }
 
 }
