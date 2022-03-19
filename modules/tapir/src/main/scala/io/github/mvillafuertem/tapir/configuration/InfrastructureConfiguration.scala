@@ -8,5 +8,3 @@ trait InfrastructureConfiguration {
   def db: UIO[BasicBackend#DatabaseDef]
 
 }
-
-object InfrastructureConfiguration {}

@@ -10,7 +10,8 @@ import io.circe.syntax.EncoderOps
 import io.github.mvillafuertem.tapir.BuildInfo
 import io.github.mvillafuertem.tapir.configuration.properties.ProductsConfigurationProperties
 import io.github.mvillafuertem.tapir.configuration.properties.ProductsConfigurationProperties.ZProductsConfigurationProperties
-import zio.{ Runtime, ZLayer, ZManaged }
+import zio.ZIO.{ logError, logInfo }
+import zio.{ Runtime, Task, ZLayer, ZManaged }
 
 import scala.concurrent.ExecutionContext
 
@@ -21,13 +22,6 @@ trait ActorSystemConfiguration {
   private def live(executionContext: ExecutionContext, products: ProductsConfigurationProperties): ActorSystem[Done] =
     ActorSystem[Done](
       Behaviors.setup[Done] { context =>
-        context.setLoggerName(getClass)
-        parse(BuildInfo.toJson)
-          .map(_.deepMerge(products.asJson).noSpacesSortKeys)
-          .fold(
-            exception => context.log.error("Error to parse configuration", exception),
-            configuration => context.log.info(s"Starting service with configuration $configuration")
-          )
         Behaviors.receiveMessage { case Done =>
           context.log.error(s"Server could not start!")
           Behaviors.stopped
@@ -46,7 +40,19 @@ trait ActorSystemConfiguration {
       .toLayer
 
   def make(products: ProductsConfigurationProperties, executionContext: ExecutionContext): ZManaged[Any, Throwable, ActorSystem[Done]] =
-    ZManaged.acquireReleaseAttemptWith(live(executionContext, products))(_.terminate())
+    for {
+      _           <- Task(parse(BuildInfo.toJson)).absolve
+                       .map(_.deepMerge(products.asJson).noSpacesSortKeys)
+                       .foldZIO(
+                         exception => logError(s"Error to parse configuration $exception"),
+                         configuration => logInfo(s"Starting service with configuration $configuration")
+                       )
+                       .toManaged
+      actorSystem <- ZManaged.acquireReleaseAttemptWith {
+                       live(executionContext, products)
+                     }(_.terminate())
+
+    } yield actorSystem
 
 }
 
