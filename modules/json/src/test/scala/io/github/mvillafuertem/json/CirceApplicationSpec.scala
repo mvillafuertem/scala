@@ -1030,18 +1030,26 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
     val friendsField: Optional[Json, Json] = root.friends.json
 
     // t h e n
-    val actual: Either[ParsingFailure, Seq[(String, String, Json)]] = parse(jsonString)
+    val actual: Either[ParsingFailure, Json] = parse(jsonString)
       .map(dataField.getAll)
-      .map(jsonElements =>
-        for {
-          element: Json <- jsonElements: List[Json]
-          guid: String  <- guidField.getOption(element): Option[String]
-          name: String  <- nameField.getOption(element): Option[String]
-          friends: Json <- friendsField.getOption(element): Option[Json]
-        } yield (guid, name, friends)
+      .map(
+        _.filter(json => nameField.getOption(json).fold(false)(_ == "Wade Jordan"))
+          .map(json =>
+          guidField
+            .getOption(json)
+            .fold[(String, Json)]("null" -> Json.Null)(guid =>
+                guid -> Json.obj(
+                  "name"    -> nameField.getOption(json).fold(Json.Null)(a => Json.fromString(a)),
+                  "friends" -> friendsField.getOption(json).fold(Json.Null)(identity)
+                )
+            )
+        )
       )
+      .map(Json.obj(_: _*))
 
     actual.isRight shouldBe true
+    actual shouldBe parse("""{"68a346f6-873b-4c07-b808-9cd446a6f18a":{"name":"Wade Jordan","friends":[{"id":0,"name":"Duke Estes"},{"id":1,"name":"Kim Hayes"},{"id":2,"name":"Branch Chang"}]}}""".stripMargin)
+
   }
 
 }
