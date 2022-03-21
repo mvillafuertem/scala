@@ -4,16 +4,19 @@ import org.scalablytyped.runtime.StringDictionary
 import typings.cdktf.cdktfMod.TerraformStack
 import typings.cdktf.terraformDependableMod.ITerraformDependable
 import typings.cdktfProviderAws.awsProviderMod.AwsProviderConfig
-import typings.cdktfProviderAws.budgetsMod.Budgets.{ BudgetsBudget, BudgetsBudgetConfig, BudgetsBudgetCostTypes, BudgetsBudgetNotification }
-import typings.cdktfProviderAws.ec2Mod.EC2.{ Instance, InstanceConfig, InstanceEbsBlockDevice }
-import typings.cdktfProviderAws.iamMod.IAM._
-import typings.cdktfProviderAws.mod.DataSources.DataAwsRegion
-import typings.cdktfProviderAws.mod.IAM.IamGroup
-import typings.cdktfProviderAws.mod.S3.S3Bucket
-import typings.cdktfProviderAws.mod.VPC.{ SecurityGroup, SecurityGroupRule }
+import typings.cdktfProviderAws.budgetsBudgetMod.{ BudgetsBudget, BudgetsBudgetConfig, BudgetsBudgetCostTypes, BudgetsBudgetNotification }
+import typings.cdktfProviderAws.iamGroupMod.IamGroupConfig
+import typings.cdktfProviderAws.iamGroupPolicyAttachmentMod.IamGroupPolicyAttachmentConfig
+import typings.cdktfProviderAws.iamUserMod.IamUserConfig
+import typings.cdktfProviderAws.instanceMod.{ Instance, InstanceConfig, InstanceEbsBlockDevice }
 import typings.cdktfProviderAws.mod._
-import typings.cdktfProviderAws.s3Mod.S3.{ S3BucketConfig, S3BucketVersioning }
-import typings.cdktfProviderAws.vpcMod.VPC.{ SecurityGroupConfig, SecurityGroupRuleConfig }
+import typings.cdktfProviderAws.mod.datasources.DataAwsRegion
+import typings.cdktfProviderAws.mod.iam.{ IamGroup, IamGroupPolicyAttachment, IamUser }
+import typings.cdktfProviderAws.mod.s3.S3Bucket
+import typings.cdktfProviderAws.mod.vpc.{ SecurityGroup, SecurityGroupRule }
+import typings.cdktfProviderAws.s3BucketMod.{ S3BucketConfig, S3BucketVersioning }
+import typings.cdktfProviderAws.securityGroupMod.SecurityGroupConfig
+import typings.cdktfProviderAws.securityGroupRuleMod.SecurityGroupRuleConfig
 import typings.constructs.mod.Construct
 
 import scala.scalajs.js
@@ -152,7 +155,7 @@ final class IamStack(scope: Construct, name: String) extends TerraformStack(scop
       .setAmi("ami-0947d2ba12ee1ff75")
       .setInstanceType("t2.micro")
       .setTags(StringDictionary("Name" -> "instance"))
-      .setSecurityGroups(js.Array[String](securityGroup.name.get))
+      .setSecurityGroups(js.Array[String](securityGroup.name))
       .setEbsBlockDevice(js.Array[InstanceEbsBlockDevice](ebsBlockDevice))
     // .deleteRootBlockDevice
   )

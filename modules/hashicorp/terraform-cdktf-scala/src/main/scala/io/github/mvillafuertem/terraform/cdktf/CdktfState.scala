@@ -20,34 +20,34 @@ final class CdktfState(scope: Construct, id: String, cdktfStackConfiguration: Cd
     .profile(cdktfStackConfiguration.profile)
     .build()
 
-  private val serverSideEncryptionConfiguration: S3BucketServerSideEncryptionConfiguration =
-    S3BucketServerSideEncryptionConfiguration
-      .builder()
-      .rule(
-        S3BucketServerSideEncryptionConfigurationRule
-          .builder()
-          .applyServerSideEncryptionByDefault(
-            S3BucketServerSideEncryptionConfigurationRuleApplyServerSideEncryptionByDefault
-              .builder()
-              .sseAlgorithm("AES256")
-              .build()
-          )
-          .build()
-      )
-      .build()
-
-  private val versioning: S3BucketVersioning =
-    S3BucketVersioning
-      .builder()
-      .enabled(true)
-      .build()
+//  private val serverSideEncryptionConfiguration: S3BucketServerSideEncryptionConfiguration =
+//    S3BucketServerSideEncryptionConfiguration
+//      .builder()
+//      .rule(
+//        S3BucketServerSideEncryptionConfigurationRule
+//          .builder()
+//          .applyServerSideEncryptionByDefault(
+//            S3BucketServerSideEncryptionConfigurationRuleApplyServerSideEncryptionByDefault
+//              .builder()
+//              .sseAlgorithm("AES256")
+//              .build()
+//          )
+//          .build()
+//      )
+//      .build()
+//
+//  private val versioning: S3BucketVersioning =
+//    S3BucketVersioning
+//      .builder()
+//      .enabled(true)
+//      .build()
 
   private val s3Bucket: S3Bucket = S3Bucket.Builder
     .create(self, "cdktf_s3")
     .bucket(cdktfStackConfiguration.bucket)
-    .versioning(versioning)
+//    .versioning(versioning)
     .forceDestroy(true)
-    .serverSideEncryptionConfiguration(serverSideEncryptionConfiguration)
+//    .serverSideEncryptionConfiguration(serverSideEncryptionConfiguration)
     .tags(Map("Environment" -> cdktfStackConfiguration.environment).asJava)
     .build()
 
