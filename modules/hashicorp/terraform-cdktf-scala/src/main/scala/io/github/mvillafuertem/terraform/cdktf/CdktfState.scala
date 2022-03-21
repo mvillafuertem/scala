@@ -2,7 +2,7 @@ package io.github.mvillafuertem.terraform.cdktf
 
 import com.hashicorp.cdktf.{ TerraformOutput, TerraformStack }
 import imports.aws._
-import imports.aws.dynamo_db.{ DynamodbTable, DynamodbTableAttribute }
+import imports.aws.dynamodb.{ DynamodbTable, DynamodbTableAttribute }
 import imports.aws.s3._
 import io.github.mvillafuertem.terraform.cdktf.CdktfStack.CdktfStackConfiguration
 import software.constructs.Construct

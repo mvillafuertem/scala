@@ -1,8 +1,8 @@
 package io.github.mvillafuertem.terraform.cdktf
 
 import com.hashicorp.cdktf.{ TerraformOutput, TerraformResourceLifecycle }
-import imports.aws.auto_scaling.AutoscalingGroup
-import imports.aws.data_sources.LaunchConfiguration
+import imports.aws.autoscaling.AutoscalingGroup
+import imports.aws.datasources.LaunchConfiguration
 import imports.aws.ec2.KeyPair
 import imports.aws.elb._
 import imports.aws.vpc.{ DataAwsVpc, SecurityGroup, SecurityGroupRule, Subnet }

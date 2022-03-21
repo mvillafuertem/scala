@@ -21,8 +21,8 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "cdktf-cli": "^0.7.0",
-    "@types/node": "14.17.27"
+    "cdktf-cli": "^0.9.4",
+    "@types/node": "^17.0.21"
   },
   "private": true
 }
