@@ -345,11 +345,11 @@ object Dependencies {
 
   val `terraform-cdktf-scala`: Seq[ModuleID] = Seq(
     // T E R R A F O R M  C D K T F
-    "com.hashicorp"       % "cdktf"      % "0.9.4"
+    "com.hashicorp"  % "cdktf"     % "0.9.4"
     // "software.constructs" % "constructs" % "10.0.9"
   ) ++ Seq(
     // T E R R A F O R M  C D K T F  T E S T
-    "org.scalatest"      %% "scalatest"  % Version.scalaTest % Test
+    "org.scalatest" %% "scalatest" % Version.scalaTest % Test
   )
 
   val zio: Seq[ModuleID] =
@@ -462,7 +462,7 @@ object Dependencies {
     val alpakkaSlick              = "3.0.4"
     val awsCdk                    = "1.149.0"
     val awsLambda                 = "1.2.1"
-    val awsSdk                    = "2.17.152"
+    val awsSdk                    = "2.17.153"
     val cask                      = "0.7.11"
     val cats                      = "2.7.0"
     val circe                     = "0.14.1"
