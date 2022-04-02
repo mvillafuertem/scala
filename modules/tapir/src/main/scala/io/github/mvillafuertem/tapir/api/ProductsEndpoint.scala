@@ -3,10 +3,11 @@ package io.github.mvillafuertem.tapir.api
 import akka.stream.scaladsl.Source
 import akka.util.ByteString
 import io.github.mvillafuertem.tapir.api.ProductsEndpoint.ProductsQuery
-import io.github.mvillafuertem.tapir.domain.model.{Product, ProductType}
+import io.github.mvillafuertem.tapir.domain.model.{ Product, ProductType }
 import sttp.capabilities.akka.AkkaStreams
 import sttp.tapir._
 import sttp.tapir.generic.auto._
+
 /**
  * @author
  *   Miguel Villafuerte

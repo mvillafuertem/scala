@@ -2,7 +2,7 @@ package io.github.mvillafuertem.tapir.domain.repository
 
 import io.github.mvillafuertem.tapir.domain.error.ProductException
 import io.github.mvillafuertem.tapir.domain.model.{ Product, ProductId }
-import zio.{ IO, stream }
+import zio.{ stream, IO }
 
 trait ProductsRepository {
 

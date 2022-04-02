@@ -10,7 +10,7 @@ object Dependencies {
       Artifact.akkaPersistence,
       Artifact.akkaSlf4f,
       Artifact.akkaStream
-    ).map(_               % Version.akka) ++ Seq(
+    ).map(_ % Version.akka) ++ Seq(
       // Artifact.akkaPersistenceCassandra % Version.akkaPersistenceCassandra,
       // Artifact.akkaPersistenceJdbc % Version.akkaPersistenceJdbc,
       Artifact.logback    % Version.logback,
@@ -32,7 +32,7 @@ object Dependencies {
       Artifact.akkaPersistenceTyped,
       Artifact.akkaSlf4f,
       Artifact.akkaStreamTyped
-    ).map(_            % Version.akka) ++ Seq(
+    ).map(_ % Version.akka) ++ Seq(
       Artifact.logback % Version.logback
     ) ++ Seq(
       // A K K A  T Y P E D  T E S T
@@ -94,12 +94,12 @@ object Dependencies {
     Artifact.circeGeneric,
     Artifact.circeGenericExtras,
     Artifact.circeParser
-  ).map(_              % Version.circe) ++ (Seq(
+  ).map(_ % Version.circe) ++ (Seq(
     // A W S  I N T E G R A T I O N  T E S T
     Artifact.awsSdkCloudWatch,
     Artifact.awsSdkLambda,
     Artifact.awsSdkS3
-  ).map(_                       % Version.awsSdk) ++ Seq(
+  ).map(_ % Version.awsSdk) ++ Seq(
     Artifact.java8Compat        % Version.java8Compat,
     Artifact.logback            % Version.logback,
     Artifact.scalaTest          % Version.scalaTest,
@@ -134,7 +134,7 @@ object Dependencies {
       Artifact.tapirOpenapiCirceYaml,
       Artifact.tapirOpenapiDocs,
       Artifact.tapirSwaggerUiBundle
-    ).map(_                         % Version.tapir) ++ Seq(
+    ).map(_ % Version.tapir) ++ Seq(
       // A K K A  F S M  T E S T
       Artifact.akkaActorTestkitTyped % Version.akka,
       Artifact.akkaStreamTestkit     % Version.akka,
@@ -155,7 +155,7 @@ object Dependencies {
       Artifact.tapirOpenapiCirceYaml,
       Artifact.tapirOpenapiDocs,
       Artifact.tapirSwaggerUiBundle
-    ).map(_                  % Version.tapir) ++ Seq(
+    ).map(_ % Version.tapir) ++ Seq(
       // A K K A  H T T P  T E S T
       Artifact.akkaHttpTestkit % Version.akkaHttp,
       Artifact.akkaTestKit     % Version.akka,
@@ -167,7 +167,7 @@ object Dependencies {
     Seq(
       Artifact.akkaActorTyped,
       Artifact.akkaStreamTyped
-    ).map(_                 % Version.akka) ++ Seq(
+    ).map(_ % Version.akka) ++ Seq(
       Artifact.alpakkaKafka % Version.alpakkaKafka,
       Artifact.ficus        % Version.ficus,
       Artifact.curator      % Version.curator,
@@ -193,7 +193,7 @@ object Dependencies {
     // P R O D U C T I O N
     "me.shadaj" %%% "slinky-hot",
     "me.shadaj" %%% "slinky-react-router"
-  ).map(_                 % Version.slinky) ++ Seq(
+  ).map(_ % Version.slinky) ++ Seq(
     "dev.zio"           %%% "zio"             % Version.zio,
     "io.github.cquiroz" %%% "scala-java-time" % Version.scalaJavaTime
   )
@@ -260,7 +260,7 @@ object Dependencies {
     ) ++ Seq(
       // S L I C K  T E S T
       Artifact.scalaTest % Version.scalaTest
-    ).map(_                 % Test)
+    ).map(_ % Test)
 
   val slinky: Def.Setting[Seq[ModuleID]] = libraryDependencies ++= Seq(
     // P R O D U C T I O N
@@ -309,7 +309,7 @@ object Dependencies {
     Seq(
       Artifact.akkaActorTyped,
       Artifact.akkaStreamTyped
-    ).map(_                              % Version.akka) ++ Seq(
+    ).map(_ % Version.akka) ++ Seq(
       // "org.iq80.leveldb" % "leveldb" % "0.12",
       "dev.zio"                         %% "zio-config"          % "3.0.0-RC6",
       "dev.zio"                         %% "zio-config-typesafe" % "3.0.0-RC6",
@@ -338,7 +338,7 @@ object Dependencies {
     "io.circe" %%% "circe-generic",
     "io.circe" %%% "circe-optics",
     "io.circe" %%% "circe-parser"
-  ).map(_             % Version.circe) ++ Seq(
+  ).map(_ % Version.circe) ++ Seq(
     // T E R R A F O R M  C D K T F  T E S T
     "org.scalatest" %%% "scalatest" % Version.scalaTest % Test
   )
@@ -357,7 +357,7 @@ object Dependencies {
     Seq(
       Artifact.zio,
       Artifact.zioStreams
-    ).map(_                   % Version.zio) ++ Seq(
+    ).map(_ % Version.zio) ++ Seq(
       Artifact.zioAkkaCluster % Version.zioAkkaCluster,
       Artifact.zioKafka       % Version.zioKafka
     ) ++ Seq(
