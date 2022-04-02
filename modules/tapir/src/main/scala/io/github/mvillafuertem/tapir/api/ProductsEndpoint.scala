@@ -23,6 +23,7 @@ trait ProductsEndpoint extends ProductsCodec {
   // e n d p o i n t
   private[api] lazy val baseEndpoint: Endpoint[Unit, Unit, Unit, Unit, Any] =
     endpoint
+      .tag("Products")
       .in(baseApiResource)
       .name(apiNameResource)
       .description(apiDescriptionResource)
