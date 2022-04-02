@@ -12,8 +12,8 @@ import io.github.mvillafuertem.tapir.configuration.properties.ProductsConfigurat
 import io.github.mvillafuertem.tapir.infrastructure.SlickProductsRepository
 import slick.basic.BasicBackend
 import slick.jdbc.H2Profile.backend._
-import zio.ZIO.{ logError, logInfo }
-import zio.{ Runtime, Task, UIO, ZEnv, ZEnvironment, ZIO, ZLayer, ZManaged }
+import zio.ZIO.{ log, logError }
+import zio.{ Runtime, Scope, Task, UIO, ZEnv, ZEnvironment, ZIO, ZLayer }
 
 import scala.concurrent.ExecutionContext
 import scala.concurrent.duration._
@@ -22,11 +22,11 @@ trait AkkaHttpServerConfiguration {
 
   type ZAkkaHttpServer = Http.ServerBinding
 
-  val live: ZLayer[ZEnv with ZActorSystem with ZProductsConfigurationProperties, Throwable, ZAkkaHttpServer] =
-    ZLayer.fromManagedEnvironment(
+  val live: ZLayer[ZEnv with Scope with ZActorSystem with ZProductsConfigurationProperties, Throwable, ZAkkaHttpServer] =
+    ZLayer.fromZIOEnvironment(
       for {
-        actorSystem <- ZManaged.service[ZActorSystem]
-        properties  <- ZManaged.service[ZProductsConfigurationProperties]
+        actorSystem <- ZIO.service[ZActorSystem]
+        properties  <- ZIO.service[ZProductsConfigurationProperties]
         httpServer  <- make(actorSystem, properties).map(ZEnvironment[ZAkkaHttpServer](_))
       } yield httpServer
     )
@@ -34,10 +34,10 @@ trait AkkaHttpServerConfiguration {
   def make(
     actorSystem: ActorSystem[_],
     properties: ProductsConfigurationProperties
-  ): ZManaged[ZEnv, Throwable, ZAkkaHttpServer] =
-    ZManaged.runtime[ZEnv].flatMap { implicit runtime: Runtime[ZEnv] =>
-      ZManaged
-        .acquireReleaseWith(
+  ): ZIO[ZEnv with Scope, Throwable, ZAkkaHttpServer] =
+    ZIO.runtime[ZEnv].flatMap { implicit runtime: Runtime[ZEnv] =>
+      ZIO
+        .acquireRelease(
           Task.fromFuture { implicit ec: ExecutionContext =>
             implicit lazy val untypedSystem: actor.ActorSystem = actorSystem.toClassic
             Http()
@@ -50,9 +50,9 @@ trait AkkaHttpServerConfiguration {
           }
         )(httpServer => Task.fromFuture { implicit ec: ExecutionContext => httpServer.terminate(30.second) }.orDie)
         .tapError(exception =>
-          logError(s"Server could not start with parameters [host:port]=[${properties.interface},${properties.port}] $exception").toManaged
+          logError(s"Server could not start with parameters [host:port]=[${properties.interface},${properties.port}] ${exception.getMessage}")
         )
-        .tap(server => logInfo(s"Server online at http://${server.localAddress}/docs").toManaged)
+        .tap(server => log(s"Server online at http://${server.localAddress}/docs"))
     }
 }
 

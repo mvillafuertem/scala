@@ -311,12 +311,12 @@ object Dependencies {
       Artifact.akkaStreamTyped
     ).map(_                              % Version.akka) ++ Seq(
       // "org.iq80.leveldb" % "leveldb" % "0.12",
-      "dev.zio"                         %% "zio-config"          % "3.0.0-RC3",
-      "dev.zio"                         %% "zio-config-typesafe" % "3.0.0-RC3",
+      "dev.zio"                         %% "zio-config"          % "3.0.0-RC6",
+      "dev.zio"                         %% "zio-config-typesafe" % "3.0.0-RC6",
       Artifact.h2                        % Version.h2,
       Artifact.logback                   % Version.logback,
       Artifact.slick                     % Version.slick,
-      Artifact.zio                       % "2.0.0-RC2",
+      Artifact.zio                       % "2.0.0-RC3",
       Artifact.zioInteropReactiveStreams % Version.zioInteropReactiveStreams,
       Artifact.zioLoggingSlf4j           % Version.zioLoggingSlf4j
     ) ++ Seq(
@@ -494,9 +494,9 @@ object Dependencies {
     val zio                       = "1.0.13"
     val zioAkkaCluster            = "0.2.0"
     val zioInteropCats            = "3.2.9.1"
-    val zioInteropReactiveStreams = "2.0.0-RC3"
+    val zioInteropReactiveStreams = "2.0.0-RC4"
     val zioKafka                  = "0.17.5"
-    val zioLoggingSlf4j           = "2.0.0-RC5"
+    val zioLoggingSlf4j           = "2.0.0-RC6"
   }
 
 }

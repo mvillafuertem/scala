@@ -3,21 +3,26 @@ package io.github.mvillafuertem.tapir.configuration
 import io.github.mvillafuertem.tapir.configuration.ActorSystemConfiguration.ZActorSystem
 import io.github.mvillafuertem.tapir.configuration.properties.ProductsConfigurationProperties
 import io.github.mvillafuertem.tapir.configuration.properties.ProductsConfigurationProperties.ZProductsConfigurationProperties
-import zio.ZIO.logError
-import zio.{ ExitCode, URIO, ZEnv, ZLayer }
+import zio.{ExitCode, Scope, URIO, ZEnv, ZIO, ZLayer}
 
 trait ProductsServiceConfiguration extends AuditingConfiguration with zio.ZIOAppDefault {
 
   val productsServiceApplication: URIO[ZEnv, ExitCode] =
-    AkkaHttpServerConfiguration.live.build.useForever
+    ZIO.scoped(AkkaHttpServerConfiguration.live.build *> ZIO.never)
       .provideSomeLayer[ZEnv](
-        ZLayer.make[ZActorSystem with ZProductsConfigurationProperties](
+        ZLayer.make[ZActorSystem with ZProductsConfigurationProperties with Scope](
           ProductsConfigurationProperties.live,
           ActorSystemConfiguration.live,
-          ZLayer.Debug.mermaid
+          ZLayer.Debug.mermaid,
+          ZLayer.scope
         )
       )
-      .catchAll(e => logError(e.getMessage))
-      .exitCode
+      .foldCause(
+        e => {
+          println(e.prettyPrint)
+          ExitCode.failure
+        },
+        _ => ExitCode.success
+      )
 
 }

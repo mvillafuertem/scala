@@ -9,7 +9,7 @@ import slick.dbio.{ DBIO, StreamingDBIO }
 import slick.jdbc.H2Profile.api._
 import zio.interop.reactivestreams._
 import zio.stream.ZStream
-import zio.{ stream, IO, UIO, ZIO }
+import zio.{ stream, IO, UIO, ZIO, ZLayer }
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -22,14 +22,14 @@ trait SlickProductsRepository extends ProductsRepository with InfrastructureConf
 
   override def create(product: Product): IO[ProductException, ProductId] = {
     val insert = (products += product).map(_ => product.productId)
-    ZIO.fromDBIO(insert).provideService(self).refineOrDie { case e: Exception =>
+    ZIO.fromDBIO(insert).provideLayer(ZLayer.succeed(self)).refineOrDie { case e: Exception =>
       new ProductException(e)
     }
   }
 
   override def getAll: stream.Stream[ProductException, Product] = {
     val getAll: StreamingDBIO[Seq[Product], Product] = products.result
-    ZStream.fromStreamingDBIO(getAll).provideService(self).refineOrDie { case e: Exception =>
+    ZStream.fromStreamingDBIO(getAll).provideLayer(ZLayer.succeed(self)).refineOrDie { case e: Exception =>
       new ProductException(e)
     }
   }

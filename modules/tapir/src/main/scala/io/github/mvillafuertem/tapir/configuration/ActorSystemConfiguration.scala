@@ -4,14 +4,9 @@ import akka.Done
 import akka.actor.BootstrapSetup
 import akka.actor.typed.ActorSystem
 import akka.actor.typed.scaladsl.Behaviors
-import io.circe.generic.auto._
-import io.circe.parser.parse
-import io.circe.syntax.EncoderOps
-import io.github.mvillafuertem.tapir.BuildInfo
 import io.github.mvillafuertem.tapir.configuration.properties.ProductsConfigurationProperties
 import io.github.mvillafuertem.tapir.configuration.properties.ProductsConfigurationProperties.ZProductsConfigurationProperties
-import zio.ZIO.{ logError, logInfo }
-import zio.{ Runtime, Task, ZLayer, ZManaged }
+import zio.{ Runtime, Scope, Task, ZIO, ZLayer }
 
 import scala.concurrent.ExecutionContext
 
@@ -31,28 +26,16 @@ trait ActorSystemConfiguration {
       BootstrapSetup().withDefaultExecutionContext(executionContext)
     )
 
-  val live: ZLayer[ZProductsConfigurationProperties, Throwable, ZActorSystem] =
-    ZManaged
+  val live: ZLayer[Scope with ZProductsConfigurationProperties, Throwable, ZActorSystem] =
+    ZIO
       .runtime[ZProductsConfigurationProperties]
       .flatMap { implicit runtime: Runtime[ZProductsConfigurationProperties] =>
         make(runtime.environment.get, runtime.runtimeConfig.executor.asExecutionContext)
       }
       .toLayer
 
-  def make(products: ProductsConfigurationProperties, executionContext: ExecutionContext): ZManaged[Any, Throwable, ActorSystem[Done]] =
-    for {
-      _           <- Task(parse(BuildInfo.toJson)).absolve
-                       .map(_.deepMerge(products.asJson).noSpacesSortKeys)
-                       .foldZIO(
-                         exception => logError(s"Error to parse configuration $exception"),
-                         configuration => logInfo(s"Starting service with configuration $configuration")
-                       )
-                       .toManaged
-      actorSystem <- ZManaged.acquireReleaseAttemptWith {
-                       live(executionContext, products)
-                     }(_.terminate())
-
-    } yield actorSystem
+  def make(products: ProductsConfigurationProperties, executionContext: ExecutionContext): ZIO[Any with Scope, Throwable, ActorSystem[Done]] =
+    ZIO.acquireRelease(Task(live(executionContext, products)))(actorSystem => Task(actorSystem.terminate()).orDie)
 
 }
 
