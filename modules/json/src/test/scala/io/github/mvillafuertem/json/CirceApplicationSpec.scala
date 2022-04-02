@@ -1035,20 +1035,22 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
       .map(
         _.filter(json => nameField.getOption(json).fold(false)(_ == "Wade Jordan"))
           .map(json =>
-          guidField
-            .getOption(json)
-            .fold[(String, Json)]("null" -> Json.Null)(guid =>
+            guidField
+              .getOption(json)
+              .fold[(String, Json)]("null" -> Json.Null)(guid =>
                 guid -> Json.obj(
                   "name"    -> nameField.getOption(json).fold(Json.Null)(a => Json.fromString(a)),
                   "friends" -> friendsField.getOption(json).fold(Json.Null)(identity)
                 )
-            )
-        )
+              )
+          )
       )
       .map(Json.obj(_: _*))
 
     actual.isRight shouldBe true
-    actual shouldBe parse("""{"68a346f6-873b-4c07-b808-9cd446a6f18a":{"name":"Wade Jordan","friends":[{"id":0,"name":"Duke Estes"},{"id":1,"name":"Kim Hayes"},{"id":2,"name":"Branch Chang"}]}}""".stripMargin)
+    actual shouldBe parse(
+      """{"68a346f6-873b-4c07-b808-9cd446a6f18a":{"name":"Wade Jordan","friends":[{"id":0,"name":"Duke Estes"},{"id":1,"name":"Kim Hayes"},{"id":2,"name":"Branch Chang"}]}}""".stripMargin
+    )
 
   }
 
