@@ -316,7 +316,7 @@ object Dependencies {
       Artifact.h2                        % Version.h2,
       Artifact.logback                   % Version.logback,
       Artifact.slick                     % Version.slick,
-      Artifact.zio                       % "2.0.0-RC4",
+      Artifact.zio                       % "2.0.0-RC2",
       Artifact.zioInteropReactiveStreams % Version.zioInteropReactiveStreams,
       Artifact.zioLoggingSlf4j           % Version.zioLoggingSlf4j
     ) ++ Seq(
@@ -330,7 +330,7 @@ object Dependencies {
       // T A P I R  T E S T
       Artifact.akkaHttpTestkit % Version.akkaHttp,
       Artifact.scalaTest       % Version.scalaTest,
-      Artifact.zioTest         % "2.0.0-RC4"
+      Artifact.zioTest         % "2.0.0-RC2"
     ).map(_ % Test)
 
   val `terraform-cdktf-scalajs`: Def.Setting[Seq[ModuleID]] = libraryDependencies ++= Seq(
