@@ -1,17 +1,18 @@
-package io.github.mvillafuertem.tapir.api
+package io.github.mvillafuertem.tapir.api.routes
 
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.server.directives.DebuggingDirectives
 import io.github.mvillafuertem.tapir.BuildInfo
+import io.github.mvillafuertem.tapir.api.ProductsEndpoint
 import sttp.tapir.docs.openapi._
 import sttp.tapir.openapi.circe.yaml._
 import sttp.tapir.openapi.{ Info, OpenAPI }
 import sttp.tapir.server.akkahttp.AkkaHttpServerInterpreter
-import sttp.tapir.swagger.{ SwaggerUI, SwaggerUIOptions }
+import sttp.tapir.swagger.{SwaggerUI, SwaggerUIOptions}
 
 import scala.concurrent.Future
 
-trait SwaggerApi {
+trait SwaggerRoute {
 
   lazy val openApi: OpenAPI =
     OpenAPIDocsInterpreter()
@@ -33,4 +34,4 @@ trait SwaggerApi {
 
 }
 
-object SwaggerApi extends SwaggerApi
+object SwaggerRoute extends SwaggerRoute

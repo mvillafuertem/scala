@@ -1,18 +1,18 @@
-package io.github.mvillafuertem.tapir.api
+package io.github.mvillafuertem.tapir.api.mapper
 
 import io.circe.syntax._
-import io.circe.{ Decoder, Encoder, HCursor, Json }
+import io.circe.{Decoder, Encoder, HCursor, Json}
 import io.github.mvillafuertem.tapir.domain.model.ProductType
-import io.github.mvillafuertem.tapir.domain.model.ProductType.{ New, Used }
-import sttp.tapir.Codec.{ JsonCodec, PlainCodec }
+import io.github.mvillafuertem.tapir.domain.model.ProductType.{New, Used}
+import sttp.tapir.Codec.{JsonCodec, PlainCodec}
 import sttp.tapir.json.circe._
-import sttp.tapir.{ Codec, Schema, Validator }
+import sttp.tapir.{Codec, Schema, Validator}
 
 /**
  * @author
  *   Miguel Villafuerte
  */
-trait ProductsCodec {
+trait ProductsMapper {
 
   // p r o d u c t  t y p e  c o d e c
   implicit def productTypeValidator: Validator.Enumeration[ProductType] = Validator.enumeration(ProductType.productTypes.toList)

@@ -5,7 +5,8 @@ import akka.actor.typed.ActorSystem
 import akka.actor.typed.scaladsl.adapter._
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.server.RouteConcatenation._enhanceRouteWithConcatenation
-import io.github.mvillafuertem.tapir.api.{ ProductsApi, SwaggerApi }
+import io.github.mvillafuertem.tapir.api.routes.ProductsRoute
+import io.github.mvillafuertem.tapir.api.routes.SwaggerRoute
 import io.github.mvillafuertem.tapir.configuration.ActorSystemConfiguration.ZActorSystem
 import io.github.mvillafuertem.tapir.configuration.properties.ProductsConfigurationProperties
 import io.github.mvillafuertem.tapir.configuration.properties.ProductsConfigurationProperties.ZProductsConfigurationProperties
@@ -43,7 +44,7 @@ trait AkkaHttpServerConfiguration {
             Http()
               .newServerAt(properties.interface, properties.port)
               .bind(
-                SwaggerApi.route ~ new ProductsApi(new SlickProductsRepository() {
+                SwaggerRoute.route ~ new ProductsRoute(new SlickProductsRepository() {
                   override def db: UIO[BasicBackend#DatabaseDef] = ZIO.succeed(Database.forConfig("infrastructure.h2"))
                 }).route
               )
