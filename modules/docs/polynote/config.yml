@@ -6,5 +6,5 @@ storage:
 
 dependencies:
   scala:
-    - dev.zio:zio_2.13:1.0.13
-    - dev.zio:zio-test_2.13:1.0.13
+    - dev.zio:zio_2.13:1.0.14
+    - dev.zio:zio-test_2.13:1.0.14
