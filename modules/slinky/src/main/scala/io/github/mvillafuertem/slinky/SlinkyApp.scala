@@ -6,6 +6,7 @@ import slinky.web.ReactDOM
 import slinky.web.html._
 import zio.{ App, ExitCode, ZIO }
 
+// sbt slinky
 object SlinkyApp extends App {
 
   override def run(args: List[String]): ZIO[zio.ZEnv, Nothing, ExitCode] =
