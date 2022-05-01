@@ -15,8 +15,10 @@ export default defineConfig(({command, mode}) => {
                 minify: (process.env.NODE_ENV === 'production'),
                 inject: {data: {script}}
             })],
+        base: './',
         build: {
-            outDir: '../../docs/slinky'
+            outDir: '../../docs/slinky',
+            emptyOutDir: true
         },
         server: {
             port: 8001,
