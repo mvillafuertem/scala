@@ -6,12 +6,14 @@ import slinky.web.ReactDOM
 import slinky.web.html._
 import zio.{ App, ExitCode, ZIO }
 
-// sbt slinky
+// yarn --cwd modules/slinky/ install
+// sbt "project slinky; ~fastLinkJS"
+// yarn --cwd modules/slinky/ dev (in a separate terminal)
 object SlinkyApp extends App {
 
   override def run(args: List[String]): ZIO[zio.ZEnv, Nothing, ExitCode] =
     ZIO
-      .succeed(ReactDOM.render(div(SlinkyButton("dear user")), dom.document.getElementById("container")))
+      .succeed(ReactDOM.render(div(SlinkyButton("dear user")), dom.document.getElementById("root")))
       .exitCode
 
 }

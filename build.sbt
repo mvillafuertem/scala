@@ -1,5 +1,7 @@
+import org.scalajs.linker.interface.ModuleSplitStyle
+
 import _root_.scala.sys.process.Process
-import _root_.scala.{ Console => csl }
+import _root_.scala.{Console => csl}
 
 Global / onChangedBuildSource := ReloadOnSourceChanges
 Global / onLoad               := {
@@ -245,19 +247,23 @@ lazy val slick = (project in file("modules/slick"))
 
 lazy val slinky = (project in file("modules/slinky"))
   // S E T T I N G S
-  .settings(commonSettingsJs)
+  .settings(scalaVersion := Settings.scala213)
+  .settings(scalacOptions += "-Ymacro-annotations")
   .settings(Dependencies.slinky)
-  // S C A L A  J S  B U N D L E R
-  .settings(webpackDevServerPort := 8008)
-  .settings(startWebpackDevServer / version := "3.10.3")
-  .settings(Test / requireJsDomEnv := true)
-  .settings(Compile / npmDependencies ++= NpmDependencies.slinky)
+  .settings(scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.ESModule) })
+  .settings(scalaJSLinkerConfig ~= { _.withModuleSplitStyle(ModuleSplitStyle.FewestModules) })
+  .settings(scalaJSLinkerConfig ~= { _.withSourceMap(false) })
+  .settings(scalaJSUseMainModuleInitializer := true)
+  .settings(externalNpm := {
+    Process("yarn", baseDirectory.value).!
+    baseDirectory.value
+  })
   // S C A L A B L Y T Y P E D
   .settings(stFlavour := Flavour.Slinky)
   .settings(stMinimize := Selection.All)
   .settings(stIgnore ++= List("@material-ui/icons"))
   // P L U G I N S
-  .enablePlugins(ScalablyTypedConverterPlugin)
+  .enablePlugins(ScalablyTypedConverterExternalNpmPlugin)
   .enablePlugins(ScalaJSPlugin)
 
 lazy val spark = (project in file("modules/spark"))
