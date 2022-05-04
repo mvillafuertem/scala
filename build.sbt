@@ -45,6 +45,7 @@ lazy val scala = (project in file("."))
     reflection,
     script,
     slick,
+    `scalajs-facades`,
     // slinky, scalajs Error downloading org.scoverage
     spark,
     sttp,
@@ -245,7 +246,16 @@ lazy val slick = (project in file("modules/slick"))
   .settings(libraryDependencies ++= Dependencies.slick)
   .settings(commands += Commands.h2Command)
 
-lazy val slinky = (project in file("modules/slinky"))
+lazy val `scalajs-facades` = (project in file("modules/scalajs/facades"))
+  // S E T T I N G S
+  .settings(scalaVersion := Settings.scala213)
+  .settings(scalaJSLinkerConfig ~={  _.withSourceMap(false)})
+  .settings(scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule)})
+  .settings(scalaJSUseMainModuleInitializer := true)
+  // P L U G I N S
+  .enablePlugins(ScalaJSJUnitPlugin)
+
+lazy val `scalajs-slinky` = (project in file("modules/scalajs/slinky"))
   // S E T T I N G S
   .settings(scalaVersion := Settings.scala213)
   .settings(scalacOptions += "-Ymacro-annotations")

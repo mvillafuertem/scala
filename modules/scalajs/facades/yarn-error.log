@@ -1,0 +1,34 @@
+Arguments: 
+  /opt/homebrew/Cellar/node@16/16.15.0/bin/node /opt/homebrew/Cellar/yarn/1.22.18/libexec/bin/yarn.js install
+
+PATH: 
+  /opt/homebrew/opt/node@16/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/shims:/Users/mvillafuerte/.yarn/bin:/Users/mvillafuerte/.config/yarn/global/node_modules/.bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin:/opt/homebrew/opt/node@16/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/shims:/Users/mvillafuerte/.yarn/bin:/Users/mvillafuerte/.config/yarn/global/node_modules/.bin:/Users/mvillafuerte/go/bin:/Users/mvillafuerte/go/bin
+
+Yarn version: 
+  1.22.18
+
+Node version: 
+  16.15.0
+
+Platform: 
+  darwin arm64
+
+Trace: 
+  Error: ENOTDIR: not a directory, scandir '/Users/mvillafuerte/Library/Caches/Yarn/v6/npm-foo-0.0.0-3438bb56-9bea-450a-8cd1-03d75a21c4ce-1651690147274/node_modules/foo'
+
+npm manifest: 
+  {
+    "name": "facades",
+    "version": "1.0.0",
+    "main": "index.js",
+    "license": "MIT",
+    "dependencies": {
+      "foo": "./src/main/resources/foo.js"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  

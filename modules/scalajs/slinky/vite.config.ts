@@ -17,7 +17,7 @@ export default defineConfig(({command, mode}) => {
             })],
         base: './',
         build: {
-            outDir: '../../docs/slinky',
+            outDir: '../../../docs/slinky',
             emptyOutDir: true
         },
         server: {
