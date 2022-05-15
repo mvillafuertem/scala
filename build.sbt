@@ -1,7 +1,7 @@
 import org.scalajs.linker.interface.ModuleSplitStyle
 
 import _root_.scala.sys.process.Process
-import _root_.scala.{Console => csl}
+import _root_.scala.{ Console => csl }
 
 Global / onChangedBuildSource := ReloadOnSourceChanges
 Global / onLoad               := {
@@ -249,8 +249,8 @@ lazy val slick = (project in file("modules/slick"))
 lazy val `scalajs-facades` = (project in file("modules/scalajs/facades"))
   // S E T T I N G S
   .settings(scalaVersion := Settings.scala213)
-  .settings(scalaJSLinkerConfig ~={  _.withSourceMap(false)})
-  .settings(scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule)})
+  .settings(scalaJSLinkerConfig ~= { _.withSourceMap(false) })
+  .settings(scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) })
   .settings(scalaJSUseMainModuleInitializer := true)
   // P L U G I N S
   .enablePlugins(ScalaJSJUnitPlugin)
