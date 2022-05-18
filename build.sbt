@@ -1,3 +1,5 @@
+import org.scalajs.linker.interface.ModuleSplitStyle
+
 import _root_.scala.sys.process.Process
 import _root_.scala.{ Console => csl }
 
@@ -43,6 +45,7 @@ lazy val scala = (project in file("."))
     reflection,
     script,
     slick,
+    `scalajs-facades`,
     // slinky, scalajs Error downloading org.scoverage
     spark,
     sttp,
@@ -234,7 +237,7 @@ lazy val script = (project in file("modules/script"))
   .settings(scalaVersion := Settings.scala213)
   .settings(crossScalaVersions := Seq(Settings.scala213))
   .settings(libraryDependencies ++= Dependencies.script)
-  .settings(libraryDependencies ++= Seq("com.lihaoyi" % "ammonite" % "2.5.2" % Test cross CrossVersion.full))
+  .settings(libraryDependencies ++= Seq("com.lihaoyi" % "ammonite" % "2.5.3" % Test cross CrossVersion.full))
   .settings(commands += Commands.ammoniteCommand)
 
 lazy val slick = (project in file("modules/slick"))
@@ -243,21 +246,34 @@ lazy val slick = (project in file("modules/slick"))
   .settings(libraryDependencies ++= Dependencies.slick)
   .settings(commands += Commands.h2Command)
 
-lazy val slinky = (project in file("modules/slinky"))
+lazy val `scalajs-facades` = (project in file("modules/scalajs/facades"))
   // S E T T I N G S
-  .settings(commonSettingsJs)
+  .settings(scalaVersion := Settings.scala213)
+  .settings(scalaJSLinkerConfig ~= { _.withSourceMap(false) })
+  .settings(scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) })
+  .settings(scalaJSUseMainModuleInitializer := true)
+  // P L U G I N S
+  .enablePlugins(ScalaJSJUnitPlugin)
+
+lazy val `scalajs-slinky` = (project in file("modules/scalajs/slinky"))
+  // S E T T I N G S
+  .settings(scalaVersion := Settings.scala213)
+  .settings(scalacOptions += "-Ymacro-annotations")
   .settings(Dependencies.slinky)
-  // S C A L A  J S  B U N D L E R
-  .settings(webpackDevServerPort := 8008)
-  .settings(startWebpackDevServer / version := "3.10.3")
-  .settings(Test / requireJsDomEnv := true)
-  .settings(Compile / npmDependencies ++= NpmDependencies.slinky)
+  .settings(scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.ESModule) })
+  .settings(scalaJSLinkerConfig ~= { _.withModuleSplitStyle(ModuleSplitStyle.FewestModules) })
+  .settings(scalaJSLinkerConfig ~= { _.withSourceMap(false) })
+  .settings(scalaJSUseMainModuleInitializer := true)
+  .settings(externalNpm := {
+    Process("yarn", baseDirectory.value).!
+    baseDirectory.value
+  })
   // S C A L A B L Y T Y P E D
   .settings(stFlavour := Flavour.Slinky)
   .settings(stMinimize := Selection.All)
   .settings(stIgnore ++= List("@material-ui/icons"))
   // P L U G I N S
-  .enablePlugins(ScalablyTypedConverterPlugin)
+  .enablePlugins(ScalablyTypedConverterExternalNpmPlugin)
   .enablePlugins(ScalaJSPlugin)
 
 lazy val spark = (project in file("modules/spark"))

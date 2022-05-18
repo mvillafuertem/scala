@@ -1,0 +1,10 @@
+{
+  "name": "facades",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "concat-with-sourcemaps": "1.0.7",
+    "source-map-loader": "0.2.3"
+  }
+}

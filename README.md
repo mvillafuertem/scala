@@ -42,3 +42,6 @@ Scala is a project with many proof of concept modules
 using everything around scala programming language
 
 ****
+
+
+#### [Slinky](https://mvillafuertem.github.io/scala/slinky/)

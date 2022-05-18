@@ -1,12 +1,12 @@
 package io.github.mvillafuertem.tapir.api.mapper
 
 import io.circe.syntax._
-import io.circe.{Decoder, Encoder, HCursor, Json}
+import io.circe.{ Decoder, Encoder, HCursor, Json }
 import io.github.mvillafuertem.tapir.domain.model.ProductType
-import io.github.mvillafuertem.tapir.domain.model.ProductType.{New, Used}
-import sttp.tapir.Codec.{JsonCodec, PlainCodec}
+import io.github.mvillafuertem.tapir.domain.model.ProductType.{ New, Used }
+import sttp.tapir.Codec.{ JsonCodec, PlainCodec }
 import sttp.tapir.json.circe._
-import sttp.tapir.{Codec, Schema, Validator}
+import sttp.tapir.{ Codec, Schema, Validator }
 
 /**
  * @author

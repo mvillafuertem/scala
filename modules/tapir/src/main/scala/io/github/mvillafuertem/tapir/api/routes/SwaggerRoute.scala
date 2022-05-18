@@ -8,7 +8,7 @@ import sttp.tapir.docs.openapi._
 import sttp.tapir.openapi.circe.yaml._
 import sttp.tapir.openapi.{ Info, OpenAPI }
 import sttp.tapir.server.akkahttp.AkkaHttpServerInterpreter
-import sttp.tapir.swagger.{SwaggerUI, SwaggerUIOptions}
+import sttp.tapir.swagger.{ SwaggerUI, SwaggerUIOptions }
 
 import scala.concurrent.Future
 
