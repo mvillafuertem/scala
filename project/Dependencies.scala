@@ -467,7 +467,7 @@ object Dependencies {
     val cats                      = "2.7.0"
     val circe                     = "0.14.1"
     val http4s                    = "1.0.0-M32"
-    val curator                   = "5.2.1"
+    val curator                   = "5.3.0"
     val dijon                     = "0.6.0"
     val ficus                     = "1.5.2"
     val h2                        = "2.1.214"
