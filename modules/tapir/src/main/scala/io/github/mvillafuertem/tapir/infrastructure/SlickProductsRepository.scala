@@ -13,7 +13,7 @@ import zio.{ stream, IO, UIO, ZIO, ZLayer }
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
-trait SlickProductsRepository extends ProductsRepository with InfrastructureConfiguration {
+trait SlickProductsRepository extends ProductsRepository[({ type T[A] = IO[ProductException, A] })#T] with InfrastructureConfiguration {
   self =>
 
   import SlickProductsRepository._
@@ -34,7 +34,7 @@ trait SlickProductsRepository extends ProductsRepository with InfrastructureConf
     }
   }
 
-  override def find: IO[Unit, String] = UIO.succeed("hola")
+  override def find: IO[ProductException, String] = UIO.succeed("hola")
 
 }
 
