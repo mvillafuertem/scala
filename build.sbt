@@ -368,5 +368,7 @@ def welcomeMessage: Def.Setting[String] = onLoadMessage := {
       |${cmd("prepare", "- Prepares sources by applying both scalafix and scalafmt")}
       |${cmd("fmt", "- Formats source files using scalafmt")}
       |${cmd("dependencyBrowseTree", "- It opens a browser window, but it displays a visualization of the dependency tree")}
+      |${cmd("""set javaOptions += "-Dconfig.file=../../local-application.conf"""", "- Set javaOptions values")}
+      |${cmd("show javaOptions", "- Show javaOptions values")}
       """.stripMargin
 }
