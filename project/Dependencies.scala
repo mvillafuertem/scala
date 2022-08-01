@@ -68,6 +68,19 @@ object Dependencies {
       Artifact.testcontainersCore % Version.testcontainers
     ).map(_ % IntegrationTest)
 
+  val `alpakka-sqs`: Seq[ModuleID] =
+    // A L P A K K A
+    Seq(
+      // A L P A K K A  I N T E G R A T I O N  T E S T
+      "org.elasticmq"            %% "elasticmq-core"          % "1.3.9",
+      "com.lightbend.akka"       %% "akka-stream-alpakka-sqs" % "3.0.4",
+      Artifact.akkaStreamTestkit  % "2.6.19",
+      Artifact.akkaSlf4f          % "2.6.19",
+      Artifact.logback            % Version.logback,
+      Artifact.scalaTest          % Version.scalaTest,
+      Artifact.testcontainersCore % Version.testcontainers
+    ).map(_ % IntegrationTest)
+
   val advanced: Seq[ModuleID] = Seq(
     // A D V A N C E D  T E S T
     Artifact.scalaTest        % Version.scalaTest          % Test,
