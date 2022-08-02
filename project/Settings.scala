@@ -13,7 +13,7 @@ object Settings {
     ),
     scalacOptions += "-Ymacro-annotations",
     // S C A L A J S  B U N D L E R
-    useYarn                         := true,
+    useYarn := true,
     // W E B P A C K
     Compile / fastOptJS / webpackExtraArgs += "--mode=development",
     Compile / fullOptJS / webpackExtraArgs += "--mode=production",
