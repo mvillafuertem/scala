@@ -78,7 +78,8 @@ object Dependencies {
       Artifact.akkaSlf4f          % "2.6.19",
       Artifact.logback            % Version.logback,
       Artifact.scalaTest          % Version.scalaTest,
-      Artifact.testcontainersCore % Version.testcontainers
+      Artifact.testcontainersCore % Version.testcontainers,
+      Artifact.circeParser        % Version.circe
     ).map(_ % IntegrationTest)
 
   val advanced: Seq[ModuleID] = Seq(
