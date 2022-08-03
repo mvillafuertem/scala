@@ -63,7 +63,7 @@ final class SqsSourceIT extends SqsSourceConfigurationIT {
       .map(_.map(_.messageAction.message.body()))(system.dispatcher)
 
     // t h e n
-    actual.futureValue shouldBe (1 to 10).map(n => s"""{"id":$n,"name":"Test"}""")
+    (actual.futureValue should contain).theSameElementsAs((1 to 10).map(n => s"""{"id":$n,"name":"Test"}"""))
 
   }
 
