@@ -1,9 +1,10 @@
 package io.github.mvillafuertem.alpakka.sqs
 
 import akka.actor.ActorSystem
-import akka.stream.alpakka.sqs.scaladsl.{ SqsPublishFlow, SqsSource }
-import akka.stream.alpakka.sqs.{ SqsPublishSettings, SqsSourceSettings }
+import akka.stream.alpakka.sqs.scaladsl.{ SqsAckFlow, SqsPublishFlow, SqsSource }
+import akka.stream.alpakka.sqs.{ MessageAction, SqsAckSettings, SqsPublishSettings, SqsSourceSettings }
 import akka.stream.scaladsl.{ Sink, Source }
+import akka.{ Done, NotUsed }
 import com.github.matsluni.akkahttpspi.AkkaHttpClient
 import io.github.mvillafuertem.alpakka.sqs.SqsSourceIT.SqsSourceConfigurationIT
 import org.scalatest.concurrent.ScalaFutures
@@ -14,42 +15,94 @@ import org.testcontainers.containers
 import software.amazon.awssdk.auth.credentials.{ AwsBasicCredentials, StaticCredentialsProvider }
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.sqs.SqsAsyncClient
-import software.amazon.awssdk.services.sqs.model.{ Message, ReceiveMessageRequest, ReceiveMessageResponse, SendMessageRequest }
+import software.amazon.awssdk.services.sqs.model.{ Message, SendMessageRequest }
 
 import java.net.URI
-import scala.collection.mutable
 import scala.concurrent.Future
 import scala.concurrent.duration.DurationInt
-import scala.jdk.CollectionConverters._
-import scala.jdk.FutureConverters._
 
 final class SqsSourceIT extends SqsSourceConfigurationIT {
 
-  behavior of s"${this.getClass.getSimpleName}"
+  it should "receive message response" in {
 
-  ignore should "receive message response using sqsClient" in {
-
-    val result: Future[ReceiveMessageResponse] =
-      awsSqsClient
-        .receiveMessage(ReceiveMessageRequest.builder().queueUrl(queueUrl).build())
-        .asScala
-
-    val actual: mutable.Seq[Message] = result.futureValue.messages().asScala
-    actual.size shouldBe 1
-    actual.head.body() shouldBe """{"id":1,"name":"Test"}"""
-
-  }
-
-  it should "receive message response using source" in {
-
-    val source = SqsSource(
-      queueUrl,
+    // g i v e n
+    val source: Source[Message, NotUsed] = SqsSource(
+      queue1Url,
       SqsSourceSettings().withCloseOnEmptyReceive(true)
     )(awsSqsClient)
 
-    val result: Future[Message] = source.runWith(Sink.head)
+    // w h e n
+    val actual: Future[Seq[String]] = source
+      .wireTap(println(_))
+      .map(MessageAction.delete)
+      .via(SqsAckFlow(queue1Url, SqsAckSettings.create)(awsSqsClient))
+      .wireTap(println(_))
+      .runWith(Sink.seq)
+      .map(_.map(_.messageAction.message.body()))(system.dispatcher)
 
-    result.futureValue.body() shouldBe """{"id":1,"name":"Test"}"""
+    // t h e n
+    actual.futureValue shouldBe Seq("""{"id":1,"name":"Test"}""")
+
+  }
+
+  it should "receive ordered message response using fifo queue" in {
+
+    // g i v e n
+    val source: Source[Message, NotUsed] = SqsSource(
+      queue2Url,
+      SqsSourceSettings().withCloseOnEmptyReceive(true)
+    )(awsSqsClient)
+
+    // w h e n
+    val actual: Future[Seq[String]] = source
+      .wireTap(println(_))
+      .map(MessageAction.delete)
+      .via(SqsAckFlow(queue2Url, SqsAckSettings.create)(awsSqsClient))
+      .wireTap(println(_))
+      .runWith(Sink.seq)
+      .map(_.map(_.messageAction.message.body()))(system.dispatcher)
+
+    // t h e n
+    (actual.futureValue should contain).theSameElementsAs((1 to 10).map(n => s"""{"id":$n,"name":"Test"}"""))
+
+  }
+
+  it should "receive message response and send enriched message to another queue" in {
+
+    // g i v e n
+    val source: Source[Message, NotUsed] = SqsSource(
+      queue3Url,
+      SqsSourceSettings().withCloseOnEmptyReceive(true)
+    )(awsSqsClient)
+
+    // w h e n
+    import io.circe._
+    val actual: Future[Seq[String]] = source
+      .wireTap(println(_))
+      .mapAsync(1)(msg =>
+        Source
+          .single[Message](msg)
+          .map(msg =>
+            parser
+              .parse(msg.body())
+              .map(json => json.deepMerge(Json.obj(("surname", Json.fromString("Integration")))))
+              .getOrElse(Json.Null)
+              .noSpaces
+          )
+          .map(SendMessageRequest.builder().messageBody(_).build())
+          .wireTap(println(_))
+          .via(SqsPublishFlow(queue1Url)(awsSqsClient))
+          .runWith(Sink.foreach(println))
+          .map(_ => msg)(system.dispatcher)
+      )
+      .map(MessageAction.delete)
+      .via(SqsAckFlow(queue3Url, SqsAckSettings.create)(awsSqsClient))
+      .wireTap(println(_))
+      .runWith(Sink.seq)
+      .map(_.map(_.messageAction.message.body()))(system.dispatcher)
+
+    // t h e n
+    (actual.futureValue should contain).theSameElementsAs((1 to 10).map(n => s"""{"id":$n,"name":"Test"}"""))
 
   }
 
@@ -74,7 +127,9 @@ object SqsSourceIT {
     private val credentialsProvider: StaticCredentialsProvider = StaticCredentialsProvider
       .create(AwsBasicCredentials.create("x", "x"))
 
-    protected val queueUrl = s"$uri/queue/queue1"
+    protected val queue1Url = s"$uri/queue/queue1"
+    protected val queue2Url = s"$uri/queue/queue2.fifo"
+    protected val queue3Url = s"$uri/queue/queue3"
 
     implicit val awsSqsClient: SqsAsyncClient = SqsAsyncClient
       .builder()
@@ -101,14 +156,7 @@ object SqsSourceIT {
 //      )
       .build()
 
-    override protected def beforeEach(): Unit =
-      Source
-        .single(s"{\"id\":1,\"name\":\"Test\"}")
-        .map(SendMessageRequest.builder().messageBody(_).build())
-        .via(SqsPublishFlow(queueUrl, SqsPublishSettings.create())(awsSqsClient))
-        .runWith(Sink.foreach(println))
-
-    override protected def afterAll(): Unit = {
+    override protected def afterAll(): Unit                      = {
       system.terminate.futureValue
       awsSqsClient.close()
       container.stop()
@@ -118,6 +166,28 @@ object SqsSourceIT {
     override protected def beforeAll(): Unit = {
       container = dockerInfrastructure
       container.start()
+      Source
+        .single("{\"id\":1,\"name\":\"Test\"}")
+        .map(SendMessageRequest.builder().messageBody(_).build())
+        .via(SqsPublishFlow(queue1Url, SqsPublishSettings.create())(awsSqsClient))
+        .runWith(Sink.foreach(println))
+        .futureValue shouldBe Done
+
+      Source
+        .fromIterator(() => (1 to 10).iterator)
+        .map(n => s"""{\"id\":$n,\"name\":\"Test\"}""")
+        .map(SendMessageRequest.builder().messageBody(_).messageGroupId("foo").build())
+        .via(SqsPublishFlow(queue2Url, SqsPublishSettings.create())(awsSqsClient))
+        .runWith(Sink.foreach(println))
+        .futureValue shouldBe Done
+
+      Source
+        .fromIterator(() => (1 to 10).iterator)
+        .map(n => s"""{\"id\":$n,\"name\":\"Test\"}""")
+        .map(SendMessageRequest.builder().messageBody(_).build())
+        .via(SqsPublishFlow(queue3Url, SqsPublishSettings.create())(awsSqsClient))
+        .runWith(Sink.foreach(println))
+        .futureValue shouldBe Done
     }
   }
 

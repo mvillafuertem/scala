@@ -34,7 +34,7 @@ lazy val scala = (project in file("."))
     algorithms,
     `alpakka-kafka`,
     `alpakka-mongodb`,
-    //`alpakka-sqs`,
+    `alpakka-sqs`,
     `aws-cdk`,
     `aws-sdk`,
     basic,
