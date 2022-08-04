@@ -35,6 +35,7 @@ lazy val scala = (project in file("."))
     `alpakka-kafka`,
     `alpakka-mongodb`,
     `alpakka-sqs`,
+    `alpakka-sns`,
     `aws-cdk`,
     `aws-sdk`,
     basic,
@@ -108,6 +109,13 @@ lazy val `alpakka-sqs` = (project in file("modules/alpakka/sqs"))
   // S E T T I N G S
   .settings(commonSettings)
   .settings(libraryDependencies ++= Dependencies.`alpakka-sqs`)
+
+lazy val `alpakka-sns` = (project in file("modules/alpakka/sns"))
+  .configs(IntegrationTest)
+  .settings(Defaults.itSettings)
+  // S E T T I N G S
+  .settings(commonSettings)
+  .settings(libraryDependencies ++= Dependencies.`alpakka-sns`)
 
 lazy val `aws-cdk` = (project in file("modules/aws/cdk"))
   .configs(IntegrationTest)

@@ -72,8 +72,21 @@ object Dependencies {
     // A L P A K K A
     Seq(
       // A L P A K K A  I N T E G R A T I O N  T E S T
-      "org.elasticmq"            %% "elasticmq-core"          % "1.3.9",
       "com.lightbend.akka"       %% "akka-stream-alpakka-sqs" % "3.0.4",
+      Artifact.akkaStreamTestkit  % "2.6.19",
+      Artifact.akkaSlf4f          % "2.6.19",
+      Artifact.logback            % Version.logback,
+      Artifact.scalaTest          % Version.scalaTest,
+      Artifact.testcontainersCore % Version.testcontainers,
+      Artifact.circeParser        % Version.circe
+    ).map(_ % IntegrationTest)
+
+  val `alpakka-sns`: Seq[ModuleID] =
+    // A L P A K K A
+    Seq(
+      // A L P A K K A  I N T E G R A T I O N  T E S T
+      "com.lightbend.akka"       %% "akka-stream-alpakka-sqs" % "3.0.4",
+      "com.lightbend.akka"       %% "akka-stream-alpakka-sns" % "3.0.4",
       Artifact.akkaStreamTestkit  % "2.6.19",
       Artifact.akkaSlf4f          % "2.6.19",
       Artifact.logback            % Version.logback,
