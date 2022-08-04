@@ -68,6 +68,20 @@ object Dependencies {
       Artifact.testcontainersCore % Version.testcontainers
     ).map(_ % IntegrationTest)
 
+  val `alpakka-sqs`: Seq[ModuleID] =
+    // A L P A K K A
+    Seq(
+      // A L P A K K A  I N T E G R A T I O N  T E S T
+      "org.elasticmq"            %% "elasticmq-core"          % "1.3.9",
+      "com.lightbend.akka"       %% "akka-stream-alpakka-sqs" % "3.0.4",
+      Artifact.akkaStreamTestkit  % "2.6.19",
+      Artifact.akkaSlf4f          % "2.6.19",
+      Artifact.logback            % Version.logback,
+      Artifact.scalaTest          % Version.scalaTest,
+      Artifact.testcontainersCore % Version.testcontainers,
+      Artifact.circeParser        % Version.circe
+    ).map(_ % IntegrationTest)
+
   val advanced: Seq[ModuleID] = Seq(
     // A D V A N C E D  T E S T
     Artifact.scalaTest        % Version.scalaTest          % Test,
@@ -462,20 +476,20 @@ object Dependencies {
     val alpakkaSlick              = "3.0.4"
     val awsCdk                    = "1.156.0"
     val awsLambda                 = "1.2.1"
-    val awsSdk                    = "2.17.238"
+    val awsSdk                    = "2.17.244"
     val cask                      = "0.7.11"
     val cats                      = "2.8.0"
     val circe                     = "0.14.1"
-    val http4s                    = "1.0.0-M34"
+    val http4s                    = "1.0.0-M35"
     val curator                   = "5.3.0"
     val dijon                     = "0.6.0"
     val ficus                     = "1.5.2"
     val h2                        = "2.1.214"
     val java8Compat               = "1.0.2"
     val jslt                      = "0.1.12"
-    val jsoniter                  = "2.13.37"
+    val jsoniter                  = "2.13.39"
     val jwtCirce                  = "4.3.0"
-    val kafka                     = "3.2.0"
+    val kafka                     = "3.2.1"
     val leveldbjniAll             = "1.8"
     val logback                   = "1.2.11"
     val mongoScalaBson            = "4.4.2"
@@ -483,13 +497,13 @@ object Dependencies {
     val postgres                  = "42.4.0"
     val scalaCheck                = "3.2.2.0"
     val scalaJavaTime             = "2.0.0"
-    val scalaTest                 = "3.2.12"
+    val scalaTest                 = "3.2.13"
     val slick                     = "3.3.3"
     val slinky                    = "0.7.2"
     val spark                     = "3.3.0"
     val sttp                      = "3.5.1"
     val tapir                     = "0.20.2"
-    val testcontainers            = "0.40.9"
+    val testcontainers            = "0.40.10"
     val testcontainersKafka       = "1.17.3"
     val zio                       = "1.0.16"
     val zioAkkaCluster            = "0.2.0"
