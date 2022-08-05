@@ -99,21 +99,24 @@ final class SqsSourceIT extends SqsSourceConfigurationIT {
     val source: Source[Message, NotUsed] = createSqsSource(queue1Url)
 
     // w h e n
-    import io.circe._
+    import io.circe.parser._
     val actual = source
       .wireTap(println(_))
       .map(MessageAction.delete)
       .via(SqsAckFlow(queue1Url, SqsAckSettings.create)(awsSqsClient))
       .runWith(Sink.seq)
       .map(
-        _.map(_.messageAction.message.body())
-          .map(io.circe.parser.parse(_).getOrElse(Json.Null))
-          .flatMap(_.\\("Message").map(_.noSpaces))
+        _.map(_.messageAction.message.body()).map { jsonString =>
+          (for {
+            json    <- parse(jsonString)
+            message <- json.hcursor.get[String]("Message")
+          } yield message).getOrElse("null")
+        }
       )(system.dispatcher)
 
     // t h e n
     (actual.futureValue should contain).theSameElementsAs(
-      (1 to 10).map(n => s""""{\\\"surname\\\":\\\"Integration\\\",\\\"id\\\":$n,\\\"name\\\":\\\"Test\\\"}"""")
+      (1 to 10).map(n => s"""{"surname":"Integration","id":$n,"name":"Test"}""")
     )
 
   }
