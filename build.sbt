@@ -34,6 +34,8 @@ lazy val scala = (project in file("."))
     algorithms,
     `alpakka-kafka`,
     `alpakka-mongodb`,
+    `alpakka-sqs`,
+    `alpakka-sns`,
     `aws-cdk`,
     `aws-sdk`,
     basic,
@@ -100,6 +102,20 @@ lazy val `alpakka-mongodb` = (project in file("modules/alpakka/mongodb"))
   // S E T T I N G S
   .settings(commonSettings)
   .settings(libraryDependencies ++= Dependencies.`alpakka-mongodb`)
+
+lazy val `alpakka-sqs` = (project in file("modules/alpakka/sqs"))
+  .configs(IntegrationTest)
+  .settings(Defaults.itSettings)
+  // S E T T I N G S
+  .settings(commonSettings)
+  .settings(libraryDependencies ++= Dependencies.`alpakka-sqs`)
+
+lazy val `alpakka-sns` = (project in file("modules/alpakka/sns"))
+  .configs(IntegrationTest)
+  .settings(Defaults.itSettings)
+  // S E T T I N G S
+  .settings(commonSettings)
+  .settings(libraryDependencies ++= Dependencies.`alpakka-sns`)
 
 lazy val `aws-cdk` = (project in file("modules/aws/cdk"))
   .configs(IntegrationTest)
@@ -368,5 +384,7 @@ def welcomeMessage: Def.Setting[String] = onLoadMessage := {
       |${cmd("prepare", "- Prepares sources by applying both scalafix and scalafmt")}
       |${cmd("fmt", "- Formats source files using scalafmt")}
       |${cmd("dependencyBrowseTree", "- It opens a browser window, but it displays a visualization of the dependency tree")}
+      |${cmd("""set javaOptions += "-Dconfig.file=../../local-application.conf"""", "- Set javaOptions values")}
+      |${cmd("show javaOptions", "- Show javaOptions values")}
       """.stripMargin
 }
