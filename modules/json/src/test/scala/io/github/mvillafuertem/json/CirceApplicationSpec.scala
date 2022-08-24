@@ -1054,4 +1054,21 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
 
   }
 
+  it should "parse json string inside json string" in {
+
+    // g i v e n
+    val jsonString = """{"Message": "{\"surname\":\"Integration\",\"id\":2,\"name\":\"Test\"}"}"""
+
+    // w h e n
+    val actual =
+      (for {
+        json    <- parse(jsonString)
+        message <- json.hcursor.get[String]("Message")
+      } yield message).getOrElse("null")
+
+    // t h e n
+    actual shouldBe """{"surname":"Integration","id":2,"name":"Test"}"""
+
+  }
+
 }

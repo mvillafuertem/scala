@@ -17,10 +17,7 @@ trait MongoDBConfigurationIT {
   val mongoDBConfigurationProperties: MongoDBConfigurationProperties = MongoDBConfigurationProperties()
 
   private val connectionString = {
-    val user     = mongoDBConfigurationProperties.user
-    val password = mongoDBConfigurationProperties.password
-    val hostname = mongoDBConfigurationProperties.hostname
-    val port     = mongoDBConfigurationProperties.port
+    import mongoDBConfigurationProperties._
     s"mongodb://$user:$password@$hostname:$port"
   }
 
