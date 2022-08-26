@@ -489,7 +489,7 @@ object Dependencies {
     val alpakkaSlick              = "3.0.4"
     val awsCdk                    = "1.156.0"
     val awsLambda                 = "1.2.1"
-    val awsSdk                    = "2.17.247"
+    val awsSdk                    = "2.17.261"
     val cask                      = "0.7.11"
     val cats                      = "2.8.0"
     val circe                     = "0.14.1"
