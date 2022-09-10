@@ -95,6 +95,46 @@ final class EnumeratumCirceSpec extends AnyFlatSpecLike with Matchers {
 
   }
 
+  it should "parse with generic custom decoder" in {
+
+    // g i v e n
+    trait CustomCirceEnum[Value <: EnumEntry] extends CirceEnum[Value] {
+      this: Enum[Value] =>
+
+      val unknownValue: String => Value
+
+      implicit override val circeDecoder: Decoder[Value] =
+        Decoder[String].emap(value => Right(withNameOption(value).getOrElse(unknownValue(value))))
+
+    }
+
+    sealed trait ShirtSize extends EnumEntry with UpperSnakecase
+
+    object ShirtSize extends Enum[ShirtSize] with CustomCirceEnum[ShirtSize] {
+
+      case object Small extends ShirtSize
+
+      case class UnknownSize(value: String) extends ShirtSize
+
+      val values = findValues
+
+      override val unknownValue: String => ShirtSize = UnknownSize
+
+    }
+
+    // w h e n
+    val small: ShirtSize       = ShirtSize.Small
+    val unknownSize: ShirtSize = ShirtSize.UnknownSize("Large")
+
+    // t h e n
+    small.asJson shouldBe Json.fromString("SMALL")
+    unknownSize.asJson shouldBe Json.fromString("UNKNOWN_SIZE(LARGE)")
+
+    Json.fromString("Large").as[ShirtSize] shouldBe Right(unknownSize)
+    Json.fromString("SMALL").as[ShirtSize] shouldBe Right(small)
+
+  }
+
 }
 
 object EnumeratumCirceSpec {}
