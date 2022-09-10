@@ -1,7 +1,7 @@
 package io.github.mvillafuertem.json
 
 import enumeratum.EnumEntry.UpperSnakecase
-import enumeratum.{ CirceEnum, EnumEntry, _ }
+import enumeratum.{CirceEnum, EnumEntry, _}
 import io.circe.Decoder.Result
 import io.circe._
 import io.circe.syntax._
@@ -72,15 +72,7 @@ final class EnumeratumCirceSpec extends AnyFlatSpecLike with Matchers {
 
     case object ShirtSize extends Enum[ShirtSize] with CirceEnum[ShirtSize] {
 
-      override implicit val circeDecoder: Decoder[ShirtSize] = new Decoder[ShirtSize] {
-        final def apply(c: HCursor): Result[ShirtSize] = implicitly[Decoder[String]].apply(c).flatMap { s =>
-          val maybeMember = withNameOption(s)
-          maybeMember match {
-            case Some(member) => Right(member)
-            case _            => Right(UnknownSize(s))
-          }
-        }
-      }
+      override implicit val circeDecoder: Decoder[ShirtSize] = Decoder[String].emap(s => Right(withNameOption(s).getOrElse(UnknownSize(s))))
 
       case object Small extends ShirtSize
 
