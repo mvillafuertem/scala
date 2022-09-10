@@ -260,8 +260,9 @@ object Dependencies {
     Artifact.jsoniterCore,
     Artifact.jsoniterMacros
   ).map(_ % Version.jsoniter) ++ Seq(
-    Artifact.dijon % Version.dijon,
-    Artifact.jslt  % Version.jslt
+    Artifact.dijon           % Version.dijon,
+    Artifact.enumeratumCirce % Version.enumeratumCirce,
+    Artifact.jslt            % Version.jslt
   ) ++ Seq(
     // J S O N  T E S T
     Artifact.scalaTest % Version.scalaTest
@@ -431,6 +432,7 @@ object Dependencies {
     val circeParser               = "io.circe"                              %% "circe-parser"
     val curator                   = "org.apache.curator"                     % "curator-test"
     val dijon                     = "me.vican.jorge"                        %% "dijon"
+    val enumeratumCirce           = "com.beachape"                          %% "enumeratum-circe"
     val ficus                     = "com.iheart"                            %% "ficus"
     val h2                        = "com.h2database"                         % "h2"
     val http4sBlazeServer         = "org.http4s"                            %% "http4s-blaze-server"
@@ -496,6 +498,7 @@ object Dependencies {
     val http4s                    = "1.0.0-M35"
     val curator                   = "5.3.0"
     val dijon                     = "0.6.0"
+    val enumeratumCirce           = "1.7.0"
     val ficus                     = "1.5.2"
     val h2                        = "2.1.214"
     val java8Compat               = "1.0.2"
