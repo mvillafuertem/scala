@@ -8,6 +8,7 @@ import io.circe.syntax._
 import org.scalatest.flatspec.AnyFlatSpecLike
 import org.scalatest.matchers.should.Matchers
 
+import scala.collection.immutable
 import scala.util.matching.Regex
 
 final class EnumeratumCirceSpec extends AnyFlatSpecLike with Matchers {
@@ -169,6 +170,68 @@ final class EnumeratumCirceSpec extends AnyFlatSpecLike with Matchers {
     Json.fromString("small").as[ShirtSize] shouldBe Right(small)
     Json.fromString("Small").as[ShirtSize] shouldBe Right(small)
     Json.fromString("SMALL").as[ShirtSize] shouldBe Right(small)
+
+  }
+
+  it should "parse with custom decoder and encoder for UnknownEnumEntry" in {
+
+    // g i v e n
+    trait UnknownEnumEntry extends EnumEntry {
+      def value: String
+    }
+    trait CustomCirceEnum[Value <: EnumEntry, UnknownValue <: Value with UnknownEnumEntry] {
+      this: Enum[Value] =>
+
+      val unknownValue: String => UnknownValue
+
+      implicit val circeDecoder: Decoder[Value] = new Decoder[Value] {
+        final def apply(c: HCursor): Result[Value] = implicitly[Decoder[String]].apply(c).flatMap { s =>
+          val maybeMember = withNameInsensitiveOption(s)
+          maybeMember match {
+            case Some(member) => Right(member)
+            case _ => Right(unknownValue(s))
+          }
+        }
+      }
+
+      implicit val circeEncoder: Encoder[Value] =
+        Encoder[Json].contramap[Value] {
+          case unknown: UnknownEnumEntry  => stringEncoder.apply(unknown.value)
+          case value => stringEncoder.apply(value.entryName)
+        }
+
+      private val stringEncoder = implicitly[Encoder[String]]
+
+    }
+
+    sealed trait ShirtSize extends EnumEntry with UpperSnakecase
+
+    case class UnknownSize(value: String) extends ShirtSize with UnknownEnumEntry
+
+    case object ShirtSize extends Enum[ShirtSize] with CustomCirceEnum[ShirtSize, UnknownSize] {
+
+      case object Small extends ShirtSize
+
+
+      val values: immutable.IndexedSeq[ShirtSize] = findValues
+
+      override val unknownValue: String => UnknownSize = UnknownSize
+
+    }
+
+    // w h e n
+    val small: ShirtSize = ShirtSize.Small
+    val unknownSize: ShirtSize = UnknownSize("LARGE")
+
+    // t h e n
+    small.asJson shouldBe Json.fromString("SMALL")
+    unknownSize.asJson shouldBe Json.fromString("LARGE")
+
+    Json.fromString("small").as[ShirtSize] shouldBe Right(small)
+    Json.fromString("Small").as[ShirtSize] shouldBe Right(small)
+    Json.fromString("SMALL").as[ShirtSize] shouldBe Right(small)
+
+    Json.fromString("LARGE").as[ShirtSize] shouldBe Right(unknownSize)
 
   }
 
