@@ -503,7 +503,7 @@ object Dependencies {
     val h2                        = "2.1.214"
     val java8Compat               = "1.0.2"
     val jslt                      = "0.1.13"
-    val jsoniter                  = "2.17.2"
+    val jsoniter                  = "2.17.3"
     val jwtCirce                  = "4.3.0"
     val kafka                     = "3.2.2"
     val leveldbjniAll             = "1.8"
