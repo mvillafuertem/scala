@@ -268,7 +268,7 @@ final class TestingStreamsSpec extends TestKit(ActorSystem("TestingStreams")) wi
       object ErrorHandlingFlow {
         def apply[T, MatErr](errorSink: Sink[Throwable, MatErr]): Flow[Try[T], T, MatErr] =
           Flow.fromGraph(
-            GraphDSL.create(errorSink) { implicit builder => sink =>
+            GraphDSL.createGraph(errorSink) { implicit builder => sink =>
               import GraphDSL.Implicits._
 
               val partition = builder.add(PartitionTry[T]())
