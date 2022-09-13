@@ -1,18 +1,19 @@
 package io.github.mvillafuertem.akka.untyped.stream
 
-import akka.actor.ActorSystem
+import akka.actor.{Actor, ActorLogging, ActorSystem, Props}
 import akka.stream.Attributes.LogLevels
 import akka.stream._
-import akka.stream.scaladsl.{ Flow, GraphDSL, Keep, Merge, Partition, Sink, Source }
-import akka.stream.testkit.scaladsl.{ TestSink, TestSource }
-import akka.testkit.{ TestKit, TestProbe }
-import akka.{ Done, NotUsed }
+import akka.stream.scaladsl.{Broadcast, Flow, GraphDSL, Keep, Merge, Partition, Sink, Source, ZipWith}
+import akka.stream.testkit.scaladsl.{TestSink, TestSource}
+import akka.testkit.{TestKit, TestProbe}
+import akka.util.Timeout
+import akka.{Done, NotUsed}
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.wordspec.AnyWordSpecLike
 
 import scala.concurrent.duration._
-import scala.concurrent.{ Await, Future }
-import scala.util.{ Failure, Success, Try }
+import scala.concurrent.{Await, Future}
+import scala.util.{Failure, Success, Try}
 
 /**
  * @author
@@ -290,6 +291,55 @@ final class TestingStreamsSpec extends TestKit(ActorSystem("TestingStreams")) wi
       val handleErrors: Flow[Try[Int], Int, Future[Done]] = ErrorHandlingFlow(errorsSink)
 
       source.via(convert).via(handleErrors).runForeach(println)
+
+    }
+
+    "test zipWith flows with a test source AND a test sink" in {
+
+      final class DestinationActor extends Actor with ActorLogging {
+        override def receive: Receive = {
+          case 1  => sender() ! "Uno"
+          case 5  => sender() ! "Cinco"
+          case 13 => sender() ! "Trece"
+          case _  => sender() ! "NS/NC"
+        }
+      }
+
+      val destinationActor = system.actorOf(Props(new DestinationActor))
+
+      val flow = Flow
+        .fromGraph(GraphDSL.create() { implicit b =>
+          import GraphDSL.Implicits._
+          implicit val timeout: Timeout = Timeout(10 seconds)
+
+          val flow      = b.add(Flow[Int].ask[String](parallelism = 4)(destinationActor))
+          val broadcast = b.add(Broadcast[Int](2))
+          val zipWith   = b.add(ZipWith[Int, String, String]((int, string) => s"$int.- $string"))
+
+          broadcast ~> flow ~> zipWith.in1
+          broadcast ~> zipWith.in0
+
+          FlowShape(broadcast.in, zipWith.out)
+
+        })
+        .withAttributes(Attributes.logLevels(onElement = LogLevels.Info))
+
+      val testSource = TestSource.probe[Int]
+      val testSink   = TestSink.probe[String]
+
+      val materializedTestValue   = testSource.via(flow).toMat(testSink)(Keep.both).run()
+      val (publisher, subscriber) = materializedTestValue
+
+      publisher
+        .sendNext(1)
+        .sendNext(5)
+        .sendNext(13)
+        .sendComplete()
+
+      subscriber
+        .request(3) // Don't forget this
+        .expectNext("1.- Uno", "5.- Cinco", "13.- Trece")
+        .expectComplete()
 
     }
 
