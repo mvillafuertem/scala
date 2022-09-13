@@ -107,7 +107,7 @@ final class S3ApplicationIT extends S3ApplicationConfigurationIT {
   override var container: containers.DockerComposeContainer[_] = _
 
   override protected def beforeAll(): Unit = {
-    container = dockerInfrastructure(Wait.forLogMessage(".*Starting mock S3 service.*\\n", 1))
+    container = dockerInfrastructure(Wait.forLogMessage(".*Ready.*", 1))
     container.start()
   }
 

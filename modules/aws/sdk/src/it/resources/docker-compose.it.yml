@@ -3,10 +3,9 @@ version: '3.8'
 services:
 
   localstack:
-    image: localstack/localstack:0.12.6
+    image: localstack/localstack:1.0.4
     ports:
-      - "4566-4599:4566-4599"
-      - "8080:8080"
+      - "4566:4566"
     environment:
       - SERVICES=s3,lambda,cloudwatch
       - DEFAULT_REGION=us-east-1
