@@ -99,8 +99,7 @@ trait AWSConfigurationIT {
   def dockerInfrastructure: containers.DockerComposeContainer[_] =
     DockerComposeContainer(
       new File(s"modules/alpakka/sns/src/it/resources/docker-compose.it.yml"),
-      exposedServices =
-        Seq(ExposedService("localstack", 4566, 1, Wait.forLogMessage(".*plugin localstack.hooks.on_infra_ready:initialize_health_info is disabled.*", 1))),
+      exposedServices = Seq(ExposedService("localstack", 4566, 1, Wait.forLogMessage(".*plugin localstack.hooks.on_infra_ready:initialize_health_info is disabled.*", 1))),
       identifier = "docker_infrastructure"
     ).container
 
