@@ -6,7 +6,7 @@ services:
     image: localstack/localstack
     hostname: localstack
     ports:
-      - "4566:4566"
+      - "4568:4566"
     environment:
       # Declare which aws services will be used in localstack
       - SERVICES=sqs,sns
