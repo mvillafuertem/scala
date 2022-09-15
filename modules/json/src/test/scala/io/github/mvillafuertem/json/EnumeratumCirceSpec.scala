@@ -1,7 +1,7 @@
 package io.github.mvillafuertem.json
 
 import enumeratum.EnumEntry.UpperSnakecase
-import enumeratum.{CirceEnum, EnumEntry, _}
+import enumeratum.{ CirceEnum, EnumEntry, _ }
 import io.circe.Decoder.Result
 import io.circe._
 import io.circe.syntax._
@@ -148,7 +148,7 @@ final class EnumeratumCirceSpec extends AnyFlatSpecLike with Matchers {
           val maybeMember = withNameInsensitiveOption(s)
           maybeMember match {
             case Some(member) => Right(member)
-            case _ => Right(UnknownSize(s))
+            case _            => Right(UnknownSize(s))
           }
         }
       }
@@ -189,15 +189,15 @@ final class EnumeratumCirceSpec extends AnyFlatSpecLike with Matchers {
           val maybeMember = withNameInsensitiveOption(s)
           maybeMember match {
             case Some(member) => Right(member)
-            case _ => Right(unknownValue(s))
+            case _            => Right(unknownValue(s))
           }
         }
       }
 
       implicit val circeEncoder: Encoder[Value] =
         Encoder[Json].contramap[Value] {
-          case unknown: UnknownEnumEntry  => stringEncoder.apply(unknown.value)
-          case value => stringEncoder.apply(value.entryName)
+          case unknown: UnknownEnumEntry => stringEncoder.apply(unknown.value)
+          case value                     => stringEncoder.apply(value.entryName)
         }
 
       private val stringEncoder = implicitly[Encoder[String]]
@@ -212,7 +212,6 @@ final class EnumeratumCirceSpec extends AnyFlatSpecLike with Matchers {
 
       case object Small extends ShirtSize
 
-
       val values: immutable.IndexedSeq[ShirtSize] = findValues
 
       override val unknownValue: String => UnknownSize = UnknownSize
@@ -220,7 +219,7 @@ final class EnumeratumCirceSpec extends AnyFlatSpecLike with Matchers {
     }
 
     // w h e n
-    val small: ShirtSize = ShirtSize.Small
+    val small: ShirtSize       = ShirtSize.Small
     val unknownSize: ShirtSize = UnknownSize("LARGE")
 
     // t h e n
