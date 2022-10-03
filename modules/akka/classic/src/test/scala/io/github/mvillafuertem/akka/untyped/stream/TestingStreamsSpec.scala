@@ -1,19 +1,20 @@
 package io.github.mvillafuertem.akka.untyped.stream
 
-import akka.actor.{ Actor, ActorLogging, ActorSystem, Props }
+import akka.actor.{Actor, ActorLogging, ActorSystem, Props}
 import akka.stream.Attributes.LogLevels
 import akka.stream._
-import akka.stream.scaladsl.{ Broadcast, Flow, GraphDSL, Keep, Merge, Partition, Sink, Source, ZipWith }
-import akka.stream.testkit.scaladsl.{ TestSink, TestSource }
-import akka.testkit.{ TestKit, TestProbe }
+import akka.stream.scaladsl.{Broadcast, Flow, GraphDSL, Keep, Merge, Partition, Sink, Source, ZipWith}
+import akka.stream.testkit.TestSubscriber
+import akka.stream.testkit.scaladsl.{TestSink, TestSource}
+import akka.testkit.{TestKit, TestProbe}
 import akka.util.Timeout
-import akka.{ Done, NotUsed }
+import akka.{Done, NotUsed}
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.wordspec.AnyWordSpecLike
 
 import scala.concurrent.duration._
-import scala.concurrent.{ Await, Future }
-import scala.util.{ Failure, Success, Try }
+import scala.concurrent.{Await, Future}
+import scala.util.{Failure, Success, Try}
 
 /**
  * @author
@@ -400,6 +401,22 @@ final class TestingStreamsSpec extends TestKit(ActorSystem("TestingStreams")) wi
         .request(10)
         .expectNext(1, 2, 3 to 10: _*)
         .expectComplete()
+
+    }
+
+    "test sharedKillSwitch" in {
+      val countingSrc = Source(LazyList.from(1)).delay(1.second)
+      val lastSnk = TestSink.probe[Int]
+      val sharedKillSwitch = KillSwitches.shared("my-kill-switch")
+
+      val last1 = countingSrc.via(sharedKillSwitch.flow).runWith(lastSnk)
+      val last2 = countingSrc.via(sharedKillSwitch.flow).runWith(lastSnk)
+
+      val error = new RuntimeException("boom!")
+      sharedKillSwitch.abort(error)
+
+      last1.expectSubscriptionAndError(error)
+      last2.expectSubscriptionAndError(error)
 
     }
 
