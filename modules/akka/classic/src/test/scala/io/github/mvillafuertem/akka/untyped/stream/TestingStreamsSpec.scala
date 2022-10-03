@@ -405,6 +405,7 @@ final class TestingStreamsSpec extends TestKit(ActorSystem("TestingStreams")) wi
     }
 
     "test sharedKillSwitch" in {
+
       val countingSrc = Source(LazyList.from(1)).delay(1.second)
       val lastSnk = TestSink.probe[Int]
       val sharedKillSwitch = KillSwitches.shared("my-kill-switch")
@@ -417,6 +418,26 @@ final class TestingStreamsSpec extends TestKit(ActorSystem("TestingStreams")) wi
 
       last1.expectSubscriptionAndError(error)
       last2.expectSubscriptionAndError(error)
+
+    }
+
+    "test KillSwitches.single" in {
+
+      import system.dispatcher
+      val killSwitchFlow = KillSwitches.single[Int]
+      val counter = Source(LazyList.from(1)).throttle(1, 1 second).log("counter")
+      val sink = TestSink.probe[Int]
+
+      val (killSwitch, materializedTestValue) = counter
+        .viaMat(killSwitchFlow)(Keep.right)
+        .toMat(sink)(Keep.both)
+        .run()
+
+      system.scheduler.scheduleOnce(3 seconds) {
+        killSwitch.shutdown()
+      }
+
+      materializedTestValue.request(3).expectNext(1, 2, 3).expectComplete()
 
     }
 
