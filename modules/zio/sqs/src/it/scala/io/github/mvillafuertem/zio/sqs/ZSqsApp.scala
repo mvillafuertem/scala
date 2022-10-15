@@ -1,15 +1,15 @@
 package io.github.mvillafuertem.zio.sqs
 
-import software.amazon.awssdk.auth.credentials.{AwsBasicCredentials, StaticCredentialsProvider}
+import software.amazon.awssdk.auth.credentials.{ AwsBasicCredentials, StaticCredentialsProvider }
 import software.amazon.awssdk.regions.Region
 import zio.Console.printLine
 import zio.aws.core.config.CommonAwsConfig
-import zio.{Schedule, Scope, ZIO, ZLayer, durationInt}
+import zio.{ durationInt, Schedule, Scope, ZIO, ZLayer }
 import zio.aws.sqs.Sqs
 import zio.aws.sqs.model.CreateQueueRequest
-import zio.sqs.{SqsStream, SqsStreamSettings}
+import zio.sqs.{ SqsStream, SqsStreamSettings }
 import zio.test.Assertion.equalTo
-import zio.test.{Spec, TestEnvironment, ZIOSpecDefault, assertZIO}
+import zio.test.{ assertZIO, Spec, TestEnvironment, ZIOSpecDefault }
 
 import java.net.URI
 
