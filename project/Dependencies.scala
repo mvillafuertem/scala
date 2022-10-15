@@ -505,7 +505,7 @@ object Dependencies {
     val jslt                      = "0.1.13"
     val jsoniter                  = "2.17.5"
     val jwtCirce                  = "4.3.0"
-    val kafka                     = "3.2.2"
+    val kafka                     = "3.2.3"
     val leveldbjniAll             = "1.8"
     val logback                   = "1.2.11"
     val mongoScalaBson            = "4.4.2"
