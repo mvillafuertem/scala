@@ -1,19 +1,19 @@
 package io.github.mvillafuertem.akka.untyped.stream
 
-import akka.actor.{ Actor, ActorLogging, ActorSystem, Props }
+import akka.actor.{Actor, ActorLogging, ActorSystem, Props}
 import akka.stream.Attributes.LogLevels
 import akka.stream._
-import akka.stream.scaladsl.{ Broadcast, Flow, GraphDSL, Keep, Merge, Partition, Sink, Source, ZipWith }
-import akka.stream.testkit.scaladsl.{ TestSink, TestSource }
-import akka.testkit.{ TestKit, TestProbe }
+import akka.stream.scaladsl.{Broadcast, Flow, GraphDSL, Keep, Merge, Partition, Sink, Source, ZipWith}
+import akka.stream.testkit.scaladsl.{TestSink, TestSource}
+import akka.testkit.{TestKit, TestProbe}
 import akka.util.Timeout
-import akka.{ Done, NotUsed }
+import akka.{Done, NotUsed}
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.wordspec.AnyWordSpecLike
 
 import scala.concurrent.duration._
-import scala.concurrent.{ Await, Future }
-import scala.util.{ Failure, Success, Try }
+import scala.concurrent.{Await, Future}
+import scala.util.{Failure, Success, Try}
 
 /**
  * @author

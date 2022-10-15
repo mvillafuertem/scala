@@ -1088,6 +1088,7 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
     // w h e n
     val actual = decode[UserEvent](jsonString)
 
+
     // t h e n
     actual shouldBe Right(UserEvent("abc123"))
 
