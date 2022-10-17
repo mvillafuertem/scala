@@ -1,17 +1,17 @@
 package io.github.mvillafuertem.akka.untyped.stream
 
 import akka.actor.ActorSystem
-import akka.stream.scaladsl.{Keep, RunnableGraph, Sink, Source}
-import akka.stream.stage.{AsyncCallback, GraphStageLogic, GraphStageWithMaterializedValue, OutHandler}
-import akka.stream.{Attributes, KillSwitch, KillSwitches, Materializer, Outlet, SourceShape}
+import akka.stream.scaladsl.{ Keep, RunnableGraph, Sink, Source }
+import akka.stream.stage.{ AsyncCallback, GraphStageLogic, GraphStageWithMaterializedValue, OutHandler }
+import akka.stream.{ Attributes, KillSwitch, KillSwitches, Materializer, Outlet, SourceShape }
 import akka.testkit.TestKit
-import akka.{Done, NotUsed}
+import akka.{ Done, NotUsed }
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.flatspec.AnyFlatSpecLike
 
 import scala.concurrent.duration.DurationInt
-import scala.concurrent.{Await, ExecutionContextExecutor, Future, Promise}
-import scala.util.{Failure, Success}
+import scala.concurrent.{ Await, ExecutionContextExecutor, Future, Promise }
+import scala.util.{ Failure, Success }
 
 // https://nivox.github.io/posts/akka-stream-materialized-values/
 // https://blog.rockthejvm.com/the-brilliance-of-materialized-values/
@@ -42,13 +42,13 @@ final class DemystifyingAkkaStreamsMaterializedValuesSpec extends TestKit(ActorS
     val streamDone: Future[Done] = promise.future
     streamDone.onComplete {
       case Failure(exception) => println(exception)
-      case Success(value) => println(value)
+      case Success(value)     => println(value)
     }
     stream.run()
     // Fail
     streamDone.onComplete {
       case Failure(exception) => println(exception)
-      case Success(value) => println(value)
+      case Success(value)     => println(value)
     }
 
   }
@@ -59,26 +59,23 @@ final class DemystifyingAkkaStreamsMaterializedValuesSpec extends TestKit(ActorS
       def stop(): Unit
     }
 
-    class ControlInterfaceImpl(killSwitch: KillSwitch)
-      extends ControlInterface {
-      def stop(): Unit = {
-        //println("valuevaluevaluevalue")
+    class ControlInterfaceImpl(killSwitch: KillSwitch) extends ControlInterface {
+      def stop(): Unit =
+        // println("valuevaluevaluevalue")
         killSwitch.shutdown()
-      }
     }
 
     val source: Source[Int, ControlInterfaceImpl] =
-      Source.fromIterator(() => Iterator.from(1))
+      Source
+        .fromIterator(() => Iterator.from(1))
         .throttle(1, 500.millis)
         .log("Produce")
         .viaMat(KillSwitches.single[Int])(Keep.right)
         .mapMaterializedValue(s => new ControlInterfaceImpl(s))
 
-
     val value = Await.result(source.runWith(Sink.seq[Int]), 1.seconds)
 
     println(value)
-
 
   }
 
@@ -88,43 +85,38 @@ final class DemystifyingAkkaStreamsMaterializedValuesSpec extends TestKit(ActorS
       def stop(): Unit
     }
 
-    class AsyncCallbackControlInterface(callback: AsyncCallback[Unit])
-      extends ControlInterface {
-      def stop(): Unit = {
+    class AsyncCallbackControlInterface(callback: AsyncCallback[Unit]) extends ControlInterface {
+      def stop(): Unit =
         callback.invoke(())
-      }
     }
 
     class StoppableIntSource(from: Int)
-      extends GraphStageWithMaterializedValue[
-        SourceShape[Int],
-        ControlInterface
-      ] {
+        extends GraphStageWithMaterializedValue[
+          SourceShape[Int],
+          ControlInterface
+        ] {
       val out: Outlet[Int] = Outlet("out")
 
       def shape: SourceShape[Int] = SourceShape(out)
 
-      class StoppableIntSourceLogic(_shape: Shape)
-        extends GraphStageLogic(shape) {
-        private[StoppableIntSource] val stopCallback: AsyncCallback[Unit] = {
-          getAsyncCallback[Unit](
-            (_) =>
-              completeStage()
-          )
-        }
+      class StoppableIntSourceLogic(_shape: Shape) extends GraphStageLogic(shape) {
+        private[StoppableIntSource] val stopCallback: AsyncCallback[Unit] =
+          getAsyncCallback[Unit]((_) => completeStage())
 
         private var next: Int = from
 
-        setHandler(out, new OutHandler {
-          def onPull(): Unit = {
-            push(out, next)
-            next += 1
+        setHandler(
+          out,
+          new OutHandler {
+            def onPull(): Unit = {
+              push(out, next)
+              next += 1
+            }
           }
-        })
+        )
       }
 
-      def createLogicAndMaterializedValue(inheritedAttributes: Attributes)
-      : (GraphStageLogic, ControlInterface) = {
+      def createLogicAndMaterializedValue(inheritedAttributes: Attributes): (GraphStageLogic, ControlInterface) = {
         val logic = new StoppableIntSourceLogic(shape)
 
         val controlInterface =
@@ -135,14 +127,14 @@ final class DemystifyingAkkaStreamsMaterializedValuesSpec extends TestKit(ActorS
     }
 
     val source: Source[Int, ControlInterface] =
-      Source.fromGraph(new StoppableIntSource(1))
+      Source
+        .fromGraph(new StoppableIntSource(1))
         .throttle(1, 500.millis)
         .log("asdfasdf")
 
     val value = Await.result(source.runWith(Sink.seq[Int]), 60.seconds)
 
     println(value)
-
 
     trait AmazingLibrary {
       def complexComputation(source: Source[Int, _]): Future[Int]
@@ -152,12 +144,9 @@ final class DemystifyingAkkaStreamsMaterializedValuesSpec extends TestKit(ActorS
       source.preMaterialize()
 
     val amazingLibrary: AmazingLibrary = ???
-    val resutlF: Future[Int] =
+    val resutlF: Future[Int]           =
       amazingLibrary.complexComputation(linkedSource)
-    
 
   }
-
-
 
 }
