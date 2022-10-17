@@ -260,8 +260,9 @@ object Dependencies {
     Artifact.jsoniterCore,
     Artifact.jsoniterMacros
   ).map(_ % Version.jsoniter) ++ Seq(
-    Artifact.dijon % Version.dijon,
-    Artifact.jslt  % Version.jslt
+    Artifact.dijon           % Version.dijon,
+    Artifact.enumeratumCirce % Version.enumeratumCirce,
+    Artifact.jslt            % Version.jslt
   ) ++ Seq(
     // J S O N  T E S T
     Artifact.scalaTest % Version.scalaTest
@@ -431,6 +432,7 @@ object Dependencies {
     val circeParser               = "io.circe"                              %% "circe-parser"
     val curator                   = "org.apache.curator"                     % "curator-test"
     val dijon                     = "me.vican.jorge"                        %% "dijon"
+    val enumeratumCirce           = "com.beachape"                          %% "enumeratum-circe"
     val ficus                     = "com.iheart"                            %% "ficus"
     val h2                        = "com.h2database"                         % "h2"
     val http4sBlazeServer         = "org.http4s"                            %% "http4s-blaze-server"
@@ -479,7 +481,7 @@ object Dependencies {
 
   private object Version {
     val akka                      = "2.6.18"
-    val akkaHttp                  = "10.2.9"
+    val akkaHttp                  = "10.2.10"
     val akkaHttpCirce             = "1.39.2"
     val akkaPersistenceCassandra  = "0.100"
     val akkaPersistenceInmemory   = "2.5.15.2"
@@ -489,20 +491,21 @@ object Dependencies {
     val alpakkaSlick              = "3.0.4"
     val awsCdk                    = "1.156.0"
     val awsLambda                 = "1.2.1"
-    val awsSdk                    = "2.17.247"
+    val awsSdk                    = "2.17.292"
     val cask                      = "0.7.11"
     val cats                      = "2.8.0"
     val circe                     = "0.14.1"
     val http4s                    = "1.0.0-M35"
     val curator                   = "5.3.0"
     val dijon                     = "0.6.0"
+    val enumeratumCirce           = "1.7.0"
     val ficus                     = "1.5.2"
     val h2                        = "2.1.214"
     val java8Compat               = "1.0.2"
-    val jslt                      = "0.1.12"
-    val jsoniter                  = "2.14.2"
+    val jslt                      = "0.1.13"
+    val jsoniter                  = "2.17.5"
     val jwtCirce                  = "4.3.0"
-    val kafka                     = "3.2.1"
+    val kafka                     = "3.2.3"
     val leveldbjniAll             = "1.8"
     val logback                   = "1.2.11"
     val mongoScalaBson            = "4.4.2"
@@ -510,7 +513,7 @@ object Dependencies {
     val postgres                  = "42.4.1"
     val scalaCheck                = "3.2.2.0"
     val scalaJavaTime             = "2.0.0"
-    val scalaTest                 = "3.2.13"
+    val scalaTest                 = "3.2.14"
     val slick                     = "3.3.3"
     val slinky                    = "0.7.2"
     val spark                     = "3.3.0"
@@ -518,11 +521,11 @@ object Dependencies {
     val tapir                     = "0.20.2"
     val testcontainers            = "0.40.10"
     val testcontainersKafka       = "1.17.3"
-    val zio                       = "1.0.16"
+    val zio                       = "1.0.17"
     val zioAkkaCluster            = "0.2.0"
     val zioInteropCats            = "3.2.9.1"
     val zioInteropReactiveStreams = "2.0.0-RC4"
-    val zioKafka                  = "0.17.6"
+    val zioKafka                  = "0.17.7"
     val zioLoggingSlf4j           = "2.0.0-RC6"
   }
 

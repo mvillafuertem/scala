@@ -4,7 +4,7 @@ services:
   # I N F R A S T R U C T U R E
   polynote:
     container_name: polynote
-    image: polynote/polynote:0.4.5-2.12
+    image: polynote/polynote:0.4.6-2.12
     command: --config /opt/config/config.yml
     ports:
       - 8192:8192

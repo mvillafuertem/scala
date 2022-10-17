@@ -1071,4 +1071,26 @@ final class CirceApplicationSpec extends AnyFlatSpecLike with Matchers {
 
   }
 
+  it should "parse using the ADT semiauto codec" in {
+
+    // g i v e n
+    import io.circe.generic.semiauto.deriveCodec
+    sealed trait Event {
+      def id: String
+      def dataExpiresAt: Long
+    }
+    case class UserEvent(userId: String, dataExpiresAt: Long = 0, id: String = "") extends Event
+
+    implicit val event: Codec[Event] = deriveCodec
+
+    val jsonString = """{"userId": "abc123", "dataExpiresAt": 0, "id": ""}""".stripMargin
+
+    // w h e n
+    val actual = decode[UserEvent](jsonString)
+
+    // t h e n
+    actual shouldBe Right(UserEvent("abc123"))
+
+  }
+
 }

@@ -46,7 +46,7 @@ final class CloudWatchApplicationIT extends CloudWatchApplicationConfigurationIT
   override var container: containers.DockerComposeContainer[_] = _
 
   override protected def beforeAll(): Unit = {
-    container = dockerInfrastructure(Wait.forLogMessage(".*Starting mock CloudWatch service.*\\n", 1))
+    container = dockerInfrastructure(Wait.forLogMessage(".*Ready.*", 1))
     container.start()
   }
 
