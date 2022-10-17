@@ -1,19 +1,20 @@
 package io.github.mvillafuertem.akka.untyped.stream
 
-import akka.actor.{Actor, ActorLogging, ActorSystem, Props}
+import akka.actor.{ Actor, ActorLogging, ActorSystem, Props }
 import akka.stream.Attributes.LogLevels
 import akka.stream._
-import akka.stream.scaladsl.{Broadcast, Flow, GraphDSL, Keep, Merge, Partition, Sink, Source, ZipWith}
-import akka.stream.testkit.scaladsl.{TestSink, TestSource}
-import akka.testkit.{TestKit, TestProbe}
+import akka.stream.scaladsl.{ Broadcast, Flow, GraphDSL, Keep, Merge, Partition, Sink, Source, ZipWith }
+import akka.stream.testkit.TestSubscriber
+import akka.stream.testkit.scaladsl.{ TestSink, TestSource }
+import akka.testkit.{ TestKit, TestProbe }
 import akka.util.Timeout
-import akka.{Done, NotUsed}
+import akka.{ Done, NotUsed }
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.wordspec.AnyWordSpecLike
 
 import scala.concurrent.duration._
-import scala.concurrent.{Await, Future}
-import scala.util.{Failure, Success, Try}
+import scala.concurrent.{ Await, Future }
+import scala.util.{ Failure, Success, Try }
 
 /**
  * @author
@@ -340,6 +341,103 @@ final class TestingStreamsSpec extends TestKit(ActorSystem("TestingStreams")) wi
         .request(3) // Don't forget this
         .expectNext("1.- Uno", "5.- Cinco", "13.- Trece")
         .expectComplete()
+
+    }
+
+    "test flowShape from sink and materializedValue" in {
+
+      val sinkFoldFlow2: Graph[FlowShape[Int, Either[Throwable, Int]], Future[Int]] =
+        GraphDSL.createGraph(Sink.fold[Int, Int](0)(_ + _)) { implicit builder => sink =>
+          import GraphDSL.Implicits._
+          FlowShape(sink.in, builder.materializedValue.mapAsync(4)(identity).map(Right(_)).outlet)
+        }
+
+      val sinkSeqFlow1: Graph[FlowShape[Int, Either[Throwable, Seq[Int]]], Future[Seq[Int]]] =
+        GraphDSL
+          .createGraph(Sink.seq[Int]) { implicit builder => sink =>
+            import GraphDSL.Implicits._
+            FlowShape(sink.in, builder.materializedValue.mapAsync(4)(identity).map(Right(_)).outlet)
+          }
+
+      val graph = GraphDSL
+        .create() { implicit builder =>
+          import GraphDSL.Implicits._
+
+          val broadcast = builder.add(Broadcast[Int](3))
+          val zipWith   = builder.add(
+            ZipWith[
+              Int,
+              Either[Throwable, Seq[Int]],
+              Either[Throwable, Int],
+              Int
+            ] {
+              case (message, Right(_), Right(_)) => message
+              case (_, _, _)                     => 0
+            }
+          )
+
+          broadcast.out(0).log("broadcast(0)") ~> zipWith.in0
+
+          broadcast
+            .out(1)
+            .log("broadcast(1)")
+            .flatMapConcat(Source.single(_).via(sinkSeqFlow1).log("sinkFlow1")) ~> zipWith.in1
+
+          broadcast
+            .out(2)
+            .log("broadcast(2)")
+            .flatMapConcat(Source.single(_).via(sinkFoldFlow2).log("sinkFlow2")) ~> zipWith.in2
+
+          FlowShape(broadcast.in, zipWith.out.log("zipWith.out").outlet)
+
+        }
+
+      val simpleSource = Source(1 to 10)
+
+      val testSink              = TestSink.probe[Int]
+      val materializedTestValue = simpleSource.via(graph).runWith(testSink)
+
+      materializedTestValue
+        .request(10)
+        .expectNext(1, 2, 3 to 10: _*)
+        .expectComplete()
+
+    }
+
+    "test sharedKillSwitch" in {
+
+      val countingSrc      = Source(LazyList.from(1)).delay(1.second)
+      val lastSnk          = TestSink.probe[Int]
+      val sharedKillSwitch = KillSwitches.shared("my-kill-switch")
+
+      val last1 = countingSrc.via(sharedKillSwitch.flow).runWith(lastSnk)
+      val last2 = countingSrc.via(sharedKillSwitch.flow).runWith(lastSnk)
+
+      val error = new RuntimeException("boom!")
+      sharedKillSwitch.abort(error)
+
+      last1.expectSubscriptionAndError(error)
+      last2.expectSubscriptionAndError(error)
+
+    }
+
+    "test KillSwitches.single" in {
+
+      import system.dispatcher
+      val killSwitchFlow = KillSwitches.single[Int]
+      val counter        = Source(LazyList.from(1)).throttle(1, 1 second).log("counter")
+      val sink           = TestSink.probe[Int]
+
+      val (killSwitch, materializedTestValue) = counter
+        .viaMat(killSwitchFlow)(Keep.right)
+        .toMat(sink)(Keep.both)
+        .run()
+
+      system.scheduler.scheduleOnce(3 seconds) {
+        killSwitch.shutdown()
+      }
+
+      materializedTestValue.request(3).expectNext(1, 2, 3).expectComplete()
 
     }
 

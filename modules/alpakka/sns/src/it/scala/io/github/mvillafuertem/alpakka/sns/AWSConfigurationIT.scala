@@ -31,9 +31,9 @@ trait AWSConfigurationIT {
   implicit val system: ActorSystem                = ActorSystem()
   private val asyncHttpClient: SdkAsyncHttpClient = AkkaHttpClient.builder().withActorSystem(system).build()
 
-  protected val queue1Url = "http://localhost:4566/000000000000/queue1"
-  protected val queue2Url = "http://localhost:4566/000000000000/queue2.fifo"
-  protected val queue3Url = "http://localhost:4566/000000000000/queue3"
+  protected val queue1Url = "http://localhost:4568/000000000000/queue1"
+  protected val queue2Url = "http://localhost:4568/000000000000/queue2.fifo"
+  protected val queue3Url = "http://localhost:4568/000000000000/queue3"
   protected val topicArn  = "arn:aws:sns:us-east-1:000000000000:topic1"
 
   implicit val awsSqsClient: SqsAsyncClient = SqsAsyncClient
