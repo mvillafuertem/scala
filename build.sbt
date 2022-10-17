@@ -34,6 +34,8 @@ lazy val scala = (project in file("."))
     algorithms,
     `alpakka-kafka`,
     `alpakka-mongodb`,
+    `alpakka-sqs`,
+    `alpakka-sns`,
     `aws-cdk`,
     `aws-sdk`,
     basic,
@@ -55,7 +57,9 @@ lazy val scala = (project in file("."))
     `zio-akka-cluster-sharding`,
     `zio-kafka`,
     `zio-queues`,
+    `zio-s3`,
     `zio-schedule`,
+    `zio-sqs`,
     `zio-streams`
   )
   // S E T T I N G S
@@ -100,6 +104,20 @@ lazy val `alpakka-mongodb` = (project in file("modules/alpakka/mongodb"))
   // S E T T I N G S
   .settings(commonSettings)
   .settings(libraryDependencies ++= Dependencies.`alpakka-mongodb`)
+
+lazy val `alpakka-sqs` = (project in file("modules/alpakka/sqs"))
+  .configs(IntegrationTest)
+  .settings(Defaults.itSettings)
+  // S E T T I N G S
+  .settings(commonSettings)
+  .settings(libraryDependencies ++= Dependencies.`alpakka-sqs`)
+
+lazy val `alpakka-sns` = (project in file("modules/alpakka/sns"))
+  .configs(IntegrationTest)
+  .settings(Defaults.itSettings)
+  // S E T T I N G S
+  .settings(commonSettings)
+  .settings(libraryDependencies ++= Dependencies.`alpakka-sns`)
 
 lazy val `aws-cdk` = (project in file("modules/aws/cdk"))
   .configs(IntegrationTest)
@@ -237,7 +255,7 @@ lazy val script = (project in file("modules/script"))
   .settings(scalaVersion := Settings.scala213)
   .settings(crossScalaVersions := Seq(Settings.scala213))
   .settings(libraryDependencies ++= Dependencies.script)
-  .settings(libraryDependencies ++= Seq("com.lihaoyi" % "ammonite" % "2.5.4" % Test cross CrossVersion.full))
+  .settings(libraryDependencies ++= Seq("com.lihaoyi" % "ammonite" % "2.5.5" % Test cross CrossVersion.full))
   .settings(commands += Commands.ammoniteCommand)
 
 lazy val slick = (project in file("modules/slick"))
@@ -351,8 +369,39 @@ lazy val `zio-kafka` = (project in file("modules/zio/kafka"))
 lazy val `zio-queues` = (project in file("modules/zio/queues"))
   .configure(zio)
 
+lazy val `zio-s3` = (project in file("modules/zio/s3"))
+  .configs(IntegrationTest)
+  .settings(Defaults.itSettings)
+  .settings(commonSettings)
+  .settings(
+    libraryDependencies ++= Seq(
+      "dev.zio"      %% "zio-s3"                    % "0.4.0",
+      "dev.zio"      %% "zio-sqs"                   % "0.5.0",
+      "com.dimafeng" %% "testcontainers-scala-core" % "0.40.11"
+    ) ++ Seq(
+      "dev.zio" %% "zio-test",
+      "dev.zio" %% "zio-test-sbt"
+    ).map(_ % "2.0.0" % Test)
+  )
+  .settings(testFrameworks := Seq(new TestFramework("zio.test.sbt.ZTestFramework")))
+
 lazy val `zio-schedule` = (project in file("modules/zio/schedule"))
   .configure(zio)
+
+lazy val `zio-sqs` = (project in file("modules/zio/sqs"))
+  .configs(IntegrationTest)
+  .settings(Defaults.itSettings)
+  .settings(commonSettings)
+  .settings(
+    libraryDependencies ++= Seq(
+      "dev.zio"      %% "zio-sqs"                   % "0.5.0",
+      "com.dimafeng" %% "testcontainers-scala-core" % "0.40.11"
+    ) ++ Seq(
+      "dev.zio" %% "zio-test",
+      "dev.zio" %% "zio-test-sbt"
+    ).map(_ % "2.0.0" % Test)
+  )
+  .settings(testFrameworks := Seq(new TestFramework("zio.test.sbt.ZTestFramework")))
 
 lazy val `zio-streams` = (project in file("modules/zio/streams"))
   .configure(zio)
