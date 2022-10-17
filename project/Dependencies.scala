@@ -514,7 +514,7 @@ object Dependencies {
     val scalaCheck                = "3.2.2.0"
     val scalaJavaTime             = "2.0.0"
     val scalaTest                 = "3.2.14"
-    val slick                     = "3.3.3"
+    val slick                     = "3.4.1"
     val slinky                    = "0.7.2"
     val spark                     = "3.3.0"
     val sttp                      = "3.5.1"
