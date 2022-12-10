@@ -124,8 +124,25 @@ final class CdktfBastion(scope: Construct, cdktfStackConfiguration: CdktfStackCo
     .build()
 
   private val _: TerraformOutput = TerraformOutput.Builder
+    .create(scope, "cdktf_bastion_ssh_copy_id")
+    .value(s"ssh-copy-id ec2-user@${alb.getDnsName}")
+    .build()
+
+  private val _: TerraformOutput = TerraformOutput.Builder
+    .create(scope, "cdktf_bastion_ssh_config")
+    .value(
+      s"""
+         |vi ~/.ssh/config
+         |
+         |Host bastion
+         |    Hostname ${alb.getDnsName}
+         |    User ec2-user
+         |""".stripMargin)
+    .build()
+
+  private val _: TerraformOutput = TerraformOutput.Builder
     .create(scope, "cdktf_bastion_ssh_connection")
-    .value(s"ssh ec2-user@${alb.getDnsName}")
+    .value("ssh bastion")
     .build()
 
 }
