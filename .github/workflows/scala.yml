@@ -25,8 +25,9 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: ${{ matrix.java-version }} # The JDK version to make available on the path.
-          java-package: jdk # (jre, jdk, or jdk+fx) - defaults to jdk
+          distribution: adopt
           architecture: x64 # (x64 or x86) - defaults to x64
+          cache: 'sbt'
       - name: Run Tests
         run: ./.cicd/test.sh
 
@@ -51,8 +52,9 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: ${{ matrix.java-version }} # The JDK version to make available on the path.
-          java-package: jdk # (jre, jdk, or jdk+fx) - defaults to jdk
+          distribution: adopt
           architecture: x64 # (x64 or x86) - defaults to x64
+          cache: 'sbt'
       - name: Run Script Tests
         run: ./.cicd/script-test.sh
 
@@ -77,8 +79,9 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: ${{ matrix.java-version }} # The JDK version to make available on the path.
-          java-package: jdk # (jre, jdk, or jdk+fx) - defaults to jdk
+          distribution: adopt
           architecture: x64 # (x64 or x86) - defaults to x64
+          cache: 'sbt'
       - name: Run Integration Tests
         run: ./.cicd/integration-test.sh # https://github.com/testcontainers/testcontainers-java/issues/3122
 
@@ -103,8 +106,9 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: ${{ matrix.java-version }} # The JDK version to make available on the path.
-          java-package: jdk # (jre, jdk, or jdk+fx) - defaults to jdk
+          distribution: adopt
           architecture: x64 # (x64 or x86) - defaults to x64
+          cache: 'sbt'
       - name: Run Benchmarks
         run: ./.cicd/benchmarks.sh
 
@@ -129,8 +133,9 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: ${{ matrix.java-version }} # The JDK version to make available on the path.
-          java-package: jdk # (jre, jdk, or jdk+fx) - defaults to jdk
+          distribution: adopt
           architecture: x64 # (x64 or x86) - defaults to x64
+          cache: 'sbt'
       - name: Run cdktf
         run: |
           sbt -v terraform-cdktf-scalajs/run && \
@@ -162,7 +167,8 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: ${{ matrix.java-version }} # The JDK version to make available on the path.
-          java-package: jdk # (jre, jdk, or jdk+fx) - defaults to jdk
+          distribution: adopt
           architecture: x64 # (x64 or x86) - defaults to x64
+          cache: 'sbt'
       - name: Run dotty
         run: sbt dotty/run
