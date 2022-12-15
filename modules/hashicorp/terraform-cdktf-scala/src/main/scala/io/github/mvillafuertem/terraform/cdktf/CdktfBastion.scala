@@ -1,11 +1,16 @@
 package io.github.mvillafuertem.terraform.cdktf
 
 import com.hashicorp.cdktf.{ TerraformOutput, TerraformResourceLifecycle }
-import imports.aws.autoscaling.AutoscalingGroup
-import imports.aws.datasources.LaunchConfiguration
-import imports.aws.ec2.KeyPair
-import imports.aws.elb._
-import imports.aws.vpc.{ DataAwsVpc, SecurityGroup, SecurityGroupRule, Subnet }
+import imports.aws.alb.Alb
+import imports.aws.alb_listener.{ AlbListener, AlbListenerDefaultAction }
+import imports.aws.alb_target_group.{ AlbTargetGroup, AlbTargetGroupHealthCheck }
+import imports.aws.autoscaling_group.AutoscalingGroup
+import imports.aws.data_aws_vpc.DataAwsVpc
+import imports.aws.key_pair.KeyPair
+import imports.aws.launch_configuration.LaunchConfiguration
+import imports.aws.security_group.SecurityGroup
+import imports.aws.security_group_rule.SecurityGroupRule
+import imports.aws.subnet.Subnet
 import io.github.mvillafuertem.terraform.cdktf.CdktfStack.CdktfStackConfiguration
 import software.constructs.Construct
 
@@ -130,14 +135,13 @@ final class CdktfBastion(scope: Construct, cdktfStackConfiguration: CdktfStackCo
 
   private val _: TerraformOutput = TerraformOutput.Builder
     .create(scope, "cdktf_bastion_ssh_config")
-    .value(
-      s"""
-         |vi ~/.ssh/config
-         |
-         |Host bastion
-         |    Hostname ${alb.getDnsName}
-         |    User ec2-user
-         |""".stripMargin)
+    .value(s"""
+              |vi ~/.ssh/config
+              |
+              |Host bastion
+              |    Hostname ${alb.getDnsName}
+              |    User ec2-user
+              |""".stripMargin)
     .build()
 
   private val _: TerraformOutput = TerraformOutput.Builder
