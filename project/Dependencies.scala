@@ -373,7 +373,7 @@ object Dependencies {
 
   val `terraform-cdktf-scala`: Seq[ModuleID] = Seq(
     // T E R R A F O R M  C D K T F
-    "com.hashicorp"  % "cdktf"     % "0.9.4"
+    "com.hashicorp"  % "cdktf"     % "0.14.3"
     // "software.constructs" % "constructs" % "10.0.9"
   ) ++ Seq(
     // T E R R A F O R M  C D K T F  T E S T
