@@ -7,6 +7,9 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java-version: [ 11.0.17, 15.0.2, 17.0.5 ]
     steps:
       - uses: actions/checkout@v2
       - name: Cache SBT
@@ -16,10 +19,10 @@ jobs:
             ~/.ivy2/cache
             ~/.sbt
           key: ${{ runner.os }}-sbt-${{ hashFiles('**/build.sbt') }}
-      - name: Set up JDK 15.0.1
+      - name: Set up JDK ${{ matrix.java-version }}
         uses: actions/setup-java@v1
         with:
-          java-version: '15.0.1' # The JDK version to make available on the path.
+          java-version: ${{ matrix.java-version }} # The JDK version to make available on the path.
           java-package: jdk # (jre, jdk, or jdk+fx) - defaults to jdk
           architecture: x64 # (x64 or x86) - defaults to x64
       - name: Run Tests
@@ -28,6 +31,9 @@ jobs:
   script-test:
     name: Script Test
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java-version: [ 11.0.17, 15.0.2, 17.0.5 ]
     steps:
       - uses: actions/checkout@v2
       - name: Cache SBT
@@ -37,10 +43,10 @@ jobs:
             ~/.ivy2/cache
             ~/.sbt
           key: ${{ runner.os }}-sbt-${{ hashFiles('**/build.sbt') }}
-      - name: Set up JDK 15.0.1
+      - name: Set up JDK ${{ matrix.java-version }}
         uses: actions/setup-java@v1
         with:
-          java-version: '15.0.1' # The JDK version to make available on the path.
+          java-version: ${{ matrix.java-version }} # The JDK version to make available on the path.
           java-package: jdk # (jre, jdk, or jdk+fx) - defaults to jdk
           architecture: x64 # (x64 or x86) - defaults to x64
       - name: Run Script Tests
@@ -49,6 +55,9 @@ jobs:
   integration-test:
     name: Integration Test
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java-version: [ 11.0.17, 15.0.2, 17.0.5 ]
     steps:
       - uses: actions/checkout@v2
       - name: Cache SBT
@@ -58,10 +67,10 @@ jobs:
             ~/.ivy2/cache
             ~/.sbt
           key: ${{ runner.os }}-sbt-${{ hashFiles('**/build.sbt') }}
-      - name: Set up JDK 15.0.1
+      - name: Set up JDK ${{ matrix.java-version }}
         uses: actions/setup-java@v1
         with:
-          java-version: '15.0.1' # The JDK version to make available on the path.
+          java-version: ${{ matrix.java-version }} # The JDK version to make available on the path.
           java-package: jdk # (jre, jdk, or jdk+fx) - defaults to jdk
           architecture: x64 # (x64 or x86) - defaults to x64
       - name: Run Integration Tests
@@ -70,6 +79,9 @@ jobs:
   benchmarks:
     name: Benchmarks
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java-version: [ 11.0.17, 15.0.2, 17.0.5 ]
     steps:
       - uses: actions/checkout@v2
       - name: Cache SBT
@@ -79,10 +91,10 @@ jobs:
             ~/.ivy2/cache
             ~/.sbt
           key: ${{ runner.os }}-sbt-${{ hashFiles('**/build.sbt') }}
-      - name: Set up JDK 15.0.1
+      - name: Set up JDK ${{ matrix.java-version }}
         uses: actions/setup-java@v1
         with:
-          java-version: '15.0.1' # The JDK version to make available on the path.
+          java-version: ${{ matrix.java-version }} # The JDK version to make available on the path.
           java-package: jdk # (jre, jdk, or jdk+fx) - defaults to jdk
           architecture: x64 # (x64 or x86) - defaults to x64
       - name: Run Benchmarks
@@ -91,6 +103,9 @@ jobs:
   cdktf:
     name: Cdktf
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java-version: [ 11.0.17, 15.0.2, 17.0.5 ]
     steps:
       - uses: actions/checkout@v2
       - name: Cache SBT
@@ -100,10 +115,10 @@ jobs:
             ~/.ivy2/cache
             ~/.sbt
           key: ${{ runner.os }}-sbt-${{ hashFiles('**/build.sbt') }}
-      - name: Set up JDK 15.0.1
+      - name: Set up JDK ${{ matrix.java-version }}
         uses: actions/setup-java@v1
         with:
-          java-version: '15.0.1' # The JDK version to make available on the path.
+          java-version: ${{ matrix.java-version }} # The JDK version to make available on the path.
           java-package: jdk # (jre, jdk, or jdk+fx) - defaults to jdk
           architecture: x64 # (x64 or x86) - defaults to x64
       - name: Run cdktf
@@ -119,6 +134,9 @@ jobs:
   dotty:
     name: Dotty
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java-version: [ 11.0.17, 15.0.2, 17.0.5 ]
     steps:
       - uses: actions/checkout@v2
       - name: Cache SBT
@@ -128,10 +146,10 @@ jobs:
             ~/.ivy2/cache
             ~/.sbt
           key: ${{ runner.os }}-sbt-${{ hashFiles('**/build.sbt') }}
-      - name: Set up JDK 15.0.1
+      - name: Set up JDK ${{ matrix.java-version }}
         uses: actions/setup-java@v1
         with:
-          java-version: '15.0.1' # The JDK version to make available on the path.
+          java-version: ${{ matrix.java-version }} # The JDK version to make available on the path.
           java-package: jdk # (jre, jdk, or jdk+fx) - defaults to jdk
           architecture: x64 # (x64 or x86) - defaults to x64
       - name: Run dotty
