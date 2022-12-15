@@ -303,7 +303,7 @@ object Dependencies {
       Artifact.sparkCore,
       Artifact.sparkSql,
       Artifact.sparkStreaming
-    ).map(_ % Version.spark) ++ Seq(
+    ).map(_ % Version.spark exclude ("org.scala-lang.modules", "scala-xml")) ++ Seq(
       // S P A R K  T E S T
       Artifact.scalaTest % Version.scalaTest
     ).map(_ % Test)
