@@ -17,6 +17,7 @@ jobs:
         with:
           path: |
             ~/.ivy2/cache
+            ~/.ivy2/local
             ~/.sbt
           key: ${{ runner.os }}-sbt-${{ hashFiles('**/build.sbt') }}
       - name: Set up JDK ${{ matrix.java-version }}
@@ -41,6 +42,7 @@ jobs:
         with:
           path: |
             ~/.ivy2/cache
+            ~/.ivy2/local
             ~/.sbt
           key: ${{ runner.os }}-sbt-${{ hashFiles('**/build.sbt') }}
       - name: Set up JDK ${{ matrix.java-version }}
@@ -65,6 +67,7 @@ jobs:
         with:
           path: |
             ~/.ivy2/cache
+            ~/.ivy2/local
             ~/.sbt
           key: ${{ runner.os }}-sbt-${{ hashFiles('**/build.sbt') }}
       - name: Set up JDK ${{ matrix.java-version }}
@@ -89,6 +92,7 @@ jobs:
         with:
           path: |
             ~/.ivy2/cache
+            ~/.ivy2/local
             ~/.sbt
           key: ${{ runner.os }}-sbt-${{ hashFiles('**/build.sbt') }}
       - name: Set up JDK ${{ matrix.java-version }}
@@ -113,6 +117,7 @@ jobs:
         with:
           path: |
             ~/.ivy2/cache
+            ~/.ivy2/local
             ~/.sbt
           key: ${{ runner.os }}-sbt-${{ hashFiles('**/build.sbt') }}
       - name: Set up JDK ${{ matrix.java-version }}
@@ -144,6 +149,7 @@ jobs:
         with:
           path: |
             ~/.ivy2/cache
+            ~/.ivy2/local
             ~/.sbt
           key: ${{ runner.os }}-sbt-${{ hashFiles('**/build.sbt') }}
       - name: Set up JDK ${{ matrix.java-version }}
