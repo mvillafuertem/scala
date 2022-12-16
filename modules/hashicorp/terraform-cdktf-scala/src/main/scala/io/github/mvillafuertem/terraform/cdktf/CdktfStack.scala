@@ -1,10 +1,14 @@
 package io.github.mvillafuertem.terraform.cdktf
 
 import com.hashicorp.cdktf.{ TerraformOutput, TerraformStack }
-import imports.aws._
-import imports.aws.budgets.{ BudgetsBudget, BudgetsBudgetCostTypes, BudgetsBudgetNotification }
-import imports.aws.ec2.{ Instance, KeyPair }
-import imports.aws.vpc.{ DataAwsVpc, NetworkInterfaceSgAttachment, SecurityGroup, SecurityGroupRule }
+import imports.aws.budgets_budget.{ BudgetsBudget, BudgetsBudgetCostTypes, BudgetsBudgetNotification }
+import imports.aws.data_aws_vpc.DataAwsVpc
+import imports.aws.instance.Instance
+import imports.aws.key_pair.KeyPair
+import imports.aws.network_interface_sg_attachment.NetworkInterfaceSgAttachment
+import imports.aws.provider.AwsProvider
+import imports.aws.security_group.SecurityGroup
+import imports.aws.security_group_rule.SecurityGroupRule
 import io.github.mvillafuertem.terraform.cdktf.CdktfStack.CdktfStackConfiguration
 import software.constructs.Construct
 
