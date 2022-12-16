@@ -13,7 +13,7 @@ trait SqsConfigurationIT {
   def dockerInfrastructure: containers.DockerComposeContainer[_] =
     DockerComposeContainer(
       new File(s"modules/alpakka/sqs/src/it/resources/docker-compose.it.yml"),
-      exposedServices = Seq(ExposedService("elasticmq", 9324, 1, Wait.forLogMessage(".*Creating queue QueueData.*", 2))),
+      exposedServices = Seq(ExposedService("elasticmq", 9324, 1, Wait.forLogMessage(".*Creating queue.*", 2))),
       identifier = "docker_infrastructure"
     ).container
 
