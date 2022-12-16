@@ -23,7 +23,7 @@ object GraphMaterializedValue extends App {
    */
   // Step 1 - Setting up the fundamentals for the graph
   val complexWordSink = Sink.fromGraph(
-    GraphDSL.create(printer, counter)((printerMatValue, counterMatValue) => counterMatValue) { implicit builder => (printerShape, counterShape) =>
+    GraphDSL.createGraph(printer, counter)((printerMatValue, counterMatValue) => counterMatValue) { implicit builder => (printerShape, counterShape) =>
       import GraphDSL.Implicits._
 
       // Step 2 - Declaring the components
@@ -57,7 +57,7 @@ object GraphMaterializedValue extends App {
     val counterSink = Sink.fold[Int, B](0)((count, _) => count + 1)
 
     Flow.fromGraph(
-      GraphDSL.create(counterSink) { implicit builder => counterSinkShape =>
+      GraphDSL.createGraph(counterSink) { implicit builder => counterSinkShape =>
         import GraphDSL.Implicits._
 
         val broadcast         = builder.add(Broadcast[B](2))

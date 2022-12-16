@@ -12,14 +12,14 @@
     "apply": "terraform apply ./cdktf.out"
   },
   "dependencies": {
-    "@cdktf/provider-aws": "^5.0.52",
-    "cdktf": "^0.9.4",
-    "constructs": "^10.0.91",
-    "node": "^17.7.1"
+    "@cdktf/provider-aws": "^11.0.6",
+    "cdktf": "^0.14.3",
+    "constructs": "^10.1.190",
+    "node": "^19.3.0"
   },
   "devDependencies": {
-    "cdktf-cli": "^0.9.4",
-    "@types/node": "^17.0.21"
+    "cdktf-cli": "^0.14.3",
+    "@types/node": "^18.11.15"
   },
   "private": true
 }

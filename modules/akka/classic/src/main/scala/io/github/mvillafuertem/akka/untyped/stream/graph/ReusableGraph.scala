@@ -71,7 +71,7 @@ object ReusableGraph extends App {
   val sharedDoubler = Flow[Int].map(_ * 2)
 
   RunnableGraph
-    .fromGraph(GraphDSL.create(sink, sink)((_, _)) { implicit builder => (topHS, bottomHS) =>
+    .fromGraph(GraphDSL.createGraph(sink, sink)((_, _)) { implicit builder => (topHS, bottomHS) =>
       import GraphDSL.Implicits._
       val broadcast = builder.add(Broadcast[Int](2))
       Source.single(1) ~> broadcast.in

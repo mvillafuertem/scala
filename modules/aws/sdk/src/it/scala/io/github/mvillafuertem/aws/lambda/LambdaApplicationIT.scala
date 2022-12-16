@@ -192,7 +192,7 @@ final class LambdaApplicationIT extends LambdaApplicationConfigurationIT {
   override var container: containers.DockerComposeContainer[_] = _
 
   override protected def beforeAll(): Unit = {
-    container = dockerInfrastructure(Wait.forLogMessage(".*Starting mock Lambda service.*\\n", 1))
+    container = dockerInfrastructure(Wait.forLogMessage(".*Ready.*", 1))
     container.start()
   }
 

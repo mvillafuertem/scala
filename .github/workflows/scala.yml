@@ -7,132 +7,168 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java-version: [ 11.0.17, 15.0.2 ] # 17.0.5 spark Tests unsuccessful
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Cache SBT
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             ~/.ivy2/cache
+            ~/.ivy2/local
             ~/.sbt
-          key: ${{ runner.os }}-sbt-${{ hashFiles('**/build.sbt') }}
-      - name: Set up JDK 15.0.1
-        uses: actions/setup-java@v1
+            ~/.m2/repository
+          key: ${{ runner.os }}-job-test-${{ matrix.java-version }}-sbt-${{ hashFiles('**/build.sbt') }}
+      - name: Set up JDK ${{ matrix.java-version }}
+        uses: actions/setup-java@v3
         with:
-          java-version: '15.0.1' # The JDK version to make available on the path.
-          java-package: jdk # (jre, jdk, or jdk+fx) - defaults to jdk
+          java-version: ${{ matrix.java-version }} # The JDK version to make available on the path.
+          distribution: adopt
           architecture: x64 # (x64 or x86) - defaults to x64
+          cache: 'sbt'
       - name: Run Tests
         run: ./.cicd/test.sh
 
   script-test:
     name: Script Test
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java-version: [ 11.0.17, 15.0.2, 17.0.5 ]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Cache SBT
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             ~/.ivy2/cache
+            ~/.ivy2/local
             ~/.sbt
-          key: ${{ runner.os }}-sbt-${{ hashFiles('**/build.sbt') }}
-      - name: Set up JDK 15.0.1
-        uses: actions/setup-java@v1
+            ~/.m2/repository
+          key: ${{ runner.os }}-job-script-test-${{ matrix.java-version }}-sbt-${{ hashFiles('**/build.sbt') }}
+      - name: Set up JDK ${{ matrix.java-version }}
+        uses: actions/setup-java@v3
         with:
-          java-version: '15.0.1' # The JDK version to make available on the path.
-          java-package: jdk # (jre, jdk, or jdk+fx) - defaults to jdk
+          java-version: ${{ matrix.java-version }} # The JDK version to make available on the path.
+          distribution: adopt
           architecture: x64 # (x64 or x86) - defaults to x64
+          cache: 'sbt'
       - name: Run Script Tests
         run: ./.cicd/script-test.sh
 
   integration-test:
     name: Integration Test
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java-version: [ 11.0.17, 15.0.2, 17.0.5 ]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Cache SBT
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             ~/.ivy2/cache
+            ~/.ivy2/local
             ~/.sbt
-          key: ${{ runner.os }}-sbt-${{ hashFiles('**/build.sbt') }}
-      - name: Set up JDK 15.0.1
-        uses: actions/setup-java@v1
+            ~/.m2/repository
+          key: ${{ runner.os }}-job-integration-test-${{ matrix.java-version }}-sbt-${{ hashFiles('**/build.sbt') }}
+      - name: Set up JDK ${{ matrix.java-version }}
+        uses: actions/setup-java@v3
         with:
-          java-version: '15.0.1' # The JDK version to make available on the path.
-          java-package: jdk # (jre, jdk, or jdk+fx) - defaults to jdk
+          java-version: ${{ matrix.java-version }} # The JDK version to make available on the path.
+          distribution: adopt
           architecture: x64 # (x64 or x86) - defaults to x64
+          cache: 'sbt'
       - name: Run Integration Tests
         run: ./.cicd/integration-test.sh # https://github.com/testcontainers/testcontainers-java/issues/3122
 
   benchmarks:
     name: Benchmarks
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java-version: [ 11.0.17, 15.0.2, 17.0.5 ]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Cache SBT
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             ~/.ivy2/cache
+            ~/.ivy2/local
             ~/.sbt
-          key: ${{ runner.os }}-sbt-${{ hashFiles('**/build.sbt') }}
-      - name: Set up JDK 15.0.1
-        uses: actions/setup-java@v1
+            ~/.m2/repository
+          key: ${{ runner.os }}-job-benchmarks-${{ matrix.java-version }}-sbt-${{ hashFiles('**/build.sbt') }}
+      - name: Set up JDK ${{ matrix.java-version }}
+        uses: actions/setup-java@v3
         with:
-          java-version: '15.0.1' # The JDK version to make available on the path.
-          java-package: jdk # (jre, jdk, or jdk+fx) - defaults to jdk
+          java-version: ${{ matrix.java-version }} # The JDK version to make available on the path.
+          distribution: adopt
           architecture: x64 # (x64 or x86) - defaults to x64
+          cache: 'sbt'
       - name: Run Benchmarks
         run: ./.cicd/benchmarks.sh
 
   cdktf:
     name: Cdktf
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java-version: [ 11.0.17, 15.0.2, 17.0.5 ]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Cache SBT
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             ~/.ivy2/cache
+            ~/.ivy2/local
             ~/.sbt
-          key: ${{ runner.os }}-sbt-${{ hashFiles('**/build.sbt') }}
-      - name: Set up JDK 15.0.1
-        uses: actions/setup-java@v1
+            ~/.m2/repository
+          key: ${{ runner.os }}-job-cdktf-${{ matrix.java-version }}-sbt-${{ hashFiles('**/build.sbt') }}
+      - name: Set up JDK ${{ matrix.java-version }}
+        uses: actions/setup-java@v3
         with:
-          java-version: '15.0.1' # The JDK version to make available on the path.
-          java-package: jdk # (jre, jdk, or jdk+fx) - defaults to jdk
+          java-version: ${{ matrix.java-version }} # The JDK version to make available on the path.
+          distribution: adopt
           architecture: x64 # (x64 or x86) - defaults to x64
+          cache: 'sbt'
       - name: Run cdktf
         run: |
-          sbt terraform-cdktf-scalajs/run && \
+          sbt -v terraform-cdktf-scalajs/run && \
           cat modules/hashicorp/terraform-cdktf-scalajs/src/main/resources/cdk.tf.json && \
           yarn --cwd modules/hashicorp/terraform-cdktf-scala/ install && \
           yarn --cwd modules/hashicorp/terraform-cdktf-scala/ fetch && \
-          sbt "terraform-cdktf-scala/run" && \
+          sbt -v terraform-cdktf-scala/run && \
           cat modules/hashicorp/terraform-cdktf-scala/src/main/resources/stacks/cdktf-terraform-stack/cdk.tf.json && \
           cat modules/hashicorp/terraform-cdktf-scala/src/main/resources/stacks/cdktf-terraform-state/cdk.tf.json
 
   dotty:
     name: Dotty
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java-version: [ 11.0.17, 15.0.2, 17.0.5 ]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Cache SBT
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             ~/.ivy2/cache
+            ~/.ivy2/local
             ~/.sbt
-          key: ${{ runner.os }}-sbt-${{ hashFiles('**/build.sbt') }}
-      - name: Set up JDK 15.0.1
-        uses: actions/setup-java@v1
+            ~/.m2/repository
+          key: ${{ runner.os }}-job-dotty-${{ matrix.java-version }}-sbt-${{ hashFiles('**/build.sbt') }}
+      - name: Set up JDK ${{ matrix.java-version }}
+        uses: actions/setup-java@v3
         with:
-          java-version: '15.0.1' # The JDK version to make available on the path.
-          java-package: jdk # (jre, jdk, or jdk+fx) - defaults to jdk
+          java-version: ${{ matrix.java-version }} # The JDK version to make available on the path.
+          distribution: adopt
           architecture: x64 # (x64 or x86) - defaults to x64
+          cache: 'sbt'
       - name: Run dotty
         run: sbt dotty/run
