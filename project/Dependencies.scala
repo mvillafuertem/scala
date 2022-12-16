@@ -212,6 +212,8 @@ object Dependencies {
     Artifact.catsCore,
     Artifact.catsFree
   ).map(_ % Version.cats) ++ Seq(
+    Artifact.catsEffect % Version.catsEffect
+  ) ++ Seq(
     // C A T S  T E S T
     Artifact.scalaTest % Version.scalaTest
   ).map(_ % Test)
@@ -425,6 +427,7 @@ object Dependencies {
     val awsSdkS3                  = "software.amazon.awssdk"                 % "s3"
     val cask                      = "com.lihaoyi"                           %% "cask"
     val catsCore                  = "org.typelevel"                         %% "cats-core"
+    val catsEffect                = "org.typelevel"                         %% "cats-effect"
     val catsFree                  = "org.typelevel"                         %% "cats-free"
     val circeGeneric              = "io.circe"                              %% "circe-generic"
     val circeGenericExtras        = "io.circe"                              %% "circe-generic-extras"
@@ -493,7 +496,8 @@ object Dependencies {
     val awsLambda                 = "1.2.1"
     val awsSdk                    = "2.17.293"
     val cask                      = "0.7.11"
-    val cats                      = "2.8.0"
+    val cats                      = "2.9.0"
+    val catsEffect                = "3.4.2"
     val circe                     = "0.14.1"
     val http4s                    = "1.0.0-M35"
     val curator                   = "5.3.0"
