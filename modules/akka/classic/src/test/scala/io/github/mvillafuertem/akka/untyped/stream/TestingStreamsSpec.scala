@@ -1,20 +1,19 @@
 package io.github.mvillafuertem.akka.untyped.stream
 
-import akka.actor.{Actor, ActorLogging, ActorSystem, Props}
+import akka.actor.{ Actor, ActorLogging, ActorSystem, Props }
 import akka.stream.Attributes.LogLevels
 import akka.stream._
-import akka.stream.scaladsl.{Broadcast, Flow, GraphDSL, Keep, Merge, Partition, Sink, Source, ZipWith}
-import akka.stream.testkit.TestSubscriber
-import akka.stream.testkit.scaladsl.{TestSink, TestSource}
-import akka.testkit.{TestKit, TestProbe}
+import akka.stream.scaladsl.{ Broadcast, Flow, GraphDSL, Keep, Merge, Partition, Sink, Source, ZipWith }
+import akka.stream.testkit.scaladsl.{ TestSink, TestSource }
+import akka.testkit.{ TestKit, TestProbe }
 import akka.util.Timeout
-import akka.{Done, NotUsed}
+import akka.{ Done, NotUsed }
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.wordspec.AnyWordSpecLike
 
 import scala.concurrent.duration._
-import scala.concurrent.{Await, Future}
-import scala.util.{Failure, Success, Try}
+import scala.concurrent.{ Await, Future }
+import scala.util.{ Failure, Success, Try }
 
 /**
  * @author
@@ -406,8 +405,8 @@ final class TestingStreamsSpec extends TestKit(ActorSystem("TestingStreams")) wi
 
     "test sharedKillSwitch" in {
 
-      val countingSrc = Source(LazyList.from(1)).delay(1.second)
-      val lastSnk = TestSink.probe[Int]
+      val countingSrc      = Source(LazyList.from(1)).delay(1.second)
+      val lastSnk          = TestSink.probe[Int]
       val sharedKillSwitch = KillSwitches.shared("my-kill-switch")
 
       val last1 = countingSrc.via(sharedKillSwitch.flow).runWith(lastSnk)
@@ -425,8 +424,8 @@ final class TestingStreamsSpec extends TestKit(ActorSystem("TestingStreams")) wi
 
       import system.dispatcher
       val killSwitchFlow = KillSwitches.single[Int]
-      val counter = Source(LazyList.from(1)).throttle(1, 1 second).log("counter")
-      val sink = TestSink.probe[Int]
+      val counter        = Source(LazyList.from(1)).throttle(1, 1 second).log("counter")
+      val sink           = TestSink.probe[Int]
 
       val (killSwitch, materializedTestValue) = counter
         .viaMat(killSwitchFlow)(Keep.right)
@@ -438,6 +437,32 @@ final class TestingStreamsSpec extends TestKit(ActorSystem("TestingStreams")) wi
       }
 
       materializedTestValue.request(3).expectNext(1, 2, 3).expectComplete()
+
+    }
+
+    "test either with groups" in {
+
+      val sink = TestSink.probe[String]
+
+      val counter = Source[Either[Throwable, Int]](Seq(Right(1), Right(2), Right(3), Right(4), Left(new RuntimeException("error")), Right(6), Right(7)))
+        .filter(_.isRight)
+        .map(_.toOption.get)
+        .grouped(2)
+        .map(eg => eg.map(e => s"""{"n":$e}""").mkString("\n"))
+        .flatMapConcat(eg => Source.single(eg))
+
+      val materializedTestValue = counter
+        .toMat(sink)(Keep.right)
+        .run()
+
+      materializedTestValue
+        .request(4)
+        .expectNext(
+          Seq("""{"n":1}""", """{"n":2}""").mkString("\n"),
+          Seq("""{"n":3}""", """{"n":4}""").mkString("\n"),
+          Seq("""{"n":6}""", """{"n":7}""").mkString("\n")
+        )
+        .expectComplete()
 
     }
 

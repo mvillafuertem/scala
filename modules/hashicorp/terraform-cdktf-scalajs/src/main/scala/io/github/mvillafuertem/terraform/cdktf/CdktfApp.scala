@@ -1,9 +1,9 @@
 package io.github.mvillafuertem.terraform.cdktf
 
 import org.scalablytyped.runtime.StringDictionary
-import typings.cdktf.appMod.AppOptions
-import typings.cdktf.cdktfMod.{ App, S3Backend }
-import typings.cdktf.s3BackendMod.S3BackendProps
+import typings.cdktf.libAppMod.{ App, AppOptions }
+import typings.cdktf.libBackendsMod.S3Backend
+import typings.cdktf.libBackendsS3BackendMod.S3BackendProps
 // 1. cdktf get
 // 2. sbt terraform-cdktf/run
 // 3. mv `pwd`/modules/terraform/cdktf/target/scala-2.13/scalajs-bundler/main `pwd`/modules/terraform/cdktf/target/scala-2.13/scalajs-bundler/scalajs-cdktf

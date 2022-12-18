@@ -255,7 +255,7 @@ lazy val script = (project in file("modules/script"))
   .settings(scalaVersion := Settings.scala213)
   .settings(crossScalaVersions := Seq(Settings.scala213))
   .settings(libraryDependencies ++= Dependencies.script)
-  .settings(libraryDependencies ++= Seq("com.lihaoyi" % "ammonite" % "2.5.4" % Test cross CrossVersion.full))
+  .settings(libraryDependencies ++= Seq("com.lihaoyi" % "ammonite" % "2.5.5" % Test cross CrossVersion.full))
   .settings(commands += Commands.ammoniteCommand)
 
 lazy val slick = (project in file("modules/slick"))
@@ -377,7 +377,7 @@ lazy val `zio-s3` = (project in file("modules/zio/s3"))
     libraryDependencies ++= Seq(
       "dev.zio"      %% "zio-s3"                    % "0.4.0",
       "dev.zio"      %% "zio-sqs"                   % "0.5.0",
-      "com.dimafeng" %% "testcontainers-scala-core" % "0.40.10"
+      "com.dimafeng" %% "testcontainers-scala-core" % "0.40.11"
     ) ++ Seq(
       "dev.zio" %% "zio-test",
       "dev.zio" %% "zio-test-sbt"
@@ -395,7 +395,7 @@ lazy val `zio-sqs` = (project in file("modules/zio/sqs"))
   .settings(
     libraryDependencies ++= Seq(
       "dev.zio"      %% "zio-sqs"                   % "0.5.0",
-      "com.dimafeng" %% "testcontainers-scala-core" % "0.40.10"
+      "com.dimafeng" %% "testcontainers-scala-core" % "0.40.11"
     ) ++ Seq(
       "dev.zio" %% "zio-test",
       "dev.zio" %% "zio-test-sbt"
