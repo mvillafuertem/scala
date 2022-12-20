@@ -1,22 +1,22 @@
 package io.github.mvillafuertem.terraform.cdktf
 
 import org.scalablytyped.runtime.StringDictionary
-import typings.cdktf.cdktfMod.TerraformStack
-import typings.cdktf.terraformDependableMod.ITerraformDependable
-import typings.cdktfProviderAws.awsProviderMod.AwsProviderConfig
-import typings.cdktfProviderAws.budgetsBudgetMod.{ BudgetsBudget, BudgetsBudgetConfig, BudgetsBudgetCostTypes, BudgetsBudgetNotification }
-import typings.cdktfProviderAws.iamGroupMod.IamGroupConfig
-import typings.cdktfProviderAws.iamGroupPolicyAttachmentMod.IamGroupPolicyAttachmentConfig
-import typings.cdktfProviderAws.iamUserMod.IamUserConfig
-import typings.cdktfProviderAws.instanceMod.{ Instance, InstanceConfig, InstanceEbsBlockDevice }
-import typings.cdktfProviderAws.mod._
-import typings.cdktfProviderAws.mod.datasources.DataAwsRegion
-import typings.cdktfProviderAws.mod.iam.{ IamGroup, IamGroupPolicyAttachment, IamUser }
-import typings.cdktfProviderAws.mod.s3.S3Bucket
-import typings.cdktfProviderAws.mod.vpc.{ SecurityGroup, SecurityGroupRule }
-import typings.cdktfProviderAws.s3BucketMod.{ S3BucketConfig, S3BucketVersioning }
-import typings.cdktfProviderAws.securityGroupMod.SecurityGroupConfig
-import typings.cdktfProviderAws.securityGroupRuleMod.SecurityGroupRuleConfig
+import typings.cdktf.libTerraformDependableMod.ITerraformDependable
+import typings.cdktf.libTerraformStackMod.TerraformStack
+import typings.cdktfProviderAws.libBudgetsBudgetMod.{ BudgetsBudget, BudgetsBudgetConfig, BudgetsBudgetCostTypes, BudgetsBudgetNotification }
+import typings.cdktfProviderAws.libDataAwsRegionMod.DataAwsRegion
+import typings.cdktfProviderAws.libIamGroupMod.IamGroupConfig
+import typings.cdktfProviderAws.libIamGroupPolicyAttachmentMod.{ IamGroupPolicyAttachment, IamGroupPolicyAttachmentConfig }
+import typings.cdktfProviderAws.libIamUserMod.{ IamUser, IamUserConfig }
+import typings.cdktfProviderAws.libInstanceMod.{ Instance, InstanceConfig, InstanceEbsBlockDevice }
+import typings.cdktfProviderAws.libProviderMod.{ AwsProvider, AwsProviderConfig }
+import typings.cdktfProviderAws.libS3BucketMod.{ S3BucketConfig, S3BucketVersioning }
+import typings.cdktfProviderAws.libSecurityGroupMod.SecurityGroupConfig
+import typings.cdktfProviderAws.libSecurityGroupRuleMod.SecurityGroupRuleConfig
+import typings.cdktfProviderAws.mod.iamGroup.IamGroup
+import typings.cdktfProviderAws.mod.s3Bucket.S3Bucket
+import typings.cdktfProviderAws.mod.securityGroup.SecurityGroup
+import typings.cdktfProviderAws.mod.securityGroupRule.SecurityGroupRule
 import typings.constructs.mod.Construct
 
 import scala.scalajs.js
@@ -30,7 +30,7 @@ final class IamStack(scope: Construct, name: String) extends TerraformStack(scop
   private val userId    = userName
   private val region    = "us-east-1"
 
-  new AwsProvider(self, "aws", AwsProviderConfig(region))
+  new AwsProvider(self, "aws", AwsProviderConfig().setRegion(region))
 
   new DataAwsRegion(self, region)
 
@@ -77,7 +77,9 @@ final class IamStack(scope: Construct, name: String) extends TerraformStack(scop
   new BudgetsBudget(
     self,
     "monthly-cost-budget",
-    BudgetsBudgetConfig("COST", "1.0", "USD", "MONTHLY")
+    BudgetsBudgetConfig("COST", "1.0")
+      .setLimitUnit("USD")
+      .setTimeUnit("MONTHLY")
       .setName("Monthly Cost Budget")
       .setTimePeriodStart("2020-11-06_00:00")
       .setCostTypes(
@@ -109,7 +111,7 @@ final class IamStack(scope: Construct, name: String) extends TerraformStack(scop
     self,
     "groupPolicyAttachmentDevelopers",
     IamGroupPolicyAttachmentConfig(groupName, "arn:aws:iam::aws:policy/AdministratorAccess")
-      .setDependsOn(js.Array[ITerraformDependable](group))
+      .setDependsOn(js.Array[ITerraformDependable](group.asInstanceOf[ITerraformDependable]))
   )
 
   val user = new IamUser(

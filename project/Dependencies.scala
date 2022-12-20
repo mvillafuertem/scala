@@ -212,6 +212,8 @@ object Dependencies {
     Artifact.catsCore,
     Artifact.catsFree
   ).map(_ % Version.cats) ++ Seq(
+    Artifact.catsEffect % Version.catsEffect
+  ) ++ Seq(
     // C A T S  T E S T
     Artifact.scalaTest % Version.scalaTest
   ).map(_ % Test)
@@ -373,7 +375,7 @@ object Dependencies {
 
   val `terraform-cdktf-scala`: Seq[ModuleID] = Seq(
     // T E R R A F O R M  C D K T F
-    "com.hashicorp"  % "cdktf"     % "0.9.4"
+    "com.hashicorp"  % "cdktf"     % "0.14.3"
     // "software.constructs" % "constructs" % "10.0.9"
   ) ++ Seq(
     // T E R R A F O R M  C D K T F  T E S T
@@ -425,6 +427,7 @@ object Dependencies {
     val awsSdkS3                  = "software.amazon.awssdk"                 % "s3"
     val cask                      = "com.lihaoyi"                           %% "cask"
     val catsCore                  = "org.typelevel"                         %% "cats-core"
+    val catsEffect                = "org.typelevel"                         %% "cats-effect"
     val catsFree                  = "org.typelevel"                         %% "cats-free"
     val circeGeneric              = "io.circe"                              %% "circe-generic"
     val circeGenericExtras        = "io.circe"                              %% "circe-generic-extras"
@@ -493,7 +496,8 @@ object Dependencies {
     val awsLambda                 = "1.2.1"
     val awsSdk                    = "2.17.293"
     val cask                      = "0.7.11"
-    val cats                      = "2.8.0"
+    val cats                      = "2.9.0"
+    val catsEffect                = "3.4.2"
     val circe                     = "0.14.1"
     val http4s                    = "1.0.0-M35"
     val curator                   = "5.3.0"
@@ -516,7 +520,7 @@ object Dependencies {
     val scalaTest                 = "3.2.14"
     val slick                     = "3.4.1"
     val slinky                    = "0.7.2"
-    val spark                     = "3.3.0"
+    val spark                     = "3.3.1"
     val sttp                      = "3.5.1"
     val tapir                     = "0.20.2"
     val testcontainers            = "0.40.10"
