@@ -42,6 +42,7 @@ lazy val scala = (project in file("."))
     benchmarks,
     cats,
     foundations,
+    `grpc-greeter`,
     http4s,
     json,
     reflection,
@@ -77,6 +78,7 @@ lazy val advanced = (project in file("modules/foundations/advanced"))
 
 lazy val `akka-classic` = (project in file("modules/akka/classic"))
   .configs(IntegrationTest)
+  .settings(Settings.integrationTest)
   .settings(Defaults.itSettings)
   // S E T T I N G S
   .settings(commonSettings)
@@ -85,6 +87,7 @@ lazy val `akka-classic` = (project in file("modules/akka/classic"))
 
 lazy val `akka-typed` = (project in file("modules/akka/typed"))
   .configs(IntegrationTest)
+  .settings(Settings.integrationTest)
   .settings(Defaults.itSettings)
   // S E T T I N G S
   .settings(commonSettings)
@@ -93,6 +96,7 @@ lazy val `akka-typed` = (project in file("modules/akka/typed"))
 
 lazy val `alpakka-kafka` = (project in file("modules/alpakka/kafka"))
   .configs(IntegrationTest)
+  .settings(Settings.integrationTest)
   .settings(Defaults.itSettings)
   // S E T T I N G S
   .settings(commonSettings)
@@ -100,6 +104,7 @@ lazy val `alpakka-kafka` = (project in file("modules/alpakka/kafka"))
 
 lazy val `alpakka-mongodb` = (project in file("modules/alpakka/mongodb"))
   .configs(IntegrationTest)
+  .settings(Settings.integrationTest)
   .settings(Defaults.itSettings)
   // S E T T I N G S
   .settings(commonSettings)
@@ -107,6 +112,7 @@ lazy val `alpakka-mongodb` = (project in file("modules/alpakka/mongodb"))
 
 lazy val `alpakka-sqs` = (project in file("modules/alpakka/sqs"))
   .configs(IntegrationTest)
+  .settings(Settings.integrationTest)
   .settings(Defaults.itSettings)
   // S E T T I N G S
   .settings(commonSettings)
@@ -114,6 +120,7 @@ lazy val `alpakka-sqs` = (project in file("modules/alpakka/sqs"))
 
 lazy val `alpakka-sns` = (project in file("modules/alpakka/sns"))
   .configs(IntegrationTest)
+  .settings(Settings.integrationTest)
   .settings(Defaults.itSettings)
   // S E T T I N G S
   .settings(commonSettings)
@@ -121,6 +128,7 @@ lazy val `alpakka-sns` = (project in file("modules/alpakka/sns"))
 
 lazy val `aws-cdk` = (project in file("modules/aws/cdk"))
   .configs(IntegrationTest)
+  .settings(Settings.integrationTest)
   // S E T T I N G S
   .settings(Defaults.itSettings)
   .settings(AssemblySettings.value)
@@ -131,6 +139,7 @@ lazy val `aws-cdk` = (project in file("modules/aws/cdk"))
 
 lazy val `aws-sdk` = (project in file("modules/aws/sdk"))
   .configs(IntegrationTest)
+  .settings(Settings.integrationTest)
   // S E T T I N G S
   .settings(Defaults.itSettings)
   .settings(AssemblySettings.value)
@@ -231,6 +240,13 @@ lazy val `graalvm-cli` = (project in file("modules/graalvm/cli"))
   .settings(libraryDependencies ++= Dependencies.`graalvm-cli`)
   .settings(GraalVMSettings.value)
   .enablePlugins(GraalVMNativeImagePlugin)
+
+lazy val `grpc-greeter` = (project in file("modules/grpc/greeter"))
+  // S E T T I N G S
+  .settings(commonSettings)
+  .settings(libraryDependencies ++= Dependencies.`grpc-greeter`)
+  .settings(ProtobufSettings.value)
+  .enablePlugins(Fs2Grpc)
 
 lazy val http4s = (project in file("modules/http4s"))
   // S E T T I N G S
@@ -364,6 +380,7 @@ lazy val `zio-akka-cluster-sharding` = (project in file("modules/zio/akka-cluste
 lazy val `zio-kafka` = (project in file("modules/zio/kafka"))
   .configure(zio)
   .configs(IntegrationTest)
+  .settings(Settings.integrationTest)
   .settings(Defaults.itSettings)
 
 lazy val `zio-queues` = (project in file("modules/zio/queues"))
@@ -371,6 +388,7 @@ lazy val `zio-queues` = (project in file("modules/zio/queues"))
 
 lazy val `zio-s3` = (project in file("modules/zio/s3"))
   .configs(IntegrationTest)
+  .settings(Settings.integrationTest)
   .settings(Defaults.itSettings)
   .settings(commonSettings)
   .settings(
@@ -390,6 +408,7 @@ lazy val `zio-schedule` = (project in file("modules/zio/schedule"))
 
 lazy val `zio-sqs` = (project in file("modules/zio/sqs"))
   .configs(IntegrationTest)
+  .settings(Settings.integrationTest)
   .settings(Defaults.itSettings)
   .settings(commonSettings)
   .settings(
