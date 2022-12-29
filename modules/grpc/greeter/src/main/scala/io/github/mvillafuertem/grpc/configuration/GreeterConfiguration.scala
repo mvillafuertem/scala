@@ -1,4 +1,4 @@
-package io.github.mvillafuertem.grpc
+package io.github.mvillafuertem.grpc.configuration
 
 import cats.effect.{ IO, IOApp, Resource }
 import io.github.mvillafuertem.grpc.greeter.{ GreeterFs2Grpc, HelloReply, HelloRequest }
@@ -8,11 +8,9 @@ import io.grpc.protobuf.services.{ HealthStatusManager, ProtoReflectionService }
 
 import java.net.InetSocketAddress
 
-// sbt -mem 6000 "grpc-greeter/run"
-// docker-compose -f modules/grpc/greeter/src/main/resources/docker-compose.yml up
-object GreeterServer extends IOApp.Simple {
+trait GreeterConfiguration {
 
-  private def resource: Resource[IO, NettyServerBuilder] =
+  def resource: Resource[IO, NettyServerBuilder] =
     GreeterFs2Grpc
       .bindServiceResource(new GreeterFs2Grpc[IO, Metadata] {
         override def sayHello(request: HelloRequest, ctx: Metadata): IO[HelloReply] = IO(
@@ -27,7 +25,4 @@ object GreeterServer extends IOApp.Simple {
           .addService(ProtoReflectionService.newInstance())
       )
 
-  override def run: IO[Unit] = resource
-    .evalMap(server => IO.delay(server.build().start()))
-    .use(_ => IO.never[Unit])
 }
