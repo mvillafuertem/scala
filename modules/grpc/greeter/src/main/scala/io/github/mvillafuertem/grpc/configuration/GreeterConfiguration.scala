@@ -1,6 +1,6 @@
 package io.github.mvillafuertem.grpc.configuration
 
-import cats.effect.{ IO, IOApp, Resource }
+import cats.effect.{ IO, Resource }
 import io.github.mvillafuertem.grpc.greeter.{ GreeterFs2Grpc, HelloReply, HelloRequest }
 import io.grpc.Metadata
 import io.grpc.netty.NettyServerBuilder

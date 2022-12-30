@@ -13,11 +13,13 @@ object GreeterGrpc {
 
     private def create[F[_]: MonadCancelThrow](verifyGreeterUseCase: UseCase[F, HelloRequest, HelloReply]): GreeterFs2Grpc[F, Metadata] =
       new GreeterFs2Grpc[F, Metadata] {
-        override def sayHello(request: HelloRequest, ctx: Metadata): F[HelloReply] =
+        override def sayHello(request: HelloRequest, ctx: Metadata): F[HelloReply] = {
           request
             .valid[Validation.ValidationError]
             .traverse(verifyGreeterUseCase(_, ctx))
             .flatMap(_.leftMap(new RuntimeException(_)).liftTo[F])
+          ???
+        }
       }
 
     def getServiceDefinition[F[_]: Async](
