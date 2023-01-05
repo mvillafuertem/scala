@@ -244,10 +244,10 @@ object Dependencies {
     Artifact.picocliCodegen % Version.picocli % Provided
   )
 
-  private val Protobuf              = Configurations.config("protobuf")
+  private val Protobuf = Configurations.config("protobuf")
   val `grpc-greeter`: Seq[ModuleID] = Seq(
     // G R P C
-    "com.google.api.grpc"   % "grpc-google-common-protos" % "2.7.4"                                 % Protobuf,
+    "com.google.api.grpc"   % "grpc-google-common-protos" % "2.7.1"                                 % Protobuf,
     "org.openapitools"      % "openapi-generator"         % "5.0.1",
     // (optional) If you need scalapb/scalapb.proto or anything from
     // google/protobuf/*.proto
