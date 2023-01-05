@@ -42,7 +42,7 @@ lazy val scala = (project in file("."))
     benchmarks,
     cats,
     foundations,
-    `grpc-greeter`,
+    `grpc-account`,
     http4s,
     json,
     reflection,
@@ -241,10 +241,10 @@ lazy val `graalvm-cli` = (project in file("modules/graalvm/cli"))
   .settings(GraalVMSettings.value)
   .enablePlugins(GraalVMNativeImagePlugin)
 
-lazy val `grpc-greeter` = (project in file("modules/grpc/greeter"))
+lazy val `grpc-account` = (project in file("modules/grpc/account"))
   // S E T T I N G S
   .settings(commonSettings)
-  .settings(libraryDependencies ++= Dependencies.`grpc-greeter`)
+  .settings(libraryDependencies ++= Dependencies.`grpc-account`)
   .settings(ProtobufSettings.value)
   .enablePlugins(Fs2Grpc)
 

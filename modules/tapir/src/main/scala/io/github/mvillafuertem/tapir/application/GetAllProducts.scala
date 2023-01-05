@@ -12,6 +12,9 @@ import zio.stream.ZStream
  */
 final class GetAllProducts {
 
+  // type projection in scala3 https://docs.scala-lang.org/scala3/reference/dropped-features/type-projection.html
+  // type T[A] = IO[ProductException, A]
+  // ZStream[ProductsRepository[T], ProductException, model.Product]
   def apply(): ZStream[ProductsRepository[({ type T[A] = IO[ProductException, A] })#T], ProductException, model.Product] =
     ZStream.environmentWithStream[ProductsRepository[({ type T[A] = IO[ProductException, A] })#T]](_.get.getAll)
 
