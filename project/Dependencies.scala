@@ -248,7 +248,7 @@ object Dependencies {
   val `grpc-account`: Seq[ModuleID] = Seq(
     // G R P C
     "com.google.api.grpc"   % "grpc-google-common-protos" % "2.7.1"                                 % Protobuf,
-    "org.openapitools"      % "openapi-generator"         % "5.0.1",
+    "org.openapitools"      % "openapi-generator"         % "5.4.0",
     // (optional) If you need scalapb/scalapb.proto or anything from
     // google/protobuf/*.proto
     "com.thesamet.scalapb" %% "scalapb-runtime"           % scalapb.compiler.Version.scalapbVersion % Protobuf,
