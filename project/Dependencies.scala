@@ -253,8 +253,8 @@ object Dependencies {
     // google/protobuf/*.proto
     "com.thesamet.scalapb" %% "scalapb-runtime"           % scalapb.compiler.Version.scalapbVersion % Protobuf,
     "io.grpc"               % "grpc-all"                  % scalapb.compiler.Version.grpcJavaVersion,
-    "com.beachape"         %% "enumeratum"                % "1.7.0",
-    "com.beachape"         %% "enumeratum-circe"          % "1.7.0",
+    "com.beachape"         %% "enumeratum"                % "1.7.2",
+    "com.beachape"         %% "enumeratum-circe"          % "1.7.2",
     "com.linecorp.armeria" %% "armeria-scalapb"           % "1.21.0"
   )
 
