@@ -511,7 +511,7 @@ object Dependencies {
     val awsSdk                    = "2.17.293"
     val cask                      = "0.7.11"
     val cats                      = "2.9.0"
-    val catsEffect                = "3.4.2"
+    val catsEffect                = "3.4.4"
     val circe                     = "0.14.1"
     val http4s                    = "1.0.0-M35"
     val curator                   = "5.3.0"
