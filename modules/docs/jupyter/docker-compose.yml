@@ -2,11 +2,12 @@ version: '3.8'
 services:
 
   # I N F R A S T R U C T U R E
-  polynote:
+  jupyter:
     container_name: jupyter-almond
     image: jupyter-almond
     ports:
       - 8888:8888
+      - 8889:8889
     volumes:
       - "../notebooks:/home/jovyan/work/"
     restart: always

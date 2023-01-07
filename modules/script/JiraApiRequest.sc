@@ -6,10 +6,10 @@ import $ivy.`com.softwaremill.sttp.client3::async-http-client-backend-zio:3.3.5`
 import $ivy.`com.softwaremill.sttp.client3::circe:3.3.5`
 import $ivy.`com.softwaremill.sttp.client3::core:3.3.5`
 import $ivy.`dev.zio::zio:1.0.10`
-import $ivy.`io.circe::circe-generic-extras:0.14.1`
-import $ivy.`io.circe::circe-generic:0.14.1`
+import $ivy.`io.circe::circe-generic-extras:0.14.2`
+import $ivy.`io.circe::circe-generic:0.14.2`
 import $ivy.`io.circe::circe-optics:0.14.1`
-import $ivy.`io.circe::circe-parser:0.14.1`
+import $ivy.`io.circe::circe-parser:0.14.2`
 import $ivy.`org.slf4j:slf4j-api:1.7.30`
 
 import io.circe.optics.JsonPath._

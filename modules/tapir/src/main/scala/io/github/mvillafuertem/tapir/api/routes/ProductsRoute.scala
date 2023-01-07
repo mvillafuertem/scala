@@ -15,7 +15,7 @@ import zio.interop.reactivestreams._
 
 import scala.concurrent.Future
 
-final class ProductsRoute(productsRepository: ProductsRepository) extends ProductsEndpoint {
+final class ProductsRoute[F[_]](productsRepository: ProductsRepository[F]) extends ProductsEndpoint {
 
   val route: Route = AkkaHttpServerInterpreter()
     .toRoute(

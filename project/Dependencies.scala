@@ -68,6 +68,33 @@ object Dependencies {
       Artifact.testcontainersCore % Version.testcontainers
     ).map(_ % IntegrationTest)
 
+  val `alpakka-sqs`: Seq[ModuleID] =
+    // A L P A K K A
+    Seq(
+      // A L P A K K A  I N T E G R A T I O N  T E S T
+      "com.lightbend.akka"       %% "akka-stream-alpakka-sqs" % "3.0.4",
+      Artifact.akkaStreamTestkit  % "2.6.19",
+      Artifact.akkaSlf4f          % "2.6.19",
+      Artifact.logback            % Version.logback,
+      Artifact.scalaTest          % Version.scalaTest,
+      Artifact.testcontainersCore % Version.testcontainers,
+      Artifact.circeParser        % Version.circe
+    ).map(_ % IntegrationTest)
+
+  val `alpakka-sns`: Seq[ModuleID] =
+    // A L P A K K A
+    Seq(
+      // A L P A K K A  I N T E G R A T I O N  T E S T
+      "com.lightbend.akka"       %% "akka-stream-alpakka-sqs" % "3.0.4",
+      "com.lightbend.akka"       %% "akka-stream-alpakka-sns" % "3.0.4",
+      Artifact.akkaStreamTestkit  % "2.6.19",
+      Artifact.akkaSlf4f          % "2.6.19",
+      Artifact.logback            % Version.logback,
+      Artifact.scalaTest          % Version.scalaTest,
+      Artifact.testcontainersCore % Version.testcontainers,
+      Artifact.circeParser        % Version.circe
+    ).map(_ % IntegrationTest)
+
   val advanced: Seq[ModuleID] = Seq(
     // A D V A N C E D  T E S T
     Artifact.scalaTest        % Version.scalaTest          % Test,
@@ -185,6 +212,8 @@ object Dependencies {
     Artifact.catsCore,
     Artifact.catsFree
   ).map(_ % Version.cats) ++ Seq(
+    Artifact.catsEffect % Version.catsEffect
+  ) ++ Seq(
     // C A T S  T E S T
     Artifact.scalaTest % Version.scalaTest
   ).map(_ % Test)
@@ -215,6 +244,23 @@ object Dependencies {
     Artifact.picocliCodegen % Version.picocli % Provided
   )
 
+  private val Protobuf              = Configurations.config("protobuf")
+  val `grpc-account`: Seq[ModuleID] = Seq(
+    // G R P C
+    Artifact.grpcGoogleCommonProtos % Version.grpcGoogleCommonProtos,
+    // (optional) If you need scalapb/scalapb.proto or anything from
+    // google/protobuf/*.proto
+    Artifact.scalapbRuntime         % scalapb.compiler.Version.scalapbVersion
+  ).map(_ % Protobuf) ++ Seq(
+    Artifact.openapiGenerator % Version.openapiGenerator,
+    Artifact.grpcAll          % scalapb.compiler.Version.grpcJavaVersion,
+    Artifact.enumeratumCirce  % Version.enumeratumCirce,
+    Artifact.armeriaScalapb   % Version.armeriaScalapb
+  ) ++ Seq(
+    Artifact.neotypesCatsEffect,
+    Artifact.neotypesCatsData
+  ).map(_ % Version.neotypes)
+
   val http4s: Seq[ModuleID] = Seq(
     // H T T P 4 S
     Artifact.http4sBlazeServer % Version.http4s,
@@ -233,8 +279,9 @@ object Dependencies {
     Artifact.jsoniterCore,
     Artifact.jsoniterMacros
   ).map(_ % Version.jsoniter) ++ Seq(
-    Artifact.dijon % Version.dijon,
-    Artifact.jslt  % Version.jslt
+    Artifact.dijon           % Version.dijon,
+    Artifact.enumeratumCirce % Version.enumeratumCirce,
+    Artifact.jslt            % Version.jslt
   ) ++ Seq(
     // J S O N  T E S T
     Artifact.scalaTest % Version.scalaTest
@@ -345,7 +392,7 @@ object Dependencies {
 
   val `terraform-cdktf-scala`: Seq[ModuleID] = Seq(
     // T E R R A F O R M  C D K T F
-    "com.hashicorp"  % "cdktf"     % "0.9.4"
+    "com.hashicorp"  % "cdktf"     % "0.14.3"
     // "software.constructs" % "constructs" % "10.0.9"
   ) ++ Seq(
     // T E R R A F O R M  C D K T F  T E S T
@@ -390,6 +437,7 @@ object Dependencies {
     val alpakkaKafka              = "com.typesafe.akka"                     %% "akka-stream-kafka"
     val alpakkaMongodb            = "com.lightbend.akka"                    %% "akka-stream-alpakka-mongodb"
     val alpakkaSlick              = "com.lightbend.akka"                    %% "akka-stream-alpakka-slick"
+    val armeriaScalapb            = "com.linecorp.armeria"                  %% "armeria-scalapb"
     val awsCdkEcsPatterns         = "software.amazon.awscdk"                 % "ecs-patterns"
     val awsLambda                 = "com.amazonaws"                          % "aws-lambda-java-core"
     val awsSdkCloudWatch          = "software.amazon.awssdk"                 % "cloudwatch"
@@ -397,6 +445,7 @@ object Dependencies {
     val awsSdkS3                  = "software.amazon.awssdk"                 % "s3"
     val cask                      = "com.lihaoyi"                           %% "cask"
     val catsCore                  = "org.typelevel"                         %% "cats-core"
+    val catsEffect                = "org.typelevel"                         %% "cats-effect"
     val catsFree                  = "org.typelevel"                         %% "cats-free"
     val circeGeneric              = "io.circe"                              %% "circe-generic"
     val circeGenericExtras        = "io.circe"                              %% "circe-generic-extras"
@@ -404,7 +453,10 @@ object Dependencies {
     val circeParser               = "io.circe"                              %% "circe-parser"
     val curator                   = "org.apache.curator"                     % "curator-test"
     val dijon                     = "me.vican.jorge"                        %% "dijon"
+    val enumeratumCirce           = "com.beachape"                          %% "enumeratum-circe"
     val ficus                     = "com.iheart"                            %% "ficus"
+    val grpcAll                   = "io.grpc"                                % "grpc-all"
+    val grpcGoogleCommonProtos    = "com.google.api.grpc"                    % "grpc-google-common-protos"
     val h2                        = "com.h2database"                         % "h2"
     val http4sBlazeServer         = "org.http4s"                            %% "http4s-blaze-server"
     val http4sDsl                 = "org.http4s"                            %% "http4s-dsl"
@@ -417,11 +469,15 @@ object Dependencies {
     val leveldbjniAll             = "org.fusesource.leveldbjni"              % "leveldbjni-all"
     val logback                   = "ch.qos.logback"                         % "logback-classic"
     val mongoScalaBson            = "org.mongodb.scala"                     %% "mongo-scala-bson"
+    val neotypesCatsData          = "io.github.neotypes"                    %% "neotypes-cats-data"
+    val neotypesCatsEffect        = "io.github.neotypes"                    %% "neotypes-cats-effect"
+    val openapiGenerator          = "org.openapitools"                       % "openapi-generator"
     val picocli                   = "info.picocli"                           % "picocli"
     val picocliCodegen            = "info.picocli"                           % "picocli-codegen"
     val postgresql                = "org.postgresql"                         % "postgresql"
     val scalaCheck                = "org.scalatestplus"                     %% "scalacheck-1-14"
     val scalaTest                 = "org.scalatest"                         %% "scalatest"
+    val scalapbRuntime            = "com.thesamet.scalapb"                  %% "scalapb-runtime"
     val slick                     = "com.typesafe.slick"                    %% "slick"
     val sparkCore                 = "org.apache.spark"                      %% "spark-core"
     val sparkSql                  = "org.apache.spark"                      %% "spark-sql"
@@ -452,7 +508,7 @@ object Dependencies {
 
   private object Version {
     val akka                      = "2.6.18"
-    val akkaHttp                  = "10.2.9"
+    val akkaHttp                  = "10.2.10"
     val akkaHttpCirce             = "1.39.2"
     val akkaPersistenceCassandra  = "0.100"
     val akkaPersistenceInmemory   = "2.5.15.2"
@@ -460,42 +516,48 @@ object Dependencies {
     val alpakkaKafka              = "3.0.0"
     val alpakkaMongodb            = "3.0.4"
     val alpakkaSlick              = "3.0.4"
+    val armeriaScalapb            = "1.21.0"
     val awsCdk                    = "1.156.0"
     val awsLambda                 = "1.2.1"
-    val awsSdk                    = "2.17.190"
+    val awsSdk                    = "2.17.293"
     val cask                      = "0.7.11"
-    val cats                      = "2.7.0"
+    val cats                      = "2.9.0"
+    val catsEffect                = "3.4.2"
     val circe                     = "0.14.1"
-    val http4s                    = "1.0.0-M32"
-    val curator                   = "5.2.1"
+    val curator                   = "5.3.0"
     val dijon                     = "0.6.0"
+    val enumeratumCirce           = "1.7.0"
     val ficus                     = "1.5.2"
-    val h2                        = "2.1.212"
+    val grpcGoogleCommonProtos    = "2.7.1"
+    val h2                        = "2.1.214"
+    val http4s                    = "1.0.0-M35"
     val java8Compat               = "1.0.2"
-    val jslt                      = "0.1.11"
-    val jsoniter                  = "2.13.21"
+    val jslt                      = "0.1.13"
+    val jsoniter                  = "2.17.5"
     val jwtCirce                  = "4.3.0"
-    val kafka                     = "3.2.0"
+    val kafka                     = "3.3.1"
     val leveldbjniAll             = "1.8"
     val logback                   = "1.2.11"
     val mongoScalaBson            = "4.4.2"
+    val neotypes                  = "0.23.1"
+    val openapiGenerator          = "5.0.1"
     val picocli                   = "4.6.1"
-    val postgres                  = "42.3.5"
+    val postgres                  = "42.4.1"
     val scalaCheck                = "3.2.2.0"
     val scalaJavaTime             = "2.0.0"
-    val scalaTest                 = "3.2.12"
-    val slick                     = "3.3.3"
+    val scalaTest                 = "3.2.14"
+    val slick                     = "3.4.1"
     val slinky                    = "0.7.2"
-    val spark                     = "3.2.1"
+    val spark                     = "3.3.1"
     val sttp                      = "3.5.1"
-    val tapir                     = "0.20.1"
-    val testcontainers            = "0.40.7"
-    val testcontainersKafka       = "1.17.1"
-    val zio                       = "1.0.13"
+    val tapir                     = "0.20.2"
+    val testcontainers            = "0.40.10"
+    val testcontainersKafka       = "1.17.5"
+    val zio                       = "1.0.17"
     val zioAkkaCluster            = "0.2.0"
     val zioInteropCats            = "3.2.9.1"
     val zioInteropReactiveStreams = "2.0.0-RC4"
-    val zioKafka                  = "0.17.5"
+    val zioKafka                  = "0.17.7"
     val zioLoggingSlf4j           = "2.0.0-RC6"
   }
 

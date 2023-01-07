@@ -13,7 +13,7 @@ object Settings {
     ),
     scalacOptions += "-Ymacro-annotations",
     // S C A L A J S  B U N D L E R
-    useYarn                         := true,
+    useYarn := true,
     // W E B P A C K
     Compile / fastOptJS / webpackExtraArgs += "--mode=development",
     Compile / fullOptJS / webpackExtraArgs += "--mode=production",
@@ -56,12 +56,16 @@ object Settings {
     javaOptions += "-Duser.timezone=UTC",
     Test / fork                         := false,
     Test / parallelExecution            := false,
-    IntegrationTest / fork              := false,
-    IntegrationTest / parallelExecution := false,
     Global / cancelable                 := true,
     // OneJar
     exportJars                          := true
   )
+
+  lazy val integrationTest: Seq[Def.Setting[_]] = Seq(
+    IntegrationTest / fork := false,
+    IntegrationTest / parallelExecution := false,
+  )
+
 
   lazy val testReport: Seq[Def.Setting[_]] = Seq(
     Test / testOptions ++= Seq(

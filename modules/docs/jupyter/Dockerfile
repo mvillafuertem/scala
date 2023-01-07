@@ -15,13 +15,19 @@ RUN apt-get -y update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-RUN curl -Lo /usr/local/bin/coursier https://github.com/coursier/coursier/releases/download/v2.0.0-RC3-2/coursier && \
+RUN curl -Lo /usr/local/bin/coursier https://github.com/coursier/coursier/releases/download/v2.1.0-M6/coursier && \
     chmod +x /usr/local/bin/coursier
 
 USER $NB_UID
-ENV SCALA_VERSION 2.13.5
-ENV ALMOND_SCALA_VERSION 2.13.4
-ENV ALMOND_VERSION 0.11.2
+ENV SCALA_VERSION 2.13.8
+ENV ALMOND_SCALA_VERSION 2.13.8
+
+ENV SCALA_212_VERSION 2.12.16
+
+ENV SCALA_31_VERSION 3.1.3
+
+ENV ALMOND_VERSION 0.13.1
+
 
 # Install Almond kernel
 RUN coursier bootstrap \
@@ -37,9 +43,22 @@ RUN coursier bootstrap \
   --java-opt -XX:+UseStringDeduplication  \
   --java-opt -Xss6m \
   --java-opt -Xms150m \
-  org.scalameta:metals_2.12:0.11.1 -o metals -f
+  org.scalameta:metals_2.13:0.11.8 -o metals -f
 
 RUN ./almond --install --log info --metabrowse --id scala$SCALA_VERSION --display-name "Scala $SCALA_VERSION"
+RUN rm -f almond
+
+# Install Almond kernel with Scala 2.12
+RUN coursier bootstrap \
+      -r jitpack \
+      -i user -I user:sh.almond:scala-kernel-api_$SCALA_212_VERSION:$ALMOND_VERSION \
+      sh.almond:scala-kernel_$SCALA_212_VERSION:$ALMOND_VERSION \
+      --default=true --sources \
+      -o almond \
+      -M almond.ScalaKernel
+RUN ./almond --install --log info --metabrowse --id scala$SCALA_212_VERSION --display-name "Scala $SCALA_212_VERSION"
+RUN rm -f almond
+
 
 RUN echo $' \n\
 c.LanguageServerManager.language_servers = {\n\
@@ -51,4 +70,4 @@ c.LanguageServerManager.language_servers = {\n\
     }\n\
 }' >> /etc/jupyter/jupyter_server_config.py
 
-RUN rm -f almond && rm -fr .cache
+RUN rm -fr .cache

@@ -13,7 +13,10 @@ import zio.{ stream, IO, UIO, ZIO, ZLayer }
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
-trait SlickProductsRepository extends ProductsRepository with InfrastructureConfiguration {
+// type projection in scala3 https://docs.scala-lang.org/scala3/reference/dropped-features/type-projection.html
+// type T[A] = IO[ProductException, A]
+// trait SlickProductsRepository extends ProductsRepository[T] with InfrastructureConfiguration
+trait SlickProductsRepository extends ProductsRepository[({ type T[A] = IO[ProductException, A] })#T] with InfrastructureConfiguration {
   self =>
 
   import SlickProductsRepository._
@@ -34,7 +37,7 @@ trait SlickProductsRepository extends ProductsRepository with InfrastructureConf
     }
   }
 
-  override def find: IO[Unit, String] = UIO.succeed("hola")
+  override def find: IO[ProductException, String] = UIO.succeed("hola")
 
 }
 

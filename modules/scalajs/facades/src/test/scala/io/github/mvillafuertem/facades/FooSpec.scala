@@ -5,8 +5,7 @@ import org.junit.Test
 
 class FooSpec {
 
-  @Test def testObj(): Unit = {
+  @Test def testObj(): Unit =
     assertEquals(42, Foo.bar(41))
-  }
 
 }

@@ -1,7 +1,7 @@
 import org.scalajs.linker.interface.ModuleSplitStyle
 
 import _root_.scala.sys.process.Process
-import _root_.scala.{Console => csl}
+import _root_.scala.{ Console => csl }
 
 Global / onChangedBuildSource := ReloadOnSourceChanges
 Global / onLoad               := {
@@ -34,12 +34,15 @@ lazy val scala = (project in file("."))
     algorithms,
     `alpakka-kafka`,
     `alpakka-mongodb`,
+    `alpakka-sqs`,
+    `alpakka-sns`,
     `aws-cdk`,
     `aws-sdk`,
     basic,
     benchmarks,
     cats,
     foundations,
+    `grpc-account`,
     http4s,
     json,
     reflection,
@@ -55,7 +58,9 @@ lazy val scala = (project in file("."))
     `zio-akka-cluster-sharding`,
     `zio-kafka`,
     `zio-queues`,
+    `zio-s3`,
     `zio-schedule`,
+    `zio-sqs`,
     `zio-streams`
   )
   // S E T T I N G S
@@ -73,6 +78,7 @@ lazy val advanced = (project in file("modules/foundations/advanced"))
 
 lazy val `akka-classic` = (project in file("modules/akka/classic"))
   .configs(IntegrationTest)
+  .settings(Settings.integrationTest)
   .settings(Defaults.itSettings)
   // S E T T I N G S
   .settings(commonSettings)
@@ -81,6 +87,7 @@ lazy val `akka-classic` = (project in file("modules/akka/classic"))
 
 lazy val `akka-typed` = (project in file("modules/akka/typed"))
   .configs(IntegrationTest)
+  .settings(Settings.integrationTest)
   .settings(Defaults.itSettings)
   // S E T T I N G S
   .settings(commonSettings)
@@ -89,6 +96,7 @@ lazy val `akka-typed` = (project in file("modules/akka/typed"))
 
 lazy val `alpakka-kafka` = (project in file("modules/alpakka/kafka"))
   .configs(IntegrationTest)
+  .settings(Settings.integrationTest)
   .settings(Defaults.itSettings)
   // S E T T I N G S
   .settings(commonSettings)
@@ -96,13 +104,31 @@ lazy val `alpakka-kafka` = (project in file("modules/alpakka/kafka"))
 
 lazy val `alpakka-mongodb` = (project in file("modules/alpakka/mongodb"))
   .configs(IntegrationTest)
+  .settings(Settings.integrationTest)
   .settings(Defaults.itSettings)
   // S E T T I N G S
   .settings(commonSettings)
   .settings(libraryDependencies ++= Dependencies.`alpakka-mongodb`)
 
+lazy val `alpakka-sqs` = (project in file("modules/alpakka/sqs"))
+  .configs(IntegrationTest)
+  .settings(Settings.integrationTest)
+  .settings(Defaults.itSettings)
+  // S E T T I N G S
+  .settings(commonSettings)
+  .settings(libraryDependencies ++= Dependencies.`alpakka-sqs`)
+
+lazy val `alpakka-sns` = (project in file("modules/alpakka/sns"))
+  .configs(IntegrationTest)
+  .settings(Settings.integrationTest)
+  .settings(Defaults.itSettings)
+  // S E T T I N G S
+  .settings(commonSettings)
+  .settings(libraryDependencies ++= Dependencies.`alpakka-sns`)
+
 lazy val `aws-cdk` = (project in file("modules/aws/cdk"))
   .configs(IntegrationTest)
+  .settings(Settings.integrationTest)
   // S E T T I N G S
   .settings(Defaults.itSettings)
   .settings(AssemblySettings.value)
@@ -113,6 +139,7 @@ lazy val `aws-cdk` = (project in file("modules/aws/cdk"))
 
 lazy val `aws-sdk` = (project in file("modules/aws/sdk"))
   .configs(IntegrationTest)
+  .settings(Settings.integrationTest)
   // S E T T I N G S
   .settings(Defaults.itSettings)
   .settings(AssemblySettings.value)
@@ -214,6 +241,13 @@ lazy val `graalvm-cli` = (project in file("modules/graalvm/cli"))
   .settings(GraalVMSettings.value)
   .enablePlugins(GraalVMNativeImagePlugin)
 
+lazy val `grpc-account` = (project in file("modules/grpc/account"))
+  // S E T T I N G S
+  .settings(commonSettings)
+  .settings(libraryDependencies ++= Dependencies.`grpc-account`)
+  .settings(ProtobufSettings.value)
+  .enablePlugins(Fs2Grpc)
+
 lazy val http4s = (project in file("modules/http4s"))
   // S E T T I N G S
   .settings(commonSettings)
@@ -237,7 +271,7 @@ lazy val script = (project in file("modules/script"))
   .settings(scalaVersion := Settings.scala213)
   .settings(crossScalaVersions := Seq(Settings.scala213))
   .settings(libraryDependencies ++= Dependencies.script)
-  .settings(libraryDependencies ++= Seq("com.lihaoyi" % "ammonite" % "2.5.3" % Test cross CrossVersion.full))
+  .settings(libraryDependencies ++= Seq("com.lihaoyi" % "ammonite" % "2.5.5" % Test cross CrossVersion.full))
   .settings(commands += Commands.ammoniteCommand)
 
 lazy val slick = (project in file("modules/slick"))
@@ -249,8 +283,8 @@ lazy val slick = (project in file("modules/slick"))
 lazy val `scalajs-facades` = (project in file("modules/scalajs/facades"))
   // S E T T I N G S
   .settings(scalaVersion := Settings.scala213)
-  .settings(scalaJSLinkerConfig ~={  _.withSourceMap(false)})
-  .settings(scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule)})
+  .settings(scalaJSLinkerConfig ~= { _.withSourceMap(false) })
+  .settings(scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) })
   .settings(scalaJSUseMainModuleInitializer := true)
   // P L U G I N S
   .enablePlugins(ScalaJSJUnitPlugin)
@@ -346,13 +380,47 @@ lazy val `zio-akka-cluster-sharding` = (project in file("modules/zio/akka-cluste
 lazy val `zio-kafka` = (project in file("modules/zio/kafka"))
   .configure(zio)
   .configs(IntegrationTest)
+  .settings(Settings.integrationTest)
   .settings(Defaults.itSettings)
 
 lazy val `zio-queues` = (project in file("modules/zio/queues"))
   .configure(zio)
 
+lazy val `zio-s3` = (project in file("modules/zio/s3"))
+  .configs(IntegrationTest)
+  .settings(Settings.integrationTest)
+  .settings(Defaults.itSettings)
+  .settings(commonSettings)
+  .settings(
+    libraryDependencies ++= Seq(
+      "dev.zio"      %% "zio-s3"                    % "0.4.0",
+      "dev.zio"      %% "zio-sqs"                   % "0.5.0",
+      "com.dimafeng" %% "testcontainers-scala-core" % "0.40.11"
+    ) ++ Seq(
+      "dev.zio" %% "zio-test",
+      "dev.zio" %% "zio-test-sbt"
+    ).map(_ % "2.0.0" % Test)
+  )
+  .settings(testFrameworks := Seq(new TestFramework("zio.test.sbt.ZTestFramework")))
+
 lazy val `zio-schedule` = (project in file("modules/zio/schedule"))
   .configure(zio)
+
+lazy val `zio-sqs` = (project in file("modules/zio/sqs"))
+  .configs(IntegrationTest)
+  .settings(Settings.integrationTest)
+  .settings(Defaults.itSettings)
+  .settings(commonSettings)
+  .settings(
+    libraryDependencies ++= Seq(
+      "dev.zio"      %% "zio-sqs"                   % "0.5.0",
+      "com.dimafeng" %% "testcontainers-scala-core" % "0.40.11"
+    ) ++ Seq(
+      "dev.zio" %% "zio-test",
+      "dev.zio" %% "zio-test-sbt"
+    ).map(_ % "2.0.0" % Test)
+  )
+  .settings(testFrameworks := Seq(new TestFramework("zio.test.sbt.ZTestFramework")))
 
 lazy val `zio-streams` = (project in file("modules/zio/streams"))
   .configure(zio)
@@ -368,5 +436,7 @@ def welcomeMessage: Def.Setting[String] = onLoadMessage := {
       |${cmd("prepare", "- Prepares sources by applying both scalafix and scalafmt")}
       |${cmd("fmt", "- Formats source files using scalafmt")}
       |${cmd("dependencyBrowseTree", "- It opens a browser window, but it displays a visualization of the dependency tree")}
+      |${cmd("""set javaOptions += "-Dconfig.file=../../local-application.conf"""", "- Set javaOptions values")}
+      |${cmd("show javaOptions", "- Show javaOptions values")}
       """.stripMargin
 }
