@@ -1,4 +1,4 @@
-package io.github.mvillafuertem.grpc.domain
+package io.github.mvillafuertem.grpc.domain.model
 
 final case class BankAccount(
   iban: String,
