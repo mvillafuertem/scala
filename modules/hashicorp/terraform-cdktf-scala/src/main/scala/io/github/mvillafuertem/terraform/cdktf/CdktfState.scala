@@ -1,9 +1,9 @@
 package io.github.mvillafuertem.terraform.cdktf
 
 import com.hashicorp.cdktf.{ TerraformOutput, TerraformStack }
-import imports.aws._
-import imports.aws.dynamodb.{ DynamodbTable, DynamodbTableAttribute }
-import imports.aws.s3._
+import imports.aws.dynamodb_table.{ DynamodbTable, DynamodbTableAttribute }
+import imports.aws.provider.AwsProvider
+import imports.aws.s3_bucket.S3Bucket
 import io.github.mvillafuertem.terraform.cdktf.CdktfStack.CdktfStackConfiguration
 import software.constructs.Construct
 
