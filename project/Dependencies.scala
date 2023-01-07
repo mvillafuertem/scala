@@ -528,7 +528,7 @@ object Dependencies {
     val dijon                     = "0.6.0"
     val enumeratumCirce           = "1.7.0"
     val ficus                     = "1.5.2"
-    val grpcGoogleCommonProtos    = "2.7.1"
+    val grpcGoogleCommonProtos    = "2.7.4"
     val h2                        = "2.1.214"
     val http4s                    = "1.0.0-M35"
     val java8Compat               = "1.0.2"
