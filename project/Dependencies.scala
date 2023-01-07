@@ -530,7 +530,7 @@ object Dependencies {
     val ficus                     = "1.5.2"
     val grpcGoogleCommonProtos    = "2.7.1"
     val h2                        = "2.1.214"
-    val http4s                    = "1.0.0-M35"
+    val http4s                    = "1.0.0-M38"
     val java8Compat               = "1.0.2"
     val jslt                      = "0.1.13"
     val jsoniter                  = "2.17.5"
