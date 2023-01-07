@@ -247,16 +247,19 @@ object Dependencies {
   private val Protobuf              = Configurations.config("protobuf")
   val `grpc-account`: Seq[ModuleID] = Seq(
     // G R P C
-    "com.google.api.grpc"   % "grpc-google-common-protos" % "2.7.1"                                 % Protobuf,
-    "org.openapitools"      % "openapi-generator"         % "5.0.1",
+    Artifact.grpcGoogleCommonProtos % Version.grpcGoogleCommonProtos,
     // (optional) If you need scalapb/scalapb.proto or anything from
     // google/protobuf/*.proto
-    "com.thesamet.scalapb" %% "scalapb-runtime"           % scalapb.compiler.Version.scalapbVersion % Protobuf,
-    "io.grpc"               % "grpc-all"                  % scalapb.compiler.Version.grpcJavaVersion,
-    "com.beachape"         %% "enumeratum"                % "1.7.0",
-    "com.beachape"         %% "enumeratum-circe"          % "1.7.0",
-    "com.linecorp.armeria" %% "armeria-scalapb"           % "1.21.0"
-  )
+    Artifact.scalapbRuntime         % scalapb.compiler.Version.scalapbVersion
+  ).map(_ % Protobuf) ++ Seq(
+    Artifact.openapiGenerator % Version.openapiGenerator,
+    Artifact.grpcAll          % scalapb.compiler.Version.grpcJavaVersion,
+    Artifact.enumeratumCirce  % Version.enumeratumCirce,
+    Artifact.armeriaScalapb   % Version.armeriaScalapb
+  ) ++ Seq(
+    Artifact.neotypesCatsEffect,
+    Artifact.neotypesCatsData
+  ).map(_ % Version.neotypes)
 
   val http4s: Seq[ModuleID] = Seq(
     // H T T P 4 S
@@ -434,6 +437,7 @@ object Dependencies {
     val alpakkaKafka              = "com.typesafe.akka"                     %% "akka-stream-kafka"
     val alpakkaMongodb            = "com.lightbend.akka"                    %% "akka-stream-alpakka-mongodb"
     val alpakkaSlick              = "com.lightbend.akka"                    %% "akka-stream-alpakka-slick"
+    val armeriaScalapb            = "com.linecorp.armeria"                  %% "armeria-scalapb"
     val awsCdkEcsPatterns         = "software.amazon.awscdk"                 % "ecs-patterns"
     val awsLambda                 = "com.amazonaws"                          % "aws-lambda-java-core"
     val awsSdkCloudWatch          = "software.amazon.awssdk"                 % "cloudwatch"
@@ -451,6 +455,8 @@ object Dependencies {
     val dijon                     = "me.vican.jorge"                        %% "dijon"
     val enumeratumCirce           = "com.beachape"                          %% "enumeratum-circe"
     val ficus                     = "com.iheart"                            %% "ficus"
+    val grpcAll                   = "io.grpc"                                % "grpc-all"
+    val grpcGoogleCommonProtos    = "com.google.api.grpc"                    % "grpc-google-common-protos"
     val h2                        = "com.h2database"                         % "h2"
     val http4sBlazeServer         = "org.http4s"                            %% "http4s-blaze-server"
     val http4sDsl                 = "org.http4s"                            %% "http4s-dsl"
@@ -463,11 +469,15 @@ object Dependencies {
     val leveldbjniAll             = "org.fusesource.leveldbjni"              % "leveldbjni-all"
     val logback                   = "ch.qos.logback"                         % "logback-classic"
     val mongoScalaBson            = "org.mongodb.scala"                     %% "mongo-scala-bson"
+    val neotypesCatsData          = "io.github.neotypes"                    %% "neotypes-cats-data"
+    val neotypesCatsEffect        = "io.github.neotypes"                    %% "neotypes-cats-effect"
+    val openapiGenerator          = "org.openapitools"                       % "openapi-generator"
     val picocli                   = "info.picocli"                           % "picocli"
     val picocliCodegen            = "info.picocli"                           % "picocli-codegen"
     val postgresql                = "org.postgresql"                         % "postgresql"
     val scalaCheck                = "org.scalatestplus"                     %% "scalacheck-1-14"
     val scalaTest                 = "org.scalatest"                         %% "scalatest"
+    val scalapbRuntime            = "com.thesamet.scalapb"                  %% "scalapb-runtime"
     val slick                     = "com.typesafe.slick"                    %% "slick"
     val sparkCore                 = "org.apache.spark"                      %% "spark-core"
     val sparkSql                  = "org.apache.spark"                      %% "spark-sql"
@@ -506,6 +516,7 @@ object Dependencies {
     val alpakkaKafka              = "3.0.0"
     val alpakkaMongodb            = "3.0.4"
     val alpakkaSlick              = "3.0.4"
+    val armeriaScalapb            = "1.21.0"
     val awsCdk                    = "1.156.0"
     val awsLambda                 = "1.2.1"
     val awsSdk                    = "2.17.293"
@@ -513,12 +524,13 @@ object Dependencies {
     val cats                      = "2.9.0"
     val catsEffect                = "3.4.2"
     val circe                     = "0.14.1"
-    val http4s                    = "1.0.0-M35"
     val curator                   = "5.3.0"
     val dijon                     = "0.6.0"
     val enumeratumCirce           = "1.7.0"
     val ficus                     = "1.5.2"
+    val grpcGoogleCommonProtos    = "2.7.1"
     val h2                        = "2.1.214"
+    val http4s                    = "1.0.0-M35"
     val java8Compat               = "1.0.2"
     val jslt                      = "0.1.13"
     val jsoniter                  = "2.17.5"
@@ -527,6 +539,8 @@ object Dependencies {
     val leveldbjniAll             = "1.8"
     val logback                   = "1.2.11"
     val mongoScalaBson            = "4.4.2"
+    val neotypes                  = "0.23.1"
+    val openapiGenerator          = "5.0.1"
     val picocli                   = "4.6.1"
     val postgres                  = "42.4.1"
     val scalaCheck                = "3.2.2.0"

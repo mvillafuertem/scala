@@ -5,7 +5,7 @@ import com.linecorp.armeria
 import io.github.mvillafuertem.grpc.account.AccountFs2Grpc
 import io.github.mvillafuertem.grpc.application.AccountCreator
 
-trait GreeterConfiguration {
+trait AccountConfiguration {
 
   def resource: Resource[IO, armeria.server.Server] =
     AccountFs2Grpc
