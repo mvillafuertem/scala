@@ -40,7 +40,8 @@ lazy val scala = (project in file("."))
     `aws-sdk`,
     basic,
     benchmarks,
-    cats,
+    `cats-calculator`,
+    `cats-console`,
     foundations,
     `grpc-account`,
     http4s,
@@ -204,7 +205,13 @@ lazy val algorithms = (project in file("modules/foundations/algorithms"))
   .settings(commonSettings)
   .settings(libraryDependencies ++= Dependencies.algorithms)
 
-lazy val cats = (project in file("modules/cats"))
+lazy val `cats-calculator` = (project in file("modules/cats/calculator"))
+  .dependsOn(algorithms)
+  // S E T T I N G S
+  .settings(commonSettings)
+  .settings(libraryDependencies ++= Dependencies.cats)
+
+lazy val `cats-console` = (project in file("modules/cats/console"))
   .dependsOn(algorithms)
   // S E T T I N G S
   .settings(commonSettings)
