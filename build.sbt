@@ -278,7 +278,7 @@ lazy val script = (project in file("modules/script"))
   .settings(scalaVersion := Settings.scala213)
   .settings(crossScalaVersions := Seq(Settings.scala213))
   .settings(libraryDependencies ++= Dependencies.script)
-  .settings(libraryDependencies ++= Seq("com.lihaoyi" % "ammonite" % "2.5.5" % Test cross CrossVersion.full))
+  .settings(libraryDependencies ++= Seq("com.lihaoyi" % "ammonite" % "2.5.6" % Test cross CrossVersion.full))
   .settings(commands += Commands.ammoniteCommand)
 
 lazy val slick = (project in file("modules/slick"))
