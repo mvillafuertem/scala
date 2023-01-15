@@ -13,6 +13,9 @@ import zio.{ stream, IO, UIO, ZIO, ZLayer }
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
+// type projection in scala3 https://docs.scala-lang.org/scala3/reference/dropped-features/type-projection.html
+// type T[A] = IO[ProductException, A]
+// trait SlickProductsRepository extends ProductsRepository[T] with InfrastructureConfiguration
 trait SlickProductsRepository extends ProductsRepository[({ type T[A] = IO[ProductException, A] })#T] with InfrastructureConfiguration {
   self =>
 
