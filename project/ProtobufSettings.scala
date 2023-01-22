@@ -1,5 +1,5 @@
 import sbt.Keys.target
-import sbt._
+import sbt.{ Compile, _ }
 import sbtprotoc.ProtocPlugin.autoImport.PB
 
 object ProtobufSettings {
@@ -10,8 +10,10 @@ object ProtobufSettings {
       target.value / "protobuf_external"
     ),
     Compile / PB.protocOptions := Seq(
-      "--descriptor_set_out=" + target.value / "descriptor"
+      "--descriptor_set_out=" + target.value / "descriptor.proto"
     )
+    // https://stackoverflow.com/questions/52628371/generate-file-descriptor-set-desc-with-scalapb
+    // Compile / PB.targets += (PB.gens.descriptorSet -> (Compile / crossTarget).value / "descriptor.protoset")
   )
 
 }

@@ -21,7 +21,21 @@ services:
   grpcui:
     container_name: grpcui
     image: fullstorydev/grpcui
-    command: -plaintext "host.docker.internal:9999"
+    command: -plaintext -protoset /protos/descriptor.protoset "host.docker.internal:9999"
     ports:
       - 8080:8080
+    volumes:
+      - ./:/protos
+    restart: always
+
+  grpcurl:
+    container_name: grpcurl
+    image: fullstorydev/grpcurl
+    command: |
+      -protoset /protos/descriptor.protoset
+      -d '{"startLabel": "PERSON", "limit": 2, "relationshipQuery": {"direction": "BOTH"}}'
+      -plaintext "host.docker.internal:9999"
+      Service/Method
+    volumes:
+      - ./:/protos
     restart: always
