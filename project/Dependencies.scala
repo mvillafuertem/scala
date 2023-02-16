@@ -516,7 +516,7 @@ object Dependencies {
     val alpakkaKafka              = "3.0.0"
     val alpakkaMongodb            = "3.0.4"
     val alpakkaSlick              = "3.0.4"
-    val armeriaScalapb            = "1.21.0"
+    val armeriaScalapb            = "1.22.1"
     val awsCdk                    = "1.156.0"
     val awsLambda                 = "1.2.1"
     val awsSdk                    = "2.17.293"
