@@ -138,6 +138,28 @@ final class CdktfBastion(scope: Construct, cdktfStackConfiguration: CdktfStackCo
     .value(s"""
               |vi ~/.ssh/config
               |
+              |Host jumpbox
+              |    Hostname ${alb.getDnsName}
+              |    User miguel.villafuerte
+              |
+              |Host svc-prod
+              |    Hostname ${alb.getDnsName}
+              |    User ec2-user
+              |    LocalForward 9999 localhost:9999
+              |    RequestTTY yes
+              |    RemoteCommand kubectl port-forward svc/service -n namespace 9999:80
+              |
+              |Host prod-port-forward
+              |    Hostname ${alb.getDnsName}
+              |    User ec2-user
+              |    LocalForward 20001 localhost:20002
+              |    RequestTTY yes
+              |    RemoteCommand kubectl port-forward svc/kiali -n namespace 20002:20001
+              |
+              |Host pue
+              |    Hostname 172.16.7.48
+              |    User training
+              |
               |Host bastion
               |    Hostname ${alb.getDnsName}
               |    User ec2-user
