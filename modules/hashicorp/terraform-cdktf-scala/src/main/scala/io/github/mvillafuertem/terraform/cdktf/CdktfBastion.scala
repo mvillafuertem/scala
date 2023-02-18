@@ -160,6 +160,21 @@ final class CdktfBastion(scope: Construct, cdktfStackConfiguration: CdktfStackCo
               |    Hostname 172.16.7.48
               |    User training
               |
+              |
+              |Host bastion
+              |    IdentitiesOnly yes
+              |    HostName bastion.foo.com # External bastion hostname
+              |    User my-user
+              |    Port 2222
+              |    PubKeyAuthentication yes
+              |    IdentityFile ~/.ssh/bastion.pem
+              |    ServerAliveInterval 30
+              |Host redis
+              |    LocalForward 6000 redis.internal:6379
+              |    Hostname redis.internal # Internal Redis DNS hostname or IP
+              |    ProxyCommand ssh bastion nc %h %p # NB: Connect using above host config
+              |
+              |
               |Host bastion
               |    Hostname ${alb.getDnsName}
               |    User ec2-user
