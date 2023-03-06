@@ -291,10 +291,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-14.14.20.tgz#f7974863edd21d1f8a494a73e8e2b3658615c340"
   integrity sha512-Y93R97Ouif9JEOWPIUyU+eyIdyRqQR0I8Ez1dzku4hDx34NWh4HbtIc3WNzwB1Y9ULvNGeu5B8h8bVL5cAk4/A==
 
-"@types/node@^17.0.21":
-  version "17.0.21"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-17.0.21.tgz#864b987c0c68d07b4345845c3e63b75edd143644"
-  integrity sha512-DBZCJbhII3r90XbQxI8Y9IjjiiOGlZ0Hr32omXIZvwwZ7p4DMMXGrKXVyPfuoBOri9XNtL0UK69jYIBIsRX3QQ==
+"@types/node@^18.11.15":
+  version "18.14.6"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.14.6.tgz#ae1973dd2b1eeb1825695bb11ebfb746d27e3e93"
+  integrity sha512-93+VvleD3mXwlLI/xASjw0FzKcwzl3OdTCzm1LaRfqgS21gfFtK3zDXM5Op9TeeMsJVOaJ2VRDpT9q4Y3d0AvA==
 
 "@types/yoga-layout@1.9.2":
   version "1.9.2"
@@ -1224,9 +1224,9 @@ minimatch@^5.1.0:
     brace-expansion "^2.0.1"
 
 minimist@>=1.2.2, minimist@^1.2.0:
-  version "1.2.5"
-  resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.5.tgz#67d66014b66a6a8aaa0c083c5fd58df4e4e97602"
-  integrity sha512-FM9nNUYrRBAELZQT3xeZQ7fmMOBg6nWNmJKTcgsJeaLstP/UODVpGsr5OhXhhXg6f+qtJ8uiZ+PUxkDWcgIXLw==
+  version "1.2.8"
+  resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.8.tgz#c1a464e7693302e082a075cee0c057741ac4772c"
+  integrity sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA==
 
 ms@2.1.2:
   version "2.1.2"
@@ -1255,10 +1255,10 @@ node-fetch@^2.6.7:
   dependencies:
     whatwg-url "^5.0.0"
 
-node@^17.7.1:
-  version "17.7.1"
-  resolved "https://registry.yarnpkg.com/node/-/node-17.7.1.tgz#da8ebf383ac327815676412be144a0681a9aefa7"
-  integrity sha512-apnZeKmmW/PBzCicYafcUgThdMVsI11i/e/4iBKVfxfl81UX7hk4Hne7L7R7PGIZMhJVJd4R1X8wcD2ZMTJpjA==
+node@^19.3.0:
+  version "19.6.1"
+  resolved "https://registry.yarnpkg.com/node/-/node-19.6.1.tgz#489c22209b09181194e7a34fe20dd60a266f1dcb"
+  integrity sha512-byYg3LxtFgNG0vINZMk4iX3Aa7p8Uc3t3WOQfZMwXcIiCzSTOXNbPOEmbrTSI73yrrfhr6IsutbLnN+/PBSaSA==
   dependencies:
     node-bin-setup "^1.0.0"
 
