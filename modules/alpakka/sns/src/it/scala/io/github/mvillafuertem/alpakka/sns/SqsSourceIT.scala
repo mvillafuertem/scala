@@ -28,7 +28,7 @@ final class SqsSourceIT extends SqsSourceConfigurationIT {
     val actual: Future[Seq[String]] = source
       .wireTap(println(_))
       .map(MessageAction.delete)
-      .via(SqsAckFlow(queue1Url, SqsAckSettings.create)(awsSqsClient))
+      .via(SqsAckFlow(queue1Url, SqsAckSettings.create())(awsSqsClient))
       .wireTap(println(_))
       .runWith(Sink.seq)
       .map(_.map(_.messageAction.message.body()))(system.dispatcher)
@@ -47,7 +47,7 @@ final class SqsSourceIT extends SqsSourceConfigurationIT {
     val actual: Future[Seq[String]] = source
       .wireTap(println(_))
       .map(MessageAction.delete)
-      .via(SqsAckFlow(queue2Url, SqsAckSettings.create)(awsSqsClient))
+      .via(SqsAckFlow(queue2Url, SqsAckSettings.create())(awsSqsClient))
       .wireTap(println(_))
       .runWith(Sink.seq)
       .map(_.map(_.messageAction.message.body()))(system.dispatcher)
@@ -83,7 +83,7 @@ final class SqsSourceIT extends SqsSourceConfigurationIT {
           .map(_ => msg)(system.dispatcher)
       )
       .map(MessageAction.delete)
-      .via(SqsAckFlow(queue3Url, SqsAckSettings.create)(awsSqsClient))
+      .via(SqsAckFlow(queue3Url, SqsAckSettings.create())(awsSqsClient))
       .wireTap(println(_))
       .runWith(Sink.seq)
       .map(_.map(_.messageAction.message.body()))(system.dispatcher)
@@ -103,7 +103,7 @@ final class SqsSourceIT extends SqsSourceConfigurationIT {
     val actual = source
       .wireTap(println(_))
       .map(MessageAction.delete)
-      .via(SqsAckFlow(queue1Url, SqsAckSettings.create)(awsSqsClient))
+      .via(SqsAckFlow(queue1Url, SqsAckSettings.create())(awsSqsClient))
       .runWith(Sink.seq)
       .map(
         _.map(_.messageAction.message.body()).map { jsonString =>
@@ -143,7 +143,7 @@ object SqsSourceIT {
     }
 
     override protected def afterAll(): Unit = {
-      system.terminate.futureValue
+      system.terminate().futureValue
       awsSqsClient.close()
       awsSqsClient.close()
       container.stop()
@@ -158,17 +158,13 @@ object SqsSourceIT {
         queue3Response <- createQueue("queue3")
 
         topicResponse <- createTopic("topic1")
-        queue1Url      = queue1Response.queueUrl()
-        queue2Url      = queue2Response.queueUrl()
-        queue3Url      = queue3Response.queueUrl()
         topicArn       = topicResponse.topicArn()
-
-        _      <- createSubscription(topicArn, queue1Url)
-        actual <- createData()
+        _             <- createSubscription(topicArn, queue1Response)
+        actual        <- createData()
       } yield (
-        queue1Url shouldBe this.queue1Url,
-        queue2Url shouldBe this.queue2Url,
-        queue3Url shouldBe this.queue3Url,
+        queue1Response shouldBe "arn:aws:sqs:us-east-1:000000000000:queue1",
+        queue2Response shouldBe "arn:aws:sqs:us-east-1:000000000000:queue2.fifo",
+        queue3Response shouldBe "arn:aws:sqs:us-east-1:000000000000:queue3",
         topicArn shouldBe this.topicArn,
         actual shouldBe Done
       )

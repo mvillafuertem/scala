@@ -1,0 +1,35 @@
+<configuration>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} %-5level [%-20.20thread] %-36.36logger{36} %msg%n%rEx</pattern>
+        </encoder>
+    </appender>
+    <!-- useful cmd $ java -DLOG_DIR=/var/log/application -jar app.jar -->
+    <property name="LOG_DIR" value="target"/>
+    <property name="LOG_FILE" value="integration-test"/>
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>${LOG_DIR}/${LOG_FILE}.log</file>
+        <append>false</append>
+        <encoder>
+            <pattern>%d{ISO8601} %-5level [%-20.20thread] [%-36.36logger{36}] %msg%n%rEx</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="ASYNCFILE" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="FILE"/>
+    </appender>
+
+    <appender name="ASYNCSTDOUT" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="STDOUT"/>
+    </appender>
+
+    <logger name="ch.qos.logback" level="WARN"/>
+    <logger name="akka" level="WARN"/>
+    <logger name="akka.kafka" level="DEBUG"/>
+    <logger name="org.testcontainers.containers.output.WaitingConsumer" level="ERROR"/>
+
+    <root level="INFO">
+        <appender-ref ref="ASYNCFILE"/>
+        <appender-ref ref="ASYNCSTDOUT"/>
+    </root>
+</configuration>

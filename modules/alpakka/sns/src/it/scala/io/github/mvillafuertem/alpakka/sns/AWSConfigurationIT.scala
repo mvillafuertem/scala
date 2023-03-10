@@ -15,9 +15,10 @@ import software.amazon.awssdk.services.sqs.model._
 
 import java.io.File
 import java.net.URI
-import scala.collection.JavaConverters._
 import scala.compat.java8.FutureConverters._
-import scala.concurrent.Future
+import scala.concurrent.duration.DurationInt
+import scala.concurrent.{ ExecutionContextExecutor, Future }
+import scala.jdk.CollectionConverters._
 
 trait AWSConfigurationIT {
 
@@ -53,7 +54,7 @@ trait AWSConfigurationIT {
       .httpClient(asyncHttpClient)
       .build()
 
-  protected def createQueue(queueName: String, fifo: Boolean = false): Future[CreateQueueResponse] =
+  protected def createQueue(queueName: String, fifo: Boolean = false)(implicit ec: ExecutionContextExecutor): Future[String] =
     awsSqsClient
       .createQueue(
         CreateQueueRequest
@@ -70,6 +71,23 @@ trait AWSConfigurationIT {
           .build()
       )
       .toScala
+      .flatMap(createQueueResponse =>
+        RetryDelays.retry(
+          awsSqsClient
+            .getQueueAttributes(
+              GetQueueAttributesRequest
+                .builder()
+                .attributeNames(QueueAttributeName.ALL)
+                .queueUrl(createQueueResponse.queueUrl())
+                .build()
+            )
+            .toScala,
+          List(200 millis, 200 millis, 500 millis, 5 seconds, 10 seconds),
+          retries = 10,
+          defaultDelay = 10 seconds
+        )(ec, system.scheduler)
+      )
+      .map(_.attributes().get(QueueAttributeName.QUEUE_ARN))
 
   protected def createTopic(topicName: String): Future[CreateTopicResponse] =
     awsSnsClient
