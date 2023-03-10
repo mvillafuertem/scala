@@ -24,10 +24,13 @@ object ZS3Spec extends ZIOSpecDefault with LocalstackConfiguration with S3Servic
 
   private val test: Seq[Spec[S3, Exception]] = Seq(
     test("create bucket")(
-      assertZIO(for {
-        succeed <- createBucket(bucketName).foldCause(_ => false, _ => true)
-        _       <- deleteBucket(bucketName)
-      } yield succeed)(equalTo(true))
+      assertZIO(
+        for {
+          bucketNameTmp <- ZIO.succeed(bucketName + "tmp")
+          succeed       <- createBucket(bucketNameTmp).foldCause(_ => false, _ => true).debug("bucket tmp created")
+          _             <- deleteBucket(bucketNameTmp)
+        } yield succeed
+      )(equalTo(true))
     ),
     test("put object") {
       val c             = Chunk.fromArray(Random.nextString(65536).getBytes())
