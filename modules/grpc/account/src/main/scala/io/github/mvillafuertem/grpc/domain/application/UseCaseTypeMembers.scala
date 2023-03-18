@@ -14,18 +14,16 @@ trait UseCaseTypeMembers {
 
 object UseCaseTypeMembers {
 
-
   type AuX[_] = UseCaseTypeMembers { type Monad[_] = AuX[_] }
 
   def apply[F[_]: AuX]: AuX[F] = implicitly[AuX[F]]
 
-
   implicit val a = new AuX[Option[_]] { self =>
-    override type Request = String
-    override type Response = String
+    override type Request         = String
+    override type Response        = String
     override type Monad[Response] = Option[Response]
 
-     def apply(request: Request, metadata: Metadata): Monad[Response] = Option("")
+    def apply(request: Request, metadata: Metadata): Monad[Response] = Option("")
 
   }
 
@@ -34,6 +32,5 @@ object UseCaseTypeMembers {
   private val value: Option[String] = a.apply("", new Metadata())
 
   println(value)
-
 
 }
