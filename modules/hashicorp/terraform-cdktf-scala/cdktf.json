@@ -2,7 +2,7 @@
   "language": "java",
   "app": "sbt terraform-cdktf-scala/run",
   "terraformProviders": [
-    "aws@~> 4.46.0"
+    "aws@~> 4.59.0"
   ],
   "terraformModules": [],
   "context": {},

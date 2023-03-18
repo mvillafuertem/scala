@@ -21,8 +21,12 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "cdktf-cli": "^0.14.3",
-    "@types/node": "^18.11.15"
+    "cdktf-cli": "^0.15.5"
+  },
+  "_comment_jsii": "https://github.com/aws/jsii/issues/3609",
+  "_comment_DefinitelyTyped": "https://github.com/DefinitelyTyped/DefinitelyTyped/discussions/64262",
+  "resolutions": {
+    "@types/node": "^15.14.9"
   },
   "private": true
 }

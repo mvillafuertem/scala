@@ -1,7 +1,7 @@
 package io.github.mvillafuertem.terraform.cdktf
 
 import com.hashicorp._
-import com.hashicorp.cdktf.{ AppOptions, S3Backend }
+import com.hashicorp.cdktf.{ AppConfig, S3Backend }
 import io.github.mvillafuertem.terraform.cdktf.CdktfStack.CdktfStackConfiguration
 
 import scala.io.Source
@@ -20,7 +20,7 @@ import scala.jdk.CollectionConverters._
 object CdktfApp extends App {
 
   private val app: cdktf.App = new cdktf.App(
-    AppOptions
+    AppConfig
       .builder()
       .stackTraces(false)
       .outdir("modules/hashicorp/terraform-cdktf-scala/src/main/resources/")
