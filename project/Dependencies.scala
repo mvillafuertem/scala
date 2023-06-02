@@ -543,7 +543,7 @@ object Dependencies {
     val openapiGenerator          = "5.0.1"
     val picocli                   = "4.6.1"
     val postgres                  = "42.4.1"
-    val scalaCheck                = "3.2.2.0"
+    val scalaCheck                = "3.2.11.0"
     val scalaJavaTime             = "2.0.0"
     val scalaTest                 = "3.2.14"
     val slick                     = "3.4.1"
