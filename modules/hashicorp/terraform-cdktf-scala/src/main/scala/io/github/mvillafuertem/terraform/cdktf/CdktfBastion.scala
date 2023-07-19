@@ -142,6 +142,8 @@ final class CdktfBastion(scope: Construct, cdktfStackConfiguration: CdktfStackCo
               |    Hostname ${alb.getDnsName}
               |    User miguel.villafuerte
               |
+              |# ssh -L 3128: localhost:3128 miguel.villafuerte@10.0.0.1 'kubectl port-forward svc/socks-proxy -n namespace 3128:3128'
+              |
               |Host svc-prod
               |    Hostname ${alb.getDnsName}
               |    User ec2-user
