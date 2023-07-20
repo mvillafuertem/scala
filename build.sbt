@@ -401,7 +401,7 @@ lazy val `zio-s3` = (project in file("modules/zio/s3"))
   .settings(
     libraryDependencies ++= Seq(
       "dev.zio"      %% "zio-s3"                    % "0.4.0",
-      "dev.zio"      %% "zio-sqs"                   % "0.5.0",
+      "dev.zio"      %% "zio-sqs"                   % "0.6.0",
       "com.dimafeng" %% "testcontainers-scala-core" % "0.40.11"
     ) ++ Seq(
       "dev.zio" %% "zio-test",
@@ -420,7 +420,7 @@ lazy val `zio-sqs` = (project in file("modules/zio/sqs"))
   .settings(commonSettings)
   .settings(
     libraryDependencies ++= Seq(
-      "dev.zio"      %% "zio-sqs"                   % "0.5.0",
+      "dev.zio"      %% "zio-sqs"                   % "0.6.0",
       "com.dimafeng" %% "testcontainers-scala-core" % "0.40.11"
     ) ++ Seq(
       "dev.zio" %% "zio-test",
