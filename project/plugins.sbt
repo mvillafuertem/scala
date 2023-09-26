@@ -11,5 +11,5 @@ addSbtPlugin("org.scalameta"               % "sbt-mdoc"            % "2.3.6")
 addSbtPlugin("org.scalameta"               % "sbt-scalafmt"        % "2.4.6")
 // addSbtPlugin("org.scoverage"               % "sbt-scoverage"       % "2.0.6")
 addSbtPlugin("pl.project13.scala"          % "sbt-jmh"             % "0.4.3")
-addSbtPlugin("org.scalablytyped.converter" % "sbt-converter"       % "1.0.0-beta40")
+addSbtPlugin("org.scalablytyped.converter" % "sbt-converter"       % "1.0.0-beta43")
 addDependencyTreePlugin
