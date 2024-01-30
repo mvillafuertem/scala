@@ -102,7 +102,7 @@ object Dependencies {
   )
 
   val algorithms: Seq[ModuleID] = Seq(
-    Artifact.catsCore % Version.cats,
+    Artifact.catsCore  % Version.cats,
     // A L G O R I T H M S  T E S T
     Artifact.scalaTest % Version.scalaTest % Test
   )
@@ -517,7 +517,7 @@ object Dependencies {
     val alpakkaKafka              = "3.0.0"
     val alpakkaMongodb            = "3.0.4"
     val alpakkaSlick              = "3.0.4"
-    val armeriaScalapb            = "1.21.0"
+    val armeriaScalapb            = "1.27.0"
     val awsCdk                    = "1.156.0"
     val awsLambda                 = "1.2.1"
     val awsSdk                    = "2.17.293"
