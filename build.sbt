@@ -217,6 +217,11 @@ lazy val `cats-console` = (project in file("modules/cats/console"))
   .settings(commonSettings)
   .settings(libraryDependencies ++= Dependencies.cats)
 
+lazy val `cats-semaphore` = (project in file("modules/cats/semaphore"))
+  // S E T T I N G S
+  .settings(commonSettings)
+  .settings(libraryDependencies ++= Dependencies.cats)
+
 lazy val docs = (project in file("modules/docs"))
   .configure(WebpackSettings.browserProject)
   // S E T T I N G S
