@@ -27,14 +27,14 @@ object Settings {
     // Test / unmanagedResourceDirectories += baseDirectory.value / "node_modules"
   )
 
-  lazy val scala213 = "2.13.8"
+  lazy val scala213 = "2.13.13"
   lazy val scala212 = "2.12.15"
   lazy val scala3   = "3.1.0"
 
   lazy val value: Seq[Def.Setting[_]] = Seq(
     // autoScalaLibrary := false,
-    scalaVersion                        := scala213,
-    scalacOptions                       := {
+    scalaVersion             := scala213,
+    scalacOptions            := {
       val default = Seq(
         "-deprecation",
         "-feature",
@@ -54,18 +54,17 @@ object Settings {
       // check against early initialization
     },
     javaOptions += "-Duser.timezone=UTC",
-    Test / fork                         := false,
-    Test / parallelExecution            := false,
-    Global / cancelable                 := true,
+    Test / fork              := false,
+    Test / parallelExecution := false,
+    Global / cancelable      := true,
     // OneJar
-    exportJars                          := true
+    exportJars               := true
   )
 
   lazy val integrationTest: Seq[Def.Setting[_]] = Seq(
-    IntegrationTest / fork := false,
-    IntegrationTest / parallelExecution := false,
+    IntegrationTest / fork              := false,
+    IntegrationTest / parallelExecution := false
   )
-
 
   lazy val testReport: Seq[Def.Setting[_]] = Seq(
     Test / testOptions ++= Seq(
