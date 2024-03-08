@@ -102,7 +102,7 @@ object Dependencies {
   )
 
   val algorithms: Seq[ModuleID] = Seq(
-    Artifact.catsCore % Version.cats,
+    Artifact.catsCore  % Version.cats,
     // A L G O R I T H M S  T E S T
     Artifact.scalaTest % Version.scalaTest % Test
   )
@@ -547,7 +547,7 @@ object Dependencies {
     val scalaCheck                = "3.2.2.0"
     val scalaJavaTime             = "2.0.0"
     val scalaTest                 = "3.2.14"
-    val slick                     = "3.4.1"
+    val slick                     = "3.5.0"
     val slinky                    = "0.7.2"
     val spark                     = "3.3.1"
     val sttp                      = "3.5.1"
