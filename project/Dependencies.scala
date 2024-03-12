@@ -102,7 +102,7 @@ object Dependencies {
   )
 
   val algorithms: Seq[ModuleID] = Seq(
-    Artifact.catsCore % Version.cats,
+    Artifact.catsCore  % Version.cats,
     // A L G O R I T H M S  T E S T
     Artifact.scalaTest % Version.scalaTest % Test
   )
@@ -531,7 +531,7 @@ object Dependencies {
     val ficus                     = "1.5.2"
     val grpcGoogleCommonProtos    = "2.7.1"
     val h2                        = "2.1.214"
-    val http4s                    = "1.0.0-M35"
+    val http4s                    = "1.0.0-M41"
     val java8Compat               = "1.0.2"
     val jslt                      = "0.1.13"
     val jsoniter                  = "2.17.5"
