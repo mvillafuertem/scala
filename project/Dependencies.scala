@@ -524,7 +524,7 @@ object Dependencies {
     val cask                      = "0.7.11"
     val cats                      = "2.9.0"
     val catsEffect                = "3.4.2"
-    val circe                     = "0.14.1"
+    val circe                     = "0.14.3"
     val curator                   = "5.3.0"
     val dijon                     = "0.6.0"
     val enumeratumCirce           = "1.7.0"
