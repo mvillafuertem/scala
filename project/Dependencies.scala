@@ -534,7 +534,7 @@ object Dependencies {
     val http4s                    = "1.0.0-M35"
     val java8Compat               = "1.0.2"
     val jslt                      = "0.1.13"
-    val jsoniter                  = "2.17.5"
+    val jsoniter                  = "2.17.9"
     val jwtCirce                  = "4.3.0"
     val kafka                     = "3.3.1"
     val leveldbjniAll             = "1.8"
