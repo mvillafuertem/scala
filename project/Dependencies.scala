@@ -359,8 +359,8 @@ object Dependencies {
       Artifact.akkaStreamTyped
     ).map(_ % Version.akka) ++ Seq(
       // "org.iq80.leveldb" % "leveldb" % "0.12",
-      "dev.zio"                         %% "zio-config"          % "3.0.0-RC6",
-      "dev.zio"                         %% "zio-config-typesafe" % "3.0.0-RC6",
+      "dev.zio"                         %% "zio-config"          % "3.0.7",
+      "dev.zio"                         %% "zio-config-typesafe" % "3.0.7",
       Artifact.h2                        % Version.h2,
       Artifact.logback                   % Version.logback,
       Artifact.slick                     % Version.slick,
