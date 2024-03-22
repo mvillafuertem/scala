@@ -520,7 +520,7 @@ object Dependencies {
     val armeriaScalapb            = "1.21.0"
     val awsCdk                    = "1.156.0"
     val awsLambda                 = "1.2.1"
-    val awsSdk                    = "2.17.293"
+    val awsSdk                    = "2.17.295"
     val cask                      = "0.7.11"
     val cats                      = "2.9.0"
     val catsEffect                = "3.4.2"
