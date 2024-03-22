@@ -527,7 +527,7 @@ object Dependencies {
     val circe                     = "0.14.1"
     val curator                   = "5.3.0"
     val dijon                     = "0.6.0"
-    val enumeratumCirce           = "1.7.0"
+    val enumeratumCirce           = "1.7.3"
     val ficus                     = "1.5.2"
     val grpcGoogleCommonProtos    = "2.7.1"
     val h2                        = "2.1.214"
