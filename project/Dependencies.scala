@@ -102,7 +102,7 @@ object Dependencies {
   )
 
   val algorithms: Seq[ModuleID] = Seq(
-    Artifact.catsCore % Version.cats,
+    Artifact.catsCore  % Version.cats,
     // A L G O R I T H M S  T E S T
     Artifact.scalaTest % Version.scalaTest % Test
   )
@@ -364,7 +364,7 @@ object Dependencies {
       Artifact.h2                        % Version.h2,
       Artifact.logback                   % Version.logback,
       Artifact.slick                     % Version.slick,
-      Artifact.zio                       % "2.0.0-RC3",
+      Artifact.zio                       % "2.0.21",
       Artifact.zioInteropReactiveStreams % Version.zioInteropReactiveStreams,
       Artifact.zioLoggingSlf4j           % Version.zioLoggingSlf4j
     ) ++ Seq(
