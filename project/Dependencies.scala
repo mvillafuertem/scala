@@ -102,7 +102,7 @@ object Dependencies {
   )
 
   val algorithms: Seq[ModuleID] = Seq(
-    Artifact.catsCore % Version.cats,
+    Artifact.catsCore  % Version.cats,
     // A L G O R I T H M S  T E S T
     Artifact.scalaTest % Version.scalaTest % Test
   )
@@ -525,7 +525,7 @@ object Dependencies {
     val cats                      = "2.9.0"
     val catsEffect                = "3.4.2"
     val circe                     = "0.14.1"
-    val curator                   = "5.3.0"
+    val curator                   = "5.6.0"
     val dijon                     = "0.6.0"
     val enumeratumCirce           = "1.7.0"
     val ficus                     = "1.5.2"
