@@ -450,5 +450,8 @@ def welcomeMessage: Def.Setting[String] = onLoadMessage := {
       |${cmd("dependencyBrowseTree", "- It opens a browser window, but it displays a visualization of the dependency tree")}
       |${cmd("""set javaOptions += "-Dconfig.file=../../local-application.conf"""", "- Set javaOptions values")}
       |${cmd("show javaOptions", "- Show javaOptions values")}
+      |${cmd("show javaOptions", "- Show javaOptions values")}
+      |${cmd("""javaOptions in Test ++= Seq("-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005")""".stripMargin, "- Active debug mode")}
+      |${cmd("sbt -jvm-debug 5005".stripMargin, "- Active mode debug")}
       """.stripMargin
 }
