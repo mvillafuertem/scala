@@ -3,14 +3,9 @@
 let
   jdk = pkgs.${java};
 
-  config = {
-    packageOverrides = p: rec {
-      sbt = p.sbt.overrideAttrs (old: rec {
-        patchPhase = ''
-          echo -java-home ${jdk} >> conf/sbtopts
-        '';
-      });
-    };
+  config.packageOverrides = pkgs: rec {
+    sbt = pkgs.sbt.override { jre = jdk; };
+    metals = pkgs.metals.override { jre = jdk; };
   };
 
   pkgs = import <nixpkgs> { inherit config; };
@@ -23,10 +18,8 @@ in pkgs.mkShell {
     [ ! -f /tmp/figlet/Shadow.flf ] &&\
     mkdir -p /tmp/figlet &&\
     curl -L https://raw.githubusercontent.com/xero/figlet-fonts/master/ANSI%20Shadow.flf > /tmp/figlet/Shadow.flf
-    echo -e "\033[36m$(figlet -f "/tmp/figlet/Shadow.flf" "scala")\033[0m"
-    mkdir -p ~/.cache/nvim/nvim-metals  # Asegúrate de que la carpeta existe
-    ln -snf ${pkgs.metals}/bin/metals ~/.cache/nvim/nvim-metals/metals  # Crea el enlace simbólico
-    echo "Enlace simbólico creado: ~/.cache/nvim/nvim-metals/metals"
+    echo -e "\033[36m$(figlet -w 130 -f "/tmp/figlet/Shadow.flf" "events-manager")\033[0m"
+    echo "remember add useGlobalExecutable in metals"
   '';
 
 }
