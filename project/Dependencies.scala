@@ -541,7 +541,7 @@ object Dependencies {
     val logback                   = "1.2.11"
     val mongoScalaBson            = "4.4.2"
     val neotypes                  = "0.23.1"
-    val openapiGenerator          = "5.0.1"
+    val openapiGenerator          = "5.4.0"
     val picocli                   = "4.6.1"
     val postgres                  = "42.4.1"
     val scalaCheck                = "3.2.2.0"
