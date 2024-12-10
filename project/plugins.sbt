@@ -1,7 +1,7 @@
 addSbtPlugin("ch.epfl.scala"               % "sbt-scalajs-bundler" % "0.21.0")
 addSbtPlugin("com.eed3si9n"                % "sbt-assembly"        % "0.14.10")
 addSbtPlugin("com.eed3si9n"                % "sbt-buildinfo"       % "0.11.0")
-addSbtPlugin("com.lightbend.sbt"           % "sbt-javaagent"       % "0.1.6")
+addSbtPlugin("com.github.sbt"              % "sbt-javaagent"       % "0.1.8")
 addSbtPlugin("com.typesafe.sbt"            % "sbt-git"             % "1.0.2")
 addSbtPlugin("com.github.sbt"              % "sbt-native-packager" % "1.9.11")
 addSbtPlugin("io.spray"                    % "sbt-revolver"        % "0.9.1")
