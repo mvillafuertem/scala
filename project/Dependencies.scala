@@ -102,7 +102,7 @@ object Dependencies {
   )
 
   val algorithms: Seq[ModuleID] = Seq(
-    Artifact.catsCore % Version.cats,
+    Artifact.catsCore  % Version.cats,
     // A L G O R I T H M S  T E S T
     Artifact.scalaTest % Version.scalaTest % Test
   )
@@ -543,7 +543,7 @@ object Dependencies {
     val neotypes                  = "0.23.1"
     val openapiGenerator          = "5.0.1"
     val picocli                   = "4.6.1"
-    val postgres                  = "42.4.1"
+    val postgres                  = "42.4.5"
     val scalaCheck                = "3.2.2.0"
     val scalaJavaTime             = "2.0.0"
     val scalaTest                 = "3.2.14"
